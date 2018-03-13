@@ -40,13 +40,15 @@ This files is useful to construct you're analysis.
 
 
 # Atlas set up
-monAtlas = atlas.Atlas(path='/media/db242421/db242421_data/atlas_AVCnn',
-                       name='atlas4D_2.nii')
+atlas_folder = 'C:\\Users\\Dhaïf\\Documents\\atlas_AVCnn'
+atlas_name ='atlas4D_2.nii'
+monAtlas = atlas.Atlas(path=atlas_folder,
+                       name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_regions = monAtlas.GetLabels(
-    '/media/db242421/db242421_data/atlas_AVCnn/atlas4D_2_labels.csv')
+labels_text_file = 'C:\\Users\\Dhaïf\\Documents\\atlas_AVCnn\\atlas4D_2_labels.csv'
+labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive', 
           'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
