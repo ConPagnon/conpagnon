@@ -21,9 +21,10 @@ import itertools
 from math import sqrt
 
 
-def time_series_extraction_with_individual_atlases(root_fmri_data_directory, groupes, subjects_id_data_path, group_data, repetition_time,
-                                                   low_pass_filtering=None, high_pass_filtering=None, detrend_signal=True,
-                                                   standardize_signal=True, smooth_signal=None, resampling_target='data', memory_level=1,
+def time_series_extraction_with_individual_atlases(root_fmri_data_directory, groupes, subjects_id_data_path, group_data,
+                                                   repetition_time, low_pass_filtering=None, high_pass_filtering=None,
+                                                   detrend_signal=True, standardize_signal=True, smooth_signal=None,
+                                                   resampling_target='data', memory_level=1,
                                                    nilearn_cache_directory=None,
                                                    ):
     """Times series extractions for each subjects with an individual atlas.
@@ -165,25 +166,31 @@ def time_series_extraction_with_individual_atlases(root_fmri_data_directory, gro
                 subject_confounds = None
 
             # Set the computation parameters for time series, via the NifTiMapsMasker class
-            subject_masker = input_data.NiftiMapsMasker(maps_img=subject_atlas, resampling_target=resampling_target,
-                                                        smoothing_fwhm=smooth_signal, high_pass=high_pass_filtering,
-                                                        low_pass=low_pass_filtering, detrend=detrend_signal, standardize=standardize_signal,
-                                                        t_r=repetition_time, memory=nilearn_cache_directory, memory_level=memory_level)
+            subject_masker = input_data.NiftiMapsMasker(
+                maps_img=subject_atlas, resampling_target=resampling_target,
+                smoothing_fwhm=smooth_signal, high_pass=high_pass_filtering,
+                low_pass=low_pass_filtering, detrend=detrend_signal, standardize=standardize_signal,
+                t_r=repetition_time, memory=nilearn_cache_directory, memory_level=memory_level)
             
             # We extract the subject time series, for each regions defined in the atlas, if confounds was found,
             # we regress them
             subject_time_series = subject_masker.fit_transform(imgs=subject_fmri, confounds=subject_confounds)
             
-            # We fill the dictionnary for each and subjects, with the time series array of shape (time point, number of regions),
+            # We fill the dictionnary for each and subjects, with the
+            # time series array of shape (time point, number of regions),
             # and the list of index of discarded rois.
-            times_series_dictionnary[groupe][subject] = {'time_series': subject_time_series, 'discarded_rois': subject_void_rois}
+            times_series_dictionnary[groupe][subject] = {'time_series': subject_time_series,
+                                                         'discarded_rois': subject_void_rois}
 
     return times_series_dictionnary
 
 
-def time_series_extraction(root_fmri_data_directory, groupes, subjects_id_data_path, reference_atlas, group_data, repetition_time,
-                           low_pass_filtering=None, high_pass_filtering=None, detrend_signal=True, standardize_signal=True,
-                           smooth_signal=None, resampling_target='data', memory_level=1, nilearn_cache_directory=None):
+def time_series_extraction(root_fmri_data_directory, groupes, subjects_id_data_path,
+                           reference_atlas, group_data, repetition_time,
+                           low_pass_filtering=None, high_pass_filtering=None,
+                           detrend_signal=True, standardize_signal=True,
+                           smooth_signal=None, resampling_target='data', memory_level=1,
+                           nilearn_cache_directory=None):
     
     """Times series extractions for each subjects on a common atlas.
     
