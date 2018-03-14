@@ -557,7 +557,6 @@ for kind in kinds:
                                             (kind, groupes[0], groupes[1]))
     plt.show()
 
-
 # Compute the intra-network connectivity for the contralesional hemisphere in
 # groups
 contralesional_intra_network_connectivity_dict, \
@@ -593,9 +592,6 @@ for kind in kinds:
                                             (kind, groupes[0], groupes[1]))
     plt.show()
 
-
-
-
 # Compute of mean ipsilesional distribution
 ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
     subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices,
@@ -603,51 +599,6 @@ ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
 contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
     subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
     groupes=groupes, kinds=kinds)
-
-# Compute mean and standard deviation assuming gaussian behavior for mean ipsilesional conenctivity per subjects
-ipsilesional_distribution_parameters = dict.fromkeys(groupes)
-for groupe in groupes:
-    ipsilesional_distribution_parameters[groupe] = dict.fromkeys(kinds)
-    for kind in kinds:
-        # Stack the mean homotopic connectivity of each subject for the current group
-        subjects_mean_ipsilesional_connectivity = np.array([ipsilesional_mean_connectivity[groupe][subject][kind]['mean connectivity']
-                                                            for subject in ipsilesional_mean_connectivity[groupe].keys()])
-        # Estimate the mean and std assuming a Gaussian behavior
-        subjects_mean_ipsilesional_connectivity, mean_ipsilesional_estimation, std_ipsilesional_estimation = \
-            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_ipsilesional_connectivity)
-        # Fill a dictionnary saving the results for each groups and kind
-        ipsilesional_distribution_parameters[groupe][kind] = {
-            'subjects mean ipsilesional connectivity': subjects_mean_ipsilesional_connectivity,
-            'ipsilesional distribution mean': mean_ipsilesional_estimation,
-            'ipsilesional distribution standard deviation': std_ipsilesional_estimation}
-
-# Compute mean and standard deviation assuming gaussian behavior for mean contralesional conenctivity per subjects
-contralesional_distribution_parameters = dict.fromkeys(groupes)
-for groupe in groupes:
-    contralesional_distribution_parameters[groupe] = dict.fromkeys(kinds)
-    for kind in kinds:
-        # Stack the mean ipsilesional connectivity of each subject for the current group
-        subjects_mean_contralesional_connectivity = np.array([contralesional_mean_connectivity[groupe][subject][kind]['mean connectivity']
-                                                              for subject in contralesional_mean_connectivity[groupe].keys()])
-        # Estimate the mean and std assuming a Gaussian behavior
-        subjects_mean_contralesional_connectivity, mean_contralesional_estimation, std_contralesional_estimation = \
-            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_contralesional_connectivity)
-        # Fill a dictionnary saving the results for each groups and kind
-        contralesional_distribution_parameters[groupe][kind] = {
-            'subjects mean contralesional connectivity': subjects_mean_contralesional_connectivity,
-            'contralesional distribution mean': mean_contralesional_estimation,
-            'contralesional distribution standard deviation': std_contralesional_estimation}
-
-# Two sample t-test on mean ipsilesional and contralesional connectivity between the two group
-groupes = ['L_Clin_Atyp_pat', 'L_Clin_Typ_pat', 'controls']
-
-ipsilesional_t_test_ = parametric_tests.two_sample_t_test_(connectivity_dictionnary_=ipsilesional_distribution_parameters,
-                                                           groupes=groupes, kinds=kinds, field='subjects mean ipsilesional connectivity',
-                                                           contrast=contrast)
-contralesional_t_test_ = parametric_tests.two_sample_t_test_(connectivity_dictionnary_=contralesional_distribution_parameters,
-                                                             groupes=groupes, kinds=kinds,
-                                                             field='subjects mean contralesional connectivity',
-                                                             contrast=contrast)
 
 import itertools
 # Perform t-test for all possible pairs without replacement
@@ -662,87 +613,6 @@ for group_pair in pairs_of_groups:
         connectivity_dictionnary_=contralesional_distribution_parameters, groupes=list(group_pair), kinds=kinds,
         field='subjects mean contralesional connectivity', contrast=contrast
     )
-
-# Fetch mean and standard deviation for ipsilesional, contralesional
-mean_ipsi = np.array([ipsilesional_distribution_parameters[g]['tangent']['ipsilesional distribution mean'] for g in groupes])
-std_ipsi = np.array([ipsilesional_distribution_parameters[g]['tangent']['ipsilesional distribution standard deviation'] for g in groupes])
-
-sns.barplot(x=groupes, y=np.abs(mean_ipsi), palette=['blue','red','green'], ci='sd')
-
-# Display histogram with a gaussian fit
-fitted_dist_color1, fitted_dist_color2, fitted_dist_color3 = 'blue', 'red', 'green'
-raw_data_color1, raw_data_color2, raw_data_color3 = 'blue', 'red', 'green'
-
-# Display results for ipsilesional and contralesional side
-with backend_pdf.PdfPages(os.path.join(directory, 'ipsi_and_contra_connectivity_distribution.pdf')) as pdf:
-    for kind in kinds:
-        plt.figure()
-        display.display_gaussian_connectivity_fit(
-            vectorized_connectivity=ipsilesional_distribution_parameters[groupes[0]][kind]['subjects mean ipsilesional connectivity'],
-            estimate_mean=ipsilesional_distribution_parameters[groupes[0]][kind]['ipsilesional distribution mean'],
-            estimate_std=ipsilesional_distribution_parameters[groupes[0]][kind]['ipsilesional distribution standard deviation'],
-            raw_data_colors=raw_data_color1,
-            fitted_distribution_color=fitted_dist_color1,
-            title='Ipsilesional functional connectivity distribution for {}'.format(kind),
-            xtitle='mean ipsilesional functional connectivity  for each subjects', ytitle='proportion of subjects',
-            legend_fitted='{} gaussian fitted distribution'.format(groupes[0]),
-            legend_data=groupes[0], display_fit='yes')
-        ax = plt.gca()
-        line = ax.lines[0]
-        vx = sorted(line.get_xdata())
-        vy = sorted(line.get_ydata())
-        display.display_gaussian_connectivity_fit(
-            vectorized_connectivity=ipsilesional_distribution_parameters[groupes[1]][kind]['subjects mean ipsilesional connectivity'],
-            estimate_mean=ipsilesional_distribution_parameters[groupes[1]][kind]['ipsilesional distribution mean'],
-            estimate_std=ipsilesional_distribution_parameters[groupes[1]][kind]['ipsilesional distribution standard deviation'],
-            raw_data_colors=raw_data_color2, fitted_distribution_color=fitted_dist_color2,
-            title='Ipsilesional functional connectivity distribution for {}'.format(kind),
-            xtitle='Functional connectivity distribution for each subjects', ytitle='proportion of subjects',
-            legend_fitted='{} gaussian fitted distribution'.format(groupes[1], ),
-            legend_data=groupes[1], display_fit='yes')
-        display.display_gaussian_connectivity_fit(
-            vectorized_connectivity=ipsilesional_distribution_parameters[groupes[2]][kind]['subjects mean ipsilesional connectivity'],
-            estimate_mean=ipsilesional_distribution_parameters[groupes[2]][kind]['ipsilesional distribution mean'],
-            estimate_std=ipsilesional_distribution_parameters[groupes[2]][kind]['ipsilesional distribution standard deviation'],
-            raw_data_colors=raw_data_color2, fitted_distribution_color=fitted_dist_color3,
-            title='Ipsilesional functional connectivity distribution for {}'.format(kind),
-            xtitle='Functional connectivity distribution for each subjects', ytitle='distribution density (a.u)',
-            legend_fitted='{} gaussian fitted distribution'.format(groupes[2], ),
-            legend_data=groupes[2], display_fit='yes')
-        pdf.savefig()
-        plt.figure()
-        display.display_gaussian_connectivity_fit(
-            vectorized_connectivity=contralesional_distribution_parameters[groupes[0]][kind]['subjects mean contralesional connectivity'],
-            estimate_mean=contralesional_distribution_parameters[groupes[0]][kind]['contralesional distribution mean'],
-            estimate_std=contralesional_distribution_parameters[groupes[0]][kind]['contralesional distribution standard deviation'],
-            raw_data_colors=raw_data_color1,
-            fitted_distribution_color=fitted_dist_color1,
-            title='Contralesional functional connectivity distribution for {}'.format(kind),
-            xtitle='Functional connectivity distribution for each subjects', ytitle='proportion of subjects',
-            legend_fitted='{} gaussian fitted distribution'.format(groupes[0]),
-            legend_data=groupes[0], display_fit='yes')
-        display.display_gaussian_connectivity_fit(
-            vectorized_connectivity=contralesional_distribution_parameters[groupes[1]][kind]['subjects mean contralesional connectivity'],
-            estimate_mean=contralesional_distribution_parameters[groupes[1]][kind]['contralesional distribution mean'],
-            estimate_std=contralesional_distribution_parameters[groupes[1]][kind]['contralesional distribution standard deviation'],
-            raw_data_colors=raw_data_color2, fitted_distribution_color=fitted_dist_color2,
-            title='Contralesional functional connectivity distribution for {}'.format(kind),
-            xtitle='mean contralesional functional connectivity for each subjects', ytitle='distribution density (a.u)',
-            legend_fitted='{} gaussian fitted distribution'.format(groupes[1], ),
-            legend_data=groupes[1], display_fit='yes')
-        display.display_gaussian_connectivity_fit(
-            vectorized_connectivity=contralesional_distribution_parameters[groupes[2]][kind]['subjects mean contralesional connectivity'],
-            estimate_mean=contralesional_distribution_parameters[groupes[2]][kind]['contralesional distribution mean'],
-            estimate_std=contralesional_distribution_parameters[groupes[2]][kind]['contralesional distribution standard deviation'],
-            raw_data_colors=raw_data_color2, fitted_distribution_color=fitted_dist_color3,
-            title='Contralesional functional connectivity distribution for {}'.format(kind),
-            xtitle='mean contralesional functional connectivity for each subjects', ytitle='distribution density (a.u)',
-            legend_fitted='{} gaussian fitted distribution'.format(groupes[2], ),
-            legend_data=groupes[2], display_fit='yes')
-        pdf.savefig()
-
-
-
 
 # Some plot of inter network result
 
