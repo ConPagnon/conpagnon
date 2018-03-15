@@ -366,6 +366,49 @@ def vectorizer(numpy_array, discard_diagonal=False, array_type='numeric'):
     return array_diagonal, vectorized_array
 
 
+def array_rebuilder(vectorized_array, diagonal, array_type):
+    """Reconstruct a square array assuming a it is symmetric
+
+    # TODO: Check array type
+    Parameters
+    ----------
+    vectorized_array: numpy.array
+        The one dimensional array you want to rebuild.
+    diagonal: numpy.array
+        The one dimensional array containing the diagonal of
+        the non-vectorized array
+    array_type: str
+        The type of the array.
+        Choices are: numeric, bool.
+
+    Returns
+    -------
+    output 1: numpy.array
+        The reconstructed array, shape (n_features, n_features).
+
+    See Also
+    --------
+    vectorizer:
+        This function vectorized a two dimensional numeric
+        or boolean array
+    nilearn.connectome.vec_to_sym_matrix:
+        This function reconstruct a symmetric array from a one
+        dimensional array.
+    """
+
+    if array_type == 'numeric':
+        rebuild_array = vec_to_sym_matrix(vec=vectorized_array,
+                                          diagonal=diagonal)
+    elif array_type == 'bool':
+        rebuild_array = np.asarray(a=vec_to_sym_matrix(vec=vectorized_array,
+                                                       diagonal=diagonal),
+                                   dtype='bool')
+    else:
+        raise ValueError('Array type not understood, choices are: numeric or bool')
+
+    return rebuild_array
+
+
 def concatenate_imgs_in_order(imgs_directory, index_roi_number, filename, save_directory):
     """Concatenate 3D NifTi images into a single 4D NifTi files, given a user order.
 
