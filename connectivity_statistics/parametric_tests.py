@@ -336,6 +336,9 @@ def linear_regression(connectivity_data, data, formula, NA_action, subjects_to_d
     raw_tvals, raw_pvals, dfree = mod.fit().t_test(contrasts=contrasts, pval=compute_pvalues,
                                                    two_tailed=pvalues_tail)
 
+    # Compute prediction of the models
+    y_prediction = mod.predict(X=X)
+
     # Replace nan values in pvalues_vec by 1 to avoid failure in correction method
     raw_pvals[np.isnan(raw_pvals)] = 1.
 
@@ -398,7 +401,7 @@ def linear_regression(connectivity_data, data, formula, NA_action, subjects_to_d
     # saving the dictionnary
     folders_and_files_management.save_object(regression_results, save_regression_directory, 'regression_results.pkl')
 
-    return regression_results, X_df, y
+    return regression_results, X_df, y, y_prediction
 
 
 def functional_connectivity_distribution_estimation(functional_connectivity_estimate):
