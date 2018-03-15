@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.utils import shuffle
 import random
 from computing import compute_connectivity_matrices as ccm
-
+import numpy as np
 """
 This module contain useful operation on subjects connectivity matrices dictionnary.
 
@@ -144,3 +144,31 @@ def merge_dictionary(dict_list, new_key=None):
     else:
         dictionary = merged_dictionary
     return dictionary
+
+
+def stack_subjects_connectivity_matrices(subjects_connectivity_dictionary, groupes, kinds):
+    """Re-arrange the subjects connectivity dictionary to return a stack version per group
+    and kind
+
+    :param subjects_connectivity_dictionary:
+    :param groupes:
+    :param kinds:
+    :return:
+    """
+    # Initialize dictionary
+    stack_connectivity_dictionary = dict.fromkeys(groupes)
+
+    for group in groupes:
+        subjects_list = subjects_connectivity_dictionary[group].keys()
+        stack_connectivity_dictionary[group] = dict.fromkeys(kinds)
+        for kind in kinds:
+            group_stacked_connectivity = [(s, subjects_connectivity_dictionary[group][s][kind])
+                                          for s in subjects_list]
+            group_stacked_mask = [(s, subjects_connectivity_dictionary[group][s]['masked_array'])
+                                  for s in subjects_list]
+
+            stack_connectivity_dictionary[group][kind] = {
+                'connectivity matrices': group_stacked_connectivity,
+                'masked_array': group_stacked_mask}
+
+    return stack_connectivity_dictionary
