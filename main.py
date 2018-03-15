@@ -33,21 +33,21 @@ importlib.reload(dictionary_operations)
 """
 Created on Mon Sep 18 16:37:22 2017
 
-@author: db242421 (dhaif.bekha@cea.fr)
+@author: Dhaif BEKHA(dhaif.bekha@cea.fr)
 
-This files is useful to construct you're analysis.
+
 """
 
 
 # Atlas set up
-atlas_folder = 'C:\\Users\\Dhaïf\\Documents\\atlas_AVCnn'
+atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name ='atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = 'C:\\Users\\Dhaïf\\Documents\\atlas_AVCnn\\atlas4D_2_labels.csv'
+labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive', 
@@ -519,7 +519,6 @@ contralesional_subjects_connectivity_matrices = dictionary_operations.merge_dict
     dict_list=[contralesional_controls_dictionary,
                contralesional_patients_connectivity_matrices]
 )
-groupes = groupes[1:]
 
 # Compute the intra-network connectivity for the ipsilesional hemisphere in
 # groups
