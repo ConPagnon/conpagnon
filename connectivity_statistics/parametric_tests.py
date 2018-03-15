@@ -11,7 +11,7 @@ from patsy import dmatrix
 import pandas as pd
 from pylearn_mulm import mulm
 import os
-
+import errno
 
 importlib.reload(pre_preprocessing)
 importlib.reload(array_operation)
@@ -249,7 +249,8 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
     return t_test_dictionnary
 
 
-def linear_regression(connectivity_data, data, formula, NA_action, subjects_to_drop, kind, save_regression_directory='.',
+def linear_regression(connectivity_data, data, formula, NA_action,
+                      subjects_to_drop, kind, save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
                       alpha=0.05, pvals_correction_method='fdr_bh', nperms_maxT=10000):
     """Fit a linear model on connectivity coefficients across subjects.
@@ -355,8 +356,10 @@ def linear_regression(connectivity_data, data, formula, NA_action, subjects_to_d
         # Correction of raw p values for each dependent variables
         for i in range(len(X_df.columns)):
             # correction of pvalues, reject of null hypotheses below alpha level.
-            reject_[i, :], pvalues_vec_corrected[i, :], _, _ = multipletests(pvals=raw_pvals[i, :], alpha=alpha,
-                                                                             method=pvals_correction_method)
+            reject_[i, :], pvalues_vec_corrected[i, :], _, _ = \
+                multipletests(pvals=raw_pvals[i, :],
+                              alpha=alpha,
+                              method=pvals_correction_method)
 
     elif pvals_correction_method == 'maxT':
         # Inference with the maximum statistic method :
@@ -386,26 +389,32 @@ def linear_regression(connectivity_data, data, formula, NA_action, subjects_to_d
     covariable_name = X_df.columns
 
     # Creation of the directory containing the regression results
-    try:
-        os.makedirs(save_regression_directory)
-    except:
-        pass
+    if save_regression_directory is not None:
+        try:
+            os.makedirs(save_regression_directory)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
 
     # Save a dictionnary with the principal
     regression_results = dict.fromkeys(covariable_name)
     for i in range(len(X_df.columns)):
-        regression_results[covariable_name[i]] = {'raw pvalues': raw_pvals_m[i, :, :], 'raw tvalues': raw_tvals_m[i, :, :],
+        regression_results[covariable_name[i]] = {'raw pvalues': raw_pvals_m[i, :, :],
+                                                  'raw tvalues': raw_tvals_m[i, :, :],
                                                   'corrected pvalues': corrected_pvals_m[i, :, :],
                                                   'significant tvalues': significant_tvals_m[i, :, :]}
 
     # saving the dictionnary
-    folders_and_files_management.save_object(regression_results, save_regression_directory, 'regression_results.pkl')
+    if save_regression_directory is not None:
+        folders_and_files_management.save_object(regression_results,
+                                                 save_regression_directory, 'regression_results.pkl')
 
     return regression_results, X_df, y, y_prediction
 
 
 def functional_connectivity_distribution_estimation(functional_connectivity_estimate):
-    # TODO : When functional_connectivity_estimate contain nan, the estimation fail, I have to add a case for data contain non finite value
+    # TODO : When functional_connectivity_estimate contain nan, the estimation fail,
+    # TODO: I have to add a case for data contain non finite value
     """Estimates the mean and standard deviation of functional connectivity distribution assuming a Gaussian behavior.
 
     Parameters
@@ -425,15 +434,18 @@ def functional_connectivity_distribution_estimation(functional_connectivity_esti
     See Also
     --------
     scipy.stats.norm :
-        This function from the scipy library is used here, to estimate the mean and the standard deviation of the data.
+        This function from the scipy library is used here,
+        to estimate the mean and the standard deviation of the data.
     pre_preprocessing.fisher_transform :
-        To ensure a normal behavior of the connectivity coefficient, this function apply a classical Fisher transform to the data.
+        To ensure a normal behavior of the connectivity coefficient,
+        this function apply a classical Fisher transform to the data.
 
     Notes
     -----
-    We assume here that the functional connectivity your're dealing with have a **Gaussian** behavior, and therefore can be described
-    properly with two parameters: the mean and the standard deviation. To ensure a Gaussian behavior transformation of the connectivity
-    coefficient should be used like Fisher transform for correlation or partial correlation for example.
+    We assume here that the functional connectivity your're dealing with have a **Gaussian** behavior,
+    and therefore can be describe properly with two parameters: the mean and the standard deviation.
+    To ensure a Gaussian behavior transformation of the connectivity coefficient should be used like
+    Fisher transform for correlation or partial correlation for example.
 
     """
 
