@@ -788,29 +788,33 @@ plt.title('Mean scores of classification using different kind of connectivity')
 # The kind to regress
 kind = 'tangent'
 # Design matrix parameters
-formula = 'EHI'
+formula = 'Sexe + lesion_normalized'
 NA_action = 'drop'
 # Subject or list of subjects to drop
 subjects_to_drop = ['sub40_np130304']
 # Correction method
-pvals_correction_method = 'maxT'
+pvals_correction_method = 'fdr_bh'
 # Number of permutations for maxT correction
 nperms_maxT = 10000
 # Type I error rate
 alpha = .05
 
 # Load the connectivity data
-connectivity_data = folders_and_files_management.load_object('regression_data.pkl')
+connectivity_data = \
+    folders_and_files_management.load_object('/media/db242421/db242421_data/ConPagnon_data'
+                                             '/regression_data/regression_data.pkl')
 # Excel file containing the dependent variables
 data_xlsx = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
 # Regression results directory
 regression_results_directory = '/media/db242421/db242421_data/ConPagnon_reports/regression_results_test'
 
-regression_results, X_df, y = parametric_tests.linear_regression(connectivity_data=connectivity_data, data=data_xlsx, formula=formula,
-                                                                 NA_action=NA_action, subjects_to_drop=subjects_to_drop, kind=kind,
-                                                                 pvals_correction_method=pvals_correction_method, nperms_maxT=nperms_maxT,
-                                                                 save_regression_directory=regression_results_directory)
-# Plot p values matrix for significant results
+regression_results, X_df, y, y_pred = parametric_tests.linear_regression(
+    connectivity_data=connectivity_data, data=data_xlsx, formula=formula,
+    NA_action=NA_action, subjects_to_drop=subjects_to_drop, kind=kind,
+    pvals_correction_method=pvals_correction_method, nperms_maxT=nperms_maxT,
+    save_regression_directory=regression_results_directory)
+
+    # Plot p values matrix for significant results
 with backend_pdf.PdfPages(os.path.join(regression_results_directory, 'significant_results.pdf')) as pdf:
     for i in range(len(X_df.columns)):
         display.plot_matrix(matrix=regression_results[X_df.columns[i]]['corrected pvalues'], labels_colors=labels_colors,
