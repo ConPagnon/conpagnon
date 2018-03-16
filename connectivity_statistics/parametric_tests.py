@@ -250,7 +250,7 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
 
 
 def linear_regression(connectivity_data, data, formula, NA_action,
-                      subjects_to_drop, kind, save_regression_directory=None,
+                      subjects_to_drop, kind, sheetname=None,save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
                       alpha=0.05, pvals_correction_method='fdr_bh', nperms_maxT=10000):
     """Fit a linear model on connectivity coefficients across subjects.
@@ -270,6 +270,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         Directive for handling missing data in the xlsx file. Choices are :
         'drop': subject will discarded in the analysis, 'raise': raise an
         error if missing data is present.
+    sheetname: string
+        The name of the sheet containing the useful data.
     subjects_to_drop: list
         List of subjects you want to discard in the analysis.
     kind: string
@@ -308,7 +310,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
 
     """
     # Reading the data
-    df = pd.read_excel(data)
+    df = pd.read_excel(data, sheet_name=sheetname)
 
     # Drop the subjects we want to discard :
     df_c = df.copy()
