@@ -274,7 +274,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         The name of the sheet containing the useful data.
     subjects_to_drop: list, optional
         List of subjects you want to discard in the analysis. If None, all the
-        row in the dataframe are kept.
+        row in the dataframe are kept. Default is None.
     kind: string
         The metric, present in the provided connectivity data you want to perform analysis.
     save_regression_directory: string
