@@ -320,11 +320,16 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     # Stacked vectorized connectivity matrices in the same order of subjects
     # index list of the DESIGN MATRIX, because of missing data, not all subjects
     # will be in the analysis.
-    regression_subjects_list = X_df.index
-    y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list])
+    # All the subjects present in the excel file
+    general_regression_subjects_list = X_df.index
+    # Intersection of subjects to perform regression and the general list
+    regression_subjects_list = set(general_regression_subjects_list) - set(connectivity_data.keys())
+    y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list
+                  if subject in connectivity_data.keys()])
+
 
     # Conversion of X_df into a classic numpy array
-    X = np.array(X_df)
+    X = np.array(X_df.loc[regression_subjects_list])
 
     # Setting the contrast vector
     if contrasts == 'Id':
