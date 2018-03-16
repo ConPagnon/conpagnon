@@ -250,7 +250,7 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
 
 
 def linear_regression(connectivity_data, data, formula, NA_action,
-                      subjects_to_drop, kind, sheetname=None,save_regression_directory=None,
+                      kind, subjects_to_drop=None, sheetname=None,save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
                       alpha=0.05, pvals_correction_method='fdr_bh', nperms_maxT=10000):
     """Fit a linear model on connectivity coefficients across subjects.
@@ -272,8 +272,9 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         error if missing data is present.
     sheetname: string
         The name of the sheet containing the useful data.
-    subjects_to_drop: list
-        List of subjects you want to discard in the analysis.
+    subjects_to_drop: list, optional
+        List of subjects you want to discard in the analysis. If None, all the
+        row in the dataframe are kept.
     kind: string
         The metric, present in the provided connectivity data you want to perform analysis.
     save_regression_directory: string
@@ -314,7 +315,10 @@ def linear_regression(connectivity_data, data, formula, NA_action,
 
     # Drop the subjects we want to discard :
     df_c = df.copy()
-    df = df_c.drop(labels=subjects_to_drop)
+    if subjects_to_drop is not None:
+        df = df_c.drop(labels=subjects_to_drop)
+    else:
+        df = df_c
 
     # Build the design matrix according the dataframe and regression model.
     X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe', NA_action=NA_action)
