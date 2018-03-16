@@ -321,14 +321,16 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         df = df_c
 
     # Build the design matrix according the dataframe and regression model.
-    X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe', NA_action=NA_action)
+    X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe',
+                   NA_action=NA_action)
 
     # Stacked vectorized connectivity matrices in the same order of subjects
     # index list of the DESIGN MATRIX, because of missing data, not all subjects
     # will be in the analysis.
     # All the subjects present in the excel file
     general_regression_subjects_list = X_df.index
-    # Intersection of subjects to perform regression and the general list
+    # Intersection of subjects to perform regression and the general list because
+    # of possible dropped NA values.
     regression_subjects_list = \
         list(set(connectivity_data.keys()).intersection(general_regression_subjects_list))
     y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list])
@@ -345,7 +347,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
 
     # Mass univariate testing using MUOLS library
     mod = mulm.MUOLS(Y=y, X=X)
-    raw_tvals, raw_pvals, dfree = mod.fit().t_test(contrasts=contrasts, pval=compute_pvalues,
+    raw_tvals, raw_pvals, dfree = mod.fit().t_test(contrasts=contrasts,
+                                                   pval=compute_pvalues,
                                                    two_tailed=pvalues_tail)
 
     # Compute prediction of the models
@@ -374,12 +377,14 @@ def linear_regression(connectivity_data, data, formula, NA_action,
 
     elif pvals_correction_method == 'maxT':
         # Inference with the maximum statistic method :
-        _, pvalues_vec_corrected, _ = mod.t_test_maxT(contrasts=contrasts, nperms=nperms_maxT)
+        _, pvalues_vec_corrected, _ = mod.t_test_maxT(contrasts=contrasts,
+                                                      nperms=nperms_maxT)
         # Manual construction for the reject_ mask:
         reject_ = pvalues_vec_corrected < alpha
 
     else:
-        raise ValueError('Unrecognized correction method ! Please refer to the docstring function.')
+        raise ValueError('Unrecognized correction method ! \n'
+                         'Please refer to the docstring function.')
 
     # Reconstruction in a matrix structure of the different output
 
@@ -391,12 +396,14 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     raw_pvals_m = vec_to_sym_matrix(raw_pvals)
     # Reconstruction of corrected p values
     corrected_pvals_m = vec_to_sym_matrix(pvalues_vec_corrected)
-    # Construction of masked raw t values according to corrected p values under alpha threshold
+    # Construction of masked raw t values according to corrected p values
+    # under alpha threshold
     significant_tvals_m = np.multiply(raw_tvals_m, reject_m_)
 
     # Saving the results of the regression
 
-    # Listing the dependent variable, in the order of the output of the regression analysis
+    # Listing the dependent variable, in the order of the output of
+    # the regression analysis
     covariable_name = X_df.columns
 
     # Creation of the directory containing the regression results
@@ -410,15 +417,17 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     # Save a dictionnary with the principal
     regression_results = dict.fromkeys(covariable_name)
     for i in range(len(X_df.columns)):
-        regression_results[covariable_name[i]] = {'raw pvalues': raw_pvals_m[i, :, :],
-                                                  'raw tvalues': raw_tvals_m[i, :, :],
-                                                  'corrected pvalues': corrected_pvals_m[i, :, :],
-                                                  'significant tvalues': significant_tvals_m[i, :, :]}
+        regression_results[covariable_name[i]] = \
+            {'raw pvalues': raw_pvals_m[i, :, :],
+             'raw tvalues': raw_tvals_m[i, :, :],
+             'corrected pvalues': corrected_pvals_m[i, :, :],
+             'significant tvalues': significant_tvals_m[i, :, :]}
 
     # saving the dictionnary
     if save_regression_directory is not None:
         folders_and_files_management.save_object(regression_results,
-                                                 save_regression_directory, 'regression_results.pkl')
+                                                 save_regression_directory,
+                                                 'regression_results.pkl')
 
     return regression_results, X_df, y, y_prediction
 
