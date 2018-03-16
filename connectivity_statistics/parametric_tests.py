@@ -323,9 +323,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     # All the subjects present in the excel file
     general_regression_subjects_list = X_df.index
     # Intersection of subjects to perform regression and the general list
-    regression_subjects_list = set(general_regression_subjects_list) - set(connectivity_data.keys())
-    y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list
-                  if subject in connectivity_data.keys()])
+    regression_subjects_list = list(set(connectivity_data.keys()))
+    y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list])
 
 
     # Conversion of X_df into a classic numpy array
