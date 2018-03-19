@@ -2,7 +2,6 @@ import pandas as pd
 from sklearn.utils import shuffle
 import random
 from computing import compute_connectivity_matrices as ccm
-import numpy as np
 """
 This module contain useful operation on subjects connectivity matrices dictionnary.
 
@@ -14,7 +13,8 @@ Author: Dhaif BEKHA.
 
 
 def groupby_factor_connectivity_matrices(population_data_file, sheetname,
-                                         subjects_connectivity_matrices_dictionnary, groupes, factors,
+                                         subjects_connectivity_matrices_dictionnary,
+                                         groupes, factors,
                                          drop_subjects_list=None):
     """Group by attribute the subjects connectivity matrices.
 
@@ -28,7 +28,8 @@ def groupby_factor_connectivity_matrices(population_data_file, sheetname,
     else:
         population_text_data = population_text_data
 
-    # Using pandas, group the dataframe by the factor list entered and store it in a dictionnary
+    # Using pandas, group the dataframe by the factor list entered and store
+    # it in a dictionnary
     population_data_by_factor = population_text_data.groupby(factors).groups
     # Store all the keys, i.e all the possible factor pairs.
     factors_keys = list(population_data_by_factor.keys())
@@ -134,6 +135,11 @@ def merge_dictionary(dict_list, new_key=None):
     output: dict
         A dictionnary with one key, and merged dictionary
         as value.
+
+    Notes
+    -----
+    Note that all the dictionnary you want to merge must have
+    different keys.
     """
     merged_dictionary = dict()
     dictionary = {}
