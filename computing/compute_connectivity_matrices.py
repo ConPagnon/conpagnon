@@ -5,7 +5,7 @@ Created on Tue Sep 19 17:02:19 2017
 
 ComPagnon 2.0
 
-@author: db242421
+@author: Dhaif BEKHA
 
 """
 from data_handling.data_architecture import read_text_data_file, create_group_dictionnary
@@ -321,7 +321,8 @@ def time_series_extraction(root_fmri_data_directory, groupes, subjects_id_data_p
     return times_series_dictionnary
 
 
-def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_estimator, vectorize, z_fisher_transform):
+def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_estimator, vectorize=False,
+                                     discarding_diagonal=False, z_fisher_transform=False):
     """Compute the connectivity matrices for groups of subjects
     
     This function computes connectivity matrices for different metrics.
@@ -352,15 +353,18 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
         If True, the connectivity matrices are reshape into 1D arrays of 
         the vectorized lower part of the matrices. Useful for classification,
         regression...
-        Diagonal are kept when vectorize is True.
-        
-    z_fisher_transform: bool
+        Default is False.
+
+    z_fisher_transform: bool, optional
         If True, the z fisher transform is apply to all
-        the connectivity matrices.
+        the connectivity matrices. Default is False
+
+    discarding_diagonal: bool, optional
+        If True, the diagonal is discarded in
+        the vectorization process. Default is False.
 
     Returns
     -------
-    
     output : dict
         A multi-levels dictionnary organised as follow :
             - The first keys levels is the different groupes in the study. 
@@ -372,11 +376,11 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
             Finally you should find a 'masked_array' key : This key 
             contains a array of Boolean, shape (numbers of regions, numbers of regions)
             where the value are True for the index in 'discarded_rois' array, and False
-            elsewhere. See Note for further details.
+            elsewhere. See Note for further details. The diagonal of the
+            matrix are saved for each kind too in a dedicated field.
             
     See Also
     --------
-    
     time_series_extraction, time_series_extraction_with_individual_atlases :
         These are the functions which extract the time series according atlas
         regions and returned a structured dictionnary. 
@@ -384,7 +388,6 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
         
     Notes 
     -----
-    
     Covariances estimator are estimators compute in the scikit-learn library.
     Multiple estimator can be found in the module sklearn.covariance, popular
     choices are the Ledoit-Wolf estimator, or the OAS estimator.
@@ -405,12 +408,11 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
     References
     ----------
     For the use of tangent :
-        .. [1]  G. Varoquaux et al. “Detection of brain functional-connectivity difference in post-stroke patients using
-        group-level covariance modeling", MICCAI 2010
-    
-    
+        .. [1]  G. Varoquaux et al. “Detection of brain functional-connectivity
+        difference in post-stroke patients using group-level covariance modeling", MICCAI 2010
     """
     # TODO: call vectorizer function to vectorize connectivity matrices and the corresponding mask.
+
     saving_subjects_connectivity_matrices_dictionary = dict.fromkeys(list(time_series_dictionary.keys()))
     for groupe in time_series_dictionary.keys():
         subjects_list = time_series_dictionary[groupe].keys()
@@ -428,36 +430,55 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
             for kind in kinds:
                 # We compute connectivity matrices except for the tangent kind, which need the pooled groups
                 if kind != 'tangent':
-                    kind_measure = ConnectivityMeasure(kind=kind, cov_estimator=covariance_estimator, vectorize=vectorize)
+                    kind_measure = ConnectivityMeasure(kind=kind, cov_estimator=covariance_estimator)
                     # the current subject connectivity matrices
                     subject_kind_matrice = kind_measure.fit_transform(subject_time_series)
                     # We fill the subject dictionnary, accounting for vectorization option
                     if vectorize:
+                        # if discard_diagonal is True
+                        if discarding_diagonal:
+                            subject_kind_matrice_diagonal, subject_kind_matrice = \
+                                vectorizer(numpy_array=subject_kind_matrice[0, ...],
+                                           discard_diagonal=discarding_diagonal,
+                                           array_type='numeric')
+                        else:
+                            subject_kind_matrice_diagonal, subject_kind_matrice = \
+                                vectorizer(numpy_array=subject_kind_matrice[0, ...], discard_diagonal=False,
+                                           array_type='numeric')
                         if z_fisher_transform is True:
                             # Apply a fisher transform, i.e arctanh to each connectivity coefficient
-                            undefined_value = np.invert(subject_kind_matrice[0, :] == 1)
+                            undefined_value = np.invert(subject_kind_matrice[:] == 1)
                             subject_kind_matrice = np.arctanh(subject_kind_matrice, where=undefined_value)
                             # Fill with nan, the undefined value after transformation
-                            subject_kind_matrice[0, np.invert(undefined_value)] = np.nan
+                            subject_kind_matrice[np.invert(undefined_value)] = np.nan
                         else:
                             subject_kind_matrice = subject_kind_matrice
-                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = subject_kind_matrice[0, :]
+                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = \
+                            subject_kind_matrice[:]
+                        # Save the diagonal in this case:
+                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind + '_diagonal'] = \
+                            subject_kind_matrice_diagonal
                     else:
+                        # If we do not vectorize the connectivity matrix
                         if z_fisher_transform is True:
                             # Apply a fisher transform, i.e arctanh to each connectivity coefficient
-                            # For r = 1, in the diagonal, arctanh is not defined. We compute a mask where False value are ignored
+                            # For r = 1, in the diagonal, arctanh is not defined.
+                            # We compute a mask where False value are ignored
                             undefined_value = np.invert(subject_kind_matrice[0, :, :] == 1)
                             subject_kind_matrice = np.arctanh(subject_kind_matrice, where=undefined_value)
                             subject_kind_matrice[0, np.invert(undefined_value)] = np.nan
                         else:
                             subject_kind_matrice = subject_kind_matrice
-                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = subject_kind_matrice[0, :, :]
-
+                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = subject_kind_matrice[
+                                                                                                  0, :,
+                                                                                                  :]
     if 'tangent' in kinds:
         # We call pooled_groups_connectivity on the tangent space, returning along the tangent matrices
         # the labels subjects in the same order of tangent connectivity matrices:
-        tangent_matrix, subjects_order = pooled_groups_connectivity(time_series_dictionary=time_series_dictionary, kinds=['tangent'],
-                                                                    covariance_estimator=covariance_estimator, vectorize=vectorize)
+        tangent_matrix, subjects_order = pooled_groups_connectivity(time_series_dictionary=time_series_dictionary,
+                                                                    kinds=['tangent'],
+                                                                    covariance_estimator=covariance_estimator,
+                                                                    vectorize=False)
 
         for groupe in time_series_dictionary.keys():
             group_subject_list = time_series_dictionary[groupe].keys()
@@ -465,16 +486,29 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
                 subjects_order_list = list(subjects_order)
                 sub_index = subjects_order_list.index(subject)
                 if vectorize:
-                    corresponding_tangent_matrice = tangent_matrix['tangent'][sub_index, :]
-                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent'] = corresponding_tangent_matrice
+                    if discarding_diagonal:
+                        diagonal_matrice_tangent, corresponding_tangent_matrice = \
+                            vectorizer(numpy_array=tangent_matrix['tangent'][sub_index, :, :],
+                                       discard_diagonal=discarding_diagonal,
+                                       array_type='numeric')
+                    else:
+                        diagonal_matrice_tangent, corresponding_tangent_matrice = \
+                            vectorizer(numpy_array=tangent_matrix['tangent'][sub_index, :, :],
+                                       discard_diagonal=False,
+                                       array_type='numeric')
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent'] = \
+                        corresponding_tangent_matrice
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent' + '_diagonal'] = \
+                        diagonal_matrice_tangent
                 else:
                     corresponding_tangent_matrice = tangent_matrix['tangent'][sub_index, :, :]
-                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent'] = corresponding_tangent_matrice
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent'] = \
+                        corresponding_tangent_matrice
 
     # Append mask of boolean for discarded_rois
     saving_subjects_connectivity_matrices_dictionary = append_masks(
         subjects_connectivity_dictionnary=saving_subjects_connectivity_matrices_dictionary,
-        kinds=kinds)
+        kinds=kinds, vectorize=vectorize, discard_diagonal=discarding_diagonal)
 
     return saving_subjects_connectivity_matrices_dictionary
 
@@ -488,7 +522,6 @@ def pooled_groups_tangent_mean(time_series_dictionary, covariance_estimator):
     
     Parameters
     ----------
-    
     time_series_dictionary : dict
         A multi-levels dictionnary organised as follow :
             - The first keys levels is the different groupes in the study. 
@@ -505,13 +538,11 @@ def pooled_groups_tangent_mean(time_series_dictionary, covariance_estimator):
     
     Returns 
     -------
-    
     output : numpy.array of shape (n_features, n_features)
         The geometric mean a the pooled group.
         
     See Also
     --------
-    
     time_series_extraction, time_series_extraction_with_individual_atlases :
     These are the functions which extract the time series according atlas
     regions and returned a structured dictionnary. This is simply the argument
@@ -519,15 +550,13 @@ def pooled_groups_tangent_mean(time_series_dictionary, covariance_estimator):
     
     Notes
     -----
-    
     Covariances estimator are estimators compute in the scikit-learn library.
     Multiple estimator can be found in the module sklearn.covariance, popular
     choices are the Ledoit-Wolf estimator, or the OAS estimator.
     
     For now, we doesnt account for discarded rois for the derivation of the
     geometric mean.
-    
-    
+
     """
 
     tangent_measure = ConnectivityMeasure(kind='tangent', cov_estimator=covariance_estimator)
@@ -553,7 +582,6 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
     
     Parameters
     ----------
-    
     subjects_connectivity_matrices : dict
          A multi-levels dictionnary organised as follow :
              - The first keys levels is the different groupes in the study. 
@@ -575,7 +603,6 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
     
     Returns 
     -------
-    
     output : dict
         A multi-levels dictionnary organised as follow :
             - The first keys levels is the different groups in the study.
@@ -585,7 +612,6 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
             
     See Also
     --------
-    
     individual_connectivity_matrices : These function returned a organised
     dictionnary containing the connectivity matrices for different kinds. This is
     simply the argument `subjects_connectivity_matrices`
@@ -597,13 +623,13 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
     when the value is True in the masked_array, we discard the rois for the corresponding
     subject in the derivation of the mean.
     
-    When I compute the mean in the tangent space, it's a arithmetic mean. This mean matrix is in the tangent space,
-    that is NOT in the same space as correlation or partial correlation matrix. Be careful with the interpretation !!
+    When I compute the mean in the tangent space, it's a arithmetic mean. This
+    mean matrix is in the tangent space, that is NOT in the same space as correlation or partial correlation matrix.
+    Be careful with the interpretation !!
     
-    That said, the tangent space is defined at ONE point in the manifold of symmetric matrices. This point is the geometric
-    mean for the POOLED groups if multiple group are studied !
-    
-    
+    That said, the tangent space is defined at ONE point in the manifold of symmetric matrices.
+    This point is the geometric mean for the POOLED groups if multiple group are studied !
+
     """
 
     group_mean_connectivity_matrices = dict.fromkeys(list(subjects_connectivity_matrices.keys()))
@@ -614,12 +640,16 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
         subjects_list = subjects_connectivity_matrices[groupe].keys()
         for kind in kinds:
             # We stack the subjects connectivity matrices for the group and current kind
-            kind_stack_matrices = np.array([subjects_connectivity_matrices[groupe][subject][kind] for subject in subjects_list])
+            kind_stack_matrices = np.array([subjects_connectivity_matrices[groupe][subject][kind]
+                                            for subject in subjects_list])
             # We also stack the subjects boolean array
-            mask_array_stack = np.array([subjects_connectivity_matrices[groupe][subject]['masked_array'] for subject in subjects_list])
-            # We compute the mean for each kind, accounting for the discarded rois, via the function call masked_array_mean
+            mask_array_stack = np.array([subjects_connectivity_matrices[groupe][subject]['masked_array']
+                                         for subject in subjects_list])
+            # We compute the mean for each kind, accounting for the discarded rois,
+            # via the function call masked_array_mean
             group_mean_connectivity_matrices[groupe][kind] = masked_arrays_mean(arrays=kind_stack_matrices,
-                                                                                masked_array=mask_array_stack, axis=axis)
+                                                                                masked_array=mask_array_stack,
+                                                                                axis=axis)
 
     return group_mean_connectivity_matrices
 
@@ -694,13 +724,18 @@ def pooled_groups_connectivity(time_series_dictionary, kinds, covariance_estimat
     group_stacked_time_series = stacked_couple_subject_time_series[:, 0]
     subject_labels = stacked_couple_subject_time_series[:, 1]
     for kind in kinds:
-        connectivity_measure = ConnectivityMeasure(kind=kind, cov_estimator=covariance_estimator, vectorize=vectorize)
-        pooled_connectivity_matrices_dictionary[kind] = connectivity_measure.fit_transform(group_stacked_time_series)
+        connectivity_measure = ConnectivityMeasure(kind=kind,
+                                                   cov_estimator=covariance_estimator,
+                                                   vectorize=vectorize)
+        pooled_connectivity_matrices_dictionary[kind] = \
+            connectivity_measure.fit_transform(group_stacked_time_series)
         
     return pooled_connectivity_matrices_dictionary, subject_labels
 
 
-def extract_sub_connectivity_matrices(subjects_connectivity_matrices, kinds, regions_index, vectorize=False,
+def extract_sub_connectivity_matrices(subjects_connectivity_matrices, kinds,
+                                      regions_index,
+                                      vectorize=False,
                                       discard_diagonal=False):
     """Extract sub matrices given region index.
 
@@ -740,18 +775,19 @@ def extract_sub_connectivity_matrices(subjects_connectivity_matrices, kinds, reg
                 row_sliced = subjects_connectivity_matrices_copy[groupe][subject][kind][regions_index, :]
                 subjects_connectivity_matrices_copy[groupe][subject][kind] = row_sliced[:, regions_index]
                 if vectorize:
-                    _, subjects_connectivity_matrices_copy[groupe][subject][kind] = vectorizer(numpy_array=row_sliced[:, regions_index],
-                                                                                               discard_diagonal=discard_diagonal,
-                                                                                               array_type='numeric')
-                    # subjects_connectivity_matrices_copy[groupe][subject][kind] = sym_matrix_to_vec(row_sliced[:, regions_index])
+                    _, subjects_connectivity_matrices_copy[groupe][subject][kind] = \
+                        vectorizer(numpy_array=row_sliced[:, regions_index],
+                                   discard_diagonal=discard_diagonal,
+                                   array_type='numeric')
+
             # Sub extraction of corresponding masked array
             row_mask_sliced = subjects_connectivity_matrices_copy[groupe][subject]['masked_array'][regions_index, :]
             subjects_connectivity_matrices_copy[groupe][subject]['masked_array'] = row_mask_sliced[:, regions_index]
             if vectorize:
                 _, subjects_connectivity_matrices_copy[groupe][subject]['masked_array'] = vectorizer(
-                    numpy_array=row_mask_sliced[:, regions_index], discard_diagonal=discard_diagonal, array_type='boolean')
-                # subjects_connectivity_matrices_copy[groupe][subject]['masked_array'] = vectorize_boolean_mask(
-                #                                                                                        row_mask_sliced[:, regions_index])
+                    numpy_array=row_mask_sliced[:, regions_index],
+                    discard_diagonal=discard_diagonal,
+                    array_type='boolean')
 
     # Return the subjects sub connectivity matrices
     subjects_sub_connectivity_matrices = subjects_connectivity_matrices_copy
@@ -759,7 +795,8 @@ def extract_sub_connectivity_matrices(subjects_connectivity_matrices, kinds, reg
     return subjects_sub_connectivity_matrices
 
 
-def subjects_mean_connectivity_(subjects_individual_matrices_dictionnary, connectivity_coefficient_position, kinds,
+def subjects_mean_connectivity_(subjects_individual_matrices_dictionnary,
+                                connectivity_coefficient_position, kinds,
                                 groupes):
     """Compute for each subjects, the mean connectivity for some connectivity coefficient in the general subjects
     connectivity matrices.
@@ -817,20 +854,23 @@ def subjects_mean_connectivity_(subjects_individual_matrices_dictionnary, connec
                 check_2d(numpy_array=subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'])
 
                 # Extract connectivity coefficient based on the list of indices of row and column index
-                subjects_connectivity_of_interest = subjects_individual_matrices_dictionnary[groupe][subject][kind][row_index,
-                                                                                                                    column_index]
+                subjects_connectivity_of_interest = \
+                    subjects_individual_matrices_dictionnary[groupe][subject][kind][row_index,
+                                                                                    column_index]
                 # Extract corresponding mask values
-                subjects_masked_array_connectivity_of_interest = subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'][
-                    row_index,
-                    column_index]
+                subjects_masked_array_connectivity_of_interest = \
+                    subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'][row_index,
+                                                                                              column_index]
                 # Build a masked array structure for further computation accounting for discarded roi
                 subjects_connectivity_of_interest_ma = np.ma.array(data=subjects_connectivity_of_interest,
                                                                    mask=subjects_masked_array_connectivity_of_interest)
                 # Compute the mean connectivity for the current subject, accounting for discarded rois
                 mean_subject_connectivity_of_interest = subjects_connectivity_of_interest_ma.mean()
-                # Fill the dictionnary, saving the subject masked array structure and mean connectivity of extracted coefficient.
-                connectivity_of_interest[groupe][subject][kind] = {'connectivity masked array': subjects_connectivity_of_interest_ma,
-                                                                   'mean connectivity': mean_subject_connectivity_of_interest}
+                # Fill the dictionnary, saving the subject masked array structure and
+                # mean connectivity of extracted coefficient.
+                connectivity_of_interest[groupe][subject][kind] = \
+                    {'connectivity masked array': subjects_connectivity_of_interest_ma,
+                     'mean connectivity': mean_subject_connectivity_of_interest}
 
     return connectivity_of_interest
 
@@ -878,9 +918,10 @@ def intra_network_functional_connectivity(subjects_individual_matrices_dictionna
 
     Notes
     -----
-    The intra connectivity is simply defined as the mean, for each network, of the coefficient belonging to the network.
-    Because connectivity metrics are symmetric, we only taking the vectorize part of the network connectivity matrices.
-    We account for discarded roi, as we compute the mean on a numpy masked array structure, that is the vectorized array
+    The intra connectivity is simply defined as the mean, for each network,
+    of the coefficient belonging to the network. Because connectivity metrics are symmetric,
+    we only taking the vectorize part of the network connectivity matrices. We account for discarded roi,
+    as we compute the mean on a numpy masked array structure, that is the vectorized array
     along with the vectorized boolean mask for the current network.
 
     References
@@ -892,16 +933,17 @@ def intra_network_functional_connectivity(subjects_individual_matrices_dictionna
     .. [2] P. Wang, "Aberrant intra- and inter-network connectivity architectures in Alzheimer's disease and mild
        cognitive impairment", Nature Publishing Group, 2015.
 
-
     """
 
     network_dict = atlas.fetch_atlas_functional_network(atlas_excel_file=atlas_file,
-                                                        sheetname=sheetname, network_column_name=network_column_name)
+                                                        sheetname=sheetname,
+                                                        network_column_name=network_column_name)
     network_labels_list = list(network_dict.keys())
     # The list of network are NOT in the same order of the atlas in the analysis, 
     # we have to fetch the color according to network labels list.
     
-    network_label_color_name = [list(set(network_dict[n]['dataframe'][color_of_network_column]))[0] for n in network_labels_list]
+    network_label_color_name = [list(set(network_dict[n]['dataframe'][color_of_network_column]))[0]
+                                for n in network_labels_list]
     network_label_colors = (1/255)*np.array([webcolors.name_to_rgb(network_label_color_name[i])
                                              for i in range(len(network_label_color_name))])
     
@@ -948,14 +990,18 @@ def intra_network_functional_connectivity(subjects_individual_matrices_dictionna
                     for kind in kinds:
                         # Vectorize the network connectivity matrix
                         diag_network, vectorize_network = array_operation.vectorizer(
-                            numpy_array=network_connectivity_matrix[groupe][subject][kind], discard_diagonal=True, array_type='numeric')
+                            numpy_array=network_connectivity_matrix[groupe][subject][kind],
+                            discard_diagonal=True,
+                            array_type='numeric')
                         # Vectorize the boolean mask
                         diag_network_mask, vectorize_network_mask = array_operation.vectorizer(
-                            numpy_array=network_connectivity_matrix[groupe][subject]['masked_array'], discard_diagonal=True,
+                            numpy_array=network_connectivity_matrix[groupe][subject]['masked_array'],
+                            discard_diagonal=True,
                             array_type='boolean')
                         # Construct the masked array structure for the current network
                         network_masked_array = np.ma.array(data=vectorize_network, mask=vectorize_network_mask)
-                        # Compute the mean for the network, accounting for discarded rois via the numpy masked array structure
+                        # Compute the mean for the network, accounting for discarded
+                        # rois via the numpy masked array structure
                         network_mean = network_masked_array.mean()
                         # Fill the intra network dictionnary
                         intra_network_connectivity_dict[groupe][subject][kind][network] = {
@@ -969,7 +1015,8 @@ def intra_network_functional_connectivity(subjects_individual_matrices_dictionna
     return intra_network_connectivity_dict, network_dict, valid_network_list,  valid_network_color_list
 
 
-def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_dictionnary, groupes, kinds, atlas_file, sheetname,
+def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_dictionnary, groupes,
+                                                 kinds, atlas_file, sheetname,
                                                  network_column_name, roi_indices_column_name):
     """Compute for each subjects, the inter network connectivity matrices
     # TODO : Instead of atlas file give the choice to directly give a dictionnary containing the useful information.
@@ -998,9 +1045,10 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
 
     Notes
     -----
-    The inter-network connectivity is simply defined as the mean of all possible connection between a network
-    pair. We also account for the possible discarded rois in one or both the network by computing the mean on a masked
-    array structure, that is, the inter-network coefficient of interest, along with the corresponding value of the masked
+    The inter-network connectivity is simply defined as the mean of all possible
+    connection between a network pair. We also account for the possible discarded rois
+    in one or both the network by computing the mean on a masked array structure, that is,
+    the inter-network coefficient of interest, along with the corresponding value of the masked
     array.
 
     References
@@ -1016,7 +1064,8 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
 
     # Fetch all the network information from a excel file
     network_dict = atlas.fetch_atlas_functional_network(atlas_excel_file=atlas_file,
-                                                        sheetname=sheetname, network_column_name=network_column_name)
+                                                        sheetname=sheetname,
+                                                        network_column_name=network_column_name)
     # The list of network name
     network_labels_list = list(network_dict.keys())
 
@@ -1033,12 +1082,14 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
         for subject in subjects_list:
             subjects_inter_network_connectivity_matrices[groupe][subject] = dict.fromkeys(kinds)
             for kind in kinds:
-                subjects_inter_network_connectivity_matrices[groupe][subject][kind] = dict.fromkeys(network_possible_pairs)
+                subjects_inter_network_connectivity_matrices[groupe][subject][kind] = \
+                    dict.fromkeys(network_possible_pairs)
                 all_inter_network_strength = []
                 for pair_of_network in network_possible_pairs:
                     inter_network_coefficient_to_sum = []
                     inter_network_coefficient_to_sum_mask = []
-                    # Fetch the roi index in 4D atlas of the first network in the pair via the network dictionnary, and number of rois
+                    # Fetch the roi index in 4D atlas of the first network
+                    # in the pair via the network dictionnary, and number of rois
                     first_network_roi_index = network_dict[pair_of_network[0]]['dataframe'][roi_indices_column_name]
                     # Fetch the roi index in 4D atlas of the second network in the pair
                     second_network_roi_index = network_dict[pair_of_network[1]]['dataframe'][roi_indices_column_name]
@@ -1046,7 +1097,8 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
                     for j in first_network_roi_index:
                         for i in second_network_roi_index:
                             # Append the coefficient to sum of all possible inter network coefficient pair
-                            inter_network_coefficient_to_sum.append(subjects_individual_matrices_dictionnary[groupe][subject][kind][i, j])
+                            inter_network_coefficient_to_sum.append(
+                                subjects_individual_matrices_dictionnary[groupe][subject][kind][i, j])
                             # Append the corresponding values in the masked array accounting for discarded rois.
                             inter_network_coefficient_to_sum_mask.append(
                                 subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'][i, j])
@@ -1108,17 +1160,21 @@ def mean_of_flatten_connectivity_matrices(subjects_individual_matrices_dictionna
             for kind in kinds:
                 # Vectorize the array for the current kind
                 diag_connectivity, vectorize_connectivity = array_operation.vectorizer(
-                    numpy_array=subjects_individual_matrices_dictionnary[groupe][subject][kind], discard_diagonal=True,
+                    numpy_array=subjects_individual_matrices_dictionnary[groupe][subject][kind],
+                    discard_diagonal=True,
                     array_type='numeric')
                 # Vectorize the corresponding boolean mask
                 diag_mask, vectorize_mask = array_operation.vectorizer(
-                    numpy_array=subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'], discard_diagonal=True,
+                    numpy_array=subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'],
+                    discard_diagonal=True,
                     array_type='boolean')
                 # Compute the masked mean accounting for discarded ROIs
-                vectorize_connectivity_masked = np.ma.masked_array(data=vectorize_connectivity, mask=vectorize_mask)
+                vectorize_connectivity_masked = np.ma.masked_array(data=vectorize_connectivity,
+                                                                   mask=vectorize_mask)
                 flat_mean_subject_connectivity = vectorize_connectivity_masked.mean()
                 # Fill the dictionnary with the mean connectivity of interest for the current subjects
-                connectivity_of_interest[groupe][subject][kind] = {'connectivity masked array': vectorize_connectivity_masked,
-                                                                   'mean connectivity': flat_mean_subject_connectivity}
+                connectivity_of_interest[groupe][subject][kind] = {
+                    'connectivity masked array': vectorize_connectivity_masked,
+                    'mean connectivity': flat_mean_subject_connectivity}
 
     return connectivity_of_interest
