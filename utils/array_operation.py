@@ -19,7 +19,9 @@ import glob
 import os
 
 
-def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
+def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds,
+                                         discard_diagonal=False,
+                                         vectorize=False):
     """Compute a boolean mask array for discarded rois 
     
     Parameters
@@ -32,17 +34,23 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
     kinds : list 
         List of present kinds in the subjects connectivity matrices
         dictionnary.
-        
+
+    discard_diagonal: bool, optional
+        If True, the diagonal are discarded in the vectorization
+        process. Default is False, the diagonal is kept.
+
+    vectorize: bool, optional
+        If True, the returned mask is vectorized. Default
+        is False
+
     Returns
     -------
-
     output : numpy.array, shape (number of regions, number of regions)
         A boolean array : True when rois are considered discarded, False elsewhere
         See notes concerning the discarded roi
         
     See Also
     --------
-    
     compute_connectivity_matrices.individual_connectivity_matrices :
         This is the function which compute the connectivity matrices for
         the chosen kinds, and return a structured dictionnary containing
@@ -50,7 +58,6 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
         
     Notes
     -----
-    
     A discarded rois, is a ROI where the corresponding labels is 'void' in the
     individual atlas of a given subject. This information is automatically gathered 
     when you extract time series with an individual atlas for each subjects. We account
@@ -62,12 +69,7 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
     array where True are masked values, and False are un-masked values.
     
     Please refer to the numpy documentation for further details.
-
-    
     """
-    # Shape of connectivity matrices
-    connectivity_matrices_shape = subject_kinds_connectivity[kinds[0]].shape
-
     # We fetch the number of regions
     numbers_of_regions = subject_kinds_connectivity[kinds[0]].shape[0]
 
@@ -77,8 +79,7 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
     # Masked array: True for discarded rois, else elsewhere.
 
     # If we have a 2D subjects connectivity matrices, we initialize a 2D boolean mask
-    if len(connectivity_matrices_shape) == 2:
-
+    if not vectorize:
         mask = np.invert(ma.make_mask(np.ones((numbers_of_regions, numbers_of_regions))))
         if subject_empty_roi.size:
             for empty_roi in subject_empty_roi:
@@ -86,6 +87,8 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
                 mask[:, empty_roi] = True
                 # True for the entire columns corresponding to the current empty roi
                 mask[empty_roi, :] = True
+        # Compute the diagonal of the mask
+        diag_mask = np.diagonal(mask)
     else:
         # Initialise a vectorized mask
         mask = np.invert(ma.make_mask(np.ones(numbers_of_regions)))
@@ -98,13 +101,24 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds):
                 mask_m[:, empty_roi] = True
                 # True for the entire columns corresponding to the current empty roi
                 mask_m[empty_roi, :] = True
-        # Re-vectorized the matrix boolean mask
-        mask = vectorize_boolean_mask(mask_m)
+        if discard_diagonal:
+            # Re-vectorized the matrix boolean mask discarding
+            # the diagonal
+            diag_mask, mask = vectorizer(numpy_array=mask_m,
+                                         discard_diagonal=discard_diagonal,
+                                         array_type='boolean')
+        else:
+            # If discard_diagonal is False, we vectorized
+            # the mask keeping the diagonal
+            diag_mask, mask = vectorizer(numpy_array=mask_m,
+                                         discard_diagonal=False,
+                                         array_type='boolean')
 
-    return mask
+    return mask, diag_mask
 
 
-def append_masks(subjects_connectivity_dictionnary, kinds):
+def append_masks(subjects_connectivity_dictionnary, kinds,
+                 discard_diagonal, vectorize):
 
     """Append a new key called 'masked_array' in the subjects connectivity
     matrices dictionnary and stock as values a boolean mask array accounting
@@ -123,17 +137,26 @@ def append_masks(subjects_connectivity_dictionnary, kinds):
     kinds : list
         List of present kinds in the subjects connectivity matrices
         dictionnary.
-        
+
+    discard_diagonal: bool
+        If True, the mask diagonal is discarded in the
+        vectorization process.
+        This argument is passed to masked_void_rois_connectivity_matrix
+
+    vectorize: bool
+        If True, the returned mask is vectorized.
+        This argument is passed to masked_void_rois_connectivity_matrix
+
     Returns
     -------
-    
     output : dict
         The modified subjects connectivity matrices with a new key for
         each subjects containing the boolean mask array for the discarded ROIs.
+        A new keys is added too, which contain the diagonal array of the mask.
+
         
     Notes
     -----
-    
     If the discarded rois keys do not exist, that is no labels 'void' is found 
     in the atlas labels file of each subjects, then all roi are included in the
     analysis, and we append a boolean mask array of False values.
@@ -147,16 +170,49 @@ def append_masks(subjects_connectivity_dictionnary, kinds):
             subject_kind_connectivity_matrice = subjects_connectivity_dictionnary[groupe][subject]
             # Creation of the mask array for void rois based on the field 'empty_rois'
             if 'discarded_rois' in subjects_connectivity_dictionnary[groupe][subject].keys():
-                
-                subject_mask = masked_void_rois_connectivity_matrix(
-                    subject_kinds_connectivity=subject_kind_connectivity_matrice,
-                    kinds=kinds)
-                # We create new keys containing the masked array.
-                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                if vectorize:
+                    if discard_diagonal:
+                        subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
+                            subject_kinds_connectivity=subject_kind_connectivity_matrice,
+                            kinds=kinds, discard_diagonal=discard_diagonal,
+                            vectorize=vectorize)
+                    else:
+                        subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
+                            subject_kinds_connectivity=subject_kind_connectivity_matrice,
+                            kinds=kinds, discard_diagonal=False,
+                            vectorize=vectorize)
+
+                    # We create new keys containing the masked array.
+                    subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                    # And the corresponding diagonal
+                    subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
+                else:
+                    subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
+                        subject_kinds_connectivity=subject_kind_connectivity_matrice,
+                        kinds=kinds, discard_diagonal=False,
+                        vectorize=False)
+
+                    # We create new keys containing the masked array.
+                    subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+
             else:
                 subject_mask = np.invert(ma.make_mask(np.ones(
                     subjects_connectivity_dictionnary[groupe][subject][kinds[0]].shape)))
-                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                if vectorize:
+                    if discard_diagonal:
+                        subject_diag_mask, subject_mask = vectorizer(numpy_array=subject_mask,
+                                                                     discard_diagonal=discard_diagonal,
+                                                                     array_type='boolean')
+                    else:
+                        subject_diag_mask, subject_mask = vectorizer(numpy_array=subject_mask,
+                                                                     discard_diagonal=False,
+                                                                     array_type='boolean')
+
+                    subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                    subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
+                else:
+                    subject_mask = subject_mask
+                    subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
 
     new_subjects_connectivity_dictionnary = subjects_connectivity_dictionnary
     
