@@ -475,12 +475,12 @@ def array_rebuilder(vectorized_array, diagonal, array_type):
     """
 
     if array_type == 'numeric':
+        # We divide by sqrt(2), preserving the norm
         rebuild_array = vec_to_sym_matrix(vec=vectorized_array,
-                                          diagonal=diagonal)
+                                          diagonal=(1/sqrt(2))*diagonal)
     elif array_type == 'bool':
-        rebuild_array = np.asarray(a=vec_to_sym_matrix(vec=vectorized_array,
-                                                       diagonal=diagonal),
-                                   dtype='bool')
+        rebuild_array = np.array(vec_to_sym_matrix(vec=vectorized_array, diagonal=diagonal),
+                                 dtype='bool')
     else:
         raise ValueError('Array type not understood, choices are: numeric or bool')
 
