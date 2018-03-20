@@ -219,7 +219,7 @@ def rebuild_subject_connectivity_matrices(subjects_connectivity_dictionary, grou
     mask where vectorized with the diagonal kept, the argument
     `diagonal_is_there` must be set to False. A dimension
     error will be raises otherwise.
-    
+
     """
     # Copy of the original dictionary to avoid side effect
     subjects_connectivity_dictionary_ = copy.deepcopy(subjects_connectivity_dictionary)
