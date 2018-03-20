@@ -161,6 +161,115 @@ Z_subjects_connectivity_matrices = ccm.individual_connectivity_matrices(
     kinds=kinds, covariance_estimator=covariance_estimator,
     vectorize=False, z_fisher_transform=True)
 
+# Regress some factors: Gender, Normalized lesion in patients groupes
+
+# Prepare the data : vectorize z-fisher transformed connectivity matrices and
+# discarding the diagonal
+vec_Z_subjects_connectivity_matrices_ = ccm.individual_connectivity_matrices(
+    time_series_dictionary=time_series_dict,
+    kinds=kinds, covariance_estimator=covariance_estimator,
+    vectorize=True, discarding_diagonal=False, z_fisher_transform=False
+)
+
+subjects_connectivity_dictionnary = vec_Z_subjects_connectivity_matrices_
+from utils.array_operation import masked_void_rois_connectivity_matrix, vectorizer
+from numpy import ma
+vectorize=False
+discard_diagonal=False
+
+for groupe in subjects_connectivity_dictionnary.keys():
+    subjects_list = subjects_connectivity_dictionnary[groupe].keys()
+    for subject in subjects_list:
+        # Entries in subject dictionnary, for the empty rois field.
+        subject_kind_connectivity_matrice = subjects_connectivity_dictionnary[groupe][subject]
+        # Creation of the mask array for void rois based on the field 'empty_rois'
+        if 'discarded_rois' in subjects_connectivity_dictionnary[groupe][subject].keys():
+            if vectorize:
+                if discard_diagonal:
+                    subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
+                        subject_kinds_connectivity=subject_kind_connectivity_matrice,
+                        kinds=kinds, discard_diagonal=discard_diagonal,
+                        vectorize=vectorize)
+                else:
+                    subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
+                        subject_kinds_connectivity=subject_kind_connectivity_matrice,
+                        kinds=kinds, discard_diagonal=False,
+                        vectorize=vectorize)
+
+                # We create new keys containing the masked array.
+                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                # And the corresponding diagonal
+                subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
+            else:
+                subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
+                    subject_kinds_connectivity=subject_kind_connectivity_matrice,
+                    kinds=kinds, discard_diagonal=False,
+                    vectorize=False)
+
+                # We create new keys containing the masked array.
+                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
+        else:
+            subject_mask = np.invert(ma.make_mask(np.ones(
+                subjects_connectivity_dictionnary[groupe][subject][kinds[0]].shape)))
+            if vectorize:
+                if discard_diagonal:
+                    subject_diag_mask, subject_mask = vectorizer(numpy_array=subject_mask,
+                                                                 discard_diagonal=discard_diagonal,
+                                                                 array_type='boolean')
+                else:
+                    subject_diag_mask, subject_mask = vectorizer(numpy_array=subject_mask,
+                                                                 discard_diagonal=False,
+                                                                 array_type='boolean')
+
+                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+                subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
+            else:
+                subject_mask = subject_mask
+                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
+
+
+
+
+# Excel file containing the dependent variables in the model
+regression_data_xlsx = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
+# Design matrix parameters
+formula = 'Sexe + lesion_normalized'
+NA_action = 'drop'
+# Subject or list of subjects to drop in excel dataframe
+subjects_to_drop = []
+# Correction method
+pvals_correction_method = 'fdr_bh'
+
+# Linear regression according to the model enter in formula
+regression_results, X_df, y, y_pred, regression_subjects_list = parametric_tests.linear_regression(
+    connectivity_data=vec_Z_subjects_connectivity_matrices_['L_Clin_Atyp_pat'],
+    data=regression_data_xlsx, formula=formula,
+    NA_action=NA_action, subjects_to_drop=['sub40_np130304'], kind='correlation',
+    pvals_correction_method=pvals_correction_method,
+    save_regression_directory=None,
+    sheetname='cohort_functional_data')
+# Regress factor
+y_regressed = y - y_pred
+# Redistribute the matrices to the corresponding subjects, in the right group
+for subject in regression_subjects_list:
+    # override the matrix in the dictionnary by the regressed one
+    vec_Z_subjects_connectivity_matrices_['L_Clin_Atyp_pat'][subject]['correlation'] = \
+        y_regressed[regression_subjects_list.index(subject)]
+
+
+regressed_Z_subjects_connectivity_matrices = dictionary_operations.rebuild_subject_connectivity_matrices(
+    subjects_connectivity_dictionary=vec_Z_subjects_connectivity_matrices_,
+    groupes=['L_Clin_Atyp_pat'],
+    kinds=['correlation'],
+    diagonal_is_there=False)
+
+regressed_mean = ccm.group_mean_connectivity(subjects_connectivity_matrices=regressed_Z_subjects_connectivity_matrices,
+                                             kinds=['correlation'])
+
+display.plot_matrix(matrix=regressed_mean['L_Clin_Atyp_pat']['correlation'], mpart='all',
+                    labels_colors=labels_colors, horizontal_labels=labels_regions,
+                    vertical_labels=labels_regions)
 # Computing for each metric, and each groups the mean connectivity matrices.
 mean_groups_connectivity_matrices = ccm.group_mean_connectivity(
     subjects_connectivity_matrices=subjects_connectivity_matrices,
@@ -783,49 +892,3 @@ sns.barplot(x=list(mean_scores_dict.keys()), y=list(mean_scores_dict.values()))
 plt.xlabel('kind')
 plt.ylabel('Mean scores of classification')
 plt.title('Mean scores of classification using different kind of connectivity')
-
-# Perform linear regression analysis of connectivity coefficients
-# The kind to regress
-kind = 'tangent'
-# Design matrix parameters
-formula = 'Sexe + lesion_normalized'
-NA_action = 'drop'
-# Subject or list of subjects to drop
-subjects_to_drop = ['sub40_np130304']
-# Correction method
-pvals_correction_method = 'fdr_bh'
-# Number of permutations for maxT correction
-nperms_maxT = 10000
-# Type I error rate
-alpha = .05
-
-# Load the connectivity data
-connectivity_data = \
-    folders_and_files_management.load_object('/media/db242421/db242421_data/ConPagnon_data'
-                                             '/regression_data/regression_data.pkl')
-# Excel file containing the dependent variables
-data_xlsx = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
-# Regression results directory
-regression_results_directory = '/media/db242421/db242421_data/ConPagnon_reports/regression_results_test'
-
-regression_results, X_df, y, y_pred = parametric_tests.linear_regression(
-    connectivity_data=connectivity_data, data=data_xlsx, formula=formula,
-    NA_action=NA_action, subjects_to_drop=subjects_to_drop, kind=kind,
-    pvals_correction_method=pvals_correction_method, nperms_maxT=nperms_maxT,
-    save_regression_directory=regression_results_directory)
-
-    # Plot p values matrix for significant results
-with backend_pdf.PdfPages(os.path.join(regression_results_directory, 'significant_results.pdf')) as pdf:
-    for i in range(len(X_df.columns)):
-        display.plot_matrix(matrix=regression_results[X_df.columns[i]]['corrected pvalues'], labels_colors=labels_colors,
-                            colormap='hot', vmin=0, vmax=alpha, horizontal_labels=labels_regions, vertical_labels=labels_regions,
-                            title='Significant connection for {} at {} level, {} corrected'.format(X_df.columns[i], alpha,
-                                                                                                   pvals_correction_method),
-                            linecolor='black')
-        pdf.savefig()
-
-
-display.plot_matrix(matrix=regression_results[X_df.columns[1]]['corrected pvalues'], labels_colors=labels_colors,
-                    colormap='hot', vmin=0, vmax=alpha, horizontal_labels=labels_regions, vertical_labels=labels_regions,
-                    title='Significant connection for {} at {} level, {} corrected'.format(X_df.columns[1], alpha,
-                                                                                           pvals_correction_method))

@@ -21,6 +21,69 @@ import itertools
 from math import sqrt
 
 
+def create_connectivity_mask(time_series_dictionary, groupes):
+    """Create boolean mask for each subjects accounting
+    for discarded roi if they exist.
+
+    Parameters
+    ----------
+    time_series_dictionary: dict
+        The time series dictionary structured as follow:
+            - The first keys levels is the different groupes.
+            - The second keys levels is the subjects IDs
+            - The third levels is two keys : 'time_series' containing the
+            subject time series in an array of shape (number of regions, number of time points)
+            A key 'discarded_rois' containing an array of the index of ROIs
+            where the corresponding labels is 'void'. If no void labels is detected,
+            then the array is empty.
+    groupes: list
+        The list of groups in the study.
+
+    Returns
+    -------
+    output: dict
+        The same time series dictionary with a field called 'masked_array' for
+        each subjects. A masked array is a boolean mask accounting for discarded
+        rois, True for a discarded rois, and False elsewhere.
+
+    Notes
+    -----
+    If 'discarded_rois' is empty the mask is False at every position
+    in the array.
+    Almost all the operation in ConPagnon accounts for discarded rois with
+    masked array via the dedicated module in NumPy.
+
+    """
+    for group in groupes:
+        subject_in_group = list(time_series_dictionary[group].keys())
+        for subject in subject_in_group:
+            # If a field discarded_rois exist:
+            number_of_regions = time_series_dictionary[group][subject]['time_series'].shape[1]
+            # mask computation
+            subject_mask = np.zeros((number_of_regions, number_of_regions), dtype='bool')
+            if 'discarded_rois' in time_series_dictionary[group][subject].keys():
+                # We compute a mask according the position of discarded roi
+                # number of regions
+                empty_roi_position = time_series_dictionary[group][subject]['discarded_rois']
+                # Replace by True the boolean value position corresponding to discarded rois
+                # If empty_roi_position is not empty
+                if empty_roi_position.size > 0:
+                    for discarded_roi in empty_roi_position:
+                        # True for the entire rows corresponding to the current empty roi
+                        subject_mask[:, discarded_roi] = True
+                        # True for the entire columns corresponding to the current empty roi
+                        subject_mask[discarded_roi, :] = True
+            else:
+                # We compute a mask, with False everywhere, because all the test
+                # is performed with masked array in general.
+                subject_mask = subject_mask
+
+            # Create a new field
+            time_series_dictionary[group][subject]['masked_array'] = subject_mask
+
+    return time_series_dictionary
+
+
 def time_series_extraction_with_individual_atlases(root_fmri_data_directory, groupes, subjects_id_data_path, group_data,
                                                    repetition_time, low_pass_filtering=None, high_pass_filtering=None,
                                                    detrend_signal=True, standardize_signal=True, smooth_signal=None,
@@ -182,6 +245,9 @@ def time_series_extraction_with_individual_atlases(root_fmri_data_directory, gro
             times_series_dictionnary[groupe][subject] = {'time_series': subject_time_series,
                                                          'discarded_rois': subject_void_rois}
 
+    times_series_dictionnary = create_connectivity_mask(time_series_dictionary=times_series_dictionnary,
+                                                        groupes=groupes)
+
     return times_series_dictionnary
 
 
@@ -318,6 +384,9 @@ def time_series_extraction(root_fmri_data_directory, groupes, subjects_id_data_p
             # time series dictionnary
             times_series_dictionnary[groupe][subject] = {'time_series': subject_time_series}
 
+    times_series_dictionnary = create_connectivity_mask(time_series_dictionary=times_series_dictionnary,
+                                                        groupes=groupes)
+
     return times_series_dictionnary
 
 
@@ -411,16 +480,42 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
         .. [1]  G. Varoquaux et al. “Detection of brain functional-connectivity
         difference in post-stroke patients using group-level covariance modeling", MICCAI 2010
     """
-    # TODO: call vectorizer function to vectorize connectivity matrices and the corresponding mask.
 
     saving_subjects_connectivity_matrices_dictionary = dict.fromkeys(list(time_series_dictionary.keys()))
+
     for groupe in time_series_dictionary.keys():
         subjects_list = time_series_dictionary[groupe].keys()
         saving_subjects_connectivity_matrices_dictionary[groupe] = dict.fromkeys(subjects_list)
         for subject in subjects_list:
             subject_time_series = [time_series_dictionary[groupe][subject]['time_series']]
-
             saving_subjects_connectivity_matrices_dictionary[groupe][subject] = dict.fromkeys(kinds)
+
+            # operation on the boolean mask for each subject
+            subject_mask = time_series_dictionary[groupe][subject]['masked_array']
+            if vectorize:
+                if discarding_diagonal:
+                    subject_mask_diagonal_, subject_mask_ = \
+                        vectorizer(numpy_array=time_series_dictionary[groupe][subject]['masked_array'],
+                                   discard_diagonal=discarding_diagonal,
+                                   array_type='boolean')
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['masked_array'] = \
+                        subject_mask_
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject][
+                        'diagonal_mask'] = subject_mask_diagonal_
+                else:
+                    # discarding_diagonal is False
+                    subject_mask_diagonal_, subject_mask_ = \
+                        vectorizer(numpy_array=subject_mask,
+                                   discard_diagonal=discarding_diagonal,
+                                   array_type='boolean')
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject]['masked_array'] = \
+                        subject_mask_
+                    saving_subjects_connectivity_matrices_dictionary[groupe][subject][
+                        'diagonal_mask'] = subject_mask_diagonal_
+            else:
+                saving_subjects_connectivity_matrices_dictionary[groupe][subject]['masked_array'] = subject_mask
+                saving_subjects_connectivity_matrices_dictionary[groupe][subject]['diagonal_mask'] = \
+                    np.diag(subject_mask)
 
             # Fetch the index of discarded rois
             if 'discarded_rois' in time_series_dictionary[groupe][subject].keys():
@@ -437,48 +532,51 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
                     if vectorize:
                         # if discard_diagonal is True
                         if discarding_diagonal:
-                            subject_kind_matrice_diagonal, subject_kind_matrice = \
+                            subject_kind_matrice_diagonal_, subject_kind_matrice_ = \
                                 vectorizer(numpy_array=subject_kind_matrice[0, ...],
                                            discard_diagonal=discarding_diagonal,
                                            array_type='numeric')
                         else:
-                            subject_kind_matrice_diagonal, subject_kind_matrice = \
+                            subject_kind_matrice_diagonal_, subject_kind_matrice_ = \
                                 vectorizer(numpy_array=subject_kind_matrice[0, ...], discard_diagonal=False,
                                            array_type='numeric')
                         if z_fisher_transform is True:
                             # Apply a fisher transform, i.e arctanh to each connectivity coefficient
-                            undefined_value = np.invert(subject_kind_matrice[:] == 1)
-                            subject_kind_matrice = np.arctanh(subject_kind_matrice, where=undefined_value)
+                            undefined_value = np.invert(subject_kind_matrice_ == 1)
+                            subject_kind_matrice_ = np.arctanh(subject_kind_matrice_, where=undefined_value)
                             # Fill with nan, the undefined value after transformation
-                            subject_kind_matrice[np.invert(undefined_value)] = np.nan
+                            subject_kind_matrice_[np.invert(undefined_value)] = np.nan
                         else:
-                            subject_kind_matrice = subject_kind_matrice
+                            subject_kind_matrice_ = subject_kind_matrice_
+
                         saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = \
-                            subject_kind_matrice[:]
+                            subject_kind_matrice_[:]
                         # Save the diagonal in this case:
                         saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind + '_diagonal'] = \
-                            subject_kind_matrice_diagonal
+                            subject_kind_matrice_diagonal_
                     else:
                         # If we do not vectorize the connectivity matrix
                         if z_fisher_transform is True:
                             # Apply a fisher transform, i.e arctanh to each connectivity coefficient
                             # For r = 1, in the diagonal, arctanh is not defined.
                             # We compute a mask where False value are ignored
-                            undefined_value = np.invert(subject_kind_matrice[0, :, :] == 1)
+                            undefined_value = np.invert(subject_kind_matrice[0, ...] == 1)
                             subject_kind_matrice = np.arctanh(subject_kind_matrice, where=undefined_value)
                             subject_kind_matrice[0, np.invert(undefined_value)] = np.nan
                         else:
                             subject_kind_matrice = subject_kind_matrice
-                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = subject_kind_matrice[
-                                                                                                  0, :,
-                                                                                                  :]
+
+                        saving_subjects_connectivity_matrices_dictionary[groupe][subject][kind] = \
+                            subject_kind_matrice[0, ...]
+
     if 'tangent' in kinds:
         # We call pooled_groups_connectivity on the tangent space, returning along the tangent matrices
         # the labels subjects in the same order of tangent connectivity matrices:
-        tangent_matrix, subjects_order = pooled_groups_connectivity(time_series_dictionary=time_series_dictionary,
-                                                                    kinds=['tangent'],
-                                                                    covariance_estimator=covariance_estimator,
-                                                                    vectorize=False)
+        tangent_matrix, subjects_order = pooled_groups_connectivity(
+            time_series_dictionary=time_series_dictionary,
+            kinds=['tangent'],
+            covariance_estimator=covariance_estimator,
+            vectorize=False)
 
         for groupe in time_series_dictionary.keys():
             group_subject_list = time_series_dictionary[groupe].keys()
@@ -488,12 +586,12 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
                 if vectorize:
                     if discarding_diagonal:
                         diagonal_matrice_tangent, corresponding_tangent_matrice = \
-                            vectorizer(numpy_array=tangent_matrix['tangent'][sub_index, :, :],
+                            vectorizer(numpy_array=tangent_matrix['tangent'][sub_index, ...],
                                        discard_diagonal=discarding_diagonal,
                                        array_type='numeric')
                     else:
                         diagonal_matrice_tangent, corresponding_tangent_matrice = \
-                            vectorizer(numpy_array=tangent_matrix['tangent'][sub_index, :, :],
+                            vectorizer(numpy_array=tangent_matrix['tangent'][sub_index, ...],
                                        discard_diagonal=False,
                                        array_type='numeric')
                     saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent'] = \
@@ -501,14 +599,9 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
                     saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent' + '_diagonal'] = \
                         diagonal_matrice_tangent
                 else:
-                    corresponding_tangent_matrice = tangent_matrix['tangent'][sub_index, :, :]
+                    corresponding_tangent_matrice = tangent_matrix['tangent'][sub_index, ...]
                     saving_subjects_connectivity_matrices_dictionary[groupe][subject]['tangent'] = \
                         corresponding_tangent_matrice
-
-    # Append mask of boolean for discarded_rois
-    saving_subjects_connectivity_matrices_dictionary = append_masks(
-        subjects_connectivity_dictionnary=saving_subjects_connectivity_matrices_dictionary,
-        kinds=kinds, vectorize=vectorize, discard_diagonal=discarding_diagonal)
 
     return saving_subjects_connectivity_matrices_dictionary
 

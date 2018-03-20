@@ -17,11 +17,13 @@ from nilearn.image import concat_imgs
 import nibabel as nb
 import glob
 import os
+from math import sqrt
 
 
 def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds,
                                          discard_diagonal=False,
                                          vectorize=False):
+
     """Compute a boolean mask array for discarded rois 
     
     Parameters
@@ -71,7 +73,8 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds,
     Please refer to the numpy documentation for further details.
     """
     # We fetch the number of regions
-    numbers_of_regions = subject_kinds_connectivity[kinds[0]].shape[0]
+    # Get the shape of the matrices
+    matrix_shape = subject_kinds_connectivity[kinds[0]].shape
 
     # We fetch the index of discarded rois
     subject_empty_roi = subject_kinds_connectivity['discarded_rois']
@@ -80,6 +83,7 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds,
 
     # If we have a 2D subjects connectivity matrices, we initialize a 2D boolean mask
     if not vectorize:
+        numbers_of_regions = matrix_shape[0]
         mask = np.invert(ma.make_mask(np.ones((numbers_of_regions, numbers_of_regions))))
         if subject_empty_roi.size:
             for empty_roi in subject_empty_roi:
@@ -90,24 +94,42 @@ def masked_void_rois_connectivity_matrix(subject_kinds_connectivity, kinds,
         # Compute the diagonal of the mask
         diag_mask = np.diagonal(mask)
     else:
-        # Initialise a vectorized mask
-        mask = np.invert(ma.make_mask(np.ones(numbers_of_regions)))
-        # Reconstruct the mask to a matrix
-        mask_m = vec_to_matrix_boolean_mask(mask)
-        # Fill the corresponding empty ROI with True value
-        if subject_empty_roi.size:
-            for empty_roi in subject_empty_roi:
-                # True for the entire rows corresponding to the current empty roi
-                mask_m[:, empty_roi] = True
-                # True for the entire columns corresponding to the current empty roi
-                mask_m[empty_roi, :] = True
         if discard_diagonal:
+            c = len(subject_kinds_connectivity[kinds[0]])
+            numbers_of_regions = int(((sqrt(8 * c + 1) - 1.) / 2) + 1)
+            # Initialise a vectorized mask
+            mask = np.invert(ma.make_mask(np.ones(numbers_of_regions)))
+            # Reconstruct the mask to a matrix
+            _ , mask_m = vectorizer(numpy_array=mask, discard_diagonal=discard_diagonal,
+                                  array_type='boolean')
+            # Fill the corresponding empty ROI with True value
+            if subject_empty_roi.size:
+                for empty_roi in subject_empty_roi:
+                    # True for the entire rows corresponding to the current empty roi
+                    mask_m[:, empty_roi] = True
+                    # True for the entire columns corresponding to the current empty roi
+                    mask_m[empty_roi, :] = True
+
             # Re-vectorized the matrix boolean mask discarding
             # the diagonal
             diag_mask, mask = vectorizer(numpy_array=mask_m,
                                          discard_diagonal=discard_diagonal,
                                          array_type='boolean')
         else:
+            c = len(subject_kinds_connectivity[kinds[0]])
+            numbers_of_regions = int(((sqrt(8 * c + 1) - 1.) / 2))
+            # Initialise a vectorized mask
+            mask = np.invert(ma.make_mask(np.ones(numbers_of_regions)))
+            # Reconstruct the mask to a matrix
+            _, mask_m = vectorizer(numpy_array=mask, discard_diagonal=False,
+                                   array_type='boolean')
+            # Fill the corresponding empty ROI with True value
+            if subject_empty_roi.size:
+                for empty_roi in subject_empty_roi:
+                    # True for the entire rows corresponding to the current empty roi
+                    mask_m[:, empty_roi] = True
+                    # True for the entire columns corresponding to the current empty roi
+                    mask_m[empty_roi, :] = True
             # If discard_diagonal is False, we vectorized
             # the mask keeping the diagonal
             diag_mask, mask = vectorizer(numpy_array=mask_m,
@@ -194,7 +216,7 @@ def append_masks(subjects_connectivity_dictionnary, kinds,
 
                     # We create new keys containing the masked array.
                     subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
-
+                    subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
             else:
                 subject_mask = np.invert(ma.make_mask(np.ones(
                     subjects_connectivity_dictionnary[groupe][subject][kinds[0]].shape)))

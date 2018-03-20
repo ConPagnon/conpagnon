@@ -2,6 +2,9 @@ import pandas as pd
 from sklearn.utils import shuffle
 import random
 from computing import compute_connectivity_matrices as ccm
+from utils.array_operation import array_rebuilder
+from math import sqrt
+import numpy as np
 """
 This module contain useful operation on subjects connectivity matrices dictionnary.
 
@@ -154,7 +157,7 @@ def merge_dictionary(dict_list, new_key=None):
 
 def stack_subjects_connectivity_matrices(subjects_connectivity_dictionary, groupes, kinds):
     """Re-arrange the subjects connectivity dictionary to return a stack version per group
-    and kind
+    and kind.
 
     :param subjects_connectivity_dictionary:
     :param groupes:
@@ -178,3 +181,61 @@ def stack_subjects_connectivity_matrices(subjects_connectivity_dictionary, group
                 'masked_array': group_stacked_mask}
 
     return stack_connectivity_dictionary
+
+
+def rebuild_subject_connectivity_matrices(subjects_connectivity_dictionary, groupes, kinds,
+                                          diagonal_is_there=False):
+    """Given the subject connectivity dictionary, the matrix are rebuild from the vectorized
+    one.
+
+
+    :param subjects_connectivity_dictionary:
+    :param groupes:
+    :param kinds:
+    :param diagonal_is_there:
+    :return:
+    """
+    for group in groupes:
+        subjects_in_group = list(subjects_connectivity_dictionary[group].keys())
+        for kind in kinds:
+            for subject in subjects_in_group:
+                # If the diagonal is in the dictionary
+                if diagonal_is_there:
+                    # Fetch the diagonal of the connectivity matrices
+                    subject_kind_diagonal = subjects_connectivity_dictionary[group][subject][kind+'_diagonal']
+                    # Fetch the diagonal of the corresponding mask
+                    subject_kind_mask_diagonal = \
+                        subjects_connectivity_dictionary[group][subject]['diagonal_mask']
+                    # Rebuild the connectivity matrix and the mask by
+                    # override the present corresponding field
+                    subjects_connectivity_dictionary[group][subject][kind] = array_rebuilder(
+                        vectorized_array=subjects_connectivity_dictionary[group][subject][kind],
+                        diagonal=subject_kind_diagonal, array_type='numeric'
+                    )
+                    subjects_connectivity_dictionary[group][subject]['masked_array'] = array_rebuilder(
+                        vectorized_array=subjects_connectivity_dictionary[group][subject]['masked_array'],
+                        array_type='bool', diagonal=subject_kind_mask_diagonal
+                    )
+                else:
+                    # We generate a diagonal of zeros for connectivity matrices,
+                    # and a diagonal of True on the diagonal.
+
+                    # Number of coefficient under the diagonal
+                    c = len(subjects_connectivity_dictionary[group][subject][kind])
+                    # Number of regions: resolve the quadratic equation in number of regions give:
+                    n_regions = ((sqrt(8 * c + 1) - 1.) / 2) + 1
+                    # Generate zeros diagonal
+                    zeros_diag = np.zeros(int(n_regions))
+                    # Generate True diagonal
+                    true_diag = np.ones(int(n_regions), dtype='bool')
+                    # Rebuild the array
+                    # override the present corresponding field
+                    subjects_connectivity_dictionary[group][subject][kind] = array_rebuilder(
+                        vectorized_array=subjects_connectivity_dictionary[group][subject][kind],
+                        diagonal=zeros_diag, array_type='numeric'
+                    )
+                    subjects_connectivity_dictionary[group][subject]['masked_array'] = array_rebuilder(
+                        vectorized_array=subjects_connectivity_dictionary[group][subject]['masked_array'],
+                        array_type='bool', diagonal=true_diag)
+
+    return subjects_connectivity_dictionary
