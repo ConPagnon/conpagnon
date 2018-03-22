@@ -444,17 +444,18 @@ def vectorizer(numpy_array, discard_diagonal=False, array_type='numeric'):
     return array_diagonal, vectorized_array
 
 
-def array_rebuilder(vectorized_array, diagonal, array_type):
+def array_rebuilder(vectorized_array, array_type, diagonal=None):
     """Reconstruct a square array assuming a it is symmetric
 
-    # TODO: Check array type
     Parameters
     ----------
     vectorized_array: numpy.array
         The one dimensional array you want to rebuild.
-    diagonal: numpy.array
+    diagonal: numpy.array, optional
         The one dimensional array containing the diagonal of
-        the non-vectorized array
+        the non-vectorized array.
+        If None, we assume that the diagonal was kept in the
+        vectorization process.
     array_type: str
         The type of the array.
         Choices are: numeric, bool.
@@ -475,19 +476,47 @@ def array_rebuilder(vectorized_array, diagonal, array_type):
     """
 
     if array_type == 'numeric':
-        # We divide by sqrt(2), preserving the norm
-        rebuild_array = vec_to_sym_matrix(vec=vectorized_array,
-                                          diagonal=(1/sqrt(2))*diagonal)
+        # We divide by sqrt(2), preserving the norm if the user
+        # give a diagonal
+        if diagonal is not None:
+            rebuild_array = vec_to_sym_matrix(vec=vectorized_array,
+                                              diagonal=(1/sqrt(2))*diagonal)
+        else:
+            # If the user doesn't give a diagonal we assume it
+            # was vectorized without discarding the diagonal
+
+            # rebuild the array
+            rebuild_array = vec_to_sym_matrix(vec=vectorized_array,
+                                              diagonal=None)
+
     elif array_type == 'bool':
-        rebuild_array = np.array(vec_to_sym_matrix(vec=vectorized_array, diagonal=diagonal),
-                                 dtype='bool')
+        if diagonal is not None:
+            # If the user give the boolean diagonal
+            # Check if the diagonal is a boolean
+            if np.issubdtype(diagonal.dtype, np.bool):
+
+                rebuild_array = np.array(vec_to_sym_matrix(vec=vectorized_array,
+                                                           diagonal=diagonal),
+                                         dtype='bool')
+            else:
+                raise TypeError('Diagonal should be type bool, and you give type {}'.
+                                format(np.dtype(diagonal)))
+        else:
+            # If the user doesn't give a diagonal we assume
+            # the mask was vectorized with the diagonal
+
+            # We rebuild the boolean mask
+            rebuild_array = np.array(vec_to_sym_matrix(vec=vectorized_array,
+                                                       diagonal=None), dtype='bool')
+
     else:
         raise ValueError('Array type not understood, choices are: numeric or bool')
 
     return rebuild_array
 
 
-def concatenate_imgs_in_order(imgs_directory, index_roi_number, filename, save_directory):
+def concatenate_imgs_in_order(imgs_directory, index_roi_number, filename,
+                              save_directory):
     """Concatenate 3D NifTi images into a single 4D NifTi files, given a user order.
 
     Parameters
@@ -496,7 +525,8 @@ def concatenate_imgs_in_order(imgs_directory, index_roi_number, filename, save_d
         The directory containing the list of images. Each file, must contain a number
         identifying the file.
     index_roi_number: list of int
-        The list of file number in the order you want to ordered the images before concatenation
+        The list of file number in the order you want to ordered
+        the images before concatenation
     filename: string
         The final name of the 4D file containing the images.
     save_directory: string
