@@ -185,7 +185,7 @@ def stack_subjects_connectivity_matrices(subjects_connectivity_dictionary, group
 
 
 def rebuild_subject_connectivity_matrices(subjects_connectivity_dictionary, groupes, kinds,
-                                          diagonal_is_there=False):
+                                          diagonal_were_kept=False):
     """Given the subject connectivity dictionary, the matrix are rebuild from the vectorized
     one.
 
@@ -226,56 +226,45 @@ def rebuild_subject_connectivity_matrices(subjects_connectivity_dictionary, grou
 
     for group in groupes:
         subjects_in_group = list(subjects_connectivity_dictionary_[group].keys())
+        # First, we rebuild the vectorized mask
         for subject in subjects_in_group:
             vectorized_subject_mask = \
                 subjects_connectivity_dictionary_[group][subject]['masked_array']
-            if diagonal_is_there:
-                # Fetch the diagonal of the corresponding mask
+            # If the diagonal where kept in the vectorization process
+            if diagonal_were_kept:
+                # We simply rebuild the boolean mask
+                rebuild_subject_mask = array_rebuilder(
+                    vectorized_array=vectorized_subject_mask,
+                    array_type='bool', diagonal=None)
+            else:
+                # We fetch the mask diagonal in the corresponding
+                # subject dictionary
                 subject_kind_mask_diagonal = \
                     subjects_connectivity_dictionary_[group][subject]['diagonal_mask']
                 rebuild_subject_mask = array_rebuilder(
                     vectorized_array=vectorized_subject_mask,
-                    array_type='bool', diagonal=subject_kind_mask_diagonal
-                )
-            else:
-                # Number of coefficient under the diagonal
-                c = len(subjects_connectivity_dictionary_[group][subject]['masked_array'])
-                # Number of regions: resolve the quadratic equation in number of regions give:
-                n_regions = ((sqrt(8 * c + 1) - 1.) / 2) + 1
-                # Generate True diagonal
-                true_diag = np.ones(int(n_regions), dtype='bool')
-                rebuild_subject_mask = array_rebuilder(
-                    vectorized_array=vectorized_subject_mask,
-                    array_type='bool', diagonal=true_diag)
+                    array_type='bool', diagonal=subject_kind_mask_diagonal)
+            # Now, iterate over the kind to rebuild the subject connectivity
+            # matrices
             for kind in kinds:
-                # If the diagonal is in the dictionary
+                # Fetch the vectorized connectivity matrice of the current subject
                 vectorized_subject_matrix = \
                     subjects_connectivity_dictionary_[group][subject][kind]
-                if diagonal_is_there:
-                    # Fetch the diagonal of the connectivity matrices
-                    subject_kind_diagonal = \
-                        subjects_connectivity_dictionary_[group][subject][kind + '_diagonal']
-                    # Rebuild the connectivity matrix and
-                    # override the present corresponding field
+                # If the diagonal where kept in the vectorization process
+                if diagonal_were_kept:
+                    # Rebuild the connectivity matrices
                     rebuild_subject_matrix = array_rebuilder(
                         vectorized_array=vectorized_subject_matrix,
-                        diagonal=subject_kind_diagonal, array_type='numeric'
+                        diagonal=None, array_type='numeric'
                     )
                 else:
-                    # We generate a diagonal of zeros for connectivity matrices,
-                    # and a diagonal of True on the diagonal.
-
-                    # Number of coefficient under the diagonal
-                    c = len(subjects_connectivity_dictionary_[group][subject][kind])
-                    # Number of regions: resolve the quadratic equation in number of regions give:
-                    n_regions = ((sqrt(8 * c + 1) - 1.) / 2) + 1
-                    # Generate zeros diagonal
-                    zeros_diag = np.zeros(int(n_regions))
+                    # Fetch the kind diagonal
+                    subject_kind_diagonal = subjects_connectivity_dictionary_[group][subject][kind + '_diagonal']
                     # Rebuild the array
                     # override the present corresponding field
                     rebuild_subject_matrix = array_rebuilder(
                         vectorized_array=vectorized_subject_matrix,
-                        diagonal=zeros_diag, array_type='numeric'
+                        diagonal=subject_kind_diagonal, array_type='numeric'
                     )
 
                 subjects_connectivity_dictionary_[group][subject][kind] = rebuild_subject_matrix
