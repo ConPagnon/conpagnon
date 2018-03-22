@@ -161,120 +161,6 @@ Z_subjects_connectivity_matrices = ccm.individual_connectivity_matrices(
     kinds=kinds, covariance_estimator=covariance_estimator,
     vectorize=False, z_fisher_transform=True)
 
-# Regress some factors: Gender, Normalized lesion in patients groupes
-
-# Prepare the data : vectorize z-fisher transformed connectivity matrices and
-# discarding the diagonal
-vec_Z_subjects_connectivity_matrices_ = ccm.individual_connectivity_matrices(
-    time_series_dictionary=time_series_dict,
-    kinds=kinds, covariance_estimator=covariance_estimator,
-    vectorize=True, discarding_diagonal=False, z_fisher_transform=False
-)
-
-subjects_connectivity_dictionnary = vec_Z_subjects_connectivity_matrices_
-from utils.array_operation import masked_void_rois_connectivity_matrix, vectorizer
-from numpy import ma
-vectorize=False
-discard_diagonal=False
-
-for groupe in subjects_connectivity_dictionnary.keys():
-    subjects_list = subjects_connectivity_dictionnary[groupe].keys()
-    for subject in subjects_list:
-        # Entries in subject dictionnary, for the empty rois field.
-        subject_kind_connectivity_matrice = subjects_connectivity_dictionnary[groupe][subject]
-        # Creation of the mask array for void rois based on the field 'empty_rois'
-        if 'discarded_rois' in subjects_connectivity_dictionnary[groupe][subject].keys():
-            if vectorize:
-                if discard_diagonal:
-                    subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
-                        subject_kinds_connectivity=subject_kind_connectivity_matrice,
-                        kinds=kinds, discard_diagonal=discard_diagonal,
-                        vectorize=vectorize)
-                else:
-                    subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
-                        subject_kinds_connectivity=subject_kind_connectivity_matrice,
-                        kinds=kinds, discard_diagonal=False,
-                        vectorize=vectorize)
-
-                # We create new keys containing the masked array.
-                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
-                # And the corresponding diagonal
-                subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
-            else:
-                subject_mask, subject_diag_mask = masked_void_rois_connectivity_matrix(
-                    subject_kinds_connectivity=subject_kind_connectivity_matrice,
-                    kinds=kinds, discard_diagonal=False,
-                    vectorize=False)
-
-                # We create new keys containing the masked array.
-                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
-                subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
-        else:
-            subject_mask = np.invert(ma.make_mask(np.ones(
-                subjects_connectivity_dictionnary[groupe][subject][kinds[0]].shape)))
-            if vectorize:
-                if discard_diagonal:
-                    subject_diag_mask, subject_mask = vectorizer(numpy_array=subject_mask,
-                                                                 discard_diagonal=discard_diagonal,
-                                                                 array_type='boolean')
-                else:
-                    subject_diag_mask, subject_mask = vectorizer(numpy_array=subject_mask,
-                                                                 discard_diagonal=False,
-                                                                 array_type='boolean')
-
-                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
-                subjects_connectivity_dictionnary[groupe][subject]['diagonal_masked_array'] = subject_diag_mask
-            else:
-                subject_mask = subject_mask
-                subjects_connectivity_dictionnary[groupe][subject]['masked_array'] = subject_mask
-
-
-
-
-# Excel file containing the dependent variables in the model
-regression_data_xlsx = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
-# Design matrix parameters
-formula = 'Sexe + lesion_normalized'
-NA_action = 'drop'
-# Subject or list of subjects to drop in excel dataframe
-subjects_to_drop = []
-# Correction method
-pvals_correction_method = 'fdr_bh'
-
-# Linear regression according to the model enter in formula
-regression_results, X_df, y, y_pred, regression_subjects_list = parametric_tests.linear_regression(
-    connectivity_data=vec_Z_subjects_connectivity_matrices_['L_Clin_Atyp_pat'],
-    data=regression_data_xlsx, formula=formula,
-    NA_action=NA_action, subjects_to_drop=['sub40_np130304'], kind='correlation',
-    pvals_correction_method=pvals_correction_method,
-    save_regression_directory=None,
-    sheetname='cohort_functional_data')
-# Regress factor
-y_regressed = y - y_pred
-# Redistribute the matrices to the corresponding subjects, in the right group
-for subject in regression_subjects_list:
-    # override the matrix in the dictionnary by the regressed one
-    vec_Z_subjects_connectivity_matrices_['L_Clin_Atyp_pat'][subject]['correlation'] = \
-        y_regressed[regression_subjects_list.index(subject)]
-
-
-regressed_Z_subjects_connectivity_matrices = dictionary_operations.rebuild_subject_connectivity_matrices(
-    subjects_connectivity_dictionary=vec_Z_subjects_connectivity_matrices_,
-    groupes=['L_Clin_Atyp_pat'],
-    kinds=['correlation'],
-    diagonal_is_there=False)
-
-regressed_mean = ccm.group_mean_connectivity(subjects_connectivity_matrices=regressed_Z_subjects_connectivity_matrices,
-                                             kinds=['correlation'])
-
-display.plot_matrix(matrix=regressed_mean['L_Clin_Atyp_pat']['correlation'], mpart='all',
-                    labels_colors=labels_colors, horizontal_labels=labels_regions,
-                    vertical_labels=labels_regions)
-# Computing for each metric, and each groups the mean connectivity matrices.
-mean_groups_connectivity_matrices = ccm.group_mean_connectivity(
-    subjects_connectivity_matrices=subjects_connectivity_matrices,
-    kinds=kinds)
-
 # Computing for each metric, and each groups the mean connectivity matrices,
 # from the z fisher transform matrices.
 Z_mean_groups_connectivity_matrices = ccm.group_mean_connectivity(
@@ -373,7 +259,8 @@ for kind in kinds:
     plt.figure()
     for i in range(n_labels):
         plt.bar(ind + i*width, homotopic_distribution_parameters[groupes[i]][kind]['homotopic distribution mean'],
-                width, color=groupes_color[i], alpha=0.5, label=groupes[i])
+                width, color=groupes_color[i], alpha=0.5, label=groupes[i],
+                yerr=homotopic_distribution_parameters[groupes[i]][kind]['homotopic distribution standard deviation'])
         plt.title(kind + ' Homotopic functional connectivity')
         plt.legend(groupes)
     plt.show()
@@ -447,21 +334,6 @@ homotopic_intra_network_strength_t_test = parametric_tests.intra_network_two_sam
     network_labels_list=network_labels_list, assume_equal_var=True, alpha=alpha)
 
 # Display the barplot for t statistic and p values for homotopic intra-network differences test
-for kind in kinds:
-    t_statistic = np.array([homotopic_intra_network_strength_t_test[kind][network]['t statistic'] for network
-                            in network_labels_list])
-    corrected_pvalues = np.array([homotopic_intra_network_strength_t_test[kind][network]['uncorrected p values'] for
-                                  network in network_labels_list])
-    plt.figure()
-    display.t_and_p_values_barplot(t_values=t_statistic, p_values=corrected_pvalues, alpha_level=alpha,
-                                   xlabel_color=network_label_colors, bar_labels=network_labels_list,
-                                   t_xlabel='Network name', t_ylabel='t statistic values',
-                                   p_xlabel='Network name', p_ylabel='FDR corrected p values',
-                                   t_title='T statistic for homotopic intra-network connectivity \n'
-                                           'comparison for {} between {} and {}'.format(kind, groupes[0], groupes[1]),
-                                   p_title='P values for homotopic intra-network connectivity \n '
-                                           'comparison for {} between {} and {}'.format(kind, groupes[0], groupes[1]))
-    plt.show()
 
 # T-test for the intra-network connectivity strength across subject between the group
 intra_network_strength_t_test = parametric_tests.intra_network_two_samples_t_test(
@@ -497,7 +369,7 @@ population_attribute = ['Lesion', 'langage_clinique']
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file=population_text_data,
-        sheetname='patients_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
         groupes=groupes, factors=['Lesion', 'langage_clinique'], drop_subjects_list=['sub40_np130304'])
 
 # Create ipsilesional and contralesional dictionnary
@@ -710,55 +582,168 @@ contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
 
 import itertools
 # Perform t-test for all possible pairs without replacement
-pairs_of_groups = list(itertools.combinations(groupes, 2))
-all_pairs_ipsilesional_t_test_ = dict.fromkeys([g for g in pairs_of_groups])
-all_pairs_contralesional_t_test_ = dict.fromkeys([g for g in pairs_of_groups])
-for group_pair in pairs_of_groups:
-    all_pairs_ipsilesional_t_test_[group_pair] = parametric_tests.two_sample_t_test_(
-        connectivity_dictionnary_=ipsilesional_distribution_parameters, groupes=list(group_pair), kinds=kinds,
-        field='subjects mean ipsilesional connectivity', contrast=contrast)
-    all_pairs_contralesional_t_test_[group_pair] = parametric_tests.two_sample_t_test_(
-        connectivity_dictionnary_=contralesional_distribution_parameters, groupes=list(group_pair), kinds=kinds,
-        field='subjects mean contralesional connectivity', contrast=contrast
-    )
+#pairs_of_groups = list(itertools.combinations(groupes, 2))
+#all_pairs_ipsilesional_t_test_ = dict.fromkeys([g for g in pairs_of_groups])
+#all_pairs_contralesional_t_test_ = dict.fromkeys([g for g in pairs_of_groups])
+#for group_pair in pairs_of_groups:
+#    all_pairs_ipsilesional_t_test_[group_pair] = parametric_tests.two_sample_t_test_(
+#        connectivity_dictionnary_=ipsilesional_distribution_parameters, groupes=list(group_pair), kinds=kinds,
+#        field='subjects mean ipsilesional connectivity', contrast=contrast)
+#    all_pairs_contralesional_t_test_[group_pair] = parametric_tests.two_sample_t_test_(
+#        connectivity_dictionnary_=contralesional_distribution_parameters, groupes=list(group_pair), kinds=kinds,
+#        field='subjects mean contralesional connectivity', contrast=contrast
+#    )
 
-# Some plot of inter network result
+groupes = ['L_Clin_Typ_pat', 'controls']
 
-# Inter-network connectivity :
+# Compute the inter-network connectivity for all brain region:
 subjects_inter_network_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
     subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices, groupes=groupes, kinds=kinds,
     atlas_file=atlas_excel_file, sheetname=sheetname, network_column_name='network',
     roi_indices_column_name='atlas4D index')
-from nilearn.plotting import plot_matrix
+
 # Display mean connectivity inter-network matrices
 for groupe in groupes:
     for kind in kinds:
         matrix_stack = np.array([subjects_inter_network_connectivity_matrices[groupe][s][kind] for s in
                                  subjects_inter_network_connectivity_matrices[groupe].keys()])
-        mean_interwork_matrix = matrix_stack.mean(axis=0)
+        mean_internetwork_matrix = matrix_stack.mean(axis=0)
         if kind == 'tangent':
-            np.fill_diagonal(mean_interwork_matrix, 0)
-        #plot_matrix(mean_interwork_matrix, title=groupe + kind + ' mean inter-work matrix ', labels=network_labels_list)
-        display.plot_matrix(matrix=mean_interwork_matrix, mpart='all', horizontal_labels=network_labels_list,
-                            vertical_labels=network_labels_list, labels_colors=network_label_colors, title=groupe + ' mean ' + kind+
-                                                                                                           ' inter-network connectivity matrix', vmin=mean_interwork_matrix.min(), vmax=mean_interwork_matrix.max(), k=0)
+            np.fill_diagonal(mean_internetwork_matrix, 0)
 
+        display.plot_matrix(matrix=mean_internetwork_matrix, mpart='all', horizontal_labels=network_labels_list,
+                            vertical_labels=network_labels_list, labels_colors=network_label_colors, 
+                            title=groupe + ' mean ' + kind+
+                            ' inter-network connectivity matrix', 
+                            vmin=mean_internetwork_matrix.min(), 
+                            vmax=mean_internetwork_matrix.max(), k=0)
+        plt.show()
 
 # Perform a two-sample t-test for the inter-network strength between the two network
 # Two sample t-test on inter network connectivity matrices between the two group under study
 inter_network_t_test_result = parametric_tests.inter_network_two_sample_t_test(
     subjects_inter_network_connectivity_matrices=subjects_inter_network_connectivity_matrices,
-    groupes=['L_Clin_Typ_pat', 'controls'], kinds=kinds, contrast=contrast, assuming_equal_var=True, network_label_list=network_labels_list, alpha=alpha)
+    groupes=['L_Clin_Typ_pat', 'controls'], kinds=kinds, contrast=contrast,
+    assuming_equal_var=True,
+    network_label_list=network_labels_list,
+    alpha=alpha)
 
 for kind in kinds:
     # Display significant t values
-    display.plot_matrix(matrix=inter_network_t_test_result[kind]['significant t values'], labels_colors=network_label_colors, k=0,
+    display.plot_matrix(matrix=inter_network_t_test_result[kind]['significant t values'],
+                        labels_colors=network_label_colors, k=0,
                         horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        title='Inter network T statistic for {}'.format(kind), linecolor='black', labels_size=12)
-    display.plot_matrix(matrix=inter_network_t_test_result[kind]['corrected p values'], labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list, colormap='hot', vmin=0, vmax=alpha,
-                        title='Corrected p values for {} at {} threshold for inter network connectivity'.format(kind, alpha),
+                        title='Inter network T statistic for {}'.format(kind), linecolor='black',
+                        labels_size=12)
+    plt.show()
+    display.plot_matrix(matrix=inter_network_t_test_result[kind]['corrected p values'],
+                        labels_colors=network_label_colors, k=0,
+                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
+                        colormap='hot', vmin=0, vmax=alpha,
+                        title='Corrected p values for {} at {} threshold for \n '
+                              'inter network connectivity'.format(kind, alpha),
                         linecolor='black', labels_size=12)
+    plt.show()
+
+# Compute ipsilesional inter-network connectivity
+subjects_inter_network_ipsilesional_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
+    subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds,
+    atlas_file=atlas_excel_file, sheetname='Hemisphere_regions', network_column_name='network',
+    roi_indices_column_name='index')
+
+# Display mean connectivity ipsilesional inter-network matrices for each group and kind
+for groupe in groupes:
+    for kind in kinds:
+        matrix_stack = np.array([subjects_inter_network_ipsilesional_connectivity_matrices[groupe][s][kind] for s in
+                                 subjects_inter_network_ipsilesional_connectivity_matrices[groupe].keys()])
+        mean_internetwork_matrix = matrix_stack.mean(axis=0)
+        if kind == 'tangent':
+            np.fill_diagonal(mean_internetwork_matrix, 0)
+
+        display.plot_matrix(matrix=mean_internetwork_matrix, mpart='all', horizontal_labels=network_labels_list,
+                            vertical_labels=network_labels_list, labels_colors=network_label_colors, 
+                            title=groupe + ' mean ' + kind +
+                            ' ipsilesional inter-network connectivity matrix',
+                            vmin=mean_internetwork_matrix.min(), 
+                            vmax=mean_internetwork_matrix.max(), k=0)
+        plt.show()
+
+
+# Perform a two-sample t-test for the ipsilesional inter-network strength between the network
+ipsilesional_inter_network_t_test_result = parametric_tests.inter_network_two_sample_t_test(
+    subjects_inter_network_connectivity_matrices=subjects_inter_network_ipsilesional_connectivity_matrices,
+    groupes=groupes, kinds=kinds, contrast=contrast,
+    assuming_equal_var=True,
+    network_label_list=network_labels_list,
+    alpha=alpha)
+
+for kind in kinds:
+    # Display significant t values
+    display.plot_matrix(matrix=ipsilesional_inter_network_t_test_result[kind]['significant t values'],
+                        labels_colors=network_label_colors, k=0,
+                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
+                        title='Inter network T statistic for {}'.format(kind), linecolor='black',
+                        labels_size=12)
+    plt.show()
+    display.plot_matrix(matrix=ipsilesional_inter_network_t_test_result[kind]['corrected p values'],
+                        labels_colors=network_label_colors, k=0,
+                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
+                        colormap='hot', vmin=0, vmax=alpha,
+                        title='Corrected p values for {} at {} threshold for \n '
+                              'ipsilesional inter network connectivity'.format(kind, alpha),
+                        linecolor='black', labels_size=12)
+    plt.show()
+
+# Compute contralesional inter-network connectivity
+subjects_inter_network_contralesional_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
+    subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices, groupes=groupes,
+    kinds=kinds,
+    atlas_file=atlas_excel_file, sheetname='Hemisphere_regions', network_column_name='network',
+    roi_indices_column_name='index')
+
+# Display mean connectivity contralesional inter-network matrices for each group and kind
+for groupe in groupes:
+    for kind in kinds:
+        matrix_stack = np.array([subjects_inter_network_contralesional_connectivity_matrices[groupe][s][kind] for s in
+                                 subjects_inter_network_contralesional_connectivity_matrices[groupe].keys()])
+        mean_internetwork_matrix = matrix_stack.mean(axis=0)
+        if kind == 'tangent':
+            np.fill_diagonal(mean_internetwork_matrix, 0)
+
+        display.plot_matrix(matrix=mean_internetwork_matrix, mpart='all', horizontal_labels=network_labels_list,
+                            vertical_labels=network_labels_list, labels_colors=network_label_colors,
+                            title=groupe + ' mean ' + kind +
+                            ' contralesional inter-network connectivity matrix',
+                            vmin=mean_internetwork_matrix.min(),
+                            vmax=mean_internetwork_matrix.max(), k=0)
+        plt.show()
+
+# Perform a two-sample t-test for the contralesional inter-network strength between the network
+contralesional_inter_network_t_test_result = parametric_tests.inter_network_two_sample_t_test(
+    subjects_inter_network_connectivity_matrices=subjects_inter_network_contralesional_connectivity_matrices,
+    groupes=groupes, kinds=kinds, contrast=contrast,
+    assuming_equal_var=True,
+    network_label_list=network_labels_list,
+    alpha=alpha)
+
+for kind in kinds:
+    # Display significant t values
+    display.plot_matrix(matrix=contralesional_inter_network_t_test_result[kind]['significant t values'],
+                        labels_colors=network_label_colors, k=0,
+                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
+                        title='Contralesional inter-network T statistic for \n {}'.format(kind), linecolor='black',
+                        labels_size=12)
+    plt.show()
+    display.plot_matrix(matrix=contralesional_inter_network_t_test_result[kind]['corrected p values'],
+                        labels_colors=network_label_colors, k=0,
+                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
+                        colormap='hot', vmin=0, vmax=alpha,
+                        title='Corrected p values for {} at {} threshold for \n '
+                              'ipsilesional inter network connectivity'.format(kind, alpha),
+                        linecolor='black', labels_size=12)
+    plt.show()
+
+
 
 # Compute the equivalent of degree centrality
 # Integrity of the node: for the node i, absolute sum of all connection from that node i.
