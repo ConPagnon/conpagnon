@@ -12,7 +12,8 @@ import pandas as pd
 from pylearn_mulm import mulm
 import os
 import errno
-
+import copy
+from scipy import linalg
 importlib.reload(pre_preprocessing)
 importlib.reload(array_operation)
 importlib.reload(ccm)
@@ -429,7 +430,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
                                                  save_regression_directory,
                                                  'regression_results.pkl')
 
-    return regression_results, X_df, y, y_prediction
+    return regression_results, X_df, y, y_prediction, regression_subjects_list
 
 
 def functional_connectivity_distribution_estimation(functional_connectivity_estimate):
@@ -824,3 +825,113 @@ def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contras
         t_test_result[kind] = {'t_statistic': t_statistic, 'uncorrected p value': p_values_uncorrected, 'contrast': contrast}
 
     return t_test_result
+
+
+def regress_confounds(vectorize_subjects_connectivity, confound_dictionary, groupes, kinds, data, sheetname,
+                      NA_action='drop'):
+    """Regress confound on connectivity matrices
+
+    Parameters
+    ----------
+    vectorize_subjects_connectivity: dict
+        The subject connectivity matrices dictionary, with vectorized matrices,
+        WITHOUT the diagonal.
+    confound_dictionary: dict
+        The nested dictionary containing for each group and kind: a field
+        named 'confounds' containing a list of confounds. A second field named
+        'subjects to drop' containing a list of subjects identifier to drop, None
+        if you want to pick all of the subjects.
+    groupes: list
+        The list of group on which you want to regress confounds.
+    kinds: list
+        The list of kind
+    data: str
+        The full path, including extension to the excel file containing
+        the confound for each subjects. This will be read by pandas.
+        Note that the index of the resulting dataframe must be the
+        subjects identifiers.
+    sheetname: str
+        The sheet name if the excel file containing the confound for each
+        subjects of each groups.
+    NA_action: str, optional
+        Behavior regarding the missing values. If 'drop', the entire
+        row is deleted from the design matrix.
+    """
+    # Reading the data excel file
+    df = pd.read_excel(data, sheet_name=sheetname)
+
+    # Copy of the vectorized connectivity matrices dictionary
+    # to override the matrices
+    regressed_subjects_connectivity_dictionary = copy.deepcopy(vectorize_subjects_connectivity)
+    regression_by_kind = dict.fromkeys(groupes, dict.fromkeys(kinds))
+    # Save the design matrix, and the stack of matrices before and after
+    # regressing
+    regression_data_dictionary = dict.fromkeys(groupes)
+
+    for group in groupes:
+        # Read the confound and subject to drop for
+        # each group
+        # List of confounds
+        group_confounds = confound_dictionary[group]['confounds']
+        # List of subject to drop
+        group_subjects_to_drop = confound_dictionary[group]['subjects to drop']
+        # List of subjects present in the group dictionary
+        group_subjects_list = list(vectorize_subjects_connectivity[group].keys())
+
+        # Copy of original dataframe to avoid
+        # side effect :
+        df_c = df.copy()
+        # Fetch the sub-dataframe containing the subjects
+        # in the dictionary
+        df_group = df_c.loc[group_subjects_list]
+        if group_subjects_to_drop is not None:
+            df_group = df_group.drop(labels=group_subjects_to_drop)
+        else:
+            df_group = df_group
+
+        # Build the formula: regress the confound without
+        # Intercept term
+        group_formula = '+'.join(group_confounds)
+
+        # Build the design matrix according the dataframe and regression model.
+        X_df = dmatrix(formula_like=group_formula, data=df_group,
+                       return_type='dataframe',
+                       NA_action=NA_action)
+        # Drop intercept
+        X_df = X_df.drop('Intercept', axis=1)
+
+        # Conversion of design dataframe into numpy array
+        # for QR decomposition
+        X = np.array(X_df)
+
+        regression_data_dictionary[group] = {'design matrix': X_df}
+
+        for kind in kinds:
+            # stack the vectorized array into a numpy array of shape (n_subjects, n_features)
+            y = np.array([vectorize_subjects_connectivity[group][subject][kind]
+                          for subject in group_subjects_list])
+
+            # check first dimension of X and y, it should be the same
+            if y.shape[0] != X.shape[0]:
+                raise ValueError('Matrices are not aligned ! First '
+                                 'dimension of y is {} and first dimension of X is {}'.format(y.shape[0],
+                                                                                              X.shape[0]))
+
+            # QR decomposition of X matrix
+            Q, R, _ = linalg.qr(X, mode='economic', pivoting=True)
+            # Improve numerical stability
+            Q = Q[:, np.abs(np.diag(R)) > np.finfo(np.float).eps * 100.]
+
+            # Regress the confounds in X on y
+            y_regressed = y - Q.dot(Q.T).dot(y)
+
+            # Override the connectivity matrices for the current group and kind
+            for subject in group_subjects_list:
+                regressed_subjects_connectivity_dictionary[group][subject][kind] = \
+                    y_regressed[group_subjects_list.index(subject), ...]
+
+            regression_by_kind[group][kind] = {'original matrices': y, 'after regression': y_regressed}
+
+        regression_data_dictionary[group].update(regression_by_kind)
+
+    return regressed_subjects_connectivity_dictionary, regression_data_dictionary
