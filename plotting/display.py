@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 18 11:15:49 2017
+"""Display functions
 
-@author: db242421 (dhaif.bekha@cea.fr)
-
+Author: Dhaif BEKHA
 """
 
 from nilearn.plotting import plot_connectome
@@ -16,11 +13,13 @@ from matplotlib.backends import backend_pdf
 from scipy import stats
 
 
-def plot_ttest_results(t_test_dictionnary, groupes, contrast, node_coords, node_color, output_pdf, node_size=50,
-                       colormap='bwr', colorbar=False, annotate=True,
+def plot_ttest_results(t_test_dictionnary, groupes, contrast, node_coords, node_color,
+                       output_pdf, node_size=50,
+                       colormap='bwr', colorbar=False,
+                       annotate=True,
                        display_mode='ortho'):
-    """Plot on a glass brain the significant mean effect resulting of a two samples t-test and save resulting
-    figure in a PDF files.
+    """Plot on a glass brain the significant mean effect resulting of a
+    two samples t-test and save resulting figures in a PDF files.
     
     Parameters
     ----------
@@ -51,6 +50,9 @@ def plot_ttest_results(t_test_dictionnary, groupes, contrast, node_coords, node_
         contrast.
     contrast : list
         The contrast vector used in the two samples t-test.
+    colormap: str, optional
+        The colormap to use for the matrix heatmap.
+        Default is 'bwr'.
     node_coords : list
         The list of centroids coordinates of each regions
         in the atlas used for regions signals extraction.
@@ -71,7 +73,7 @@ def plot_ttest_results(t_test_dictionnary, groupes, contrast, node_coords, node_
         If True, letters at the top of the glass brain
         indicates the left or right hemisphere location.
         Default is True.
-    display : str, optional
+    display_mode : str, optional
         The slice configuration you want to display
         Possible values are: 'ortho','x', 'y', 'z', 'xz' 
         'yx', 'yz', 'l', 'r', 'lr', 'lzr', 'lyr','lzry', 'lyrz'.
@@ -116,7 +118,7 @@ def plot_ttest_results(t_test_dictionnary, groupes, contrast, node_coords, node_
         for kind in t_test_dictionnary.keys():
             # Write title for the current kind according contrast
             if contrast == [-1.0, 1.0]:
-                title = 't-test for {} and contrast {} - {}'.format(kind,groupes[1], groupes[0])
+                title = 't-test for {} and contrast {} - {}'.format(kind, groupes[1], groupes[0])
             elif contrast == [1.0, -1.0]:
                 title = 't-test for {} contrast {} - {}'.format(kind, groupes[0], groupes[1])
             else:
@@ -124,15 +126,21 @@ def plot_ttest_results(t_test_dictionnary, groupes, contrast, node_coords, node_
 
             # plot the connectome on a glass brain using Nilearn plot_connectome function
             fig = plt.figure()
-            plot_connectome(adjacency_matrix=t_test_dictionnary[kind]['significant mean effect'], node_coords=node_coords,
-                            node_color=node_color, node_size=node_size, edge_cmap=colormap, colorbar=colorbar, annotate=annotate,
+            plot_connectome(adjacency_matrix=t_test_dictionnary[kind]['significant mean effect'],
+                            node_coords=node_coords,
+                            node_color=node_color, node_size=node_size,
+                            edge_cmap=colormap, colorbar=colorbar,
+                            annotate=annotate,
                             display_mode=display_mode, figure=fig, title=title)
             pdf.savefig()
 
 
-def plot_matrix(matrix, labels_colors='auto', mpart='lower', k=0, colormap='RdBu_r', colorbar_params={'shrink': .5}, center=0,
-                vmin=None, vmax=None, labels_size=8, horizontal_labels='auto', vertical_labels='auto',
-                linewidths=.5, linecolor='white', title='Untitled', figure_size=(12, 9)):
+def plot_matrix(matrix, labels_colors='auto', mpart='lower', k=0, colormap='RdBu_r',
+                colorbar_params={'shrink': .5}, center=0,
+                vmin=None, vmax=None, labels_size=8, horizontal_labels='auto',
+                vertical_labels='auto',
+                linewidths=.5, linecolor='white', title='Untitled',
+                figure_size=(12, 9)):
     """Plot a entire matrix, or it's lower part with a chosen heatmap.
     
     Parameters
@@ -215,8 +223,11 @@ def plot_matrix(matrix, labels_colors='auto', mpart='lower', k=0, colormap='RdBu
     for tick in ax.get_xticklabels():
         # Set label rotation to 90° for the x axis.
         tick.set_rotation(90)
-    sns.heatmap(data=matrix, square=True, cmap=colormap, mask=matrice_mask, cbar_kws=colorbar_params, center=center
-                , vmin=vmin, vmax=vmax, xticklabels=horizontal_labels, yticklabels=vertical_labels, linewidths=linewidths,
+    sns.heatmap(data=matrix, square=True, cmap=colormap, mask=matrice_mask, cbar_kws=colorbar_params,
+                center=center,
+                vmin=vmin, vmax=vmax, xticklabels=horizontal_labels,
+                yticklabels=vertical_labels,
+                linewidths=linewidths,
                 linecolor=linecolor)
     # Set rotation angle to zero for the y axis.
     plt.yticks(rotation=0)
@@ -230,10 +241,13 @@ def plot_matrix(matrix, labels_colors='auto', mpart='lower', k=0, colormap='RdBu
     f.tight_layout()
 
 
-def display_gaussian_connectivity_fit(vectorized_connectivity, estimate_mean, estimate_std, raw_data_colors='blue', line_width=2, alpha=0.5,
-                                      normed=True, bins='auto', fitted_distribution_color='black', title=None, xtitle=None, ytitle=None,
-                                      legend_fitted='Fitted Gaussian Distribution', legend_data=None, display_fit='yes', ms=5):
-    """Display a vectorized connectivity matrices histogram, along with a Gaussian fit with an estimated mean, and standard deviation.
+def display_gaussian_connectivity_fit(vectorized_connectivity, estimate_mean, estimate_std,
+                                      raw_data_colors='blue', line_width=2, alpha=0.5, normed=True,
+                                      bins='auto', fitted_distribution_color='black', title=None,
+                                      xtitle=None, ytitle=None, legend_fitted='Fitted Gaussian Distribution',
+                                      legend_data=None, display_fit='yes', ms=5):
+    """Display a vectorized connectivity matrices histogram, along with a Gaussian
+    fit with an estimated mean, and standard deviation.
 
     Parameters
     ----------
@@ -244,16 +258,18 @@ def display_gaussian_connectivity_fit(vectorized_connectivity, estimate_mean, es
     estimate_std: float
         The estimated standard deviation of the connectivity coefficient distribution.
     raw_data_colors: string, optional
-        The colors of the histogram for the connectivity coefficient distribution. Default is blue.
+        The colors of the histogram for the connectivity coefficient distribution.
+        Default is blue.
     line_width: int, optional
         The width of line for the fit of the data. Default is 2.
     alpha: float, optional
         The opacity coefficient for histogram, between 0 and 1. Default is 0.5.
     normed: bool, optional
-        Normalized the histogram. This is mandatory for displaying the gaussian fit over the data, since it represent
-        a probability density function.
+        Normalized the histogram. This is mandatory for displaying
+        the gaussian fit over the data, since it represent a probability density function.
     bins: string, optional
-        How the bins edges of the histogram are computed, choices among different estimators {'fd', 'doane', 'scott', 'rice', 'sturges'}
+        How the bins edges of the histogram are computed, choices among different estimators
+        {'fd', 'doane', 'scott', 'rice', 'sturges'}
         Default is 'auto', the maximum of the sturges and fd estimators are taken.
     fitted_distribution_color: string, optional
         The color of the curves representing the Gaussian fit. Default is black.
@@ -277,24 +293,24 @@ def display_gaussian_connectivity_fit(vectorized_connectivity, estimate_mean, es
     matplotlib.pyplot.hist:
         This function, used here, compute and display the histogram of the data.
 
-
     """
     # Sort the vectorized vector of connectivity entered
     sorted_vectorized_connectivity = sorted(vectorized_connectivity)
     
     # Call matplotlib histogram function to draw the histogram of the data
     if display_fit is 'yes':
-        # count_array, bins_array, _ = plt.hist(sorted_vectorized_connectivity, label=legend_data, bins=bins, alpha=alpha, lw=line_width,
-        # color=raw_data_colors, normed=normed)
-        distribution_density = stats.norm.pdf(sorted_vectorized_connectivity, estimate_mean, estimate_std)
-        plt.plot(sorted_vectorized_connectivity, distribution_density, '-o', lw=line_width, label=legend_fitted,
+        distribution_density = stats.norm.pdf(sorted_vectorized_connectivity,
+                                              estimate_mean, estimate_std)
+        plt.plot(sorted_vectorized_connectivity, distribution_density, '-o',
+                 lw=line_width, label=legend_fitted,
                  color=fitted_distribution_color, ms=ms)
         plt.legend(prop={'size': 7})
         plt.title(title)
         plt.xlabel(xtitle)
         plt.ylabel(ytitle)
     elif display_fit is 'no':
-        count_array, bins_array, _ = plt.hist(sorted_vectorized_connectivity, label=legend_data, bins=bins, alpha=alpha, lw=line_width,
+        count_array, bins_array, _ = plt.hist(sorted_vectorized_connectivity, label=legend_data,
+                                              bins=bins, alpha=alpha, lw=line_width,
                                               color=raw_data_colors, normed=False)
 
         plt.legend(prop={'size': 7})
@@ -302,12 +318,16 @@ def display_gaussian_connectivity_fit(vectorized_connectivity, estimate_mean, es
         plt.xlabel(xtitle)
         plt.ylabel(ytitle)
     else:
-        raise ValueError('Unrecognized display option ! Choices are yes or no and you entered {}'.format(display_fit))
+        raise ValueError('Unrecognized display option ! '
+                         'Choices are yes or no and you entered {}'.format(display_fit))
 
 
 def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_labels,
-                           t_xlabel, t_ylabel, p_xlabel, p_ylabel, t_title, p_title, xlabel_size=10, ylabel_size=10, size_label=8):
-    """Plot a barplot representation of t and p values resulting of a two sample Student t-test in two separates figure.
+                           t_xlabel, t_ylabel, p_xlabel, p_ylabel,
+                           t_title, p_title, xlabel_size=10,
+                           ylabel_size=10, size_label=8):
+    """Plot a barplot representation of t and p values resulting
+    of a two sample Student t-test in two separates figure.
 
 
 
@@ -318,7 +338,8 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
     # Plot a seaborn bar plot for p-values
 
     # Put in grey the bar above the type I error threshold
-    bar_color = [xlabel_color[i] if (pvalues[i] < alpha_level) else 'grey' for i in range(len(bar_labels))]
+    bar_color = [xlabel_color[i] if (pvalues[i] < alpha_level) else 'grey'
+                 for i in range(len(bar_labels))]
     ax = sns.barplot(x=bar_labels, y=pvalues, palette=bar_color)
     plt.xlabel(p_xlabel, size=xlabel_size)
     plt.ylabel(p_ylabel, size=ylabel_size)
@@ -327,10 +348,12 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
         xtick.set_color(color)
         xtick.set_fontsize(size_label)
         xtick.set_rotation(90)
-    # Plot a asymptote for significativity threshold
-    plt.hlines(y=alpha_level, xmin=ax.get_xlim()[0], xmax=ax.get_xlim()[1], label=str(alpha_level) + ' threshold', colors='red')
+    # Plot a asymptote for p-value above alpha threshold
+    plt.hlines(y=alpha_level, xmin=ax.get_xlim()[0], xmax=ax.get_xlim()[1],
+               label=str(alpha_level) + ' threshold', colors='red')
     plt.title(p_title)
     plt.legend()
+    plt.show()
     # Plot the T statistic distribution
     plt.figure()
     ax = sns.barplot(x=bar_labels, y=tvalues, palette=bar_color)
@@ -341,6 +364,6 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
         xtick.set_fontsize(size_label)
         xtick.set_rotation(90)
     plt.title(t_title)
-
+    plt.show()
 
 
