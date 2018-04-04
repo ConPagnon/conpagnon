@@ -194,3 +194,52 @@ def write_ols_results(ols_fit, design_matrix, response_variable, output_dir, csv
             data.index.name = design_matrix_index_name
 
         data.to_csv(csvfile, index=True)
+
+
+def group_by_factors(dataframe, list_of_factors, return_type='list_of_dataframe'):
+    """Group by factors present in a dataframe
+
+    Parameters
+    ----------
+    dataframe: pandas.DataFrame
+        A pandas dataframe.
+    list_of_factors: list
+        The list of factors, i.e columns name in the dataframe,
+        you want to group by.
+    return_type: str
+        The output format, choices are `list_of_dataframe` or
+        `dictionary`. If the former, a list of dataframe is returned
+        of length equal to the number of groups, if the latter a dictionary
+        with groups name as keys and corresponding dataframe as values is returned.
+        Default is `list_of_dataframe`.
+
+    Returns
+    -------
+    output:
+        A list or dictionary of the corresponding dataframe group by attribute.
+    """
+    # Group by the list of factors
+    grouped_dataframe = dataframe.groupby(list_of_factors)
+    # Get the groups keys name
+    groups_names = grouped_dataframe.groups.keys()
+    # Depending on the wanted return_type, construct
+    # a dictionary of a list
+    if return_type is 'list_of_dataframe':
+        # Initialize a list containing the dataframe
+        list_of_dataframes = []
+        for group in groups_names:
+            list_of_dataframes.append(grouped_dataframe.get_group(name=group))
+
+        dataframe_by_group = list_of_dataframes
+    elif return_type is 'dictionary':
+        # Initialize a dictionary containing groups name
+        # as keys, and the corresponding group dataframe as values
+        grouped_dataframe_dictionary = {group_name: grouped_dataframe.get_group(name=group_name) for
+                                        group_name in groups_names}
+
+        dataframe_by_group = grouped_dataframe_dictionary
+    else:
+        raise ValueError('return type not understood. Choices are dictionary, list_of_dataframe'
+                         'and you enter {}'.format(return_type))
+
+    return dataframe_by_group
