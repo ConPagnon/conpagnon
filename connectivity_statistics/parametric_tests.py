@@ -5,6 +5,7 @@ from scipy.stats import mstats, norm, ttest_ind
 from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
 import numpy as np
 from statsmodels.sandbox.stats.multicomp import multipletests
+import statsmodels as sm
 import warnings
 from computing import compute_connectivity_matrices as ccm
 from patsy import dmatrix, dmatrices
@@ -28,9 +29,11 @@ Parametric test used in a resting state group connectivity analysis.
 """
 
 
-def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kinds, contrast, preprocessing_method = 'fisher',
+def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kinds, contrast,
+                       preprocessing_method='fisher',
                        alpha=.05, multicomp_method='fdr_bh'):
-    """Perform two samples t-test on connectivity matrices to detect group differences in connectivity using different kinds.
+    """Perform two samples t-test on connectivity matrices to detect group differences in connectivity
+    using different kinds.
 
     The t-test account for discarded rois you might want to exclude in the analysis.
 
@@ -53,21 +56,17 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
         The list of metrics you want to perform the group comparison.
         Choices are : 'correlation', 'covariances', 'tangent', 'partial correlation',
         'precision'.
-
     preprocessing_method : string, optional
         The type of preprocessing methods to apply of connectivity coefficients
         of type 'correlation', 'partial correlation', 'covariances', 'precision'.
         Choices are : 'fisher'.
-
     contrast : list, optional
         The contrast you want to compute in the t-test. Default is [1.0, -1.0]
         to compute mean(groupes[0]) - mean(groupes[1]).
         The other contrast is [-1.0, 1.0] for mean(groupes[1]) - mean(groupes[0]).
-
     alpha : float, optional
         The false positive proportion, commonly named the alpha level.
         Default is 0.05.
-
     multicomp_method : str, optional
         The inference method for accounting the multiple comparison problems.
         Default is the classic False Discovery Rate (FDR) proposed by
@@ -154,11 +153,13 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
     n_groupes = len(groupes)
 
     if n_groupes < 2:
-        raise ValueError('Two samples t-test requires at least two samples...only found {} group'.format(n_groupes))
+        raise ValueError('Two samples t-test requires at '
+                         'least two samples...only found {} group'.format(n_groupes))
     elif n_groupes > 2:
-        warnings.warn('{} groups was found ! Only the first two groups will be use for the two sample t-test: {} and {}'.format(n_groupes,
-                                                                                                                                groupes[0],
-                                                                                                                                groupes[1]))
+        warnings.warn('{} groups was found ! Only the first two groups will be use '
+                      'for the two sample t-test: {} and {}'.format(n_groupes,
+                                                                    groupes[0],
+                                                                    groupes[1]))
 
     if contrast == [1.0, -1.0]:
         print('Computing two sample t-test for kinds {} and contrast {} - {}'.format(kinds, groupes[0], groupes[1]))
@@ -166,17 +167,19 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
 
         print('Computing two sample t-test for kinds {} and contrast {} - {}'.format(kinds, groupes[1], groupes[0]))
     else:
-        raise ValueError('Unrecognized contrast, only [1.0,1.0] or [-1.0,-1.0] are accepted. You enter {}'.format(contrast))
+        raise ValueError('Unrecognized contrast, only [1.0,1.0] or [-1.0,-1.0] are accepted. '
+                         'You enter {}'.format(contrast))
 
     if 'tangent' in kinds:
-        warnings.warn('I think using a two sample t-test in this fashion on tangent space should be interpreted carefully !')
+        warnings.warn('I think using a two sample t-test in this fashion on tangent '
+                      'space should be interpreted carefully !')
 
     # Fisher transform coefficients
     for kind in kinds:
         if preprocessing_method == 'fisher':
             if kind != 'tangent':
-                X = pre_preprocessing.fisher_transform(symmetric_array = stacked_matrices[groupes[0]][kind])
-                Y = pre_preprocessing.fisher_transform(symmetric_array = stacked_matrices[groupes[1]][kind])
+                X = pre_preprocessing.fisher_transform(symmetric_array=stacked_matrices[groupes[0]][kind])
+                Y = pre_preprocessing.fisher_transform(symmetric_array=stacked_matrices[groupes[1]][kind])
             elif kind == 'tangent':
                 X = stacked_matrices[groupes[0]][kind]
                 Y = stacked_matrices[groupes[1]][kind]
@@ -190,14 +193,17 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
         X_vectorize = sym_matrix_to_vec(symmetric=X)
         Y_vectorize = sym_matrix_to_vec(symmetric=Y)
         # Vectorize the corresponding boolean array
-        vec_X_mask = array_operation.vectorize_boolean_mask(symmetric_boolean_mask=stacked_matrices[groupes[0]]['masked_array'])
-        vec_Y_mask = array_operation.vectorize_boolean_mask(symmetric_boolean_mask=stacked_matrices[groupes[1]]['masked_array'])
+        vec_X_mask = array_operation.vectorize_boolean_mask(
+            symmetric_boolean_mask=stacked_matrices[groupes[0]]['masked_array'])
+        vec_Y_mask = array_operation.vectorize_boolean_mask(
+            symmetric_boolean_mask=stacked_matrices[groupes[1]]['masked_array'])
 
         # Create a numpy masked array structure for the two sample
         X_ = np.ma.array(data=X_vectorize, mask=vec_X_mask)
         Y_ = np.ma.array(data=Y_vectorize, mask=vec_Y_mask)
 
-        # Finally perform a two sample t-test for masked array along the first dimension according contrast, accounting for discarded rois
+        # Finally perform a two sample t-test for masked array along the first
+        # dimension according contrast, accounting for discarded rois
         if contrast == [1.0, -1.0]:
             t_stats_vec, pvalues_vec = mstats.ttest_ind(a=X_, b=Y_, axis=0)
         elif contrast == [-1.0, 1.0]:
@@ -207,11 +213,14 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
         pvalues_vec[np.isnan(pvalues_vec)] = 1.
 
         # Correction of pvalues, reject of null hypotheses below alpha level.
-        reject_, pvalues_vec_corrected, _, _ = multipletests(pvals=pvalues_vec.data, alpha=alpha, method=multicomp_method)
+        reject_, pvalues_vec_corrected, _, _ = multipletests(pvals=pvalues_vec.data,
+                                                             alpha=alpha,
+                                                             method=multicomp_method)
 
         # Computing the effect: difference between mean according to the contrast vector:
-        groupes_mean_matrices = ccm.group_mean_connectivity(subjects_connectivity_matrices=subjects_connectivity_matrices_dictionnary,
-                                                            kinds=kinds)
+        groupes_mean_matrices = ccm.group_mean_connectivity(
+            subjects_connectivity_matrices=subjects_connectivity_matrices_dictionnary,
+            kinds=kinds)
 
         mean_X = groupes_mean_matrices[groupes[0]][kind]
         mean_Y = groupes_mean_matrices[groupes[1]][kind]
@@ -241,10 +250,14 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
         uncorrected_mean_effect = np.multiply(mean_effect, pvalues_uncorrected_matrix < alpha)
 
         # Save the t_stats_matrix, the uncorrected p values matrix, the corrected pvalues matrix in the dictionnary.
-        t_test_dictionnary[kind] = {'tstatistic': t_stats_matrix, 'uncorrected pvalues': pvalues_uncorrected_matrix,
-                                    'corrected pvalues': pvalues_corrected_matrix,'significant edges': significant_edges,
-                                    'significant pvalues': significant_pvalues, 'significant mean effect': significant_mean_effect,
-                                    'total mean effect': mean_effect, 'uncorrected mean effect': uncorrected_mean_effect,
+        t_test_dictionnary[kind] = {'tstatistic': t_stats_matrix,
+                                    'uncorrected pvalues': pvalues_uncorrected_matrix,
+                                    'corrected pvalues': pvalues_corrected_matrix,
+                                    'significant edges': significant_edges,
+                                    'significant pvalues': significant_pvalues,
+                                    'significant mean effect': significant_mean_effect,
+                                    'total mean effect': mean_effect,
+                                    'uncorrected mean effect': uncorrected_mean_effect,
                                     'tested_contrast': contrast}
 
     return t_test_dictionnary
@@ -599,8 +612,8 @@ def distribution_estimation_mean_subjects_connectivity(mean_matrix_for_each_subj
     -------
     output: dict
         A dictionnary with the groupes as keys, and for each group the estimated standard deviation,
-        the estimated mean of the distribution, and the array of shape (n_subject, ) of the mean matrix
-        of each subjects.
+        the estimated mean of the distribution, and the array of shape (n_subject, )
+        of the mean matrix of each subjects.
 
 
     """
@@ -611,7 +624,8 @@ def distribution_estimation_mean_subjects_connectivity(mean_matrix_for_each_subj
         for kind in kinds:
             # Fetch the mean connectivity for each subject in one numerical array
             mean_connectivity_vec = np.array(
-                [mean_matrix_for_each_subjects[groupe][kind][s] for s in mean_matrix_for_each_subjects[groupe][kind].keys()])
+                [mean_matrix_for_each_subjects[groupe][kind][s]
+                 for s in mean_matrix_for_each_subjects[groupe][kind].keys()])
             # Estimate the mean and standard deviation of the data with a Gaussian assumption
             # Fill the dictionnary with the parameters estimate for the current group and kind
             estimation_dict[groupe][kind] = {
@@ -622,8 +636,10 @@ def distribution_estimation_mean_subjects_connectivity(mean_matrix_for_each_subj
     return estimation_dict
 
 
-def intra_network_two_samples_t_test(intra_network_connectivity_dictionary, groupes, kinds, contrast, network_labels_list, alpha=.05,
-                                     p_value_correction_method='fdr_bh', assume_equal_var=True, nan_policy='omit'):
+def intra_network_two_samples_t_test(intra_network_connectivity_dictionary, groupes, kinds,
+                                     contrast, network_labels_list, alpha=.05,
+                                     p_value_correction_method='fdr_bh', assume_equal_var=True,
+                                     nan_policy='omit'):
     """Test the difference of intra network connectivity between the groups under the study.
 
     Parameters
@@ -737,12 +753,14 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
         The list of the name of the different network.
     alpha: float, optional
         The type I error rate threshold. For p-value under alpha, the null hypothesis can be rejected.
-        Default os 0.05.
+        Default is 0.05.
     p_value_correction_method: string, optional
         The correction method accounting for the multiple comparison problem.
-        Default is 'fdr_bh', the traditional False Discovery Rate correction from Benjamini & Hochberg.
+        Default is 'fdr_bh', the traditional False Discovery Rate correction from
+        Benjamini & Hochberg.
     assuming_equal_var: bool, optional
-        If False, the Welch t-test is perform accounting for different variances between the tested sample.
+        If False, the Welch t-test is perform accounting for different variances between
+        the tested sample.
     nan_policy: string, optional
         Behavior regarding possible missing data (nan values). Default is 'omit'.
 
@@ -762,10 +780,12 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
     for kind in kinds:
         # Fetch and vectorize the subjects connectivity matrices
         x = np.array([vectorizer(numpy_array=subjects_inter_network_connectivity_matrices[groupes[0]][s][kind],
-                                 discard_diagonal=True)[1] for s in subjects_inter_network_connectivity_matrices[groupes[0]].keys()])
+                                 discard_diagonal=True)[1]
+                      for s in subjects_inter_network_connectivity_matrices[groupes[0]].keys()])
 
         y = np.array([vectorizer(numpy_array=subjects_inter_network_connectivity_matrices[groupes[1]][s][kind],
-                                 discard_diagonal=True)[1] for s in subjects_inter_network_connectivity_matrices[groupes[1]].keys()])
+                                 discard_diagonal=True)[1]
+                      for s in subjects_inter_network_connectivity_matrices[groupes[1]].keys()])
         if contrast == [1.0, -1.0]:
             t_statistic, p_values_uncorrected = ttest_ind(x, y, axis=0, equal_var=assuming_equal_var,
                                                           nan_policy=nan_policy)
@@ -777,7 +797,8 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
 
         # Correction of p values
         vec_reject_mask, vec_corrected_p_values, _, _, = multipletests(pvals=p_values_uncorrected,
-                                                                       alpha=alpha, method=p_value_correction_method)
+                                                                       alpha=alpha,
+                                                                       method=p_value_correction_method)
 
         # Reconstruction of boolean reject_ mask : it's a binary mask
         reject_m_ = vec_to_sym_matrix(vec_reject_mask, np.bool_(np.ones(n_network)))
@@ -799,15 +820,16 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
     return inter_network_t_test_result
 
 
-def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contrast, assume_equal_var=True,
+def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contrast,
+                       assume_equal_var=True,
                        nan_policy='omit'):
     """Perform a simple two sample t test.
 
     Parameters
     ---------
     connectivity_dictionnary_: dict
-        A dictionnary which contain some connectivity of interest, and associated measure, in a ConPagnon
-        subjects connectivity matrices like.
+        A dictionnary which contain some connectivity of interest, and associated measure,
+        in a ConPagnon subjects connectivity matrices like.
     groupes: list
         The list of groupes under in the study.
     kinds: list
@@ -825,7 +847,8 @@ def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contras
     Returns
     -------
     output: dict
-        A dictionnary with the raw t statistic, the used contrast vector, and the **uncorrected** p values.
+        A dictionnary with the raw t statistic, the used contrast vector,
+        and the **uncorrected** p values.
 
     """
 
@@ -835,12 +858,15 @@ def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contras
         x = connectivity_dictionnary_[groupes[0]][kind][field]
         y = connectivity_dictionnary_[groupes[1]][kind][field]
         if contrast == [1.0, -1.0]:
-            t_statistic, p_values_uncorrected = ttest_ind(x, y, equal_var=assume_equal_var, nan_policy=nan_policy)
+            t_statistic, p_values_uncorrected = ttest_ind(x, y, equal_var=assume_equal_var,
+                                                          nan_policy=nan_policy)
         elif contrast == [-1.0, 1.0]:
-            t_statistic, p_values_uncorrected = ttest_ind(y, x, equal_var=assume_equal_var, nan_policy=nan_policy)
+            t_statistic, p_values_uncorrected = ttest_ind(y, x, equal_var=assume_equal_var,
+                                                          nan_policy=nan_policy)
         else:
             raise ValueError('Unrecognized contrast !')
-        t_test_result[kind] = {'t_statistic': t_statistic, 'uncorrected p value': p_values_uncorrected,
+        t_test_result[kind] = {'t_statistic': t_statistic,
+                               'uncorrected p value': p_values_uncorrected,
                                'contrast': contrast}
 
     return t_test_result
@@ -851,7 +877,7 @@ def regress_confounds(vectorize_subjects_connectivity, confound_dictionary, grou
                       sheetname,
                       NA_action='drop'):
     # TODO: add a way to select column containing the subjects ID, and
-    # TODO: shit it to be the index of the DataFrame
+    # TODO: shift it to be the index of the DataFrame
     """Regress confound on connectivity matrices
 
     Parameters
@@ -988,3 +1014,29 @@ def design_matrix_builder(dataframe, formula, return_type='dataframe'):
     y, X = dmatrices(formula,data=dataframe, return_type=return_type)
 
     return y, X
+
+
+def ols_regression(y, X):
+    """Fit a linear model with ordinary least square regression
+    from statmodels library
+
+    Parameters
+    ----------
+    y: array-like
+        The variable to explain of shape (n_observations, )
+    X: array-like
+        The design matrix, of shape (n_obervations, n_regressors) or
+        (n_obervations + 1, n_regressors) if intercept is added in the model.
+
+    Returns
+    -------
+    output: statsmodels.regression.linear_model.RegressionResultsWrapper
+        A statsmodels regression object containing the fit of the model.
+    """
+
+    # Model initialization with OLS method
+    ols_model = sm.OLS(endog=y, exog=X)
+    # Fit of the model
+    ols_model_fit = ols_model.fit()
+
+    return ols_model_fit
