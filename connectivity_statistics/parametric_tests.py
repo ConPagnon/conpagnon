@@ -1,11 +1,11 @@
 import importlib
 from utils import pre_preprocessing, array_operation, folders_and_files_management
 from utils.array_operation import vectorizer
-from scipy.stats import mstats, norm, ttest_ind
+from scipy.stats import mstats, norm, ttest_ind, pearsonr
 from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
 import numpy as np
 from statsmodels.sandbox.stats.multicomp import multipletests
-import statsmodels as sm
+import statsmodels.api as sm
 import warnings
 from computing import compute_connectivity_matrices as ccm
 from patsy import dmatrix, dmatrices
@@ -1040,3 +1040,40 @@ def ols_regression(y, X):
     ols_model_fit = ols_model.fit()
 
     return ols_model_fit
+
+
+def partial_corr(C):
+    """
+    Returns the sample linear partial correlation coefficients between pairs of variables in C, controlling
+    for the remaining variables in C.
+    Parameters
+    ----------
+    C : array-like, shape (n, p)
+        Array with the different variables. Each column of C is taken as a variable
+    Returns
+    -------
+    P : array-like, shape (p, p)
+        P[i, j] contains the partial correlation of C[:, i] and C[:, j] controlling
+        for the remaining variables in C.
+    """
+
+    C = np.asarray(C)
+    p = C.shape[1]
+    P_corr = np.zeros((p, p), dtype=np.float)
+    for i in range(p):
+        P_corr[i, i] = 1
+        for j in range(i + 1, p):
+            idx = np.ones(p, dtype=np.bool)
+            idx[i] = False
+            idx[j] = False
+            beta_i = linalg.lstsq(C[:, idx], C[:, j])[0]
+            beta_j = linalg.lstsq(C[:, idx], C[:, i])[0]
+
+            res_j = C[:, j] - C[:, idx].dot(beta_i)
+            res_i = C[:, i] - C[:, idx].dot(beta_j)
+
+            corr = pearsonr(res_i, res_j)[0]
+            P_corr[i, j] = corr
+            P_corr[j, i] = corr
+
+    return P_corr
