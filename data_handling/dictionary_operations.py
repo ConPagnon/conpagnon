@@ -3,14 +3,11 @@ from sklearn.utils import shuffle
 import random
 from computing import compute_connectivity_matrices as ccm
 from utils.array_operation import array_rebuilder
-from math import sqrt
-import numpy as np
 import copy
 """
 This module contain useful operation on subjects connectivity matrices dictionnary.
 
 Author: Dhaif BEKHA.
-
 """
 
 # TODO: create a function for merging dictionnary key easily
@@ -197,7 +194,7 @@ def rebuild_subject_connectivity_matrices(subjects_connectivity_dictionary, grou
         The list of groups to rebuild the subjects matrices.
     kinds: list
         The list of kinds to rebuild.
-    diagonal_is_there: bool, optional
+    diagonal_were_kept: bool, optional
         If True, the reconstructed matrix, will have
         the diagonal store in the kind diagonal field of
         the dictionary, and the mask diagonal field for
