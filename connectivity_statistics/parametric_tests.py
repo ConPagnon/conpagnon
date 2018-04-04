@@ -7,7 +7,7 @@ import numpy as np
 from statsmodels.sandbox.stats.multicomp import multipletests
 import warnings
 from computing import compute_connectivity_matrices as ccm
-from patsy import dmatrix
+from patsy import dmatrix, dmatrices
 import pandas as pd
 from pylearn_mulm import mulm
 import os
@@ -254,6 +254,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
                       kind, subjects_to_drop=None, sheetname=None,save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
                       alpha=0.05, pvals_correction_method='fdr_bh', nperms_maxT=10000):
+    # TODO: add a way to select column containing the subjects ID, and
+    # TODO: shit it to be the index of the DataFrame
     """Fit a linear model on connectivity coefficients across subjects.
 
     Parameters
@@ -675,9 +677,13 @@ def intra_network_two_samples_t_test(intra_network_connectivity_dictionary, grou
                           for subject in intra_network_connectivity_dictionary[groupes[1]].keys()])
             # Perform two sample t-test according to contrast vector
             if contrast == [1.0, -1.0]:
-                network_t_statistic, network_p_values_uncorrected = ttest_ind(x, y, nan_policy=nan_policy, equal_var=assume_equal_var)
+                network_t_statistic, network_p_values_uncorrected = ttest_ind(x, y,
+                                                                              nan_policy=nan_policy,
+                                                                              equal_var=assume_equal_var)
             elif contrast == [-1.0, 1.0]:
-                network_t_statistic, network_p_values_uncorrected = ttest_ind(y, x, nan_policy=nan_policy, equal_var=assume_equal_var)
+                network_t_statistic, network_p_values_uncorrected = ttest_ind(y, x,
+                                                                              nan_policy=nan_policy,
+                                                                              equal_var=assume_equal_var)
             else:
                 raise ValueError('Unrecognized contrast !')
 
@@ -694,26 +700,33 @@ def intra_network_two_samples_t_test(intra_network_connectivity_dictionary, grou
         # Correction of p-values, for each kinds correct for the number of test i.e the number of network
         all_network_p_values = np.array(all_network_uncorrected_p_values)
         # Correct the p value with the chosen method
-        reject_boolean_mask, corrected_pvalues, _, _ = multipletests(pvals=all_network_p_values, method=p_value_correction_method,
-                                                                     alpha=alpha)
+        reject_boolean_mask, corrected_pvalues, _, _ = \
+            multipletests(pvals=all_network_p_values,
+                          method=p_value_correction_method,
+                          alpha=alpha)
 
         # Fill the dictionnary, appending a new key containing the corrected p values
         for network in network_labels_list:
-            intra_network_strength_t_test[kind][network]['corrected pvalues'] = corrected_pvalues[network_labels_list.index(network)]
+            intra_network_strength_t_test[kind][network]['corrected pvalues'] = \
+                corrected_pvalues[network_labels_list.index(network)]
 
     return intra_network_strength_t_test
 
 
-def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices, groupes, kinds, contrast, network_label_list, alpha=.05,
-                                    p_value_correction_method='fdr_bh', assuming_equal_var=True, nan_policy='omit'):
+def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices, groupes,
+                                    kinds, contrast,
+                                    network_label_list, alpha=.05,
+                                    p_value_correction_method='fdr_bh',
+                                    assuming_equal_var=True,
+                                    nan_policy='omit'):
     """Test the difference of connectivity between network performing a two sample t test.
 
     Parameters
     ----------
     subjects_inter_network_connectivity_matrices: dict
         A subjects connectivity dictionnary, with groupes in the study as the first levels of keys,
-        the kinds in the study as the second levels of keys, and the inter network connectivity matrices
-        as values, of shape (number of networks, number of networks)
+        the kinds in the study as the second levels of keys, and the inter network connectivity
+        matrices as values, of shape (number of networks, number of networks)
     groupes: list
         The list of the groups under the study.
     kinds: list
@@ -754,9 +767,11 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
         y = np.array([vectorizer(numpy_array=subjects_inter_network_connectivity_matrices[groupes[1]][s][kind],
                                  discard_diagonal=True)[1] for s in subjects_inter_network_connectivity_matrices[groupes[1]].keys()])
         if contrast == [1.0, -1.0]:
-            t_statistic, p_values_uncorrected = ttest_ind(x, y, axis=0, equal_var=assuming_equal_var, nan_policy=nan_policy)
+            t_statistic, p_values_uncorrected = ttest_ind(x, y, axis=0, equal_var=assuming_equal_var,
+                                                          nan_policy=nan_policy)
         elif contrast == [-1.0, 1.0]:
-            t_statistic, p_values_uncorrected = ttest_ind(y, x, axis=0, equal_var=assuming_equal_var, nan_policy=nan_policy)
+            t_statistic, p_values_uncorrected = ttest_ind(y, x, axis=0, equal_var=assuming_equal_var,
+                                                          nan_policy=nan_policy)
         else:
             raise ValueError('Unrecognized contrast !')
 
@@ -775,14 +790,17 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
         # Construction of masked raw t values according to corrected p values under alpha threshold
         significant_tvals_m = np.multiply(raw_tvals_m, reject_m_)
 
-        inter_network_t_test_result[kind] = {'raw t statistic': raw_tvals_m, 'uncorrected p values': raw_pvals_m,
-                                             'corrected p values': corrected_pvals_m, 'significant t values': significant_tvals_m,
+        inter_network_t_test_result[kind] = {'raw t statistic': raw_tvals_m,
+                                             'uncorrected p values': raw_pvals_m,
+                                             'corrected p values': corrected_pvals_m,
+                                             'significant t values': significant_tvals_m,
                                              'contrast': contrast}
 
     return inter_network_t_test_result
 
 
-def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contrast, assume_equal_var=True, nan_policy='omit'):
+def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contrast, assume_equal_var=True,
+                       nan_policy='omit'):
     """Perform a simple two sample t test.
 
     Parameters
@@ -822,13 +840,18 @@ def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contras
             t_statistic, p_values_uncorrected = ttest_ind(y, x, equal_var=assume_equal_var, nan_policy=nan_policy)
         else:
             raise ValueError('Unrecognized contrast !')
-        t_test_result[kind] = {'t_statistic': t_statistic, 'uncorrected p value': p_values_uncorrected, 'contrast': contrast}
+        t_test_result[kind] = {'t_statistic': t_statistic, 'uncorrected p value': p_values_uncorrected,
+                               'contrast': contrast}
 
     return t_test_result
 
 
-def regress_confounds(vectorize_subjects_connectivity, confound_dictionary, groupes, kinds, data, sheetname,
+def regress_confounds(vectorize_subjects_connectivity, confound_dictionary, groupes, kinds,
+                      data,
+                      sheetname,
                       NA_action='drop'):
+    # TODO: add a way to select column containing the subjects ID, and
+    # TODO: shit it to be the index of the DataFrame
     """Regress confound on connectivity matrices
 
     Parameters
@@ -935,3 +958,33 @@ def regress_confounds(vectorize_subjects_connectivity, confound_dictionary, grou
         regression_data_dictionary[group].update(regression_by_kind)
 
     return regressed_subjects_connectivity_dictionary, regression_data_dictionary
+
+
+def design_matrix_builder(dataframe, formula, return_type='dataframe'):
+    """Build a design matrix based on a dataframe
+
+    Parameters
+    ----------
+    dataframe: pandas.DataFrame
+        A pandas dataframe containing the data.
+    formula: str
+        The formula written in R style, with the variable
+        to explain in the left side of the ~, and the explanatory
+        variables in the right side.
+    return_type: str, optional
+        Return type of the response variable, and design matrix.
+        Default is dataframe. Other choices are: matrix.
+
+    Returns
+    -------
+    output1: pandas.DataFrame
+        A dataframe, of shape (n_observations, ). This is
+        the variable to explain
+    output2: pandas.DataFrame
+        The design matrix, of shape (n_observation, n_explanatory_variables +1)
+    """
+    # Build the design matrix and return the response variable
+    # and design matrix
+    y, X = dmatrices(formula,data=dataframe, return_type=return_type)
+
+    return y, X
