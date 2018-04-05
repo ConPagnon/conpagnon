@@ -14,6 +14,8 @@ Utilitary modules.
 import os
 import pickle
 from PyPDF2 import PdfFileWriter, PdfFileReader
+import shutil
+
 
 def remove_empty_directories(root_directory):
     
@@ -51,12 +53,13 @@ def check_directories_existence(root_directory, directories_list):
     
     """
     
-    #la liste des dossiers a la racine root_directory
+    # la liste des dossiers a la racine root_directory
     sub_dir_list = os.listdir(root_directory)
     
     for d in directories_list:
         if d not in sub_dir_list:
-            raise Exception('le dossier {} n\'existe pas ! Les dossiers disponibles dans {} sont {}'.format(d, root_directory, sub_dir_list))
+            raise Exception('le dossier {} n\'existe pas ! Les dossiers '
+                            'disponibles dans {} sont {}'.format(d, root_directory, sub_dir_list))
 
 
 def save_object(object_to_save, saving_directory, filename):
@@ -72,7 +75,7 @@ def save_object(object_to_save, saving_directory, filename):
         Full path to a saving directory.
     
     filename : str
-        Filemame of the saved object, including the extension .pkl.
+        Filename of the saved object, including the extension .pkl.
         
     See Also
     --------
@@ -88,8 +91,9 @@ def save_object(object_to_save, saving_directory, filename):
     """
     full_path_to_file = os.path.join(saving_directory, filename)
     with open(full_path_to_file, 'wb+') as output:
-        pickle.dump(obj = object_to_save, file = output, protocol =  pickle.HIGHEST_PROTOCOL )
-               
+        pickle.dump(obj=object_to_save, file=output, protocol=pickle.HIGHEST_PROTOCOL )
+
+
 def load_object(full_path_to_object):
     
     """Load a python object saved by a pickler operator.
@@ -117,36 +121,42 @@ def load_object(full_path_to_object):
         object_to_load = pickle.load(pickleObj)
     return object_to_load
 
+
 # Creating a routine that appends files to the output file
-def append_pdf(input,output):
-    """Append a input pdf file to an ouput empty pdf file.
+def append_pdf(input, output):
+    """Append a input pdf file to an output empty pdf file.
     
     """
     [output.addPage(input.getPage(page_num)) for page_num in range(input.numPages)]
 
 
-def merge_pdfs(pdfs,output_filename):
+def merge_pdfs(pdfs, output_filename):
     """Merge together a list of pdf files.
     
     """
-    
 
     # Creating an object where pdf pages are appended to
     output = PdfFileWriter()
-    
-    
-    
+
     # Appending two pdf-pages from two different files
     for pdf in pdfs:
-        #read the pdf file
+        # read the pdf file
         pdf_ = PdfFileReader(pdf)
         append_pdf(pdf_,output)
 
-    
     # Writing all the collected pages to a file
-    output.write(open(output_filename,"wb"))
-    
+    output.write(open(output_filename, "wb"))
 
 
+def create_directory(directory):
+    """Create a directory, erase it and create it
+    if it exist.
+    """
 
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    else:
+        shutil.rmtree(directory)
+        os.makedirs(directory)
 
+    return directory
