@@ -2,6 +2,7 @@ import csv
 import os
 import pandas as pd
 import statsmodels
+import numpy as np
 """Text file management, output results, modify
  and append information to text files
 
@@ -70,6 +71,29 @@ def csv_from_dictionary(subjects_dictionary, groupes, kinds, field_to_write,
                 # field
                 for subject, subject_sub_dictionary in subjects_dictionary[group].items():
                     writer.writerow([subject, subject_sub_dictionary[kind][field_to_write]])
+
+
+def csv_from_intra_network_dictionary(subjects_dictionary, groupes, kinds, network_labels_list,
+                                      field_to_write, csv_filename, output_directory, delimiter=','):
+    """Write csv file from the intra-network connectivity dictionary structure.
+
+    """
+    for group in groupes:
+        for kind in kinds:
+            for network in network_labels_list:
+                header = ['subjects', 'intra_' + network + '_connectivity']
+                output_csv = os.path.join(
+                    output_directory, group + '_' + kind + '_' + csv_filename)
+                with open(output_csv, 'w') as csv_file:
+                    # Initialize a writer object
+                    writer = csv.writer(csv_file, delimiter=delimiter)
+                    # The first row is the header
+                    writer.writerow(header)
+                    # Write for each subject, the corresponding connectivity value
+                    # field
+                    for subject, subject_sub_dictionary in subjects_dictionary[group].items():
+                        writer.writerow(
+                            [subject, subject_sub_dictionary[kind][network][field_to_write]])
 
 
 def dataframe_to_csv(dataframe, path, delimiter=',', index=False):
@@ -160,7 +184,7 @@ def merge_by_index(dataframe1, dataframe2, left_index=True, right_index=True):
     return merged_dataframe
 
 
-def write_ols_results(ols_fit, design_matrix, response_variable, output_dir, csv_filename,
+def write_ols_results(ols_fit, design_matrix, response_variable, output_dir, model_name,
                       design_matrix_index_name=None):
     """Write OLS result, along with the design matrix and the variable to explain.
     """
@@ -178,15 +202,19 @@ def write_ols_results(ols_fit, design_matrix, response_variable, output_dir, csv
     ols_results_dataframe = ols_results_dataframe.reset_index()
     ols_results_dataframe.columns = header
     # We write the result in a CSV file
-    with open(os.path.join(output_dir, csv_filename), 'w') as csvfile:
-        csv_writer = csv.writer(csvfile)
+    with open(os.path.join(output_dir, model_name + '_parameters.csv'), 'w') as csvfile:
         # Save the results: coefficients, t-values, p-values, standard error,
         # and confidence interval
         ols_results_dataframe.to_csv(csvfile, index=False)
+
+    with open(os.path.join(output_dir, model_name + '_qualitity_fit.csv'), 'w') as csvfile:
+        csv_writer = csv.writer(csvfile)
         # Save r squared, adjusted r squared, degrees of freedom
         csv_writer.writerow(['r_squared', 'adj_r_squared', 'n_obs', 'df_model', 'df_resid'])
         csv_writer.writerow([ols_fit.rsquared, ols_fit.rsquared_adj, ols_fit.nobs, ols_fit.df_model,
                              ols_fit.df_resid])
+
+    with open(os.path.join(output_dir, model_name + '_design_matrix.csv'), 'w') as csvfile:
         # Save the design matrix, and the response variable in the
         # same dataframe
         data = concatenate_dataframes([design_matrix, response_variable], axis=1)
@@ -194,6 +222,10 @@ def write_ols_results(ols_fit, design_matrix, response_variable, output_dir, csv
             data.index.name = design_matrix_index_name
 
         data.to_csv(csvfile, index=True)
+
+    # save the prediction for plotting purpose: numpy will be enough
+    np.savetxt(os.path.join(output_dir, model_name + '_prediction.csv'), np.c_[ols_fit.predict()],
+               header='prediction', comments='')
 
 
 def group_by_factors(dataframe, list_of_factors, return_type='list_of_dataframe'):
@@ -243,3 +275,13 @@ def group_by_factors(dataframe, list_of_factors, return_type='list_of_dataframe'
                          'and you enter {}'.format(return_type))
 
     return dataframe_by_group
+
+
+def dictionary_to_csv(dictionary, output_dir, output_filename):
+    """Write dictionary couple (key, value) in a CSV file
+    """
+
+    with open(os.path.join(output_dir, output_filename), 'w') as f:
+        w = csv.writer(f)
+        w.writerows(dictionary.items())
+
