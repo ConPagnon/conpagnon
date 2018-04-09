@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import statsmodels
 import numpy as np
+from utils.folders_and_files_management import create_directory
 """Text file management, output results, modify
  and append information to text files
 
@@ -74,16 +75,22 @@ def csv_from_dictionary(subjects_dictionary, groupes, kinds, field_to_write,
 
 
 def csv_from_intra_network_dictionary(subjects_dictionary, groupes, kinds, network_labels_list,
-                                      field_to_write, csv_filename, output_directory, delimiter=','):
+                                      field_to_write, output_directory, csv_prefix, delimiter=',',
+                                      ):
     """Write csv file from the intra-network connectivity dictionary structure.
 
     """
     for group in groupes:
         for kind in kinds:
             for network in network_labels_list:
+                # Create the output directory
                 header = ['subjects', 'intra_' + network + '_connectivity']
+                create_directory(directory=os.path.join(
+                    output_directory, kind, network), erase_previous=False)
+                # CSV filename
+                csv_filename = group + '_' + csv_prefix + '_' + network + '_connectivity.csv'
                 output_csv = os.path.join(
-                    output_directory, group + '_' + kind + '_' + csv_filename)
+                    output_directory, kind, network, csv_filename)
                 with open(output_csv, 'w') as csv_file:
                     # Initialize a writer object
                     writer = csv.writer(csv_file, delimiter=delimiter)
@@ -284,4 +291,3 @@ def dictionary_to_csv(dictionary, output_dir, output_filename):
     with open(os.path.join(output_dir, output_filename), 'w') as f:
         w = csv.writer(f)
         w.writerows(dictionary.items())
-
