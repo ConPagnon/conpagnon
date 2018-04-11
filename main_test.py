@@ -622,8 +622,9 @@ folders_and_files_management.save_object(object_to_save=subjects_inter_network_c
 kind = 'correlation'
 groups_in_models = ['patients', 'controls']
 # directory where the data are
-data_directory = os.path.join('/media/db242421/db242421_data/ConPagnon_data/text_output_11042018',
-                              kind)
+# data_directory = os.path.join('/media/db242421/db242421_data/ConPagnon_data/text_output_11042018',
+#                             kind)
+data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
 correction_method = ''
 # Fit three linear model for the three type of overall connections
@@ -636,8 +637,10 @@ variables_model = ['Groupe', 'Sexe']
 model_formula = 'Groupe + Sexe'
 
 # Load behavioral data
+cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data')
+output_csv_directory = 'D:\\text_output_11042018'
 # Clean the data: drop subjects if needed
 drop_subjects_list = ['sub40_np130304']
 if drop_subjects_list:
@@ -648,10 +651,14 @@ else:
 # For each model: read the csv for each group, concatenate resultings dataframe, and append
 # (merging by index) all variable of interest in the model.
 
-# a p-values dictionary to store each p-values for each model, for each variables
-pvalues_models = {}
+# Initialization of a overall response to call maxT correction
+# in the muols package !
+general_response_matrix = np.zeros(shape=(len(behavioral_data_cleaned.index), len(models_to_build)))
+# Build the design matrix
+from patsy import dmatrix
+all_models_design = np.array(dmatrix(formula_like= '~' + '+'.join(variables_model), data=behavioral_data_cleaned,
+                            return_type='dataframe'))
 for model in models_to_build:
-
     # List of the corresponding dataframes
     model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
         csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
@@ -682,14 +689,12 @@ for model in models_to_build:
                                       output_dir=regression_output_directory,
                                       model_name=model,
                                       design_matrix_index_name='subjects')
-    pvalues_models[model] = model_fit.pvalues
+    # fill the general response matrix
+    model_response_vector = np.array(model_response)
+    general_response_matrix[:, models_to_build.index(model)] = model_response_vector[:, 0]
 
-from copy import deepcopy
-# Correction of p-values for each variable
-for model in pvalues_models:
-    # Deepcopy of pvalues dictionary
-    pvalues_models_copy = deepcopy(pvalues_models)
-    # Discard the intercept: the zero index
-    pvalues_models_copy[model] = pvalues_models_copy[model].drop(pvalues_models_copy[model].index[0])
-    #
-    p_values_to_correct = []
+# p-values correction for the 3 models:
+from pylearn_mulm import mulm
+contrasts = np.identity(X.shape[1])
+mod = mulm.MUOLS(general_response_matrix, X).fit()
+t_values, corrected_p_values, df = mod.t_test_maxT(contrasts=contrasts, pval=True, two_tailed=True)

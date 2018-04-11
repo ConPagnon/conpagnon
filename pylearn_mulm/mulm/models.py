@@ -221,7 +221,7 @@ class MUOLS:
         pvalues = np.array(
             [np.array([np.sum(max_t[:, con] >= t) for t in tvals_[con, :]])\
                 / float(nperms) for con in range(contrasts.shape[0])])
-        return tvals, pvalues, df
+        return tvals, pvalues, df, max_t
 
     def t_test_minP(self, contrasts, nperms=10000, two_tailed=True, **kwargs):
         """Correct for multiple comparisons using minP procedure.
