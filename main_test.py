@@ -42,7 +42,7 @@ Created on Mon Sep 18 16:37:22 2017
 
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
-atlas_name ='atlas4D_2.nii'
+atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
@@ -95,10 +95,9 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/text_output_09042018'
+output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/text_output_11042018'
 
 # Cohort behavioral data
-
 cohort_excel_file_path = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data')
@@ -116,7 +115,7 @@ contrast = [1.0, -1.0]
 kinds = ['tangent', 'partial correlation', 'correlation']
 
 # Creation of the directory which will contains all figure saved by the user
-directory = '/media/db242421/db242421_data/ConPagnon_reports/analysis_01march2018_TEST/'+groupes[0]+'_'+groupes[1]
+directory = '/media/db242421/db242421_data/ConPagnon_reports/analysis_01march2018_TEST/' + groupes[0] + '_' + groupes[1]
 try:
     os.makedirs(directory)
 except OSError as e:
@@ -174,26 +173,6 @@ Z_subjects_connectivity_matrices = ccm.individual_connectivity_matrices(
     kinds=kinds, covariance_estimator=covariance_estimator,
     vectorize=False, z_fisher_transform=True,
     discarding_diagonal=False)
-
-# confound_dictionary = {'controls': {'confounds': ['Sexe'], 'subjects to drop': None},
-#                       'patients': {'confounds': ['Sexe', 'lesion_normalized'], 'subjects to drop': None},
-#                      }
-
-# regressed_Z_subjects_connectivity_matrices, regression_confound_dictionary = parametric_tests.regress_confounds(
-#    vectorize_subjects_connectivity=raw_Z_subjects_connectivity_matrices,
-#    data='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
-#    sheetname='cohort_functional_data',
-#    NA_action='drop',
-#    groupes=groupes,
-#    kinds=kinds,
-#    confound_dictionary=confound_dictionary)
-
-# Z_subjects_connectivity_matrices = dictionary_operations.rebuild_subject_connectivity_matrices(
-#    subjects_connectivity_dictionary=regressed_Z_subjects_connectivity_matrices,
-#    groupes=groupes,
-#    kinds=kinds,
-#    diagonal_were_kept=False
-# )
 
 # Computing for each metric, and each groups the mean connectivity matrices,
 # from the z fisher transform matrices.
@@ -292,7 +271,6 @@ intra_network_connectivity_dict, network_dict, network_labels_list, network_labe
         sheetname=sheetname, roi_indices_column_name='atlas4D index',
         network_column_name='network', color_of_network_column='Color')
 
-
 # We can compute the homotopic connectivity for each network, i.e a intra-network homotopic connectivity
 homotopic_intra_network_connectivity_d = dict.fromkeys(network_labels_list)
 for network in network_labels_list:
@@ -322,77 +300,47 @@ for groupe in groupes:
                     {'network connectivity strength':
                      homotopic_intra_network_connectivity_d[network][groupe][subject][kind]['mean connectivity']}
 
-# Test differences in the homotopic connectivity within each network between groups
-homotopic_intra_network_strength_t_test = parametric_tests.intra_network_two_samples_t_test(
-    intra_network_connectivity_dictionary=homotopic_intranetwork_d,
-    groupes=groupes, kinds=kinds, contrast=[1.0, -1.0],
-    network_labels_list=network_labels_list, assume_equal_var=True, alpha=alpha)
+# Save the whole brain intra-network connectivity
+data_management.csv_from_intra_network_dictionary(subjects_dictionary=intra_network_connectivity_dict,
+                                                  groupes=groupes, kinds=kinds,
+                                                  network_labels_list=network_labels_list,
+                                                  field_to_write='network connectivity strength',
+                                                  output_directory=output_csv_directory,
+                                                  csv_prefix='intra')
 
-# Display the barplot for t statistic and p values for homotopic intra-network differences test
-for kind in kinds:
-    t_statistic = np.array([homotopic_intra_network_strength_t_test[kind][network]['t statistic'] for network
-                            in network_labels_list])
-    corrected_pvalues = np.array([homotopic_intra_network_strength_t_test[kind][network]['uncorrected p values'] for network
-                                  in network_labels_list])
-    plt.figure()
-    display.t_and_p_values_barplot(t_values=t_statistic, p_values=corrected_pvalues, alpha_level=alpha,
-                                   xlabel_color=network_label_colors, bar_labels=network_labels_list,
-                                   t_xlabel='Network name', t_ylabel='t statistic values',
-                                   p_xlabel='Network name', p_ylabel='FDR corrected p values',
-                                   t_title='T statistic for homotopic '
-                                           'intra-network comparison for {} \n between {} and {}'.format
-                                            (kind, groupes[0], groupes[1]),
-                                   p_title='P values for homotopic '
-                                           'intra-network comparison for {} \n between {} and {}'.format
-                                            (kind, groupes[0], groupes[1]))
-    #plt.show()
+# Save the whole brain intra-network homotopic connectivity
+data_management.csv_from_intra_network_dictionary(subjects_dictionary=homotopic_intranetwork_d,
+                                                  groupes=groupes, kinds=kinds,
+                                                  network_labels_list=network_labels_list,
+                                                  field_to_write='network connectivity strength',
+                                                  output_directory=output_csv_directory,
+                                                  csv_prefix='intra_homotopic')
 
-# As for whole brain homotopic connectivity, we use a linear model for intra-network homotopic
-# connectivity
-for network in network_labels_list:
-    # Write for each groups the mean intra network network homotopic connectivity
-    intra_network_homotopic = homotopic_intra_network_connectivity_d[network]
-    csv_filename = 'intra_' + network + '_homotopic_connectivity.csv'
+# Save the whole brain homotopic connectivity
+for group in groupes:
     for kind in kinds:
-        # Create a directory for each network inside each kind directory
-        network_kind_output_csv_directory = folders_and_files_management.create_directory(
-            directory=os.path.join(output_csv_directory, kind, network))
-
-        data_management.csv_from_dictionary(subjects_dictionary=intra_network_homotopic, groupes=groupes,
-                                            kinds=[kind], field_to_write='mean connectivity',
-                                            header=['subjects', network + '_homotopic_connectivity'],
-                                            csv_filename=csv_filename,
-                                            output_directory=network_kind_output_csv_directory)
-
-
-# Study with a linear model of whole intra-network connectivity of each network
-# Write for each network, and each groups the patients and controls intra network connectivity in text file
-# save the results for homotopic connectivity in CSV file for each group and kind
-for kind in kinds:
-    for network in network_labels_list:
-        csv_filename_end = 'intra_' + network + '.csv'
-        data_management.csv_from_intra_network_dictionary(subjects_dictionary=intra_network_connectivity_dict,
-                                                          groupes=groupes, kinds=[kind],
-                                                          network_labels_list=[network],
-                                                          field_to_write='network connectivity strength',
-                                                          csv_filename=network + '.csv',
-                                                          output_directory=os.path.join(output_csv_directory,
-                                                                                        kind,
-                                                                                        network))
-
+        data_management.csv_from_dictionary(subjects_dictionary=homotopic_connectivity,
+                                            groupes=[group],
+                                            kinds=[kind],
+                                            field_to_write='mean connectivity',
+                                            header=['subjects', 'mean_homotopic'],
+                                            csv_filename='mean_homotopic.csv',
+                                            output_directory=os.path.join(output_csv_directory, kind),
+                                            delimiter=',')
 
 # Overall and Within network, ipsilesional and contralesional connectivity differences
 population_text_data = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
 # Drop subjects if wanted
 subjects_to_drop = ['sub40_np130304']
 # List of factor to group by
-population_attribute = [ 'Lesion']
+population_attribute = ['Lesion']
 
 # Compute the connectivity matrices dictionnary with factor as keys.
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file=population_text_data,
-        sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        sheetname='cohort_functional_data',
+        subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
         groupes=['patients'], factors=population_attribute, drop_subjects_list=['sub40_np130304'])
 
 # Create ipsilesional and contralesional dictionnary
@@ -535,12 +483,6 @@ ipsilesional_intra_network_connectivity_dict, \
         sheetname='Hemisphere_regions', roi_indices_column_name='index',
         network_column_name='network', color_of_network_column='Color')
 
-# T-test for the intra-network connectivity strength across subject between the group
-ipsilesional_intra_network_strength_t_test = parametric_tests.intra_network_two_samples_t_test(
-    intra_network_connectivity_dictionary=ipsilesional_intra_network_connectivity_dict,
-    groupes=groupes, kinds=kinds, contrast=[1.0, -1.0],
-    network_labels_list=ipsi_network_labels_list, assume_equal_var=True, alpha=alpha)
-
 # Compute the intra-network connectivity for the contralesional hemisphere in
 # groups
 contralesional_intra_network_connectivity_dict, \
@@ -560,103 +502,61 @@ contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
     subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
     groupes=groupes, kinds=kinds)
 
-# Compute the inter-network connectivity for all brain region:
+# Save the ipsilesional intra-network connectivity for each groups and network
+data_management.csv_from_intra_network_dictionary(subjects_dictionary=ipsilesional_intra_network_connectivity_dict,
+                                                  groupes=groupes,
+                                                  kinds=kinds,
+                                                  network_labels_list=ipsi_network_labels_list,
+                                                  field_to_write='network connectivity strength',
+                                                  output_directory=output_csv_directory,
+                                                  csv_prefix='ipsi_intra',
+                                                  delimiter=',')
+
+# Save the contra-lesional intra-network connectivity for each group and networks
+data_management.csv_from_intra_network_dictionary(subjects_dictionary=contralesional_intra_network_connectivity_dict,
+                                                  groupes=groupes,
+                                                  kinds=kinds,
+                                                  network_labels_list=contra_network_labels_list,
+                                                  field_to_write='network connectivity strength',
+                                                  output_directory=output_csv_directory,
+                                                  csv_prefix='contra_intra',
+                                                  delimiter=',')
+
+# Save the overall mean ipsilesional connectivity for each group and kind
+for group in groupes:
+    for kind in kinds:
+        data_management.csv_from_dictionary(subjects_dictionary=ipsilesional_mean_connectivity,
+                                            groupes=[group],
+                                            kinds=[kind],
+                                            field_to_write='mean connectivity',
+                                            header=['subjects', 'mean_ipsi'],
+                                            csv_filename='mean_ipsilesional.csv',
+                                            output_directory=os.path.join(output_csv_directory, kind),
+                                            delimiter=',')
+
+        # Save the overall mean contralesional connectivity for each group and kind
+        data_management.csv_from_dictionary(subjects_dictionary=contralesional_mean_connectivity,
+                                            groupes=[group],
+                                            kinds=[kind],
+                                            field_to_write='mean connectivity',
+                                            header=['subjects', 'mean_contra'],
+                                            csv_filename='mean_contralesional.csv',
+                                            output_directory=os.path.join(output_csv_directory, kind),
+                                            delimiter=',')
+
+
+# Compute the inter-network connectivity for whole brain:
 subjects_inter_network_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
     subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices, groupes=groupes, kinds=kinds,
     atlas_file=atlas_excel_file, sheetname=sheetname, network_column_name='network',
     roi_indices_column_name='atlas4D index')
 
-# Display mean connectivity inter-network matrices
-for groupe in groupes:
-    for kind in kinds:
-        matrix_stack = np.array([subjects_inter_network_connectivity_matrices[groupe][s][kind] for s in
-                                 subjects_inter_network_connectivity_matrices[groupe].keys()])
-        mean_internetwork_matrix = matrix_stack.mean(axis=0)
-        if kind == 'tangent':
-            np.fill_diagonal(mean_internetwork_matrix, 0)
-
-        display.plot_matrix(matrix=mean_internetwork_matrix, mpart='all', horizontal_labels=network_labels_list,
-                            vertical_labels=network_labels_list, labels_colors=network_label_colors,
-                            title=groupe + ' mean ' + kind+
-                            ' inter-network connectivity matrix',
-                            vmin=mean_internetwork_matrix.min(),
-                            vmax=mean_internetwork_matrix.max(), k=0)
-        plt.show()
-
-# Perform a two-sample t-test for the inter-network strength between the two network
-# Two sample t-test on inter network connectivity matrices between the two group under study
-inter_network_t_test_result = parametric_tests.inter_network_two_sample_t_test(
-    subjects_inter_network_connectivity_matrices=subjects_inter_network_connectivity_matrices,
-    groupes=groupes, kinds=kinds, contrast=contrast,
-    assuming_equal_var=True,
-    network_label_list=network_labels_list,
-    alpha=alpha)
-
-for kind in kinds:
-    # Display significant t values
-    display.plot_matrix(matrix=inter_network_t_test_result[kind]['significant t values'],
-                        labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        title='Inter network T statistic for {}'.format(kind), linecolor='black',
-                        labels_size=12)
-    plt.show()
-    display.plot_matrix(matrix=inter_network_t_test_result[kind]['corrected p values'],
-                        labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        colormap='hot', vmin=0, vmax=alpha,
-                        title='Corrected p values for {} at {} threshold for \n '
-                              'inter network connectivity'.format(kind, alpha),
-                        linecolor='black', labels_size=12)
-    plt.show()
 
 # Compute ipsilesional inter-network connectivity
 subjects_inter_network_ipsilesional_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
     subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds,
     atlas_file=atlas_excel_file, sheetname='Hemisphere_regions', network_column_name='network',
     roi_indices_column_name='index')
-
-# Display mean connectivity ipsilesional inter-network matrices for each group and kind
-for groupe in groupes:
-    for kind in kinds:
-        matrix_stack = np.array([subjects_inter_network_ipsilesional_connectivity_matrices[groupe][s][kind] for s in
-                                 subjects_inter_network_ipsilesional_connectivity_matrices[groupe].keys()])
-        mean_internetwork_matrix = matrix_stack.mean(axis=0)
-        if kind == 'tangent':
-            np.fill_diagonal(mean_internetwork_matrix, 0)
-
-        display.plot_matrix(matrix=mean_internetwork_matrix, mpart='all', horizontal_labels=network_labels_list,
-                            vertical_labels=network_labels_list, labels_colors=network_label_colors,
-                            title=groupe + ' mean ' + kind +
-                            ' ipsilesional inter-network connectivity matrix',
-                            vmin=mean_internetwork_matrix.min(),
-                            vmax=mean_internetwork_matrix.max(), k=0)
-        plt.show()
-
-
-# Perform a two-sample t-test for the ipsilesional inter-network strength between the network
-ipsilesional_inter_network_t_test_result = parametric_tests.inter_network_two_sample_t_test(
-    subjects_inter_network_connectivity_matrices=subjects_inter_network_ipsilesional_connectivity_matrices,
-    groupes=groupes, kinds=kinds, contrast=contrast,
-    assuming_equal_var=True,
-    network_label_list=network_labels_list,
-    alpha=alpha)
-
-for kind in kinds:
-    # Display significant t values
-    display.plot_matrix(matrix=ipsilesional_inter_network_t_test_result[kind]['significant t values'],
-                        labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        title='Inter network T statistic for {}'.format(kind), linecolor='black',
-                        labels_size=12)
-    plt.show()
-    display.plot_matrix(matrix=ipsilesional_inter_network_t_test_result[kind]['corrected p values'],
-                        labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        colormap='hot', vmin=0, vmax=alpha,
-                        title='Corrected p values for {} at {} threshold for \n '
-                              'ipsilesional inter network connectivity'.format(kind, alpha),
-                        linecolor='black', labels_size=12)
-    plt.show()
 
 # Compute contralesional inter-network connectivity
 subjects_inter_network_contralesional_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
@@ -665,44 +565,131 @@ subjects_inter_network_contralesional_connectivity_matrices = ccm.inter_network_
     atlas_file=atlas_excel_file, sheetname='Hemisphere_regions', network_column_name='network',
     roi_indices_column_name='index')
 
-# Display mean connectivity contralesional inter-network matrices for each group and kind
-for groupe in groupes:
-    for kind in kinds:
-        matrix_stack = np.array([subjects_inter_network_contralesional_connectivity_matrices[groupe][s][kind] for s in
-                                 subjects_inter_network_contralesional_connectivity_matrices[groupe].keys()])
-        mean_internetwork_matrix = matrix_stack.mean(axis=0)
-        if kind == 'tangent':
-            np.fill_diagonal(mean_internetwork_matrix, 0)
+# Now save the different dictionary for the current analysis
+# Save the times series dictionary
+dictionary_output_directory = os.path.join(output_csv_directory, 'dictionary')
+folders_and_files_management.save_object(object_to_save=times_series_individual_atlases,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='times_series_individual_atlases.pkl')
+# Save the raw subjects matrices dictionary
+folders_and_files_management.save_object(object_to_save=subjects_connectivity_matrices,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='raw_subjects_connectivity_matrices.pkl')
+# Save the Z-fisher transform matrices dictionary
+folders_and_files_management.save_object(object_to_save=Z_subjects_connectivity_matrices,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='z_fisher_transform_subjects_connectivity_matrices.pkl')
+# Save the Z-fisher mean groups connectivity matrices
+folders_and_files_management.save_object(object_to_save=Z_mean_groups_connectivity_matrices,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='z_fisher_groups_mean_connectivity_matrices.pkl')
+# Save the whole brain homotopic connectivity dictionary
+folders_and_files_management.save_object(object_to_save=homotopic_connectivity,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='whole_brain_mean_homotopic_connectivity.pkl')
+# Save the intra-network mean homotopic dictionary
+folders_and_files_management.save_object(object_to_save=homotopic_intranetwork_d,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='intra_network_mean_homotopic_connectivity.pkl')
+# Save the whole brain intra_network connectivity dictionary
+folders_and_files_management.save_object(object_to_save=intra_network_connectivity_dict,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='whole_brain_intra_network_connectivity.pkl')
+# Save the ipsilesional intra-network connectivity dictionary
+folders_and_files_management.save_object(object_to_save=ipsilesional_intra_network_connectivity_dict,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='ipsilesional_intra_network_connectivity.pkl')
+# Save the contralesional intra-network connectivity dictionary
+folders_and_files_management.save_object(object_to_save=contralesional_intra_network_connectivity_dict,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='contralesional_intra_network_connectivity.pkl')
+# Save the whole-brain inter-network connectivity dictionary
+folders_and_files_management.save_object(object_to_save=subjects_inter_network_connectivity_matrices,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='subjects_inter_network_connectivity_matrices.pkl')
+# Save the ipsilesional inter-network connectivity dictionary
+folders_and_files_management.save_object(object_to_save=subjects_inter_network_ipsilesional_connectivity_matrices,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='subjects_inter_network_ipsi_connectivity_matrices.pkl')
+# Save the contralesional inter-network connectivity dictionary
+folders_and_files_management.save_object(object_to_save=subjects_inter_network_contralesional_connectivity_matrices,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='subjects_inter_network_contra_connectivity_matrices.pkl')
 
-        display.plot_matrix(matrix=mean_internetwork_matrix, mpart='all', horizontal_labels=network_labels_list,
-                            vertical_labels=network_labels_list, labels_colors=network_label_colors,
-                            title=groupe + ' mean ' + kind +
-                            ' contralesional inter-network connectivity matrix',
-                            vmin=mean_internetwork_matrix.min(),
-                            vmax=mean_internetwork_matrix.max(), k=0)
-        plt.show()
+# Stastical analysis
+# Overall homotopic, ipsilesional and contralesional connectivity with respect to groups, controling for gender
+# with a linear model
+kind = 'correlation'
+groups_in_models = ['patients', 'controls']
+# directory where the data are
+data_directory = os.path.join('/media/db242421/db242421_data/ConPagnon_data/text_output_11042018',
+                              kind)
+# Choose the correction method
+correction_method = ''
+# Fit three linear model for the three type of overall connections
+models_to_build = ['mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
-# Perform a two-sample t-test for the contralesional inter-network strength between the network
-contralesional_inter_network_t_test_result = parametric_tests.inter_network_two_sample_t_test(
-    subjects_inter_network_connectivity_matrices=subjects_inter_network_contralesional_connectivity_matrices,
-    groupes=groupes, kinds=kinds, contrast=contrast,
-    assuming_equal_var=True,
-    network_label_list=network_labels_list,
-    alpha=alpha)
+# variables in the model
+variables_model = ['Groupe', 'Sexe']
 
-for kind in kinds:
-    # Display significant t values
-    display.plot_matrix(matrix=contralesional_inter_network_t_test_result[kind]['significant t values'],
-                        labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        title='Contralesional inter-network T statistic for \n {}'.format(kind), linecolor='black',
-                        labels_size=12)
-    plt.show()
-    display.plot_matrix(matrix=contralesional_inter_network_t_test_result[kind]['corrected p values'],
-                        labels_colors=network_label_colors, k=0,
-                        horizontal_labels=network_labels_list, vertical_labels=network_labels_list,
-                        colormap='hot', vmin=0, vmax=alpha,
-                        title='Corrected p values for {} at {} threshold for \n '
-                              'ipsilesional inter network connectivity'.format(kind, alpha),
-                        linecolor='black', labels_size=12)
-    plt.show()
+# formulation of the model
+model_formula = 'Groupe + Sexe'
+
+# Load behavioral data
+behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
+                                                  sheetname='cohort_functional_data')
+# Clean the data: drop subjects if needed
+drop_subjects_list = ['sub40_np130304']
+if drop_subjects_list:
+    behavioral_data_cleaned = behavioral_data.drop(drop_subjects_list)
+else:
+    behavioral_data_cleaned = behavioral_data
+
+# For each model: read the csv for each group, concatenate resultings dataframe, and append
+# (merging by index) all variable of interest in the model.
+
+# a p-values dictionary to store each p-values for each model, for each variables
+pvalues_models = {}
+for model in models_to_build:
+
+    # List of the corresponding dataframes
+    model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
+        csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
+                                                              for group in groups_in_models])
+    # Shift index to be the subjects identifiers
+    model_dataframe = data_management.shift_index_column(panda_dataframe=model_dataframe,
+                                                         columns_to_index='subjects')
+    # Add variables in the model to complete the overall DataFrame
+    model_dataframe = data_management.merge_by_index(dataframe1=model_dataframe,
+                                                     dataframe2=behavioral_data[variables_model])
+    # Build the model formula: the variable to explain is the first column of the
+    # dataframe, and we add to the left all variable in the model
+    model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_model)
+    # Build response, and design matrix from the model model formulation
+    model_response, model_design = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
+                                                                          formula=model_formulation,
+                                                                          return_type='dataframe')
+    # regression with a simple OLS model
+    model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
+
+    # Creation of a directory for the current analysis
+    regression_output_directory = folders_and_files_management.create_directory(
+        directory=os.path.join(output_csv_directory, 'regression_analysis', kind))
+
+    # Write output regression results in csv files
+    data_management.write_ols_results(ols_fit=model_fit, design_matrix=model_design,
+                                      response_variable=model_response,
+                                      output_dir=regression_output_directory,
+                                      model_name=model,
+                                      design_matrix_index_name='subjects')
+    pvalues_models[model] = model_fit.pvalues
+
+from copy import deepcopy
+# Correction of p-values for each variable
+for model in pvalues_models:
+    # Deepcopy of pvalues dictionary
+    pvalues_models_copy = deepcopy(pvalues_models)
+    # Discard the intercept: the zero index
+    pvalues_models_copy[model] = pvalues_models_copy[model].drop(pvalues_models_copy[model].index[0])
+    #
+    p_values_to_correct = []

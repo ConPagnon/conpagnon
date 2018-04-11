@@ -1011,7 +1011,7 @@ def design_matrix_builder(dataframe, formula, return_type='dataframe'):
     """
     # Build the design matrix and return the response variable
     # and design matrix
-    y, X = dmatrices(formula,data=dataframe, return_type=return_type)
+    y, X = dmatrices(formula, data=dataframe, return_type=return_type)
 
     return y, X
 
