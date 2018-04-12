@@ -95,7 +95,8 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/text_output_11042018'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/text_output_11042018'
+output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
 # Cohort behavioral data
 cohort_excel_file_path = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
@@ -213,8 +214,7 @@ homotopic_roi_indices = np.array([
     (21, 26), (22, 29), (23, 28), (24, 27), (30, 31), (32, 33), (35, 34), (36, 37), (38, 39), (44, 40),
     (41, 45), (42, 43), (46, 49), (47, 48), (50, 53), (53, 54), (54, 57), (55, 56), (58, 61), (59, 60),
     (62, 63), (64, 65), (66, 67), (68, 69), (70, 71)])
-# TODO: Construct a dictionnary with homotopic, ipsilesional, left hemisphere and
-# TODO: right hemisphere rois within each defined network ?
+
 # Atlas excel information file
 atlas_excel_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas_version2.xlsx'
 sheetname = 'complete_atlas'
@@ -567,7 +567,8 @@ subjects_inter_network_contralesional_connectivity_matrices = ccm.inter_network_
 
 # Now save the different dictionary for the current analysis
 # Save the times series dictionary
-dictionary_output_directory = os.path.join(output_csv_directory, 'dictionary')
+save_dict_path = os.path.join(output_csv_directory, 'dictionary')
+dictionary_output_directory = data_management.create_directory(save_dict_path)
 folders_and_files_management.save_object(object_to_save=times_series_individual_atlases,
                                          saving_directory=dictionary_output_directory,
                                          filename='times_series_individual_atlases.pkl')
@@ -619,14 +620,12 @@ folders_and_files_management.save_object(object_to_save=subjects_inter_network_c
 # Stastical analysis
 # Overall homotopic, ipsilesional and contralesional connectivity with respect to groups, controling for gender
 # with a linear model
-kind = 'correlation'
+kinds_to_model  = ['correlation', 'partial correlation', 'tangent']
 groups_in_models = ['patients', 'controls']
-# directory where the data are
-# data_directory = os.path.join('/media/db242421/db242421_data/ConPagnon_data/text_output_11042018',
-#                             kind)
-data_directory = os.path.join('D:\\text_output_11042018', kind)
+
+# data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
-correction_method = ''
+correction_method = 'FDR'
 # Fit three linear model for the three type of overall connections
 models_to_build = ['mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
@@ -637,10 +636,10 @@ variables_model = ['Groupe', 'Sexe']
 model_formula = 'Groupe + Sexe'
 
 # Load behavioral data
-cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
+# cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data')
-output_csv_directory = 'D:\\text_output_11042018'
+# output_csv_directory = 'D:\\text_output_11042018'
 # Clean the data: drop subjects if needed
 drop_subjects_list = ['sub40_np130304']
 if drop_subjects_list:
@@ -650,51 +649,83 @@ else:
 
 # For each model: read the csv for each group, concatenate resultings dataframe, and append
 # (merging by index) all variable of interest in the model.
+for kind in kinds_to_model:
+    # directory where the data are
+    data_directory = os.path.join('/media/db242421/db242421_data/ConPagnon_data/text_output_11042018',
+                                  kind)
+    all_model_response = []
+    for model in models_to_build:
+        # List of the corresponding dataframes
+        model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
+            csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
+                                                                  for group in groups_in_models])
+        # Shift index to be the subjects identifiers
+        model_dataframe = data_management.shift_index_column(panda_dataframe=model_dataframe,
+                                                             columns_to_index='subjects')
+        # Add variables in the model to complete the overall DataFrame
+        model_dataframe = data_management.merge_by_index(dataframe1=model_dataframe,
+                                                         dataframe2=behavioral_data[variables_model])
+        # Build the model formula: the variable to explain is the first column of the
+        # dataframe, and we add to the left all variable in the model
+        model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_model)
+        # Build response, and design matrix from the model model formulation
+        model_response, model_design = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
+                                                                              formula=model_formulation,
+                                                                              return_type='dataframe')
+        # regression with a simple OLS model
+        model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
 
-# Initialization of a overall response to call maxT correction
-# in the muols package !
-general_response_matrix = np.zeros(shape=(len(behavioral_data_cleaned.index), len(models_to_build)))
-# Build the design matrix
-from patsy import dmatrix
-all_models_design = np.array(dmatrix(formula_like= '~' + '+'.join(variables_model), data=behavioral_data_cleaned,
-                            return_type='dataframe'))
-for model in models_to_build:
-    # List of the corresponding dataframes
-    model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
-        csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
-                                                              for group in groups_in_models])
-    # Shift index to be the subjects identifiers
-    model_dataframe = data_management.shift_index_column(panda_dataframe=model_dataframe,
-                                                         columns_to_index='subjects')
-    # Add variables in the model to complete the overall DataFrame
-    model_dataframe = data_management.merge_by_index(dataframe1=model_dataframe,
-                                                     dataframe2=behavioral_data[variables_model])
-    # Build the model formula: the variable to explain is the first column of the
-    # dataframe, and we add to the left all variable in the model
-    model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_model)
-    # Build response, and design matrix from the model model formulation
-    model_response, model_design = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
-                                                                          formula=model_formulation,
-                                                                          return_type='dataframe')
-    # regression with a simple OLS model
-    model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
+        # Creation of a directory for the current analysis
+        regression_output_directory = folders_and_files_management.create_directory(
+            directory=os.path.join(output_csv_directory, 'regression_analysis', kind))
 
-    # Creation of a directory for the current analysis
-    regression_output_directory = folders_and_files_management.create_directory(
-        directory=os.path.join(output_csv_directory, 'regression_analysis', kind))
+        # Write output regression results in csv files
+        data_management.write_ols_results(ols_fit=model_fit, design_matrix=model_design,
+                                          response_variable=model_response,
+                                          output_dir=regression_output_directory,
+                                          model_name=model,
+                                          design_matrix_index_name='subjects')
+        # Appending current model response
+        all_model_response.append(model_response)
 
-    # Write output regression results in csv files
-    data_management.write_ols_results(ols_fit=model_fit, design_matrix=model_design,
-                                      response_variable=model_response,
-                                      output_dir=regression_output_directory,
-                                      model_name=model,
-                                      design_matrix_index_name='subjects')
-    # fill the general response matrix
-    model_response_vector = np.array(model_response)
-    general_response_matrix[:, models_to_build.index(model)] = model_response_vector[:, 0]
 
-# p-values correction for the 3 models:
-from pylearn_mulm import mulm
-contrasts = np.identity(X.shape[1])
-mod = mulm.MUOLS(general_response_matrix, X).fit()
-t_values, corrected_p_values, df = mod.t_test_maxT(contrasts=contrasts, pval=True, two_tailed=True)
+
+    # p-values correction for the 3 models with permutation method in mulm package
+    from pylearn_mulm import mulm
+    from patsy import dmatrix
+
+    # The design matrix is the same for all model
+    design_matrix = dmatrix('Groupe + Sexe', behavioral_data_cleaned, return_type='dataframe')
+    # Append the dataframe
+    all_model_response.append(design_matrix)
+    # merge by index the dataframe
+    df_tmp = data_management.merge_by_index(dataframe1=all_model_response[0], dataframe2=all_model_response[1])
+    df_tmp = data_management.merge_by_index(dataframe1=df_tmp, dataframe2=all_model_response[2])
+    # Re-index the response variable dataframe to match the index of design matrix
+    ipsi_homo_contra_connectivity = df_tmp.reindex(design_matrix.index)
+
+    # Fit a linear model and correcting for maximum statistic
+    mulm_fit = mulm.MUOLS(Y=np.array(ipsi_homo_contra_connectivity), X=np.array(design_matrix)).fit()
+    contrasts = np.identity(np.array(design_matrix).shape[1])
+    raw_t, raw_p, df = mulm_fit.t_test(contrasts=contrasts, two_tailed=True, pval=True)
+    if correction_method == 'maxT':
+
+        _, p_values_maximum_T, _, null_distribution_max_T = mulm_fit.t_test_maxT(contrasts=contrasts, two_tailed=True,
+                                                                                 nperms=10000)
+        corrected_p_values = p_values_maximum_T
+    elif correction_method == 'FDR':
+        raw_p_shape = raw_p.shape
+        fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
+                                               method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+        corrected_p_values = fdr_corrected_p_values
+
+    # Append in each model CSV file, the corrected p-values for maximum statistic
+    for model in models_to_build:
+        model_csv_file = os.path.join(output_csv_directory, 'regression_analysis', kind,
+                                 model + '_parameters.csv')
+        # Read the csv file
+        model_parameters = data_management.read_csv(model_csv_file)
+        # Add a last column for adjusted p-values
+        model_parameters[correction_method + 'corrected_pvalues'] = corrected_p_values[:, models_to_build.index(model)]
+        # Write it back to csf format
+        data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
