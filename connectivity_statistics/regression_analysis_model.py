@@ -17,7 +17,8 @@ from statsmodels.sandbox.stats.multicomp import multipletests
 
 def regression_analysis_network_level(groups, kinds, networks_list, root_analysis_directory,
                                       network_model, variables_in_model, behavioral_dataframe,
-                                      correction_method, alpha):
+                                      correction_method=['FDR'], alpha=0.05,
+                                      two_tailed=True, n_permutations=10000):
     """Regress a linear model at the network level
     """
     # The design matrix is the same for all model
@@ -45,6 +46,7 @@ def regression_analysis_network_level(groups, kinds, networks_list, root_analysi
                     dataframe=network_model_dataframe,
                     formula=network_model_dataframe.columns[0] + '~' + '+'.join(variables_in_model)
                 )
+
                 # Fit the model
                 network_model_fit = parametric_tests.ols_regression(y=network_response,
                                                                     X=network_design)
@@ -74,46 +76,51 @@ def regression_analysis_network_level(groups, kinds, networks_list, root_analysi
             # t-test for each variable in the model
             contrasts = np.identity(np.array(design_matrix).shape[1])
             raw_t, raw_p, df = mulm_fit.t_test(contrasts=contrasts, two_tailed=True, pval=True)
-            if correction_method == 'maxT':
+            for corr_method in correction_method:
+                if corr_method == 'maxT':
 
-                _, p_values_maximum_T, _, null_distribution_max_T = mulm_fit.t_test_maxT(contrasts=contrasts,
-                                                                                         two_tailed=True,
-                                                                                         nperms=10000)
-                corrected_p_values = p_values_maximum_T
-                # save the null distribution
-                folders_and_files_management.save_object(object_to_save=null_distribution_max_T,
-                                                         saving_directory=os.path.join(root_analysis_directory,
-                                                                                       'regression_analysis', kind),
-                                                         filename=model+'_network_maximum_statistic_null.pkl')
-            elif correction_method == 'FDR':
-                raw_p_shape = raw_p.shape
-                fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
-                                                       method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
-                corrected_p_values = fdr_corrected_p_values
-            else:
-                # return raw p
-                corrected_p_values = raw_p
+                    _, p_values_maximum_T, _, null_distribution_max_T = \
+                        mulm_fit.t_test_maxT(contrasts=contrasts, two_tailed=two_tailed,
+                                             nperms=n_permutations)
+                    corrected_p_values = p_values_maximum_T
+                    # save the null distribution
+                    folders_and_files_management.save_object(object_to_save=null_distribution_max_T,
+                                                             saving_directory=os.path.join(root_analysis_directory,
+                                                                                           'regression_analysis', kind),
+                                                             filename=model+'_network_maximum_statistic_null.pkl')
+                elif corr_method == 'FDR':
+                    raw_p_shape = raw_p.shape
+                    fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
+                                                           method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+                    corrected_p_values = fdr_corrected_p_values
+                else:
+                    # return raw p
+                    corrected_p_values = raw_p
 
+                # Append in each model for all networkCSV file,
+                # the corrected p-values for the chosen
+                # correction method
+                for network in networks_list:
+                    model_network_csv_file = os.path.join(root_analysis_directory,
+                                                          'regression_analysis', kind,
+                                                          network, model + '_parameters.csv')
 
-            # Append in each model for all networkCSV file, the corrected p-values for the chosen
-            # correction method
-            for network in networks_list:
-                model_network_csv_file = os.path.join(root_analysis_directory, 'regression_analysis', kind,
-                                                      network, model + '_parameters.csv')
-
-                # Read the csv file
-                model_network_parameters = data_management.read_csv(model_network_csv_file)
-                # Add a last column for adjusted p-values
-                model_network_parameters[correction_method + 'corrected_pvalues'] = \
-                    corrected_p_values[:, networks_list.index(network)]
-                # Write it back to csf format
-                data_management.dataframe_to_csv(dataframe=model_network_parameters,
-                                                 path=model_network_csv_file)
+                    # Read the csv file
+                    model_network_parameters = data_management.read_csv(model_network_csv_file)
+                    # Add a last column for adjusted p-values
+                    model_network_parameters[corr_method + 'corrected_pvalues'] = \
+                        corrected_p_values[:, networks_list.index(network)]
+                    # Write it back to csf format
+                    data_management.dataframe_to_csv(dataframe=model_network_parameters,
+                                                     path=model_network_csv_file)
 
 
 def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
-                                    whole_brain_model, variables_in_model, behavioral_dataframe,
-                                    correction_method, alpha):
+                                    whole_brain_model, variables_in_model,
+                                    behavioral_dataframe,
+                                    correction_method=['FDR'], alpha=0.05,
+                                    n_permutations=10000,
+                                    two_tailed=True):
     """Regression analysis on composite connectivity score over the whole brain.
 
     """
@@ -142,9 +149,10 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
             # dataframe, and we add to the left all variable in the model
             model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_in_model)
             # Build response, and design matrix from the model model formulation
-            model_response, model_design = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
-                                                                                  formula=model_formulation,
-                                                                                  return_type='dataframe')
+            model_response, model_design = \
+                parametric_tests.design_matrix_builder(dataframe=model_dataframe,
+                                                       formula=model_formulation,
+                                                       return_type='dataframe')
             # regression with a simple OLS model
             model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
 
@@ -171,33 +179,36 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                               X=np.array(design_matrix)).fit()
         contrasts = np.identity(np.array(design_matrix).shape[1])
         raw_t, raw_p, df = mulm_fit.t_test(contrasts=contrasts, two_tailed=True, pval=True)
-        if correction_method == 'maxT':
+        for corr_method in correction_method:
 
-            _, p_values_maximum_T, _, null_distribution_max_T = mulm_fit.t_test_maxT(contrasts=contrasts,
-                                                                                     two_tailed=True,
-                                                                                     nperms=10000)
-            corrected_p_values = p_values_maximum_T
-            # save the null distribution
-            folders_and_files_management.save_object(object_to_save=null_distribution_max_T,
-                                                     saving_directory=os.path.join(root_analysis_directory,
-                                                                                   'regression_analysis', kind),
-                                                     filename='whole_brain_connectivity_maximum_statistic_null.pkl')
-        elif correction_method == 'FDR':
-            raw_p_shape = raw_p.shape
-            fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
-                                                   method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
-            corrected_p_values = fdr_corrected_p_values
-        else:
-            corrected_p_values = raw_p
+            if corr_method == 'maxT':
 
-        # Append in each model CSV file, the corrected p-values for maximum statistic
-        for model in whole_brain_model:
-            model_csv_file = os.path.join(root_analysis_directory, 'regression_analysis', kind,
-                                          model + '_parameters.csv')
-            # Read the csv file
-            model_parameters = data_management.read_csv(model_csv_file)
-            # Add a last column for adjusted p-values
-            model_parameters[correction_method + 'corrected_pvalues'] = \
-                corrected_p_values[:, whole_brain_model.index(model)]
-            # Write it back to csf format
-            data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
+                _, p_values_maximum_T, _, null_distribution_max_T = \
+                    mulm_fit.t_test_maxT(contrasts=contrasts, two_tailed=two_tailed,
+                                         nperms=n_permutations)
+                corrected_p_values = p_values_maximum_T
+                # save the null distribution
+                folders_and_files_management.save_object(
+                    object_to_save=null_distribution_max_T,
+                    saving_directory=os.path.join(root_analysis_directory,
+                                                  'regression_analysis', kind),
+                                                  filename='whole_brain_connectivity_maximum_statistic_null.pkl')
+            elif corr_method == 'FDR':
+                raw_p_shape = raw_p.shape
+                fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
+                                                       method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+                corrected_p_values = fdr_corrected_p_values
+            else:
+                corrected_p_values = raw_p
+
+            # Append in each model CSV file, the corrected p-values for maximum statistic
+            for model in whole_brain_model:
+                model_csv_file = os.path.join(root_analysis_directory, 'regression_analysis', kind,
+                                              model + '_parameters.csv')
+                # Read the csv file
+                model_parameters = data_management.read_csv(model_csv_file)
+                # Add a last column for adjusted p-values
+                model_parameters[corr_method + 'corrected_pvalues'] = \
+                    corrected_p_values[:, whole_brain_model.index(model)]
+                # Write it back to csf format
+                data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
