@@ -4,6 +4,7 @@ import pandas as pd
 import statsmodels
 import numpy as np
 from utils.folders_and_files_management import create_directory
+from functools import reduce
 """Text file management, output results, modify
  and append information to text files
 
@@ -291,3 +292,12 @@ def dictionary_to_csv(dictionary, output_dir, output_filename):
     with open(os.path.join(output_dir, output_filename), 'w') as f:
         w = csv.writer(f)
         w.writerows(dictionary.items())
+
+
+def merge_list_dataframes(list_dataframes):
+    """Merge a list of dataframes
+    """
+    df = reduce(lambda df1, df2: pd.merge(df1, df2, left_index=True, right_index=True),
+                list_dataframes)
+
+    return df
