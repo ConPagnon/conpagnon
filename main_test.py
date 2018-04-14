@@ -636,10 +636,10 @@ variables_model = ['Groupe', 'Sexe']
 model_formula = 'Groupe + Sexe'
 
 # Load behavioral data
-# cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
+cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data')
-# output_csv_directory = 'D:\\text_output_11042018'
+output_csv_directory = 'D:\\text_output_11042018'
 # Clean the data: drop subjects if needed
 drop_subjects_list = ['sub40_np130304']
 if drop_subjects_list:
@@ -647,85 +647,104 @@ if drop_subjects_list:
 else:
     behavioral_data_cleaned = behavioral_data
 
-# For each model: read the csv for each group, concatenate resultings dataframe, and append
-# (merging by index) all variable of interest in the model.
-for kind in kinds_to_model:
-    # directory where the data are
-    data_directory = os.path.join('/media/db242421/db242421_data/ConPagnon_data/text_output_11042018',
-                                  kind)
-    all_model_response = []
-    for model in models_to_build:
-        # List of the corresponding dataframes
-        model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
-            csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
-                                                                  for group in groups_in_models])
-        # Shift index to be the subjects identifiers
-        model_dataframe = data_management.shift_index_column(panda_dataframe=model_dataframe,
-                                                             columns_to_index='subjects')
-        # Add variables in the model to complete the overall DataFrame
-        model_dataframe = data_management.merge_by_index(dataframe1=model_dataframe,
-                                                         dataframe2=behavioral_data[variables_model])
-        # Build the model formula: the variable to explain is the first column of the
-        # dataframe, and we add to the left all variable in the model
-        model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_model)
-        # Build response, and design matrix from the model model formulation
-        model_response, model_design = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
-                                                                              formula=model_formulation,
-                                                                              return_type='dataframe')
-        # regression with a simple OLS model
-        model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
+model_network_list = ['DMN', 'Auditory', 'Executive',
+                      'Language', 'Basal_Ganglia', 'MTL',
+                      'Salience', 'Sensorimotor', 'Visuospatial',
+                      'Primary_visual', 'Precuneus', 'Secondary_Visual']
 
-        # Creation of a directory for the current analysis
-        regression_output_directory = folders_and_files_management.create_directory(
-            directory=os.path.join(output_csv_directory, 'regression_analysis', kind))
+ipsi_contra_model_network_list = ['DMN', 'Executive',
+                      'Language',  'MTL',
+                      'Salience', 'Sensorimotor', 'Visuospatial',
+                      'Primary_visual', 'Secondary_Visual']
 
-        # Write output regression results in csv files
-        data_management.write_ols_results(ols_fit=model_fit, design_matrix=model_design,
-                                          response_variable=model_response,
-                                          output_dir=regression_output_directory,
-                                          model_name=model,
-                                          design_matrix_index_name='subjects')
-        # Appending current model response
-        all_model_response.append(model_response)
+from connectivity_statistics import regression_analysis_model
+regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
+                                                            kinds=kinds_to_model,
+                                                            networks_list=model_network_list,
+                                                            root_analysis_directory=output_csv_directory,
+                                                            network_model=['intra', 'intra_homotopic'],
+                                                            variables_in_model=variables_model,
+                                                            behavioral_dataframe=behavioral_data_cleaned,
+                                                            correction_method=['FDR', 'maxT'],
+                                                            alpha=0.05)
 
+regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
+                                                            kinds=kinds_to_model,
+                                                            networks_list=ipsi_contra_model_network_list,
+                                                            root_analysis_directory=output_csv_directory,
+                                                            network_model=['ipsi_intra', 'contra_intra'],
+                                                            variables_in_model=variables_model,
+                                                            behavioral_dataframe=behavioral_data_cleaned,
+                                                            correction_method=['FDR','maxT'],
+                                                            alpha=0.05)
 
+regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
+                                                          kinds=kinds_to_model,
+                                                          root_analysis_directory=output_csv_directory,
+                                                          whole_brain_model=models_to_build,
+                                                          variables_in_model=variables_model,
+                                                          behavioral_dataframe=behavioral_data_cleaned,
+                                                          correction_method=['FDR','maxT'],
+                                                          alpha=0.05)
 
-    # p-values correction for the 3 models with permutation method in mulm package
-    from pylearn_mulm import mulm
-    from patsy import dmatrix
+# Inter-network statistic : whole brain, ipsilesional and contralesional
+from patsy import dmatrix
+df = behavioral_data_cleaned
+formula = 'Groupe + Sexe'
+NA_action = 'drop'
+kind = 'correlation'
 
-    # The design matrix is the same for all model
-    design_matrix = dmatrix('Groupe + Sexe', behavioral_data_cleaned, return_type='dataframe')
-    # Append the dataframe
-    all_model_response.append(design_matrix)
-    # merge by index the dataframe
-    df_tmp = data_management.merge_by_index(dataframe1=all_model_response[0], dataframe2=all_model_response[1])
-    df_tmp = data_management.merge_by_index(dataframe1=df_tmp, dataframe2=all_model_response[2])
-    # Re-index the response variable dataframe to match the index of design matrix
-    ipsi_homo_contra_connectivity = df_tmp.reindex(design_matrix.index)
+whole_brain_internetwork_matrices = folders_and_files_management.load_object(
+    full_path_to_object='D:\\text_output_11042018\\dictionary\\subjects_inter_network_connectivity_matrices.pkl'
+)
+from data_handling import dictionary_operations
+connectivity_data = dictionary_operations.merge_dictionary([whole_brain_internetwork_matrices['patients'],
+                                                            whole_brain_internetwork_matrices['controls']],
+                                                           'all_subjects')['all_subjects']
 
-    # Fit a linear model and correcting for maximum statistic
-    mulm_fit = mulm.MUOLS(Y=np.array(ipsi_homo_contra_connectivity), X=np.array(design_matrix)).fit()
-    contrasts = np.identity(np.array(design_matrix).shape[1])
-    raw_t, raw_p, df = mulm_fit.t_test(contrasts=contrasts, two_tailed=True, pval=True)
-    if correction_method == 'maxT':
+# Build the design matrix according the dataframe and regression model.
+X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe',
+               NA_action=NA_action)
 
-        _, p_values_maximum_T, _, null_distribution_max_T = mulm_fit.t_test_maxT(contrasts=contrasts, two_tailed=True,
-                                                                                 nperms=10000)
-        corrected_p_values = p_values_maximum_T
-    elif correction_method == 'FDR':
-        raw_p_shape = raw_p.shape
-        fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
-                                               method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
-        corrected_p_values = fdr_corrected_p_values
+# Stacked vectorized connectivity matrices in the same order of subjects
+# index list of the DESIGN MATRIX, because of missing data, not all subjects
+# will be in the analysis.
+# All the subjects present in the excel file
+general_regression_subjects_list = X_df.index
+# Intersection of subjects to perform regression and  the general list because
+# of possible dropped NA values.
+regression_subjects_list = \
+    list(set(connectivity_data.keys()).intersection(general_regression_subjects_list))
 
-    # Append in each model CSV file, the corrected p-values for maximum statistic
-    for model in models_to_build:
-        model_csv_file = os.path.join(output_csv_directory, 'regression_analysis', kind,
-                                 model + '_parameters.csv')
-        # Read the csv file
-        model_parameters = data_management.read_csv(model_csv_file)
-        # Add a last column for adjusted p-values
-        model_parameters[correction_method + 'corrected_pvalues'] = corrected_p_values[:, models_to_build.index(model)]
-        # Write it back to csf format
-        data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
+y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list])
+
+# Conversion of X_df into a classic numpy array
+X_df = X_df.loc[regression_subjects_list]
+X = np.array(X_df.loc[regression_subjects_list])
+
+contrasts='Id'
+# Setting the contrast vector
+if contrasts == 'Id':
+    contrasts = np.identity(X.shape[1])
+else:
+    contrasts = contrasts
+
+from pylearn_mulm import mulm
+compute_pvalues = True
+pvalues_tail = True
+# Mass univariate testing using MUOLS library
+mod = mulm.MUOLS(Y=y, X=X).fit()
+raw_tvals, raw_pvals, dfree = mod.t_test(contrasts=contrasts,
+                                               pval=compute_pvalues,
+                                               two_tailed=pvalues_tail)
+
+# Compute prediction of the models
+y_prediction = mod.predict(X=X)
+
+# Replace nan values in pvalues_vec by 1 to avoid failure in correction method
+raw_pvals[np.isnan(raw_pvals)] = 1.
+
+# Initialize boolean mask for rejected H0 hypothesis, i.e for corrected pvalues < alpha.
+reject_ = np.zeros(raw_pvals.shape, dtype='bool')
+# Initialize array to save corrected pvalues
+pvalues_vec_corrected = np.zeros(raw_pvals.shape)
