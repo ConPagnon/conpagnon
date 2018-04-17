@@ -266,7 +266,8 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
 def linear_regression(connectivity_data, data, formula, NA_action,
                       kind, subjects_to_drop=None, sheetname=None,save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
-                      alpha=0.05, pvals_correction_method='fdr_bh', nperms_maxT=10000):
+                      alpha=0.05, pvals_correction_method=['FDR'], nperms_maxT=10000,
+                      vectorize=False, discard_diagonal=False):
     # TODO: add a way to select column containing the subjects ID, and
     # TODO: shit it to be the index of the DataFrame
     """Fit a linear model on connectivity coefficients across subjects.
@@ -328,18 +329,18 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     """
     # Reading the data
     df = pd.read_excel(data, sheet_name=sheetname)
-
+    
     # Drop the subjects we want to discard :
     df_c = df.copy()
     if subjects_to_drop is not None:
         df = df_c.drop(labels=subjects_to_drop)
     else:
         df = df_c
-
+    
     # Build the design matrix according the dataframe and regression model.
     X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe',
                    NA_action=NA_action)
-
+    
     # Stacked vectorized connectivity matrices in the same order of subjects
     # index list of the DESIGN MATRIX, because of missing data, not all subjects
     # will be in the analysis.
@@ -350,78 +351,43 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     regression_subjects_list = \
         list(set(connectivity_data.keys()).intersection(general_regression_subjects_list))
     y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list])
-
+    
+    if vectorize:
+        y = sym_matrix_to_vec(y, discard_diagonal=discard_diagonal)
+    else:
+        y = y
+    
     # Conversion of X_df into a classic numpy array
     X_df = X_df.loc[regression_subjects_list]
     X = np.array(X_df.loc[regression_subjects_list])
-
+    
     # Setting the contrast vector
     if contrasts == 'Id':
         contrasts = np.identity(X.shape[1])
     else:
         contrasts = contrasts
-
+    
     # Mass univariate testing using MUOLS library
-    mod = mulm.MUOLS(Y=y, X=X)
-    raw_tvals, raw_pvals, dfree = mod.fit().t_test(contrasts=contrasts,
+    mod = mulm.MUOLS(Y=y, X=X).fit()
+    raw_tvals, raw_pvals, dfree = mod.t_test(contrasts=contrasts,
                                                    pval=compute_pvalues,
                                                    two_tailed=pvalues_tail)
-
+    
     # Compute prediction of the models
     y_prediction = mod.predict(X=X)
-
+    
     # Replace nan values in pvalues_vec by 1 to avoid failure in correction method
     raw_pvals[np.isnan(raw_pvals)] = 1.
-
+    
     # Initialize boolean mask for rejected H0 hypothesis, i.e for corrected pvalues < alpha.
     reject_ = np.zeros(raw_pvals.shape, dtype='bool')
     # Initialize array to save corrected pvalues
     pvalues_vec_corrected = np.zeros(raw_pvals.shape)
-
-    # Choose multiple comparison correction method among the statsmodels library
-    if pvals_correction_method in ['bonferroni', 'sidak', 'holm-sidak', 'holm',
-                                   'simes-hochberg', 'hommel', 'fdr_bh', 'fdr_by',
-                                   'fdr_tsbh', 'fdr_tsbky']:
-
-        # Correction of raw p values for each dependent variables
-        for i in range(len(X_df.columns)):
-            # correction of pvalues, reject of null hypotheses below alpha level.
-            reject_[i, :], pvalues_vec_corrected[i, :], _, _ = \
-                multipletests(pvals=raw_pvals[i, :],
-                              alpha=alpha,
-                              method=pvals_correction_method)
-
-    elif pvals_correction_method == 'maxT':
-        # Inference with the maximum statistic method :
-        _, pvalues_vec_corrected, _ = mod.t_test_maxT(contrasts=contrasts,
-                                                      nperms=nperms_maxT)
-        # Manual construction for the reject_ mask:
-        reject_ = pvalues_vec_corrected < alpha
-
-    else:
-        raise ValueError('Unrecognized correction method ! \n'
-                         'Please refer to the docstring function.')
-
-    # Reconstruction in a matrix structure of the different output
-
-    # Reconstruction of boolean reject_ mask : it's a binary mask
-    reject_m_ = vec_to_sym_matrix(reject_)
-    # Reconstruction of raw t values
-    raw_tvals_m = vec_to_sym_matrix(raw_tvals)
-    # Reconstruction of raw p values
-    raw_pvals_m = vec_to_sym_matrix(raw_pvals)
-    # Reconstruction of corrected p values
-    corrected_pvals_m = vec_to_sym_matrix(pvalues_vec_corrected)
-    # Construction of masked raw t values according to corrected p values
-    # under alpha threshold
-    significant_tvals_m = np.multiply(raw_tvals_m, reject_m_)
-
+    
+    # Save the results dictionary per correction method
+    correction_method_regression_results = dict.fromkeys(pvals_correction_method)
+    
     # Saving the results of the regression
-
-    # Listing the dependent variable, in the order of the output of
-    # the regression analysis
-    covariable_name = X_df.columns
-
     # Creation of the directory containing the regression results
     if save_regression_directory is not None:
         try:
@@ -429,23 +395,78 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
-
-    # Save a dictionnary with the principal
-    regression_results = dict.fromkeys(covariable_name)
-    for i in range(len(X_df.columns)):
-        regression_results[covariable_name[i]] = \
-            {'raw pvalues': raw_pvals_m[i, :, :],
-             'raw tvalues': raw_tvals_m[i, :, :],
-             'corrected pvalues': corrected_pvals_m[i, :, :],
-             'significant tvalues': significant_tvals_m[i, :, :]}
-
+        
+    # Choose multiple comparison correction method among the statsmodels library
+    for corr_method in pvals_correction_method:
+        
+        # Listing the dependent variable, in the order of the output of
+        # the regression analysis
+        covariable_name = X_df.columns
+        # Save a dictionnary with the principal
+        regression_results = dict.fromkeys(covariable_name)
+        
+        if corr_method == 'FDR':
+            
+            # Flatten the array of raw p-values
+            raw_p_shape = raw_pvals.shape
+            # Call fdr correction, and reshape the results to (n_variable, n_features)
+            pvalues_vec_corrected = multipletests(pvals=raw_pvals.flatten(),
+                                                   method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+            
+            reject_ = multipletests(pvals=raw_pvals.flatten(),
+                                                   method='fdr_bh', alpha=alpha)[0].reshape(raw_p_shape)
+        
+        elif corr_method == 'maxT':
+            # Inference with the maximum statistic method :
+            _, pvalues_vec_corrected, _, null_distribution = \
+            mod.t_test_maxT(contrasts=contrasts,
+                            nperms=nperms_maxT)
+            # Manual construction for the reject_ mask:
+            reject_ = pvalues_vec_corrected < alpha
+        
+        else:
+            raise ValueError('Unrecognized correction method ! \n'
+                             'Please refer to the docstring function.')
+        
+        # Reconstruction in a matrix structure of the different output
+        
+        # Reconstruction of boolean reject_ mask : it's a binary mask
+        reject_m_ = vec_to_sym_matrix(reject_)
+        # Reconstruction of raw t values
+        raw_tvals_m = vec_to_sym_matrix(raw_tvals)
+        # Reconstruction of raw p values
+        raw_pvals_m = vec_to_sym_matrix(raw_pvals)
+        # Reconstruction of corrected p values
+        corrected_pvals_m = vec_to_sym_matrix(pvalues_vec_corrected)
+        # Construction of masked raw t values according to corrected p values
+        # under alpha threshold
+        significant_tvals_m = np.multiply(raw_tvals_m, reject_m_)
+        
+    
+        
+        for i in range(len(X_df.columns)):
+            regression_results[covariable_name[i]] = \
+                {'raw pvalues': raw_pvals_m[i, :, :],
+                 'raw tvalues': raw_tvals_m[i, :, :],
+                 'corrected pvalues': corrected_pvals_m[i, :, :],
+                 'significant tvalues': significant_tvals_m[i, :, :]}
+                
+    
+                
+        correction_method_regression_results[corr_method] = {'results': regression_results}
+    
+        if corr_method == 'maxT':    
+            correction_method_regression_results['maximum T null distribution'] = null_distribution
+    
+    
     # saving the dictionnary
     if save_regression_directory is not None:
-        folders_and_files_management.save_object(regression_results,
+        folders_and_files_management.save_object(correction_method_regression_results,
                                                  save_regression_directory,
                                                  'regression_results.pkl')
+    
 
-    return regression_results, X_df, y, y_prediction, regression_subjects_list
+    return correction_method_regression_results, X_df, y, y_prediction, regression_subjects_list
 
 
 def functional_connectivity_distribution_estimation(functional_connectivity_estimate):

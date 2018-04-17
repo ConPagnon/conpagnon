@@ -636,10 +636,10 @@ variables_model = ['Groupe', 'Sexe']
 model_formula = 'Groupe + Sexe'
 
 # Load behavioral data
-cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
+# cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data')
-output_csv_directory = 'D:\\text_output_11042018'
+#output_csv_directory = 'D:\\text_output_11042018'
 # Clean the data: drop subjects if needed
 drop_subjects_list = ['sub40_np130304']
 if drop_subjects_list:
@@ -650,12 +650,12 @@ else:
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
                       'Salience', 'Sensorimotor', 'Visuospatial',
-                      'Primary_visual', 'Precuneus', 'Secondary_Visual']
+                      'Primary_Visual', 'Precuneus', 'Secondary_Visual']
 
 ipsi_contra_model_network_list = ['DMN', 'Executive',
                       'Language',  'MTL',
                       'Salience', 'Sensorimotor', 'Visuospatial',
-                      'Primary_visual', 'Secondary_Visual']
+                      'Primary_Visual', 'Secondary_Visual']
 
 from connectivity_statistics import regression_analysis_model
 regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
@@ -688,63 +688,110 @@ regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_model
                                                           alpha=0.05)
 
 # Inter-network statistic : whole brain, ipsilesional and contralesional
-from patsy import dmatrix
-df = behavioral_data_cleaned
-formula = 'Groupe + Sexe'
-NA_action = 'drop'
-kind = 'correlation'
-
+inter_network_model = 'overall_inter_network'
+# Whole brain internetwork
+# Load the dictionary
 whole_brain_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='D:\\text_output_11042018\\dictionary\\subjects_inter_network_connectivity_matrices.pkl'
-)
-from data_handling import dictionary_operations
-connectivity_data = dictionary_operations.merge_dictionary([whole_brain_internetwork_matrices['patients'],
-                                                            whole_brain_internetwork_matrices['controls']],
-                                                           'all_subjects')['all_subjects']
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
+                        'subjects_inter_network_connectivity_matrices.pkl')
 
-# Build the design matrix according the dataframe and regression model.
-X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe',
-               NA_action=NA_action)
+regression_analysis_model.regression_analysis_internetwork_level(
+    internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices,
+    groups_in_model=groups_in_models,
+    behavioral_data_path=cohort_excel_file_path,
+    sheet_name='cohort_functional_data',
+    subjects_to_drop=drop_subjects_list,
+    model_formula=model_formula,
+    kinds_to_model=kinds_to_model,
+    root_analysis_directory=output_csv_directory,
+    inter_network_model=inter_network_model,
+    network_labels_list=network_labels_list,
+    network_labels_colors=network_label_colors,
+    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    alpha=0.05)
+    # Ipsilesional inter-network analysis
+ipsi_internetwork_model = 'ipsi_inter_network'
+ipsi_internetwork_matrices = folders_and_files_management.load_object(
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
+                        'subjects_inter_network_ipsi_connectivity_matrices.pkl')
 
-# Stacked vectorized connectivity matrices in the same order of subjects
-# index list of the DESIGN MATRIX, because of missing data, not all subjects
-# will be in the analysis.
-# All the subjects present in the excel file
-general_regression_subjects_list = X_df.index
-# Intersection of subjects to perform regression and  the general list because
-# of possible dropped NA values.
-regression_subjects_list = \
-    list(set(connectivity_data.keys()).intersection(general_regression_subjects_list))
+regression_analysis_model.regression_analysis_internetwork_level(
+    internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices,
+    groups_in_model=groups_in_models,
+    behavioral_data_path=cohort_excel_file_path,
+    sheet_name='cohort_functional_data',
+    subjects_to_drop=drop_subjects_list,
+    model_formula=model_formula,
+    kinds_to_model=kinds_to_model,
+    root_analysis_directory=output_csv_directory,
+    inter_network_model=ipsi_internetwork_model,
+    network_labels_list=network_labels_list ,
+    network_labels_colors=network_label_colors,
+    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    alpha=0.05)
+    # Contralesional inter-network analysis
+contra_internetwork_model = 'contra_inter_network'
+contra_internetwork_matrices = folders_and_files_management.load_object(
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
+                        'subjects_inter_network_contra_connectivity_matrices.pkl')
 
-y = np.array([connectivity_data[subject][kind] for subject in regression_subjects_list])
+regression_analysis_model.regression_analysis_internetwork_level(
+    internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices,
+    groups_in_model=groups_in_models,
+    behavioral_data_path=cohort_excel_file_path,
+    sheet_name='cohort_functional_data',
+    subjects_to_drop=drop_subjects_list,
+    model_formula=model_formula,
+    kinds_to_model=kinds_to_model,
+    root_analysis_directory=output_csv_directory,
+    inter_network_model=contra_internetwork_model,
+    network_labels_list=network_labels_list ,
+    network_labels_colors=network_label_colors,
+    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    alpha=0.05)
 
-# Conversion of X_df into a classic numpy array
-X_df = X_df.loc[regression_subjects_list]
-X = np.array(X_df.loc[regression_subjects_list])
+from matplotlib.backends.backend_pdf import PdfPages
+# Study the relation of homotopic connectivity with respect to normalized lesion size
+homotopic_lesion_model = 'mean_homotopic~standardized_language_score + Sexe + lesion_normalized'
 
-contrasts='Id'
-# Setting the contrast vector
-if contrasts == 'Id':
-    contrasts = np.identity(X.shape[1])
-else:
-    contrasts = contrasts
+model_name = 'mean_homotopic_lesionSize_gender_language'
+design_matrix = data_management.read_excel_file(cohort_excel_file_path,
+                                                sheetname='cohort_functional_data')
+for kind in kinds_to_model:
+    patients_homotopic = data_management.read_csv(csv_file=os.path.join(output_csv_directory, kind, 
+                                                                        'patients_'+ kind + '_mean_homotopic.csv'))
+    patients_homotopic = data_management.shift_index_column(panda_dataframe=patients_homotopic, 
+                                                            columns_to_index='subjects')
+    model_dataframe = data_management.merge_by_index(patients_homotopic, design_matrix)
+    mean_homotopic, X = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
+                                                               formula=homotopic_lesion_model)
+    homotopic_lesion_model_fit = parametric_tests.ols_regression(mean_homotopic, X)
+    # Write the results
+    data_management.write_ols_results(ols_fit=homotopic_lesion_model_fit, design_matrix=X, 
+                                      response_variable=mean_homotopic, 
+                                      output_dir=os.path.join(output_csv_directory, 'regression_analysis', kind),
+                                      model_name=model_name,
+                                      design_matrix_index_name='subjects')
+    # Save the plot
+    with PdfPages(os.path.join(output_csv_directory, 'regression_analysis', kind, model_name + '.pdf')) as pdf:
+        plt.figure()
+        display.seaborn_scatterplot(x='standardized_language_score', y='mean_homotopic', data=model_dataframe,
+                                    figure_title='Evolution of mean homotopic connectivity \n with language score, '
+                                                 'rsquared = '
+                                                 + str(homotopic_lesion_model_fit.rsquared_adj) + ' ,p = ' +
+                                                       str(homotopic_lesion_model_fit.pvalues[1]),
+                                    line_kws={'color': 'firebrick'}, scatter_kws={'color': ['seagreen', 'red']},
+                                    hue='langage_clinique')
 
-from pylearn_mulm import mulm
-compute_pvalues = True
-pvalues_tail = True
-# Mass univariate testing using MUOLS library
-mod = mulm.MUOLS(Y=y, X=X).fit()
-raw_tvals, raw_pvals, dfree = mod.t_test(contrasts=contrasts,
-                                               pval=compute_pvalues,
-                                               two_tailed=pvalues_tail)
+        pdf.savefig(bbox_inches='tight')
 
-# Compute prediction of the models
-y_prediction = mod.predict(X=X)
-
-# Replace nan values in pvalues_vec by 1 to avoid failure in correction method
-raw_pvals[np.isnan(raw_pvals)] = 1.
-
-# Initialize boolean mask for rejected H0 hypothesis, i.e for corrected pvalues < alpha.
-reject_ = np.zeros(raw_pvals.shape, dtype='bool')
-# Initialize array to save corrected pvalues
-pvalues_vec_corrected = np.zeros(raw_pvals.shape)
+plt.figure()
+sns.lmplot(x='standardized_language_score', y='mean_homotopic', data=model_dataframe,
+           hue='langage_clinique', fit_reg=True)
+plt.show()

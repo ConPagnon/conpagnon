@@ -5,7 +5,7 @@ level
 Author: Dhaif BEKHA.
 
 """
-from data_handling import data_management
+from data_handling import data_management, dictionary_operations
 from utils import folders_and_files_management
 import os
 from connectivity_statistics import parametric_tests
@@ -13,7 +13,8 @@ from pylearn_mulm import mulm
 from patsy import dmatrix
 import numpy as np
 from statsmodels.sandbox.stats.multicomp import multipletests
-
+from matplotlib.backends.backend_pdf import PdfPages
+from plotting import display
 
 def regression_analysis_network_level(groups, kinds, networks_list, root_analysis_directory,
                                       network_model, variables_in_model, behavioral_dataframe,
@@ -212,3 +213,95 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                     corrected_p_values[:, whole_brain_model.index(model)]
                 # Write it back to csf format
                 data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
+                
+                
+def regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary, groups_in_model, behavioral_data_path,
+                                           sheet_name, subjects_to_drop, model_formula, kinds_to_model,  root_analysis_directory,
+                                           inter_network_model, network_labels_list, network_labels_colors,
+                                           pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+                                           discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+                                           compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+                                           alpha=0.05
+                                           ):
+    
+    # Merge the dictionary into one, to give it as data argument to
+    # linear regression function
+    group_dictionary_list = [internetwork_subjects_connectivity_dictionary[group] for group in groups_in_model]
+    connectivity_data = dictionary_operations.merge_dictionary(group_dictionary_list,
+                                                               'all_subjects')['all_subjects']
+    
+    # We iterate for each kind
+    for kind in kinds_to_model:
+        # Create and save the raw data dictionary 
+        raw_connectivity_data_output = data_management.create_directory(
+                directory=os.path.join(root_analysis_directory, kind, inter_network_model))
+        
+        folders_and_files_management.save_object(object_to_save=connectivity_data,
+                                                 saving_directory=raw_connectivity_data_output, 
+                                                 filename=inter_network_model + 'data.pkl'
+                                                 )
+        # Create the output directory for the current kind
+        inter_network_analysis_output = data_management.create_directory(
+                directory=os.path.join(root_analysis_directory, 'regression_analysis',
+                                       kind, 
+                                       inter_network_model))
+        
+        regression_results, X_df, y, y_prediction, regression_subjects_list = parametric_tests.linear_regression(connectivity_data=connectivity_data,
+                                       data=behavioral_data_path,
+                                       sheetname='cohort_functional_data',
+                                       subjects_to_drop=['sub40_np130304'],
+                                       pvals_correction_method=['FDR', 'maxT'],
+                                       save_regression_directory=inter_network_analysis_output,
+                                       kind=kind,
+                                       NA_action=NA_action,
+                                       formula=model_formula,
+                                       vectorize=True,
+                                       discard_diagonal=False)
+        # Save the design matrix 
+        data_management.dataframe_to_csv(dataframe=X_df, 
+                                         path=os.path.join(inter_network_analysis_output, 'design_matrix.csv'),
+                                         index=True)
+        
+        # Create the figure for each correction method: matrix plot
+        # of significant p-values, and t-values
+        
+        # For each variable plot and save a matrix, with T statistic masked
+        # for significant values, and significant p values for each variables
+        corr_method_output_pdf = os.path.join(inter_network_analysis_output,
+                                              kind + '_' + inter_network_model + '.pdf')
+        
+        with PdfPages(corr_method_output_pdf) as pdf:
+            
+            for corr_method in pvals_correction_method:
+                # Fetch the results of the model 
+                corr_method_results = regression_results[corr_method]['results']
+    
+        
+                # iterate over all the keys of dictionary results, i.e
+                # all variable
+                for variable in corr_method_results.keys():  
+                    # Significant t statistic
+                    display.plot_matrix(matrix=corr_method_results[variable]['significant tvalues'],
+                                        labels_colors=network_labels_colors, mpart='lower', k=-1, 
+                                        colormap='RdBu_r',
+                                        colorbar_params={'shrink': .5}, center=0,
+                                        vmin=None, vmax=None, labels_size=8, 
+                                        horizontal_labels=network_labels_list,
+                                        vertical_labels=network_labels_list,
+                                        linewidths=.5, linecolor='black', 
+                                        title=corr_method + '_' + variable + '_effect',
+                                        figure_size=(12, 9))
+                    pdf.savefig()
+                    # Significant p values
+                    display.plot_matrix(matrix=corr_method_results[variable]['corrected pvalues'],
+                        labels_colors=network_labels_colors, mpart='lower', k=-1, 
+                        colormap='hot',
+                        colorbar_params={'shrink': .5}, center=0,
+                        vmin=0, vmax=alpha, labels_size=8, 
+                        horizontal_labels=network_labels_list,
+                        vertical_labels=network_labels_list,
+                        linewidths=.5, linecolor='black', 
+                        title=corr_method + '_' + variable + '_p values',
+                        figure_size=(12, 9))
+                    pdf.savefig()
+

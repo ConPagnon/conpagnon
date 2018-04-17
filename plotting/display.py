@@ -367,3 +367,11 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
     plt.show()
 
 
+def seaborn_scatterplot(x, y, data, figure_title, **kwargs):
+
+    plt.figure()
+    sns.lmplot(x=x, y=y, data=data, **kwargs)
+    plt.title(figure_title)
+
+
+
