@@ -692,66 +692,75 @@ inter_network_model = 'overall_inter_network'
 # Whole brain internetwork
 # Load the dictionary
 whole_brain_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/subjects_inter_network_connectivity_matrices.pkl')
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
+                        'subjects_inter_network_connectivity_matrices.pkl')
 
-regression_analysis_model.regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices, 
-                                                                 groups_in_model=groups_in_models, 
-                                                                 behavioral_data_path=cohort_excel_file_path,
-                                                                 sheet_name='cohort_functional_data', 
-                                                                 subjects_to_drop=drop_subjects_list, 
-                                                                 model_formula=model_formula, 
-                                                                 kinds_to_model=kinds_to_model,  
-                                                                 root_analysis_directory=output_csv_directory,
-                                                                 inter_network_model=inter_network_model, 
-                                                                 network_labels_list=network_labels_list, 
-                                                                 network_labels_colors=network_label_colors,
-                                                                 pvals_correction_method=['maxT', 'FDR'], vectorize=True,
-                                                                 discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
-                                                                 compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
-                                                                 alpha=0.05)
-# Ipsilesional inter-network analysis
+regression_analysis_model.regression_analysis_internetwork_level(
+    internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices,
+    groups_in_model=groups_in_models,
+    behavioral_data_path=cohort_excel_file_path,
+    sheet_name='cohort_functional_data',
+    subjects_to_drop=drop_subjects_list,
+    model_formula=model_formula,
+    kinds_to_model=kinds_to_model,
+    root_analysis_directory=output_csv_directory,
+    inter_network_model=inter_network_model,
+    network_labels_list=network_labels_list,
+    network_labels_colors=network_label_colors,
+    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    alpha=0.05)
+    # Ipsilesional inter-network analysis
 ipsi_internetwork_model = 'ipsi_inter_network'
 ipsi_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/subjects_inter_network_ipsi_connectivity_matrices.pkl')
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
+                        'subjects_inter_network_ipsi_connectivity_matrices.pkl')
 
-regression_analysis_model.regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices, 
-                                                                 groups_in_model=groups_in_models, 
-                                                                 behavioral_data_path=cohort_excel_file_path,
-                                                                 sheet_name='cohort_functional_data', 
-                                                                 subjects_to_drop=drop_subjects_list, 
-                                                                 model_formula=model_formula, 
-                                                                 kinds_to_model=kinds_to_model,  
-                                                                 root_analysis_directory=output_csv_directory,
-                                                                 inter_network_model=ipsi_internetwork_model, 
-                                                                 network_labels_list=network_labels_list , 
-                                                                 network_labels_colors=network_label_colors,
-                                                                 pvals_correction_method=['maxT', 'FDR'], vectorize=True,
-                                                                 discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
-                                                                 compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
-                                                                 alpha=0.05)
-# Contralesional inter-network analysis
+regression_analysis_model.regression_analysis_internetwork_level(
+    internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices,
+    groups_in_model=groups_in_models,
+    behavioral_data_path=cohort_excel_file_path,
+    sheet_name='cohort_functional_data',
+    subjects_to_drop=drop_subjects_list,
+    model_formula=model_formula,
+    kinds_to_model=kinds_to_model,
+    root_analysis_directory=output_csv_directory,
+    inter_network_model=ipsi_internetwork_model,
+    network_labels_list=network_labels_list ,
+    network_labels_colors=network_label_colors,
+    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    alpha=0.05)
+    # Contralesional inter-network analysis
 contra_internetwork_model = 'contra_inter_network'
 contra_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/subjects_inter_network_contra_connectivity_matrices.pkl')
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
+                        'subjects_inter_network_contra_connectivity_matrices.pkl')
 
-regression_analysis_model.regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices, 
-                                                                 groups_in_model=groups_in_models, 
-                                                                 behavioral_data_path=cohort_excel_file_path,
-                                                                 sheet_name='cohort_functional_data', 
-                                                                 subjects_to_drop=drop_subjects_list, 
-                                                                 model_formula=model_formula, 
-                                                                 kinds_to_model=kinds_to_model,  
-                                                                 root_analysis_directory=output_csv_directory,
-                                                                 inter_network_model=contra_internetwork_model, 
-                                                                 network_labels_list=network_labels_list , 
-                                                                 network_labels_colors=network_label_colors,
-                                                                 pvals_correction_method=['maxT', 'FDR'], vectorize=True,
-                                                                 discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
-                                                                 compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
-                                                                 alpha=0.05)
+regression_analysis_model.regression_analysis_internetwork_level(
+    internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices,
+    groups_in_model=groups_in_models,
+    behavioral_data_path=cohort_excel_file_path,
+    sheet_name='cohort_functional_data',
+    subjects_to_drop=drop_subjects_list,
+    model_formula=model_formula,
+    kinds_to_model=kinds_to_model,
+    root_analysis_directory=output_csv_directory,
+    inter_network_model=contra_internetwork_model,
+    network_labels_list=network_labels_list ,
+    network_labels_colors=network_label_colors,
+    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
+    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    alpha=0.05)
 
-# Study the relation of homotopic connectivity with respect to lesion size
-homotopic_lesion_model = 'mean_homotopic~lesion_normalized'
+from matplotlib.backends.backend_pdf import PdfPages
+# Study the relation of homotopic connectivity with respect to normalized lesion size
+homotopic_lesion_model = 'mean_homotopic~standardized_language_score + Sexe + lesion_normalized'
+
+model_name = 'mean_homotopic_lesionSize_gender_language'
 design_matrix = data_management.read_excel_file(cohort_excel_file_path,
                                                 sheetname='cohort_functional_data')
 for kind in kinds_to_model:
@@ -767,10 +776,22 @@ for kind in kinds_to_model:
     data_management.write_ols_results(ols_fit=homotopic_lesion_model_fit, design_matrix=X, 
                                       response_variable=mean_homotopic, 
                                       output_dir=os.path.join(output_csv_directory, 'regression_analysis', kind),
-                                      model_name='mean_homotopic_lesionSize',
+                                      model_name=model_name,
                                       design_matrix_index_name='subjects')
-    # Display mean homotopic versus lesion normalized
-    plt.plot(np.array(X['lesion_normalized']), np.array(mean_homotopic), 'o', 'blue')
-                                        
-    
-    
+    # Save the plot
+    with PdfPages(os.path.join(output_csv_directory, 'regression_analysis', kind, model_name + '.pdf')) as pdf:
+        plt.figure()
+        display.seaborn_scatterplot(x='standardized_language_score', y='mean_homotopic', data=model_dataframe,
+                                    figure_title='Evolution of mean homotopic connectivity \n with language score, '
+                                                 'rsquared = '
+                                                 + str(homotopic_lesion_model_fit.rsquared_adj) + ' ,p = ' +
+                                                       str(homotopic_lesion_model_fit.pvalues[1]),
+                                    line_kws={'color': 'firebrick'}, scatter_kws={'color': ['seagreen', 'red']},
+                                    hue='langage_clinique')
+
+        pdf.savefig(bbox_inches='tight')
+
+plt.figure()
+sns.lmplot(x='standardized_language_score', y='mean_homotopic', data=model_dataframe,
+           hue='langage_clinique', fit_reg=True)
+plt.show()
