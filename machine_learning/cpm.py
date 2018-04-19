@@ -233,6 +233,13 @@ behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.arr
                                                   'predicted_negative_model_scores': behavior_prediction_negative_edges},
                                             index=behavioral_scores.index)
 
+sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+           ci=None, line_kws={'color': 'black'}, scatter_kws={'color': 'red'})
+plt.show()
+plt.figure()
+sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+           ci=None, line_kws={'color': 'black'}, scatter_kws={'color': 'blue'})
+plt.show()
 
 
 
