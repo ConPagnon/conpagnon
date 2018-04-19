@@ -223,6 +223,19 @@ R_predict_positive_model,  P_predict_negative_model = \
     stats.pearsonr(x=np.array(behavioral_scores),
                    y=behavior_prediction_positive_edges)
 
+# Plot relationship between predicted and true value by the model
+import pandas as pd
+import seaborn as sns
+
+# Add predicted score for negative and positive edges model
+behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.array(behavioral_scores) ,
+                                                  'predicted_positive_model_scores': behavior_prediction_positive_edges,
+                                                  'predicted_negative_model_scores': behavior_prediction_negative_edges},
+                                            index=behavioral_scores.index)
+
+
+
+
 from plotting import display
 save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
 # Plot the negative and positive edges on a glass brain
