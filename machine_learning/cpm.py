@@ -236,20 +236,7 @@ behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.arr
                                             index=behavioral_scores.index)
 
 
-g = sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-               fit_reg=False, hue='language profil', legend_out=True, legend=True)
-sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
-plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model')
-plt.show()
 
-plt.figure()
-g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-               fit_reg=False, hue='language profil', legend_out=True, legend=True)
-sns.regplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
-plt.title('Predicted behavioral score versus true behavioral score \n in the negative edges model')
-plt.show()
 
 
 
@@ -257,17 +244,34 @@ plt.show()
 from plotting import display
 save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
 # Plot the negative and positive edges on a glass brain
-with PdfPages(os.path.join(save_plot_directory, 'CPM.pdf')) as pdf:
+with PdfPages(os.path.join(save_plot_directory, 'CPM_linear_selelection_of_predictor.pdf')) as pdf:
 
     plt.figure()
-    plot_connectome(adjacency_matrix=negatives_edges_matrix, node_coords=atlas_nodes, node_color=labels_colors,
-                    edge_cmap='Blues', title='Edges with negative correlation to language score')
+    g = sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+                   fit_reg=False, hue='language profil', legend_out=True, legend=True)
+    sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+                scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
+    plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model')
+    pdf.savefig()
+    plt.show()
 
+    plt.figure()
+    g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+                   fit_reg=False, hue='language profil', legend_out=True, legend=True)
+    sns.regplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+                scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
+    plt.title('Predicted behavioral score versus true behavioral score \n in the negative edges model')
     pdf.savefig()
     plt.show()
 
     plt.figure()
     plot_connectome(adjacency_matrix=positive_edges_matrix, node_coords=atlas_nodes, node_color=labels_colors,
                     edge_cmap='Reds', title='Edges with positive correlation to language score')
+    pdf.savefig()
+    plt.show()
+
+    plt.figure()
+    plot_connectome(adjacency_matrix=negatives_edges_matrix, node_coords=atlas_nodes, node_color=labels_colors,
+                    edge_cmap='Blues', title='Edges with negative correlation to language score')
     pdf.savefig()
     plt.show()
