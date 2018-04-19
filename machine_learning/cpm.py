@@ -215,11 +215,11 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
         positive_edge_model_fit.params[1]*test_subject_positive_edges_summary + positive_edge_model_fit.params[0]
 
 # Compare prediction and true behavioral score
-R_predict_negative_model, P_predict_positive_model = \
+R_predict_negative_model, P_predict_negative_model = \
     stats.pearsonr(x=behavior_prediction_negative_edges,
                    y=np.array(behavioral_scores))
 
-R_predict_positive_model,  P_predict_negative_model = \
+R_predict_positive_model,  P_predict_positive_model = \
     stats.pearsonr(x=np.array(behavioral_scores),
                    y=behavior_prediction_positive_edges)
 
@@ -230,16 +230,27 @@ import seaborn as sns
 # Add predicted score for negative and positive edges model
 behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.array(behavioral_scores) ,
                                                   'predicted_positive_model_scores': behavior_prediction_positive_edges,
-                                                  'predicted_negative_model_scores': behavior_prediction_negative_edges},
+                                                  'predicted_negative_model_scores': behavior_prediction_negative_edges,
+                                                  'language profil': regression_data_file['langage_clinique']},
+
                                             index=behavioral_scores.index)
 
-sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-           ci=None, line_kws={'color': 'black'}, scatter_kws={'color': 'red'})
+
+g = sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+               fit_reg=False, hue='language profil', legend_out=True, legend=True)
+sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
+plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model')
 plt.show()
+
 plt.figure()
-sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-           ci=None, line_kws={'color': 'black'}, scatter_kws={'color': 'blue'})
+g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+               fit_reg=False, hue='language profil', legend_out=True, legend=True)
+sns.regplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
+plt.title('Predicted behavioral score versus true behavioral score \n in the negative edges model')
 plt.show()
+
 
 
 
