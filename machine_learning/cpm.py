@@ -14,6 +14,14 @@ from connectivity_statistics.parametric_tests import design_matrix_builder
 from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
 from patsy import dmatrix
 import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+import os
+from sklearn.model_selection import LeaveOneOut
+from pylearn_mulm import mulm
+from sklearn import linear_model
+from scipy import stats
+from nilearn.plotting import plot_connectome
 
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
@@ -68,11 +76,7 @@ behavioral_scores = regression_data_file['language_score'].loc[patients_subjects
 vectorized_connectivity_matrices = sym_matrix_to_vec(patients_connectivity_matrices, discard_diagonal=True)
 
 # Features selection by leave one out cross validation scheme
-from sklearn.model_selection import LeaveOneOut
-from pylearn_mulm import mulm
-from sklearn import linear_model
-from scipy import stats
-from nilearn.plotting import plot_connectome
+
 
 # Clean behavioral data
 drop_subject_in_data = ['sub40_np130304']
@@ -211,15 +215,14 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
         positive_edge_model_fit.params[1]*test_subject_positive_edges_summary + positive_edge_model_fit.params[0]
 
 # Compare prediction and true behavioral score
-R_negative_model = np.corrcoef(x=behavior_prediction_negative_edges,
-                               y=np.array(behavioral_scores))
+R_predict_negative_model, P_predict_positive_model = \
+    stats.pearsonr(x=behavior_prediction_negative_edges,
+                   y=np.array(behavioral_scores))
 
-R_positive_model = np.corrcoef(x=np.array(behavioral_scores),
-                               y=behavior_prediction_positive_edges)
+R_predict_positive_model,  P_predict_negative_model = \
+    stats.pearsonr(x=np.array(behavioral_scores),
+                   y=behavior_prediction_positive_edges)
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
-import os
 from plotting import display
 save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
 # Plot the negative and positive edges on a glass brain
