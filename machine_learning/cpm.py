@@ -328,7 +328,7 @@ with PdfPages(os.path.join(save_plot_directory, kind + '_CPM_linear_selelection_
                     scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
         pdf.savefig()
         plt.show()
-        plt.figure()
+
 
         # For the negative edges model
         negative_edges_position = np.where(np.tril(negatives_edges_matrix) == 1)
@@ -359,7 +359,6 @@ with PdfPages(os.path.join(save_plot_directory, kind + '_CPM_linear_selelection_
                         y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
                                            labels_regions[negative_edges_position[1][n_couple]]),
                         data=couple_connectivity_dataframe,
-                        scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
+                        scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
             pdf.savefig()
             plt.show()
-            plt.figure()
