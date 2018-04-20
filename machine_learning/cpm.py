@@ -265,6 +265,8 @@ with PdfPages(os.path.join(save_plot_directory, kind + '_CPM_linear_selelection_
               'r = {}, p = {}'.format(R_predict_negative_model, P_predict_negative_model))
     pdf.savefig(bbox_inches='tight')
     plt.show()
+
+
     # plot glass brain for selected positive edges
     plt.figure()
     plot_connectome(adjacency_matrix=positive_edges_matrix, node_coords=atlas_nodes, node_color=labels_colors,
@@ -330,35 +332,35 @@ with PdfPages(os.path.join(save_plot_directory, kind + '_CPM_linear_selelection_
         plt.show()
 
 
-        # For the negative edges model
-        negative_edges_position = np.where(np.tril(negatives_edges_matrix) == 1)
-        number_of_couple_region = len(negative_edges_position[0])
-        for n_couple in range(number_of_couple_region):
-            # list of connectivity coefficient of the current couple accross patients
-            rois_couple_connectivity = []
-            for n_patient in range(patients_connectivity_matrices.shape[0]):
-                rois_couple_connectivity.append(patients_connectivity_matrices[n_patient,
-                                                                               negative_edges_position[0][n_couple],
-                                                                               negative_edges_position[1][n_couple]])
+    # For the negative edges model
+    negative_edges_position = np.where(np.tril(negatives_edges_matrix) == 1)
+    number_of_couple_region = len(negative_edges_position[0])
+    for n_couple in range(number_of_couple_region):
+        # list of connectivity coefficient of the current couple accross patients
+        rois_couple_connectivity = []
+        for n_patient in range(patients_connectivity_matrices.shape[0]):
+            rois_couple_connectivity.append(patients_connectivity_matrices[n_patient,
+                                                                           negative_edges_position[0][n_couple],
+                                                                           negative_edges_position[1][n_couple]])
 
-            rois_couple_connectivity = np.array(rois_couple_connectivity)
-            # Construct a pandas dataframe to plot with seaborn
-            couple_connectivity_dataframe = pd.DataFrame(
-                data={'{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
-                                       labels_regions[negative_edges_position[1][n_couple]]): rois_couple_connectivity,
-                      'true behavioral score': np.array(behavioral_scores),
-                      'language profil': regression_data_file['langage_clinique']
-                      }, index=behavioral_scores.index)
-            plt.figure()
-            g = sns.lmplot(x='true behavioral score',
-                           y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
-                                              labels_regions[negative_edges_position[1][n_couple]]),
-                           data=couple_connectivity_dataframe,
-                           fit_reg=False, hue='language profil', legend_out=True, legend=True)
-            sns.regplot(x='true behavioral score',
-                        y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
-                                           labels_regions[negative_edges_position[1][n_couple]]),
-                        data=couple_connectivity_dataframe,
-                        scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
-            pdf.savefig()
-            plt.show()
+        rois_couple_connectivity = np.array(rois_couple_connectivity)
+        # Construct a pandas dataframe to plot with seaborn
+        couple_connectivity_dataframe = pd.DataFrame(
+            data={'{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
+                                   labels_regions[negative_edges_position[1][n_couple]]): rois_couple_connectivity,
+                  'true behavioral score': np.array(behavioral_scores),
+                  'language profil': regression_data_file['langage_clinique']
+                  }, index=behavioral_scores.index)
+        plt.figure()
+        g = sns.lmplot(x='true behavioral score',
+                       y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
+                                          labels_regions[negative_edges_position[1][n_couple]]),
+                       data=couple_connectivity_dataframe,
+                       fit_reg=False, hue='language profil', legend_out=True, legend=True)
+        sns.regplot(x='true behavioral score',
+                    y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
+                                       labels_regions[negative_edges_position[1][n_couple]]),
+                    data=couple_connectivity_dataframe,
+                    scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
+        pdf.savefig()
+        plt.show()
