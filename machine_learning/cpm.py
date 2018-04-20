@@ -274,7 +274,8 @@ behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.arr
 from plotting import display
 save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
 # Plot the negative and positive edges on a glass brain
-with PdfPages(os.path.join(save_plot_directory, kind + '_LG_LesionSize_CPM_correlation_selelection_of_predictor.pdf')) as pdf:
+with PdfPages(os.path.join(save_plot_directory, kind + '_LG_LesionSize_CPM_correlation_selelection_of_predictor.pdf')) \
+        as pdf: 
     # Plot regression line for both model
 
     # Plot for positive model
@@ -363,7 +364,6 @@ with PdfPages(os.path.join(save_plot_directory, kind + '_LG_LesionSize_CPM_corre
                     scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
         pdf.savefig()
         plt.show()
-
 
     # For the negative edges model
     negative_edges_position = np.where(np.tril(negatives_edges_matrix) == 1)
