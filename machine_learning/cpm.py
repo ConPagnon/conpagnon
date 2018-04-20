@@ -6,11 +6,18 @@ named connectome predictive modelling is adapted from
 
 .. [1] Using connectome-based predictive modeling to
 predict individual behavior from brain connectivity, Shen et al.
+
+author: Dhaif BEKHA.
+# TODO: Break the code into small part !!!!
+# TODO: Use GLM with both negative and positive values as predictor of behavioral variable
+# TODO: When the predicted value is computed, add possibility to add other variable in the model
+# TODO: Compute a network visualisation of the results with networkx for example
+# TODO: Estimate model efficience with other metrics such as MSE, instead of simple correlation
+# TODO: Estimate p-value of model power with permutations statistic
 """
 from data_handling import atlas, data_management
 from utils.folders_and_files_management import load_object
 import numpy as np
-from connectivity_statistics.parametric_tests import design_matrix_builder
 from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
 from patsy import dmatrix
 import statsmodels.api as sm
@@ -22,6 +29,7 @@ from pylearn_mulm import mulm
 from sklearn import linear_model
 from scipy import stats
 from nilearn.plotting import plot_connectome
+from data_handling import dictionary_operations
 
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
@@ -61,7 +69,20 @@ regression_data_file = data_management.read_excel_file(
     sheetname='cohort_functional_data')
 
 # Type of subjects connectivity matrices
-subjects_matrices = subjects_connectivity_matrices
+subjects_matrices = Z_subjects_connectivity_matrices
+
+# Select a subset of patients
+# Compute the connectivity matrices dictionnary with factor as keys.
+group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
+    dictionary_operations.groupby_factor_connectivity_matrices(
+        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+        sheetname='cohort_functional_data',
+        subjects_connectivity_matrices_dictionnary=subjects_matrices,
+        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
+
+subjects_matrices = {}
+subjects_matrices['patients'] = group_by_factor_subjects_connectivity['G']
+
 
 # Fetch patients matrices, and one behavioral score
 kind = 'tangent'
@@ -74,6 +95,9 @@ patients_connectivity_matrices = np.array([subjects_matrices['patients'][s][kind
 behavioral_scores = regression_data_file['language_score'].loc[patients_subjects_ids]
 # Vectorized connectivity matrices of shape (n_samples, n_features)
 vectorized_connectivity_matrices = sym_matrix_to_vec(patients_connectivity_matrices, discard_diagonal=True)
+
+# Load some extra variable in a dataframe
+extra_variables_df = regression_data_file['lesion_normalized'].loc[patients_subjects_ids]
 
 # Features selection by leave one out cross validation scheme
 
@@ -96,7 +120,7 @@ behavior_prediction_positive_edges = np.zeros(len(patients_subjects_ids))
 behavior_prediction_negative_edges = np.zeros(len(patients_subjects_ids))
 
 # Choose method to relate connectivity to behavior (predictor selection)
-selection_predictor_method = 'linear_model'
+selection_predictor_method = 'correlation'
 
 for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
     print('Train on {}'.format([patients_subjects_ids[i] for i in train_index]))
@@ -108,6 +132,9 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
 
     training_set_behavioral_score = behavioral_scores[train_index]
     test_subject_behavioral_score = behavioral_scores[test_index]
+
+    training_set_extra_variables = extra_variables_df[train_index]
+    test_subject_extra_variables = extra_variables_df[test_index]
 
     if selection_predictor_method == 'linear_model':
 
@@ -193,7 +220,11 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
 
     # Fit a linear model on the training set, for negative and positive edges summary values
     design_matrix_negative_edges = sm.add_constant(negative_edges_summary_values)
+    design_matrix_negative_edges = np.c_[design_matrix_negative_edges, np.array(training_set_extra_variables)]
+
     design_matrix_positive_edges = sm.add_constant(positive_edges_summary_values)
+    design_matrix_positive_edges = np.c_[design_matrix_positive_edges, np.array(training_set_extra_variables)]
+
 
     # Fit positive edges model
     positive_edges_model = sm.OLS(training_set_behavioral_score, design_matrix_positive_edges)
@@ -209,10 +240,12 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
 
     # Fit the model of on the left out subject
     behavior_prediction_negative_edges[test_index] = \
-        negative_edge_model_fit.params[1]*test_subject_negative_edges_summary + negative_edge_model_fit.params[0]
+        negative_edge_model_fit.params[1]*test_subject_negative_edges_summary + \
+        negative_edge_model_fit.params[2]*test_subject_extra_variables + negative_edge_model_fit.params[0]
 
     behavior_prediction_positive_edges[test_index] = \
-        positive_edge_model_fit.params[1]*test_subject_positive_edges_summary + positive_edge_model_fit.params[0]
+        positive_edge_model_fit.params[1]*test_subject_positive_edges_summary + \
+        positive_edge_model_fit.params[2]*test_subject_extra_variables +positive_edge_model_fit.params[0]
 
 # Compare prediction and true behavioral score
 R_predict_negative_model, P_predict_negative_model = \
@@ -241,7 +274,7 @@ behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.arr
 from plotting import display
 save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
 # Plot the negative and positive edges on a glass brain
-with PdfPages(os.path.join(save_plot_directory, kind + '_CPM_linear_selelection_of_predictor.pdf')) as pdf:
+with PdfPages(os.path.join(save_plot_directory, kind + '_LG_LesionSize_CPM_correlation_selelection_of_predictor.pdf')) as pdf:
     # Plot regression line for both model
 
     # Plot for positive model
@@ -364,3 +397,5 @@ with PdfPages(os.path.join(save_plot_directory, kind + '_CPM_linear_selelection_
                     scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
         pdf.savefig()
         plt.show()
+
+
