@@ -36,14 +36,14 @@ import seaborn as sns
 
 
 # Atlas set up
-atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
+atlas_folder = 'D:\\atlas_AVCnn'
 atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = 'D:\\atlas_AVCnn\\atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
@@ -62,14 +62,14 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/'
-                        'dictionary/raw_subjects_connectivity_matrices.pkl')
+    full_path_to_object='D:\\text_output_11042018\\dictionary'
+                        '\\raw_subjects_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/'
-                        'dictionary/z_fisher_transform_subjects_connectivity_matrices.pkl')
+    full_path_to_object='D:\\text_output_11042018\\dictionary'
+                        '\\z_fisher_transform_subjects_connectivity_matrices.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
-    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+    excel_file_path='D:\\regression_data\\regression_data.xlsx',
     sheetname='cohort_functional_data')
 
 # Type of subjects connectivity matrices
@@ -79,7 +79,7 @@ subjects_matrices = Z_subjects_connectivity_matrices
 # Compute the connectivity matrices dictionnary with factor as keys.
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
     dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+        population_data_file='D:\\regression_data\\regression_data.xlsx',
         sheetname='cohort_functional_data',
         subjects_connectivity_matrices_dictionnary=subjects_matrices,
         groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
@@ -137,6 +137,66 @@ patients_design_matrix = dmatrix(formula_like='language_score+Sexe+lesion_normal
                                  data=regression_data_file,
                                  NA_action='drop',
                                  return_type='dataframe').loc[patients_subjects_ids]
+
+from scipy.stats import t
+
+def predictors_selection_linear_model(training_connectivity_matrices, training_set_design_matrix,
+                                      behavior_column_name, significance_selection_threshold=.01):
+    """Relate each edges of subjects connectivity matrices in the training set
+    with a behavioral scores using a linear model
+
+
+    """
+    # Reorder the design matrix, put the behavioral variable
+    # to the last position
+    columns_name_design_matrix = list(training_set_design_matrix.columns)
+    behavioral_variable_position = columns_name_design_matrix.index(behavior_column_name)
+    if behavioral_variable_position != 1:
+        # Move the colmumn name corresponding to the behavioral variable of interest
+        # to the 1 index of the list
+        columns_name_design_matrix.insert(1, columns_name_design_matrix.pop(behavioral_variable_position))
+        # Reorder the design matrix
+        training_set_design_matrix = training_set_design_matrix[columns_name_design_matrix]
+    else:
+        training_set_design_matrix = training_set_design_matrix
+
+    # Fit a linear model with MUOLS
+    training_set_model = mulm.MUOLS(training_connectivity_matrices, np.array(training_set_design_matrix))
+    contrasts = np.identity(training_set_design_matrix.shape[1])
+    t_value, p_value, df = training_set_model.fit().t_test(contrasts, pval=True, two_tailed=True)
+
+    # Fetch the t and p vector corresponding to the behavior of interest
+    t_behavior = t_value[1, :]
+    p_behavior = p_value[1, :]
+
+    # For each edges convert the t statistic of the linear model in correlation
+    # coefficient value
+    R_mat = np.sign(t_behavior)*np.sqrt(t_behavior**2/(df[1] + t_behavior**2))
+    P_mat = t.sf(np.abs(t_behavior), df[1])
+
+    # Positive and Negative correlation indices, under the selection threshold
+    negative_edges_indices = np.nonzero((R_mat < 0) & (P_mat < significance_selection_threshold))
+    positives_edges_indices = np.nonzero((R_mat > 0) & (P_mat < significance_selection_threshold))
+
+    # Fill the corresponding indices with 1 if indices exist, zero elsewhere
+    negative_edges_mask[negative_edges_indices] = 1
+    positive_edges_mask[positives_edges_indices] = 1
+
+    # Get the sum off all edges in the mask
+    negative_edges_summary_values = np.zeros(training_connectivity_matrices.shape[0])
+    positive_edges_summary_values = np.zeros(training_connectivity_matrices.shape[0])
+
+    for i in range(training_connectivity_matrices.shape[0]):
+        negative_edges_summary_values[i] = np.sum(np.multiply(negative_edges_mask,
+                                                              training_connectivity_matrices[i, ...]))
+        positive_edges_summary_values[i] = np.sum(np.multiply(positive_edges_mask,
+                                                              training_connectivity_matrices[i, ...]))
+
+    return training_set_design_matrix, t_behavior, p_behavior, R_mat, P_mat
+
+
+
+
 
 for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
     print('Train on {}'.format([patients_subjects_ids[i] for i in train_index]))
