@@ -30,6 +30,10 @@ from sklearn import linear_model
 from scipy import stats
 from nilearn.plotting import plot_connectome
 from data_handling import dictionary_operations
+from connectivity_statistics.parametric_tests import partial_corr
+import pandas as pd
+import seaborn as sns
+
 
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
@@ -90,18 +94,25 @@ patients_subjects_ids = list(subjects_matrices['patients'].keys())
 # Patients matrices stack
 patients_connectivity_matrices = np.array([subjects_matrices['patients'][s][kind] for
                                            s in patients_subjects_ids])
+# Set to zero the diagonal of each matrix
+#for patient_matrix in range(patients_connectivity_matrices.shape[0]):
+#    np.fill_diagonal(patients_connectivity_matrices[patient_matrix, :, :],
+#                     np.ones(patients_connectivity_matrices[patient_matrix, :, :].shape[0]))
 
 # Behavioral score
 behavioral_scores = regression_data_file['language_score'].loc[patients_subjects_ids]
 # Vectorized connectivity matrices of shape (n_samples, n_features)
 vectorized_connectivity_matrices = sym_matrix_to_vec(patients_connectivity_matrices, discard_diagonal=True)
 
-# Load some extra variable in a dataframe
-extra_variables_df = regression_data_file['lesion_normalized'].loc[patients_subjects_ids]
+# Build confounding variable
+confounding_variables = ['lesion_normalized', 'Sexe']
+confounding_variables_data = regression_data_file[confounding_variables].loc[patients_subjects_ids]
+# Encode the confounding variable in an array
+confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variables), data=confounding_variables_data,
+                                       return_type='dataframe').drop(['Intercept'], axis=1)
+
 
 # Features selection by leave one out cross validation scheme
-
-
 # Clean behavioral data
 drop_subject_in_data = ['sub40_np130304']
 try:
@@ -120,7 +131,12 @@ behavior_prediction_positive_edges = np.zeros(len(patients_subjects_ids))
 behavior_prediction_negative_edges = np.zeros(len(patients_subjects_ids))
 
 # Choose method to relate connectivity to behavior (predictor selection)
-selection_predictor_method = 'correlation'
+selection_predictor_method = 'linear_model'
+
+patients_design_matrix = dmatrix(formula_like='language_score+Sexe+lesion_normalized',
+                                 data=regression_data_file,
+                                 NA_action='drop',
+                                 return_type='dataframe').loc[patients_subjects_ids]
 
 for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
     print('Train on {}'.format([patients_subjects_ids[i] for i in train_index]))
@@ -133,17 +149,12 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
     training_set_behavioral_score = behavioral_scores[train_index]
     test_subject_behavioral_score = behavioral_scores[test_index]
 
-    training_set_extra_variables = extra_variables_df[train_index]
-    test_subject_extra_variables = extra_variables_df[test_index]
+    training_set_confounding_variables = np.array(confounding_variables_matrix)[train_index]
 
     if selection_predictor_method == 'linear_model':
 
         # Perform linear regression for feature selection controlling for confounding
         # effect
-        patients_design_matrix = dmatrix(formula_like='language_score+Sexe+lesion_normalized',
-                                         data=regression_data_file,
-                                         NA_action='drop',
-                                         return_type='dataframe')
         # Fetch the corresponding design matrix for the current training set
         training_set_design_matrix = patients_design_matrix.iloc[train_index]
         # Fit a linear model with muols
@@ -151,10 +162,12 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
         contrasts = np.identity(training_set_design_matrix.shape[1])
         t_value, p_value, df = training_set_model.fit().t_test(contrasts, pval=True, two_tailed=True)
 
+        # TODO: convert t statistic to partial r-value !!!
+
         # By default, the behavior of interest is assume to be
         # the first variable in the model
-        t_behavior = t_value[1, :]
-        p_behavior = p_value[1, :]
+        t_behavior = t_value[2, :]
+        p_behavior = p_value[2, :]
 
         # Separate edge who correlates positively and negatively to the behavior of interest
         # Positive and negative mask initialisation
@@ -176,8 +189,6 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
         for i in range(patients_train_set.shape[0]):
             negative_edges_summary_values[i] = np.sum(np.multiply(negative_edges_mask, patients_train_set[i, ...]))
             positive_edges_summary_values[i] = np.sum(np.multiply(positive_edges_mask, patients_train_set[i, ...]))
-
-
 
     elif selection_predictor_method == 'correlation':
         # Matrix which will contain the correlation of each edge to behavior, and the corresponding
@@ -209,6 +220,40 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
             negative_edges_summary_values[i] = np.sum(np.multiply(negative_edges_mask, patients_train_set[i, ...]))
             positive_edges_summary_values[i] = np.sum(np.multiply(positive_edges_mask, patients_train_set[i, ...]))
 
+    elif selection_predictor_method == 'partial correlation':
+        # Matrix which will contain the correlation of each edge to behavior, and the corresponding
+        # p values
+        R_mat = np.zeros(patients_train_set.shape[1])
+        P_mat = np.zeros(patients_train_set.shape[1])
+
+        # Positive and negative mask initialisation
+        negative_edges_mask = np.zeros(patients_train_set.shape[1])
+        positive_edges_mask = np.zeros(patients_train_set.shape[1])
+
+        # Construct temporary array to contain the connectivity, behavior and
+        # other variable to regress
+        for i in range(patients_train_set.shape[1]):
+            R_, P_ = partial_corr(np.c_[patients_train_set[:, i], training_set_behavioral_score,
+                                  training_set_confounding_variables])
+            R_mat[i] = R_[0, 1]
+            P_mat[i] = P_[0, 1]
+
+        # Positive and Negative correlation indices, under the selection threshold
+        negative_edges_indices = np.nonzero((R_mat < 0) & (P_mat < significance_selection_threshold))
+        positives_edges_indices = np.nonzero((R_mat > 0) & (P_mat < significance_selection_threshold))
+
+        # Fill the corresponding indices with 1 if indices exist, zero elsewhere
+        negative_edges_mask[negative_edges_indices] = 1
+        positive_edges_mask[positives_edges_indices] = 1
+
+        # Get the sum off all edges in the mask
+        negative_edges_summary_values = np.zeros(patients_train_set.shape[0])
+        positive_edges_summary_values = np.zeros(patients_train_set.shape[0])
+
+        for i in range(patients_train_set.shape[0]):
+            negative_edges_summary_values[i] = np.sum(np.multiply(negative_edges_mask, patients_train_set[i, ...]))
+            positive_edges_summary_values[i] = np.sum(np.multiply(positive_edges_mask, patients_train_set[i, ...]))
+
     else:
         raise ValueError('Selection method not understood')
 
@@ -220,11 +265,10 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
 
     # Fit a linear model on the training set, for negative and positive edges summary values
     design_matrix_negative_edges = sm.add_constant(negative_edges_summary_values)
-    design_matrix_negative_edges = np.c_[design_matrix_negative_edges, np.array(training_set_extra_variables)]
+    # design_matrix_negative_edges = np.c_[design_matrix_negative_edges, np.array(training_set_extra_variables)]
 
     design_matrix_positive_edges = sm.add_constant(positive_edges_summary_values)
-    design_matrix_positive_edges = np.c_[design_matrix_positive_edges, np.array(training_set_extra_variables)]
-
+    # design_matrix_positive_edges = np.c_[design_matrix_positive_edges, np.array(training_set_extra_variables)]
 
     # Fit positive edges model
     positive_edges_model = sm.OLS(training_set_behavioral_score, design_matrix_positive_edges)
@@ -241,11 +285,10 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
     # Fit the model of on the left out subject
     behavior_prediction_negative_edges[test_index] = \
         negative_edge_model_fit.params[1]*test_subject_negative_edges_summary + \
-        negative_edge_model_fit.params[2]*test_subject_extra_variables + negative_edge_model_fit.params[0]
+        negative_edge_model_fit.params[0]
 
     behavior_prediction_positive_edges[test_index] = \
-        positive_edge_model_fit.params[1]*test_subject_positive_edges_summary + \
-        positive_edge_model_fit.params[2]*test_subject_extra_variables +positive_edge_model_fit.params[0]
+        positive_edge_model_fit.params[1]*test_subject_positive_edges_summary + positive_edge_model_fit.params[0]
 
 # Compare prediction and true behavioral score
 R_predict_negative_model, P_predict_negative_model = \
@@ -257,9 +300,6 @@ R_predict_positive_model,  P_predict_positive_model = \
                    y=behavior_prediction_positive_edges)
 
 # Plot relationship between predicted and true value by the model
-import pandas as pd
-import seaborn as sns
-
 # Add predicted score for negative and positive edges model
 behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.array(behavioral_scores) ,
                                                   'predicted_positive_model_scores': behavior_prediction_positive_edges,
@@ -267,7 +307,24 @@ behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.arr
                                                   'language profil': regression_data_file['langage_clinique']},
 
                                             index=behavioral_scores.index)
+plt.figure()
+g = sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+               fit_reg=False, hue='language profil', legend_out=True, legend=True)
+sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
+            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
+plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model \n'
+          'r = {}, p = {}'.format(R_predict_positive_model, P_predict_positive_model))
+plt.show()
 
+# Plot for negative model
+plt.figure()
+g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+               fit_reg=False, hue='language profil', legend_out=True, legend=True)
+sns.regplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
+            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
+plt.title('Predicted behavioral score versus true behavioral score \n in the negative edges model \n'
+          'r = {}, p = {}'.format(R_predict_negative_model, P_predict_negative_model))
+plt.show()
 
 
 
@@ -275,7 +332,7 @@ from plotting import display
 save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
 # Plot the negative and positive edges on a glass brain
 with PdfPages(os.path.join(save_plot_directory, kind + '_LG_LesionSize_CPM_correlation_selelection_of_predictor.pdf')) \
-        as pdf: 
+        as pdf:
     # Plot regression line for both model
 
     # Plot for positive model
