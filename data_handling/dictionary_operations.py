@@ -29,6 +29,13 @@ def groupby_factor_connectivity_matrices(population_data_file, sheetname,
     else:
         population_text_data = population_text_data
 
+    all_subjects_list = []
+    for groupe in groupes:
+        for s in subjects_connectivity_matrices_dictionnary[groupe].keys():
+            all_subjects_list.append(s)
+
+    population_text_data = population_text_data.loc[all_subjects_list]
+
     # Using pandas, group the dataframe by the factor list entered and store
     # it in a dictionnary
     population_data_by_factor = population_text_data.groupby(factors).groups
