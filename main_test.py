@@ -66,7 +66,7 @@ atlas_nodes = monAtlas.GetCenterOfMass()
 n_nodes = monAtlas.GetRegionNumbers()
 
 # Groups name to include in the study
-groupes = ['patients', 'controls']
+groupes = ['LG', 'controls']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -95,7 +95,7 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/text_output_11042018'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LG_LangScore'
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
 # Cohort behavioral data
@@ -114,14 +114,6 @@ contrast = [1.0, -1.0]
 # Metrics list of interest, connectivity matrices will be
 # computed according to this list
 kinds = ['tangent', 'partial correlation', 'correlation']
-
-# Creation of the directory which will contains all figure saved by the user
-directory = '/media/db242421/db242421_data/ConPagnon_reports/analysis_01march2018_TEST/' + groupes[0] + '_' + groupes[1]
-try:
-    os.makedirs(directory)
-except OSError as e:
-    if e.errno != errno.EEXIST:
-        raise
 
 # Fetch data in the case of individual atlases for each subjects.
 organised_data_with_individual_atlas = data_architecture.fetch_data_with_individual_atlases(
@@ -332,16 +324,14 @@ for group in groupes:
 population_text_data = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
 # Drop subjects if wanted
 subjects_to_drop = ['sub40_np130304']
-# List of factor to group by
-population_attribute = ['Lesion']
+
 
 # Compute the connectivity matrices dictionnary with factor as keys.
-group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
+group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file=population_text_data,
-        sheetname='cohort_functional_data',
-        subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
-        groupes=['patients'], factors=population_attribute, drop_subjects_list=['sub40_np130304'])
+        sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        groupes=['LG'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
 
 # Create ipsilesional and contralesional dictionnary
 ipsi_dict = {}
@@ -378,8 +368,8 @@ for attribute in factor_keys:
 
 
 # Construct a corresponding ipsilesional and contralesional dictionnary for controls
-n_left_tot = len(ipsi_dict['G'])
-n_right_tot = len(ipsi_dict['D'])
+n_left_tot = len(ipsi_dict[('G')])
+n_right_tot = len(ipsi_dict[('D')])
 
 # Compute the percentage of right lesion and left lesion
 n_total_patients = n_left_tot + n_right_tot
@@ -415,8 +405,7 @@ n_right_ipsilesional_controls, n_right_ipsi_controls_ids = \
 # Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionnary
 ipsilesional_controls_dictionary = dictionary_operations.merge_dictionary(
     new_key='controls',
-    dict_list=[n_right_ipsilesional_controls['controls'],
-               n_left_ipsilesional_controls['controls']])
+    dict_list=[n_left_ipsilesional_controls['controls']])
 
 # In the same, we have to generate, a "contralesional" dictionary for the
 # controls group
@@ -446,7 +435,7 @@ n_right_contralesional_controls, n_right_contra_controls_ids = \
 # Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionnary
 contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
     new_key='controls',
-    dict_list=[n_right_contralesional_controls['controls'],
+    dict_list=[
                n_left_contralesional_controls['controls']])
 
 # Finally, we have to merge ipsilesional/contralesional dictionaries of the different group
@@ -455,12 +444,12 @@ contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
 
 # First, the two group of patients
 ipsilesional_patients_connectivity_matrices = {
-    'patients': {**ipsi_dict['D'], **ipsi_dict['G']},
+    'LG': {**ipsi_dict[('G')]},
     }
 
 contralesional_patients_connectivity_matrices = {
-     'patients': {**contra_dict['D'], **contra_dict['G']},
-    }
+     'LG': { **contra_dict[('G')]},
+   }
 
 # Merged overall patients and controls dictionaries
 ipsilesional_subjects_connectivity_matrices = dictionary_operations.merge_dictionary(
@@ -621,7 +610,7 @@ folders_and_files_management.save_object(object_to_save=subjects_inter_network_c
 # Overall homotopic, ipsilesional and contralesional connectivity with respect to groups, controling for gender
 # with a linear model
 kinds_to_model  = ['correlation', 'partial correlation', 'tangent']
-groups_in_models = ['patients', 'controls']
+groups_in_models = ['LG']
 
 # data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
@@ -630,10 +619,10 @@ correction_method = 'FDR'
 models_to_build = ['mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
-variables_model = ['Groupe', 'Sexe']
+variables_model = ['language_score', 'Sexe', 'lesion_normalized']
 
 # formulation of the model
-model_formula = 'Groupe + Sexe'
+model_formula = 'language_score + Sexe + lesion_normalized'
 
 # Load behavioral data
 # cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
@@ -684,7 +673,7 @@ regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_model
                                                           whole_brain_model=models_to_build,
                                                           variables_in_model=variables_model,
                                                           behavioral_dataframe=behavioral_data_cleaned,
-                                                          correction_method=['FDR','maxT'],
+                                                          correction_method=['FDR', 'maxT'],
                                                           alpha=0.05)
 
 # Inter-network statistic : whole brain, ipsilesional and contralesional
@@ -692,8 +681,8 @@ inter_network_model = 'overall_inter_network'
 # Whole brain internetwork
 # Load the dictionary
 whole_brain_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
-                        'subjects_inter_network_connectivity_matrices.pkl')
+    full_path_to_object=os.path.join(output_csv_directory, 'dictionary',  'subjects_inter_network_connectivity_matrices.pkl'))
+
 
 regression_analysis_model.regression_analysis_internetwork_level(
     internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices,
@@ -711,11 +700,12 @@ regression_analysis_model.regression_analysis_internetwork_level(
     discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
     compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
     alpha=0.05)
+
     # Ipsilesional inter-network analysis
 ipsi_internetwork_model = 'ipsi_inter_network'
 ipsi_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
-                        'subjects_inter_network_ipsi_connectivity_matrices.pkl')
+    full_path_to_object=os.path.join(output_csv_directory,
+                                     'dictionary/subjects_inter_network_ipsi_connectivity_matrices.pkl'))
 
 regression_analysis_model.regression_analysis_internetwork_level(
     internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices,
@@ -736,8 +726,8 @@ regression_analysis_model.regression_analysis_internetwork_level(
     # Contralesional inter-network analysis
 contra_internetwork_model = 'contra_inter_network'
 contra_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary/'
-                        'subjects_inter_network_contra_connectivity_matrices.pkl')
+    full_path_to_object=os.path.join(output_csv_directory,
+                                     'dictionary/subjects_inter_network_contra_connectivity_matrices.pkl'))
 
 regression_analysis_model.regression_analysis_internetwork_level(
     internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices,
@@ -756,42 +746,44 @@ regression_analysis_model.regression_analysis_internetwork_level(
     compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
     alpha=0.05)
 
-from matplotlib.backends.backend_pdf import PdfPages
-# Study the relation of homotopic connectivity with respect to normalized lesion size
-homotopic_lesion_model = 'mean_homotopic~standardized_language_score + Sexe + lesion_normalized'
 
-model_name = 'mean_homotopic_lesionSize_gender_language'
-design_matrix = data_management.read_excel_file(cohort_excel_file_path,
-                                                sheetname='cohort_functional_data')
-for kind in kinds_to_model:
-    patients_homotopic = data_management.read_csv(csv_file=os.path.join(output_csv_directory, kind, 
-                                                                        'patients_'+ kind + '_mean_homotopic.csv'))
-    patients_homotopic = data_management.shift_index_column(panda_dataframe=patients_homotopic, 
-                                                            columns_to_index='subjects')
-    model_dataframe = data_management.merge_by_index(patients_homotopic, design_matrix)
-    mean_homotopic, X = parametric_tests.design_matrix_builder(dataframe=model_dataframe,
-                                                               formula=homotopic_lesion_model)
-    homotopic_lesion_model_fit = parametric_tests.ols_regression(mean_homotopic, X)
-    # Write the results
-    data_management.write_ols_results(ols_fit=homotopic_lesion_model_fit, design_matrix=X, 
-                                      response_variable=mean_homotopic, 
-                                      output_dir=os.path.join(output_csv_directory, 'regression_analysis', kind),
-                                      model_name=model_name,
-                                      design_matrix_index_name='subjects')
-    # Save the plot
-    with PdfPages(os.path.join(output_csv_directory, 'regression_analysis', kind, model_name + '.pdf')) as pdf:
-        plt.figure()
-        display.seaborn_scatterplot(x='standardized_language_score', y='mean_homotopic', data=model_dataframe,
-                                    figure_title='Evolution of mean homotopic connectivity \n with language score, '
-                                                 'rsquared = '
-                                                 + str(homotopic_lesion_model_fit.rsquared_adj) + ' ,p = ' +
-                                                       str(homotopic_lesion_model_fit.pvalues[1]),
-                                    line_kws={'color': 'firebrick'}, scatter_kws={'color': ['seagreen', 'red']},
-                                    hue='langage_clinique')
+# Display of results: For each network, take the t-value for : intra-network, homotopic intra network, ipsilesional
+# intra network, contralesional intra-network
+network_to_plot = ['DMN', 'Executive', 'Language',  'MTL', 'Salience', 'Sensorimotor', 'Visuospatial',
+                   'Primary_Visual', 'Secondary_Visual']
+from data_handling import data_management
+from plotting.display import t_and_p_values_barplot
+from itertools import repeat
+network_color_df = data_management.shift_index_column(atlas_information[['network', 'Color']], 'network')
 
-        pdf.savefig(bbox_inches='tight')
+network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network_to_plot]
 
-plt.figure()
-sns.lmplot(x='standardized_language_score', y='mean_homotopic', data=model_dataframe,
-           hue='langage_clinique', fit_reg=True)
-plt.show()
+model_to_plot = ['intra', 'intra_homotopic', 'contra_intra', 'ipsi_intra']
+
+effect_to_plot = 'Groupe[T.P]'
+
+results_directory = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/regression_analysis'
+model_dictionary = dict.fromkeys(network_to_plot)
+
+for network in network_to_plot:
+    all_models_t = []
+    all_models_p = []
+    for model in model_to_plot:
+        model_result = pd.read_csv(os.path.join(results_directory, 'tangent', network,
+                                                model + '_parameters.csv'))
+        all_models_t.append(model_result['t'].loc[1])
+        all_models_p.append(model_result['FDRcorrected_pvalues'].loc[1])
+
+    model_dictionary[network] = {'t_values': all_models_t, 'p_values': all_models_p}
+
+for network in network_to_plot:
+    plt.figure()
+    xlabel_color = [x for item in [network_color[network_to_plot.index(network)]] for
+                    x in repeat(network_color[network_to_plot.index(network)], len(model_to_plot))]
+    t_and_p_values_barplot(t_values=model_dictionary[network]['t_values'],
+                           p_values=model_dictionary[network]['p_values'],
+                           alpha_level=0.05,
+                           xlabel_color=xlabel_color, bar_labels=model_to_plot,
+                           t_xlabel=' ', t_ylabel='t statistic', p_xlabel=' ', p_ylabel='corrected p value',
+                           t_title=network, p_title=network
+                           )
