@@ -66,6 +66,10 @@ def regression_analysis_network_level(groups, kinds, networks_list, root_analysi
 
                 all_network_connectivity.append(network_response)
 
+                # Take only the index subjects present in the analysis, because design matrix is for the whole
+                # cohort !!!
+                design_matrix = design_matrix.loc[network_design.index]
+
             # Multiple comparison correction
 
             # merge by index the dataframe from all the network for the current model
@@ -127,7 +131,7 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
     """
 
     # The design matrix is the same for all model
-    design_matrix = dmatrix('Groupe + Sexe', behavioral_dataframe, return_type='dataframe')
+    design_matrix = dmatrix('+'.join(variables_in_model), behavioral_dataframe, return_type='dataframe')
     # For each model: read the csv for each group, concatenate resultings dataframe, and append
     # (merging by index) all variable of interest in the model.
     for kind in kinds:
@@ -169,6 +173,10 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                                               design_matrix_index_name='subjects')
             # Appending current model response
             all_model_response.append(model_response)
+
+            # Take only the index subjects present in the analysis, because design matrix is for the whole
+            # cohort !!!
+            design_matrix = design_matrix.loc[model_design.index]
 
         # merge by index the dataframe
         df_tmp = data_management.merge_list_dataframes(all_model_response)
@@ -246,17 +254,22 @@ def regression_analysis_internetwork_level(internetwork_subjects_connectivity_di
                                        kind, 
                                        inter_network_model))
         
-        regression_results, X_df, y, y_prediction, regression_subjects_list = parametric_tests.linear_regression(connectivity_data=connectivity_data,
-                                       data=behavioral_data_path,
-                                       sheetname='cohort_functional_data',
-                                       subjects_to_drop=['sub40_np130304'],
-                                       pvals_correction_method=['FDR', 'maxT'],
-                                       save_regression_directory=inter_network_analysis_output,
-                                       kind=kind,
-                                       NA_action=NA_action,
-                                       formula=model_formula,
-                                       vectorize=True,
-                                       discard_diagonal=False)
+        regression_results, X_df, y, y_prediction, regression_subjects_list = parametric_tests.linear_regression(
+            connectivity_data=connectivity_data,
+            data=behavioral_data_path,
+            sheetname=sheet_name,
+            subjects_to_drop=subjects_to_drop,
+            pvals_correction_method=['FDR', 'maxT'],
+            save_regression_directory=inter_network_analysis_output,
+            kind=kind,
+            NA_action=NA_action,
+            formula=model_formula,
+            vectorize=vectorize,
+            discard_diagonal=discard_diagonal,
+            nperms_maxT=nperms_maxT,
+            contrasts=contrasts,
+            compute_pvalues=compute_pvalues,
+            pvalues_tail=pvalues_tail)
         # Save the design matrix 
         data_management.dataframe_to_csv(dataframe=X_df, 
                                          path=os.path.join(inter_network_analysis_output, 'design_matrix.csv'),
