@@ -1,5 +1,6 @@
 import numpy as np
 from pylearn_mulm import mulm
+from scipy import stats
 from scipy.stats import t
 import statsmodels.api as sm
 
@@ -41,6 +42,19 @@ def predictors_selection_linear_model(training_connectivity_matrices,
     # coefficient value
     R_mat = np.sign(t_stats) * np.sqrt(t_stats**2 / (df_[0] + t_stats**2))
     P_mat = 2*t.sf(np.abs(t_stats), df_[0])
+
+    return R_mat, P_mat
+
+
+def predictors_selection_correlation(training_connectivity_matrices, 
+                                     training_set_behavioral_scores):
+    R_mat = np.zeros(training_connectivity_matrices.shape[1])
+    P_mat = np.zeros(training_connectivity_matrices.shape[1])
+
+    for i in range(training_connectivity_matrices.shape[1]):
+        # Simple correlation between each edges and behavior
+        R_mat[i], P_mat[i] = stats.pearsonr(x=training_set_behavioral_scores[:, 0],
+                                            y=training_connectivity_matrices[:, i])
 
     return R_mat, P_mat
 

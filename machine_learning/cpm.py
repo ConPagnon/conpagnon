@@ -30,17 +30,17 @@ from data_handling import dictionary_operations
 import pandas as pd
 import seaborn as sns
 from machine_learning.CPM_method import predictors_selection_linear_model, fit_model_on_training_set, \
-    compute_summary_subjects_summary_values
+    compute_summary_subjects_summary_values, predictors_selection_correlation
 
 # Atlas set up
-atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
+atlas_folder = 'D:\\atlas_AVCnn'
 atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = 'D:\\atlas_AVCnn\\atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
@@ -59,14 +59,14 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary'
-                        '/raw_subjects_connectivity_matrices.pkl')
+    full_path_to_object='D:\\text_output_11042018/dictionary'
+                        '\\raw_subjects_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/text_output_11042018/dictionary'
-                        '/z_fisher_transform_subjects_connectivity_matrices.pkl')
+    full_path_to_object='D:\\text_output_11042018\\dictionary'
+                        '\\z_fisher_transform_subjects_connectivity_matrices.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
-    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+    excel_file_path='D:\\regression_data\\regression_data.xlsx',
     sheetname='cohort_functional_data')
 
 # Type of subjects connectivity matrices
@@ -76,7 +76,7 @@ subjects_matrices = Z_subjects_connectivity_matrices
 # Compute the connectivity matrices dictionary with factor as keys.
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
     dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+        population_data_file='D:\\regression_data\\regression_data.xlsx',
         sheetname='cohort_functional_data',
         subjects_connectivity_matrices_dictionnary=subjects_matrices,
         groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
@@ -122,7 +122,7 @@ behavior_prediction_positive_edges = np.zeros(len(patients_subjects_ids))
 behavior_prediction_negative_edges = np.zeros(len(patients_subjects_ids))
 
 # Choose method to relate connectivity to behavior (predictor selection)
-selection_predictor_method = 'linear_model'
+selection_predictor_method = 'correlation'
 
 for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
     print('Train on {}'.format([patients_subjects_ids[i] for i in train_index]))
@@ -152,6 +152,16 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
             training_set_behavioral_score=training_set_behavioral_score_)
 
         # Compute summary values for both positive and negative edges model
+        negative_edges_mask, positive_edges_mask, negative_edges_summary_values, positive_edges_summary_values =\
+            compute_summary_subjects_summary_values(
+                training_connectivity_matrices=patients_train_set,
+                significance_selection_threshold=significance_selection_threshold,
+                R_mat=R_mat, P_mat=P_mat)
+    elif selection_predictor_method == 'correlation':
+
+        R_mat, P_mat = predictors_selection_correlation(training_connectivity_matrices=patients_train_set,
+                                                        training_set_behavioral_scores=training_set_behavioral_score_)
+
         negative_edges_mask, positive_edges_mask, negative_edges_summary_values, positive_edges_summary_values =\
             compute_summary_subjects_summary_values(
                 training_connectivity_matrices=patients_train_set,
