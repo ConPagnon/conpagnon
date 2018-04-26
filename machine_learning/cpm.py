@@ -30,17 +30,20 @@ from data_handling import dictionary_operations
 import pandas as pd
 import seaborn as sns
 from machine_learning.CPM_method import predictors_selection_linear_model, fit_model_on_training_set, \
-    compute_summary_subjects_summary_values, predictors_selection_correlation
+    compute_summary_subjects_summary_values, predictors_selection_correlation, predictor_selection_pcorrelation
+from scipy.io import savemat
+from connectivity_statistics.parametric_tests import partial_corr
+from scipy.stats import t
 
 # Atlas set up
-atlas_folder = 'D:\\atlas_AVCnn'
+atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/'
 atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = 'D:\\atlas_AVCnn\\atlas4D_2_labels.csv'
+labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
@@ -59,24 +62,24 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='D:\\text_output_11042018/dictionary'
-                        '\\raw_subjects_connectivity_matrices.pkl')
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
+                        '/raw_subjects_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
-    full_path_to_object='D:\\text_output_11042018\\dictionary'
-                        '\\z_fisher_transform_subjects_connectivity_matrices.pkl')
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
+                        '/z_fisher_transform_subjects_connectivity_matrices.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
-    excel_file_path='D:\\regression_data\\regression_data.xlsx',
+    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
     sheetname='cohort_functional_data')
 
 # Type of subjects connectivity matrices
-subjects_matrices = Z_subjects_connectivity_matrices
+subjects_matrices = subjects_connectivity_matrices
 
 # Select a subset of patients
 # Compute the connectivity matrices dictionary with factor as keys.
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
     dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file='D:\\regression_data\\regression_data.xlsx',
+        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
         sheetname='cohort_functional_data',
         subjects_connectivity_matrices_dictionnary=subjects_matrices,
         groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
@@ -122,7 +125,27 @@ behavior_prediction_positive_edges = np.zeros(len(patients_subjects_ids))
 behavior_prediction_negative_edges = np.zeros(len(patients_subjects_ids))
 
 # Choose method to relate connectivity to behavior (predictor selection)
-selection_predictor_method = 'correlation'
+selection_predictor_method = 'partial correlation'
+
+# Save the matrices for matlab utilisation
+# Transpose the shape to (n_features, n_features, n_subjects)
+patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1,2,0))
+# Put ones on the diagonal
+for i in range(patients_connectivity_matrices_t.shape[2]):
+    np.fill_diagonal(patients_connectivity_matrices_t[..., i], 1)
+# Save the matrix in .mat format
+patients_matrices_dict = {'patients_matrices': patients_connectivity_matrices_t}
+savemat('/media/db242421/db242421_data/CPM_matlab_ver/patients_LG_mat.mat', patients_matrices_dict)
+# Save gender in .mat format
+gender_dict = {'gender': np.array(confounding_variables_data['Sexe'])}
+savemat('/media/db242421/db242421_data/CPM_matlab_ver/gender_LG_mat.mat', gender_dict)
+# Save lesion normalized
+lesion_dict = {'lesion': np.array(confounding_variables_data['lesion_normalized'])}
+savemat('/media/db242421/db242421_data/CPM_matlab_ver/lesion_LG_mat.mat', lesion_dict)
+# Save behavior
+behavior_dict = {'behavior': np.array(behavioral_scores)}
+savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LG_mat.mat', behavior_dict)
+
 
 for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
     print('Train on {}'.format([patients_subjects_ids[i] for i in train_index]))
@@ -157,6 +180,7 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
                 training_connectivity_matrices=patients_train_set,
                 significance_selection_threshold=significance_selection_threshold,
                 R_mat=R_mat, P_mat=P_mat)
+
     elif selection_predictor_method == 'correlation':
 
         R_mat, P_mat = predictors_selection_correlation(training_connectivity_matrices=patients_train_set,
@@ -167,6 +191,20 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
                 training_connectivity_matrices=patients_train_set,
                 significance_selection_threshold=significance_selection_threshold,
                 R_mat=R_mat, P_mat=P_mat)
+
+    elif selection_predictor_method == 'partial correlation':
+
+        R_mat, P_mat = predictor_selection_pcorrelation(
+            training_connectivity_matrices=patients_train_set,
+            training_set_behavioral_scores=training_set_behavioral_score_,
+            training_set_confounding_variables=training_confound_variable_matrix)
+
+        negative_edges_mask, positive_edges_mask, negative_edges_summary_values, positive_edges_summary_values =\
+            compute_summary_subjects_summary_values(
+                training_connectivity_matrices=patients_train_set,
+                significance_selection_threshold=significance_selection_threshold,
+                R_mat=R_mat, P_mat=P_mat)
+
 
     else:
         raise ValueError('Selection method not understood')
@@ -220,7 +258,6 @@ sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data
 plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model \n'
           'r = {}, p = {}'.format(R_predict_positive_model, P_predict_positive_model))
 plt.show()
-
 # Plot for negative model
 plt.figure()
 g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,

@@ -3,7 +3,7 @@ from pylearn_mulm import mulm
 from scipy import stats
 from scipy.stats import t
 import statsmodels.api as sm
-
+from connectivity_statistics.parametric_tests import partial_corr
 """
 This module contain useful function for the connectome predictive modelling algorithm.
 
@@ -55,6 +55,30 @@ def predictors_selection_correlation(training_connectivity_matrices,
         # Simple correlation between each edges and behavior
         R_mat[i], P_mat[i] = stats.pearsonr(x=training_set_behavioral_scores[:, 0],
                                             y=training_connectivity_matrices[:, i])
+
+    return R_mat, P_mat
+
+
+def predictor_selection_pcorrelation(training_connectivity_matrices,
+                                     training_set_behavioral_scores,
+                                     training_set_confounding_variables):
+    # Matrix which will contain the correlation of each edge to behavior, and the corresponding
+    # p values
+    R_mat = np.zeros(training_connectivity_matrices.shape[1])
+
+    # Construct temporary array to contain the connectivity, behavior and
+    # other variable to regress
+    for i in range(training_connectivity_matrices.shape[1]):
+        R_ = partial_corr(np.c_[training_connectivity_matrices[:, i],
+                                training_set_behavioral_scores[:, 0],
+                                training_set_confounding_variables])
+        R_mat[i] = R_[0, 1]
+
+    df = training_connectivity_matrices.shape[0] - 2 - training_set_confounding_variables.shape[1]
+    # Compute p values manually: convert R values in t statistic
+    t_mat = (np.sqrt(df) * np.abs(R_mat)) / (np.sqrt(np.ones(R_mat.shape[0]) - R_mat ** 2))
+    # Compute two tailed p value
+    P_mat = t.sf(np.abs(t_mat), df) * 2
 
     return R_mat, P_mat
 

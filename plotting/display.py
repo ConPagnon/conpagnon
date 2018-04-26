@@ -353,7 +353,7 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
                label=str(alpha_level) + ' threshold', colors='red')
     plt.title(p_title)
     plt.legend()
-    plt.show()
+    #plt.show()
     # Plot the T statistic distribution
     plt.figure()
     ax = sns.barplot(x=bar_labels, y=tvalues, palette=bar_color)
@@ -364,7 +364,7 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
         xtick.set_fontsize(size_label)
         xtick.set_rotation(90)
     plt.title(t_title)
-    plt.show()
+    #plt.show()
 
 
 def seaborn_scatterplot(x, y, data, figure_title, **kwargs):

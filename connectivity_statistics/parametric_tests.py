@@ -1083,7 +1083,6 @@ def partial_corr(C):
     C = np.c_[C, np.ones(C.shape[0])]
     p = C.shape[1]
     P_corr = np.zeros((p, p), dtype=np.float)
-    p_values = np.zeros((p,p), dtype=np.float)
     for i in range(p):
         P_corr[i, i] = 1
         for j in range(i + 1, p):
@@ -1096,11 +1095,8 @@ def partial_corr(C):
             res_j = C[:, j] - C[:, idx].dot(beta_i)
             res_i = C[:, i] - C[:, idx].dot(beta_j)
 
-            corr, p_value = pearsonr(res_i, res_j)
+            corr, _ = pearsonr(res_i, res_j)
             P_corr[i, j] = corr
-            p_values[i, j] = p_value
-
             P_corr[j, i] = corr
-            p_values[j, i] = p_value
 
-    return P_corr, p_values
+    return P_corr
