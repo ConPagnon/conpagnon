@@ -334,7 +334,21 @@ homotopic_intra_network_strength_t_test = parametric_tests.intra_network_two_sam
     network_labels_list=network_labels_list, assume_equal_var=True, alpha=alpha)
 
 # Display the barplot for t statistic and p values for homotopic intra-network differences test
-
+for kind in kinds:
+    t_statistic = np.array([homotopic_intra_network_strength_t_test [kind][network]['t statistic'] for network
+                            in network_labels_list])
+    corrected_pvalues = np.array([homotopic_intra_network_strength_t_test [kind][network]['uncorrected p values'] for network
+                                  in network_labels_list])
+    plt.figure()
+    display.t_and_p_values_barplot(t_values=t_statistic, p_values=corrected_pvalues, alpha_level=alpha,
+                                   xlabel_color=network_label_colors, bar_labels=network_labels_list,
+                                   t_xlabel='Network name', t_ylabel='t statistic values',
+                                   p_xlabel='Network name', p_ylabel='FDR corrected p values',
+                                   t_title='T statistic for homotopic intra-network comparison for {} \n between {} and {}'.format
+                                            (kind, groupes[0], groupes[1]),
+                                   p_title='P values for homotopic intra-network comparison for {} \n between {} and {}'.format
+                                            (kind, groupes[0], groupes[1]))
+    plt.show()
 # T-test for the intra-network connectivity strength across subject between the group
 intra_network_strength_t_test = parametric_tests.intra_network_two_samples_t_test(
     intra_network_connectivity_dictionary=intra_network_connectivity_dict,
@@ -593,8 +607,6 @@ import itertools
 #        connectivity_dictionnary_=contralesional_distribution_parameters, groupes=list(group_pair), kinds=kinds,
 #        field='subjects mean contralesional connectivity', contrast=contrast
 #    )
-
-groupes = ['L_Clin_Typ_pat', 'controls']
 
 # Compute the inter-network connectivity for all brain region:
 subjects_inter_network_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
