@@ -490,6 +490,12 @@ ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
 contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
     subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
     groupes=groupes, kinds=kinds)
+# Compute whole brain mean connectivity for each subjects i.e  the mean of the flatten subjects
+# connectivity matrices
+whole_brain_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
+    subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
+    groupes=['patients', 'controls'], kinds=kinds)
+
 
 # Save the ipsilesional intra-network connectivity for each groups and network
 data_management.csv_from_intra_network_dictionary(subjects_dictionary=ipsilesional_intra_network_connectivity_dict,
@@ -531,6 +537,20 @@ for group in groupes:
                                             header=['subjects', 'mean_contra'],
                                             csv_filename='mean_contralesional.csv',
                                             output_directory=os.path.join(output_csv_directory, kind),
+                                            delimiter=',')
+
+# Save the whole brain mean connectivity
+groupes = ['patients']
+for group in groupes:
+    for kind in kinds:
+        data_management.csv_from_dictionary(subjects_dictionary=whole_brain_mean_connectivity,
+                                            groupes=[group],
+                                            kinds=[kind],
+                                            field_to_write='mean connectivity',
+                                            header=['subjects', 'mean_connectivity'],
+                                            csv_filename='mean_connectivity.csv',
+                                            output_directory=os.path.join('/media/db242421/db242421_data/ConPagnon_data'
+                                                                          '/25042018_Patients_LangScore', kind),
                                             delimiter=',')
 
 
@@ -619,7 +639,7 @@ correction_method = 'FDR'
 models_to_build = ['mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
-variables_model = ['language_score', 'Sexe', 'lesion_normalized']
+variables_model = ['Groupe', 'Sexe']
 
 # formulation of the model
 model_formula = 'language_score + Sexe + lesion_normalized'
@@ -674,6 +694,15 @@ regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_model
                                                           variables_in_model=variables_model,
                                                           behavioral_dataframe=behavioral_data_cleaned,
                                                           correction_method=['FDR', 'maxT'],
+                                                          alpha=0.05)
+
+regression_analysis_model.regression_analysis_whole_brain(groups=['patients'],
+                                                          kinds=kinds,
+                                                          root_analysis_directory='/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore',
+                                                          whole_brain_model=['mean_connectivity'],
+                                                          variables_in_model=['language_score', 'Sexe', 'lesion_normalized'],
+                                                          behavioral_dataframe=behavioral_data_cleaned,
+                                                          correction_method=['FDR'],
                                                           alpha=0.05)
 
 # Inter-network statistic : whole brain, ipsilesional and contralesional
@@ -761,8 +790,8 @@ network_color_df = data_management.shift_index_column(atlas_information[['networ
 
 network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network_to_plot]
 
-model_to_plot = ['mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
-bar_label = ['H', 'CL', 'IPS']
+model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
+bar_label = ['G', 'H', 'CL', 'IPS']
 
 results_directory = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/regression_analysis'
 model_dictionary = dict.fromkeys(network_to_plot)
@@ -775,8 +804,8 @@ for network in network_to_plot:
     for model in model_to_plot:
         model_result = pd.read_csv(os.path.join(results_directory, 'tangent', network,
                                                 model + '_parameters.csv'))
-        all_models_t.append(model_result['t'].loc[2])
-        all_models_p.append(model_result['FDRcorrected_pvalues'].loc[2])
+        all_models_t.append(model_result['t'].loc[1])
+        all_models_p.append(model_result['FDRcorrected_pvalues'].loc[1])
 
     model_dictionary[network] = {'t_values': all_models_t, 'p_values': all_models_p}
 
@@ -789,7 +818,7 @@ for model in model_to_plot:
     whole_brain_p.append(model_result['FDRcorrected_pvalues'].loc[1])
 
 
-with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_1.pdf')) as pdf:
+with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
 
     for network in network_to_plot:
         #plt.figure()
@@ -809,7 +838,7 @@ with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_controls_3.p
     t_and_p_values_barplot(t_values=whole_brain_t,
                            p_values=whole_brain_p,
                            alpha_level=0.05,
-                           xlabel_color=['black', 'black', 'black'], bar_labels=bar_label,
+                           xlabel_color=['black', 'black', 'black', 'black'], bar_labels=bar_label,
                            t_xlabel=' ', t_ylabel='t statistic', p_xlabel=' ', p_ylabel='corrected p value',
                            t_title='', p_title='', xlabel_size=20
                            )
@@ -832,11 +861,8 @@ plot_prob_atlas(maps_img=atlas_path,  view_type='filled_contours', title='AVCnn 
 plt.show()
 
 # Plot each network on a glass brain
-network_to_plot = ['DMN', 'Executive',
-                   'Language',  'MTL',
-                   'Salience', 'Sensorimotor', 'Visuospatial',
-                   'Primary_Visual',
-                   'Basal_Ganglia', 'Auditory', 'Precuneus',  'Secondary_Visual']
+network_to_plot = ['Sensorimotor', 'Visuospatial', 'Salience'
+                   ]
 network_color_df = data_management.shift_index_column(atlas_information[['network', 'Color']],
                                                       'network')
 
@@ -847,7 +873,7 @@ network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network
 n_regions_network = [len(list((network_color_df.loc[n]['Color']))) for n in network_to_plot]
 
 with backend_pdf.PdfPages('/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
-                          'figures_presentation_15052018/atlas_avcnn_72rois_ver/networks_alone.pdf') as pdf:
+                          'figures_presentation_15052018/atlas_avcnn_72rois_ver/one_side_inter_network_sensorimotor_language.pdf') as pdf:
     for network in network_to_plot:
         plt.figure()
         plot_connectome(adjacency_matrix=np.zeros((n_regions_network[network_to_plot.index(network)],
@@ -858,6 +884,18 @@ with backend_pdf.PdfPages('/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
         pdf.savefig()
 
         plt.show()
+
+
+# One side plot
+network_node_ = network_nodes_df.loc[['Sensorimotor', 'Visuospatial', 'Salience']]
+chosen_node_ = network_node_.iloc[[0,2,4,6,7,10,11,14,16,18]]
+chosen_node_adjacency_matrix = np.zeros((chosen_node_.shape[0], chosen_node_.shape[0]))
+plot_connectome(adjacency_matrix=chosen_node_adjacency_matrix, node_coords=np.array(chosen_node_),
+                node_color=network_color, title='Sensorimotor, Visuospatial and Salience',
+                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/figures_presentation_15052018/'
+                            'atlas_avcnn_72rois_ver/One_side_sensorimotor_visuospatial_salience.pdf')
+plt.show()
+
 
 # Plot the full set of nodes on the glass brain
 plot_connectome(adjacency_matrix=np.zeros((n_nodes, n_nodes)),
