@@ -699,10 +699,10 @@ regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_model
 regression_analysis_model.regression_analysis_whole_brain(groups=['patients'],
                                                           kinds=kinds,
                                                           root_analysis_directory='/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore',
-                                                          whole_brain_model=['mean_connectivity'],
+                                                          whole_brain_model=['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional'],
                                                           variables_in_model=['language_score', 'Sexe', 'lesion_normalized'],
                                                           behavioral_dataframe=behavioral_data_cleaned,
-                                                          correction_method=['FDR'],
+                                                          correction_method=['FDR', 'maxT'],
                                                           alpha=0.05)
 
 # Inter-network statistic : whole brain, ipsilesional and contralesional
@@ -793,10 +793,10 @@ network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network
 model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
 bar_label = ['G', 'H', 'CL', 'IPS']
 
-results_directory = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/regression_analysis'
+results_directory = '/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore/regression_analysis'
 model_dictionary = dict.fromkeys(network_to_plot)
 
-output_fig_folder = '/media/db242421/db242421_data/ConPagnon_data/figures_patients_controls'
+output_fig_folder = '/media/db242421/db242421_data/ConPagnon_data/figures_Patients_LangScore'
 
 for network in network_to_plot:
     all_models_t = []
@@ -814,8 +814,8 @@ whole_brain_t = []
 whole_brain_p = []
 for model in model_to_plot:
     model_result = pd.read_csv(os.path.join(results_directory, 'tangent', model + '_parameters.csv'))
-    whole_brain_t.append(model_result['t'].loc[1])
-    whole_brain_p.append(model_result['FDRcorrected_pvalues'].loc[1])
+    whole_brain_t.append(model_result['t'].loc[2])
+    whole_brain_p.append(model_result['maxTcorrected_pvalues'].loc[2])
 
 
 with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
@@ -834,7 +834,7 @@ with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.
         pdf.savefig()
 
 
-with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_controls_3.pdf')) as pdf:
+with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
     t_and_p_values_barplot(t_values=whole_brain_t,
                            p_values=whole_brain_p,
                            alpha_level=0.05,
@@ -859,7 +859,7 @@ plot_prob_atlas(maps_img=atlas_path,  view_type='filled_contours', title='AVCnn 
                             'figures_presentation_15052018/atlas_avcnn_72rois_ver/roi_plot_on_MNI.pdf',
                 cmap=cmap)
 plt.show()
-
+# TODO: Batch all this figure !!!!
 # Plot each network on a glass brain
 network_to_plot = ['Sensorimotor', 'Visuospatial', 'Salience'
                    ]
