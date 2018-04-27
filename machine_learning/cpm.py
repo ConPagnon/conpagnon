@@ -36,14 +36,14 @@ from connectivity_statistics.parametric_tests import partial_corr
 from scipy.stats import t
 
 # Atlas set up
-atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/'
+atlas_folder = 'D:\\atlas_AVCnn'
 atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = 'D:\\atlas_AVCnn\\atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
@@ -62,14 +62,14 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
-                        '/raw_subjects_connectivity_matrices.pkl')
+    full_path_to_object='D:\\text_output_11042018\\dictionary'
+                        '\\raw_subjects_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
-                        '/z_fisher_transform_subjects_connectivity_matrices.pkl')
+    full_path_to_object='D:\\text_output_11042018\dictionary'
+                        '\\z_fisher_transform_subjects_connectivity_matrices.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
-    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+    excel_file_path='D:\\regression_data\\regression_data.xlsx',
     sheetname='cohort_functional_data')
 
 # Type of subjects connectivity matrices
@@ -79,7 +79,7 @@ subjects_matrices = subjects_connectivity_matrices
 # Compute the connectivity matrices dictionary with factor as keys.
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
     dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+        population_data_file='D:\\regression_data\\regression_data.xlsx',
         sheetname='cohort_functional_data',
         subjects_connectivity_matrices_dictionnary=subjects_matrices,
         groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
@@ -129,22 +129,22 @@ selection_predictor_method = 'partial correlation'
 
 # Save the matrices for matlab utilisation
 # Transpose the shape to (n_features, n_features, n_subjects)
-patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1,2,0))
+# patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1,2,0))
 # Put ones on the diagonal
-for i in range(patients_connectivity_matrices_t.shape[2]):
-    np.fill_diagonal(patients_connectivity_matrices_t[..., i], 1)
+# for i in range(patients_connectivity_matrices_t.shape[2]):
+    # np.fill_diagonal(patients_connectivity_matrices_t[..., i], 1)
 # Save the matrix in .mat format
-patients_matrices_dict = {'patients_matrices': patients_connectivity_matrices_t}
-savemat('/media/db242421/db242421_data/CPM_matlab_ver/patients_LG_mat.mat', patients_matrices_dict)
+# patients_matrices_dict = {'patients_matrices': patients_connectivity_matrices_t}
+# savemat('/media/db242421/db242421_data/CPM_matlab_ver/patients_LG_mat.mat', patients_matrices_dict)
 # Save gender in .mat format
-gender_dict = {'gender': np.array(confounding_variables_data['Sexe'])}
-savemat('/media/db242421/db242421_data/CPM_matlab_ver/gender_LG_mat.mat', gender_dict)
+# gender_dict = {'gender': np.array(confounding_variables_data['Sexe'])}
+# savemat('/media/db242421/db242421_data/CPM_matlab_ver/gender_LG_mat.mat', gender_dict)
 # Save lesion normalized
-lesion_dict = {'lesion': np.array(confounding_variables_data['lesion_normalized'])}
-savemat('/media/db242421/db242421_data/CPM_matlab_ver/lesion_LG_mat.mat', lesion_dict)
+# lesion_dict = {'lesion': np.array(confounding_variables_data['lesion_normalized'])}
+# savemat('/media/db242421/db242421_data/CPM_matlab_ver/lesion_LG_mat.mat', lesion_dict)
 # Save behavior
-behavior_dict = {'behavior': np.array(behavioral_scores)}
-savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LG_mat.mat', behavior_dict)
+# behavior_dict = {'behavior': np.array(behavioral_scores)}
+# savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LG_mat.mat', behavior_dict)
 
 
 for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
@@ -204,8 +204,6 @@ for train_index, test_index in leave_one_out_generator.split(vectorized_connecti
                 training_connectivity_matrices=patients_train_set,
                 significance_selection_threshold=significance_selection_threshold,
                 R_mat=R_mat, P_mat=P_mat)
-
-
     else:
         raise ValueError('Selection method not understood')
 
@@ -242,159 +240,31 @@ R_predict_positive_model,  P_predict_positive_model = \
     stats.pearsonr(x=np.array(behavioral_scores),
                    y=behavior_prediction_positive_edges)
 
-# Plot relationship between predicted and true value by the model
-# Add predicted score for negative and positive edges model
-behavioral_scores_both_model = pd.DataFrame(data={'true_behavioral_score':np.array(behavioral_scores) ,
-                                                  'predicted_positive_model_scores': behavior_prediction_positive_edges,
-                                                  'predicted_negative_model_scores': behavior_prediction_negative_edges,
-                                                  'language profil': regression_data_file['langage_clinique']},
-
-                                            index=behavioral_scores.index)
-plt.figure()
-g = sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-               fit_reg=False, hue='language profil', legend_out=True, legend=True)
-sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
-plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model \n'
-          'r = {}, p = {}'.format(R_predict_positive_model, P_predict_positive_model))
-plt.show()
-# Plot for negative model
-plt.figure()
-g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-               fit_reg=False, hue='language profil', legend_out=True, legend=True)
-sns.regplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-            scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
-plt.title('Predicted behavioral score versus true behavioral score \n in the negative edges model \n'
-          'r = {}, p = {}'.format(R_predict_negative_model, P_predict_negative_model))
-plt.show()
 
 
+def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
+                     selection_predictor_method='correlation',
+                     significance_selection_threshold=0.01, **kwargs):
+    """Predicting behavior scores wih a linear model
 
-from plotting import display
-save_plot_directory = '/media/db242421/db242421_data/ConPagnon_data/CPM'
-# Plot the negative and positive edges on a glass brain
-with PdfPages(os.path.join(save_plot_directory, kind + '_LG_LesionSize_CPM_correlation_selelection_of_predictor.pdf')) \
-        as pdf:
-    # Plot regression line for both model
+    """
 
-    # Plot for positive model
-    plt.figure()
-    g = sns.lmplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-                   fit_reg=False, hue='language profil', legend_out=True, legend=True)
-    sns.regplot(x='true_behavioral_score', y='predicted_positive_model_scores', data=behavioral_scores_both_model,
-                scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
-    plt.title('Predicted behavioral score versus true behavioral score \n in the positive edges model \n'
-              'r = {}, p = {}'.format(R_predict_positive_model, P_predict_positive_model))
-    pdf.savefig(bbox_inches='tight')
-    plt.show()
+    for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
+        print('Train on {}'.format([patients_subjects_ids[i] for i in train_index]))
+        print('Test on {}'.format([patients_subjects_ids[i] for i in test_index]))
+        # For each iteration, split the patients matrices array in train and
+        # test set using leave one out cross validation
+        patients_train_set, leave_one_out_patients = \
+            vectorized_connectivity_matrices[train_index], vectorized_connectivity_matrices[test_index]
 
-    # Plot for negative model
-    plt.figure()
-    g = sns.lmplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-                   fit_reg=False, hue='language profil', legend_out=True, legend=True)
-    sns.regplot(x='true_behavioral_score', y='predicted_negative_model_scores', data=behavioral_scores_both_model,
-                scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
-    plt.title('Predicted behavioral score versus true behavioral score \n in the negative edges model \n'
-              'r = {}, p = {}'.format(R_predict_negative_model, P_predict_negative_model))
-    pdf.savefig(bbox_inches='tight')
-    plt.show()
+        # Training set behavioral scores
+        training_set_behavivoral_score_ = np.zeros((patients_train_set.shape[0], 1))
+        training_set_behavioral_score_[:, 0] = behavioral_scores[train_index]
 
+        # Test subject behavioral score
+        test_subject_behavioral_score = behavioral_scores[test_index]
 
-    # plot glass brain for selected positive edges
-    plt.figure()
-    plot_connectome(adjacency_matrix=positive_edges_matrix, node_coords=atlas_nodes, node_color=labels_colors,
-                    edge_cmap='Reds', title='Edges with positive correlation to language score')
-    pdf.savefig(bbox_inches='tight')
-    plt.show()
-
-    # plot glass brain for selected negative edges
-    plt.figure()
-    plot_connectome(adjacency_matrix=negatives_edges_matrix, node_coords=atlas_nodes, node_color=labels_colors,
-                    edge_cmap='Blues', title='Edges with negative correlation to language score')
-    pdf.savefig(bbox_inches='tight')
-    plt.show()
-
-    # plot positive model matrix
-    plt.figure()
-    display.plot_matrix(matrix=positive_edges_matrix, labels_colors=labels_colors, mpart='all',
-                        colormap='Reds', horizontal_labels=labels_regions, vertical_labels=labels_regions,
-                        title='Edges with positive correlation to behavior', linecolor='black')
-    pdf.savefig(bbox_inches='tight')
-    plt.show()
-
-    # plot negative model matrix
-    plt.figure()
-    display.plot_matrix(matrix=negatives_edges_matrix, labels_colors=labels_colors, mpart='all',
-                        colormap='Blues', horizontal_labels=labels_regions, vertical_labels=labels_regions,
-                        title='Edges with negative correlation to behavior', linecolor='black')
-    pdf.savefig(bbox_inches='tight')
-    plt.show()
-
-
-    # For the positive edges model
-    positive_edges_position = np.where(np.tril(positive_edges_matrix) == 1)
-    number_of_couple_region = len(positive_edges_position[0])
-    for n_couple in range(number_of_couple_region):
-        # list of connectivity coefficient of the current couple accross patients
-        rois_couple_connectivity = []
-        for n_patient in range(patients_connectivity_matrices.shape[0]):
-            rois_couple_connectivity.append(patients_connectivity_matrices[n_patient,
-                                            positive_edges_position[0][n_couple],
-                                            positive_edges_position[1][n_couple]])
-
-        rois_couple_connectivity = np.array(rois_couple_connectivity)
-        # Construct a pandas dataframe to plot with seaborn
-        couple_connectivity_dataframe = pd.DataFrame(
-            data={'{} - {}'.format(labels_regions[positive_edges_position[0][n_couple]],
-                                   labels_regions[positive_edges_position[1][n_couple]]): rois_couple_connectivity,
-                  'true behavioral score': np.array(behavioral_scores),
-                  'language profil': regression_data_file['langage_clinique']
-                  }, index=behavioral_scores.index)
-        plt.figure()
-        g = sns.lmplot(x='true behavioral score',
-                       y='{} - {}'.format(labels_regions[positive_edges_position[0][n_couple]],
-                                   labels_regions[positive_edges_position[1][n_couple]]),
-                       data=couple_connectivity_dataframe,
-                       fit_reg=False, hue='language profil', legend_out=True, legend=True)
-        sns.regplot(x='true behavioral score',
-                    y='{} - {}'.format(labels_regions[positive_edges_position[0][n_couple]],
-                                   labels_regions[positive_edges_position[1][n_couple]]),
-                    data=couple_connectivity_dataframe,
-                    scatter=False, ax=g.axes[0, 0], line_kws={'color': 'firebrick'})
-        pdf.savefig()
-        plt.show()
-
-    # For the negative edges model
-    negative_edges_position = np.where(np.tril(negatives_edges_matrix) == 1)
-    number_of_couple_region = len(negative_edges_position[0])
-    for n_couple in range(number_of_couple_region):
-        # list of connectivity coefficient of the current couple accross patients
-        rois_couple_connectivity = []
-        for n_patient in range(patients_connectivity_matrices.shape[0]):
-            rois_couple_connectivity.append(patients_connectivity_matrices[n_patient,
-                                                                           negative_edges_position[0][n_couple],
-                                                                           negative_edges_position[1][n_couple]])
-
-        rois_couple_connectivity = np.array(rois_couple_connectivity)
-        # Construct a pandas dataframe to plot with seaborn
-        couple_connectivity_dataframe = pd.DataFrame(
-            data={'{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
-                                   labels_regions[negative_edges_position[1][n_couple]]): rois_couple_connectivity,
-                  'true behavioral score': np.array(behavioral_scores),
-                  'language profil': regression_data_file['langage_clinique']
-                  }, index=behavioral_scores.index)
-        plt.figure()
-        g = sns.lmplot(x='true behavioral score',
-                       y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
-                                          labels_regions[negative_edges_position[1][n_couple]]),
-                       data=couple_connectivity_dataframe,
-                       fit_reg=False, hue='language profil', legend_out=True, legend=True)
-        sns.regplot(x='true behavioral score',
-                    y='{} - {}'.format(labels_regions[negative_edges_position[0][n_couple]],
-                                       labels_regions[negative_edges_position[1][n_couple]]),
-                    data=couple_connectivity_dataframe,
-                    scatter=False, ax=g.axes[0, 0], line_kws={'color': 'b'})
-        pdf.savefig()
-        plt.show()
-
+        # The confounding variables, stored in an array for the training set
+        training_confound_variable_matrix = confounding_variables_matrix.loc[[patients_subjects_ids[i]
+                                                                              for i in train_index]]
 
