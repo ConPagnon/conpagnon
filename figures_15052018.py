@@ -1,5 +1,5 @@
 # Figure generation for AVCnn presentation
-from nilearn.plotting import plot_epi, show, plot_prob_atlas
+from nilearn.plotting import plot_epi, show, plot_prob_atlas, plot_roi
 import os
 from nilearn.image.image import mean_img
 from matplotlib.backends.backend_pdf import PdfPages
@@ -88,4 +88,53 @@ with PdfPages(os.path.join(save_figures, 'atlas_indiv.pdf')) as pdf:
         pdf.savefig()
         plt.show()
 
-# Classification scores
+# Classification barplot
+from computing import compute_connectivity_matrices as ccm
+from sklearn import covariance
+from machine_learning import classification
+
+time_series_dict = times_series
+covariance_estimator = covariance.LedoitWolf()
+kinds = ['correlation', 'partial correlation', 'tangent']
+groupes = ['patients', 'controls']
+
+
+# Computing connectivity matrices for pooled groups directly.
+pooled_groups_connectivity_matrices, _ = ccm.pooled_groups_connectivity(time_series_dictionary=time_series_dict,
+                                                                        covariance_estimator=covariance_estimator,
+                                                                        kinds=kinds, vectorize=True)
+
+# Group classification
+time_series_dictionary = time_series_dict
+group_stacked_time_series = []
+labels = []
+for groupe in time_series_dictionary.keys():
+    subject_list = time_series_dictionary[groupe].keys()
+    for subject in subject_list:
+        group_stacked_time_series.append(time_series_dictionary[groupe][subject]['time_series'])
+        labels.append(groupes.index(groupe))
+
+# Build labels for each class we want to discriminate.
+labels = labels
+pooled_groups_connectivity_matrices = pooled_groups_connectivity_matrices
+n_splits = 10000
+test_size = 0.3
+train_size = 0.7
+
+# Compute mean scores for classification
+mean_scores, mean_scores_dict = classification.two_groups_classification(
+    pooled_groups_connectivity_matrices=pooled_groups_connectivity_matrices,
+    labels=labels, n_splits=n_splits, test_size=test_size,
+    train_size=train_size, kinds=kinds)
+
+# bar plot of classification results
+with PdfPages(os.path.join(save_figures, 'classif.pdf')) as pdf:
+
+    plt.figure()
+    sns.barplot(x=list(mean_scores_dict.keys()), y=list(mean_scores_dict.values()),
+                palette=['red', 'green', 'goldenrod'])
+    plt.xlabel('metric')
+    plt.ylabel('Mean scores of classification')
+    plt.title('Mean scores of classification using different kind of connectivity')
+    pdf.savefig()
+    plt.show()
