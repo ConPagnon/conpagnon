@@ -203,7 +203,7 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
         A dataframe  of shape (n_subjects, n_variables) containing the confounding/controlling
         variable which might be used in the selection predictors step when selection method is
         partial correlation/linear regression. Defaults is None.
-    add_predictive_variables: a pandas.DataFrame shape (n_subjects_in_training_set, n_variables) or None, optional
+    add_predictive_variables: pandas.DataFrame shape (n_subjects_in_training_set, n_variables) or None, optional
         If not None, additional variables will be fitted in the predictive model, besides negative
         and positive summary features.
     verbose: int, optional
@@ -212,7 +212,9 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
     Returns
     -------
     output 1: float
-        The
+        The correlation coefficient for the positive features model.
+    output 2: float
+        The correlation coefficient for the negative features model.
 
 
 
@@ -224,6 +226,9 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
     # Initialization of behavior prediction vector
     behavior_prediction_positive_edges = np.zeros(vectorized_connectivity_matrices.shape[0])
     behavior_prediction_negative_edges = np.zeros(vectorized_connectivity_matrices.shape[0])
+
+    all_selected_positive_features = []
+    all_selected_negative_features = []
 
     for train_index, test_index in leave_one_out_generator.split(vectorized_connectivity_matrices):
         if verbose:
@@ -267,6 +272,9 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
                     significance_selection_threshold=significance_selection_threshold,
                     R_mat=R_mat, P_mat=P_mat)
 
+            all_selected_negative_features.append(negative_edges_mask)
+            all_selected_positive_features.append(positive_edges_mask)
+
         elif selection_predictor_method == 'correlation':
 
             R_mat, P_mat = \
@@ -278,6 +286,9 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
                     training_connectivity_matrices=patients_train_set,
                     significance_selection_threshold=significance_selection_threshold,
                     R_mat=R_mat, P_mat=P_mat)
+
+            all_selected_negative_features.append(negative_edges_mask)
+            all_selected_positive_features.append(positive_edges_mask)
 
         elif selection_predictor_method == 'partial correlation':
             if confounding_variables_matrix is None:
@@ -294,6 +305,9 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
                         training_connectivity_matrices=patients_train_set,
                         significance_selection_threshold=significance_selection_threshold,
                         R_mat=R_mat, P_mat=P_mat)
+
+                all_selected_negative_features.append(negative_edges_mask)
+                all_selected_positive_features.append(positive_edges_mask)
         else:
             raise ValueError('Selection method not understood')
 
@@ -337,4 +351,5 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
         stats.pearsonr(x=np.array(behavioral_scores),
                        y=behavior_prediction_positive_edges)
 
-    return R_predict_positive_model, R_predict_negative_model
+    return R_predict_positive_model, R_predict_negative_model, all_selected_positive_features, \
+           all_selected_negative_features
