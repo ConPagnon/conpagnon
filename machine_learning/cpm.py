@@ -6,9 +6,12 @@ from patsy import dmatrix
 from data_handling import dictionary_operations
 from machine_learning.CPM_method import predict_behavior
 from scipy.io import savemat
-from connectivity_statistics.parametric_tests import partial_corr
-from scipy.stats import t
-
+from joblib import Parallel, delayed
+import matplotlib.pyplot as plt
+import time
+from matplotlib.backends.backend_pdf import PdfPages
+from utils.folders_and_files_management import save_object
+from nilearn.plotting import plot_connectome
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
@@ -83,6 +86,7 @@ confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variabl
 add_predictive_variables = confounding_variables_matrix
 significance_selection_threshold = 0.01
 
+n_subjects = vectorized_connectivity_matrices.shape[0]
 # Features selection by leave one out cross validation scheme
 # Clean behavioral data
 drop_subject_in_data = ['sub40_np130304']
@@ -110,13 +114,118 @@ except:
 # behavior_dict = {'behavior': np.array(behavioral_scores)}
 # savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LG_mat.mat', behavior_dict)
 
-P, N = predict_behavior(vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-                        behavioral_scores=np.array(behavioral_scores),
-                        selection_predictor_method='correlation',
-                        significance_selection_threshold=significance_selection_threshold,
-                        confounding_variables_matrix=None,
-                        add_predictive_variables=add_predictive_variables,
-                        verbose=1)
+tic = time.time()
+True_R_positive, True_R_negative, all_positive_features, all_negatives_features = predict_behavior(
+    vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+    behavioral_scores=np.array(behavioral_scores),
+    selection_predictor_method='correlation',
+    significance_selection_threshold=significance_selection_threshold,
+    confounding_variables_matrix=None,
+    add_predictive_variables=add_predictive_variables,
+    verbose=0)
+tac = time.time()
+T = tac - tic
+# with a for loop
+#tic = time.time()
+#null_distribution_array = np.zeros((n_permutations, 2))
+#for i in range(n_permutations):
+#    behavioral_scores_perm = np.random.permutation(behavioral_scores)
+#    R_positive_perm, R_negative_perm = predict_behavior(
+#        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+#        behavioral_scores=behavioral_scores_perm,
+#        selection_predictor_method='correlation',
+#        significance_selection_threshold=significance_selection_threshold,
+#        confounding_variables_matrix=None,
+#        add_predictive_variables=None,
+#        verbose=0)
+#    null_distribution_array[:, 0] = R_positive_perm
+#    null_distribution_array[:, 1] = R_negative_perm
+#tac = time.time()
+#T = tac - tic
+
+if __name__ == '__main__':
+    # Permutation test
+    n_permutations = 10000
 
 
+    tic = time.time()
+    null_distribution = Parallel(n_jobs=-1, verbose=10, backend="multiprocessing")(delayed(predict_behavior)(
+        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+        behavioral_scores=np.random.permutation(behavioral_scores),
+        selection_predictor_method='correlation',
+        significance_selection_threshold=significance_selection_threshold,
+        confounding_variables_matrix=None,
+        add_predictive_variables=add_predictive_variables,
+        verbose=0) for n_perm in range(n_permutations))
+    tac = time.time()
+    T = tac - tic
 
+    null_distribution = np.array(null_distribution)
+
+    # Compute p-value
+    sorted_positive_null_distribution = sorted(null_distribution[:, 0])
+    sorted_negative_null_distribution = sorted(null_distribution[:, 1])
+
+    p_positive = (len(np.where(sorted_positive_null_distribution > True_R_positive)[0]) / (n_permutations + 1))
+    p_negative = (len(np.where(sorted_negative_null_distribution > True_R_negative)[0])/ (n_permutations + 1))
+
+    print('For positive model, R_positive = {}'.format(True_R_positive))
+    print('For negative model, R_negative = {}'.format(True_R_negative))
+
+    # Save null distribution in pickle format
+    save_object(object_to_save=null_distribution,
+                saving_directory='/media/db242421/db242421_data/ConPagnon_data/CPM_results/LG_patients',
+                filename='estimated_null_distribution.pkl')
+
+    # plot on glass brain common negative/positive feature common accros all cross validation
+    # iterations
+    positive_features_arrays = vec_to_sym_matrix(np.array(all_positive_features),
+                                                 diagonal=np.zeros((n_subjects, n_nodes)))
+    negative_features_arrays = vec_to_sym_matrix(np.array(all_negatives_features),
+                                                 diagonal=np.zeros((n_subjects, n_nodes)))
+
+    # Find intersection node by summing all edges across subjects
+    positive_sum_mask = positive_features_arrays.sum(axis=0)
+    negative_sum_mask = negative_features_arrays.sum(axis=0)
+
+    positive_sum_mask[positive_sum_mask != n_subjects] = 0
+    negative_sum_mask[negative_sum_mask != n_subjects] = 0
+    # Plot of histogram
+    with PdfPages('/media/db242421/db242421_data/ConPagnon_data/CPM_results/LG_patients/LG_patients.pdf') as pdf:
+        plt.figure()
+        plt.hist(sorted_positive_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
+        plt.title('Null distribution of correlation for positive features model \n'
+                  'R_pos = {}, p_pos = {}'.format(True_R_positive, p_positive))
+        R_positive_thresh = np.percentile(sorted_positive_null_distribution, q=95)
+        plt.axvline(x=True_R_positive, color='red')
+        plt.axvline(x=R_positive_thresh, color='black')
+        plt.legend(['True predicted correlation', '95% threshold correlation'])
+        pdf.savefig()
+        plt.show()
+
+        plt.figure()
+        plt.hist(sorted_negative_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
+        plt.title('Null distribution of correlation for negative features model \n'
+                  'R_neg = {}, p_neg = {}'.format(True_R_negative, p_negative))
+        R_negative_thresh = np.percentile(sorted_negative_null_distribution, q=95)
+        plt.axvline(x=True_R_negative, color='blue')
+        plt.axvline(x=R_negative_thresh, color='black')
+        plt.legend(['True predicted correlation', '95% threshold correlation'])
+        pdf.savefig()
+        plt.show()
+
+        # plot mask on glass brain
+        plt.figure()
+        plot_connectome(adjacency_matrix=positive_sum_mask, node_coords=atlas_nodes,
+                        node_color=labels_colors,edge_cmap='Reds',
+                        title='Edges with positive correlation to behavior')
+        pdf.savefig()
+        plt.show()
+
+        # plot mask on glass brain
+        plt.figure()
+        plot_connectome(adjacency_matrix=negative_sum_mask, node_coords=atlas_nodes,
+                        node_color=labels_colors,edge_cmap='Blues',
+                        title='Edges with negative correlation to behavior')
+        pdf.savefig()
+        plt.show()
