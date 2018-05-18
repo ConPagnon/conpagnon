@@ -1,7 +1,7 @@
 from utils.folders_and_files_management import load_object
 import os
 import numpy as np
-from sklearn.model_selection import StratifiedShuffleSplit, cross_val_score
+from sklearn.model_selection._split import ShuffleSplit
 from nilearn.connectome import sym_matrix_to_vec
 from sklearn.svm import LinearSVC
 
@@ -23,13 +23,7 @@ bootstrap_number = 200
 # Number of permutation
 n_permutations = 200
 
-# Construction of classification function returning SVC weight
-n_splits = 1000
-train_size_dataset = 0.8
-test_size_dataset = 0.2
 
-cross_validation_iterator = StratifiedShuffleSplit(n_splits=n_splits, train_size=train_size_dataset,
-                                                   test_size=test_size_dataset, random_state=0)
 # SVC initialization
 svc = LinearSVC()
 
