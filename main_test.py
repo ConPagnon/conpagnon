@@ -66,7 +66,7 @@ atlas_nodes = monAtlas.GetCenterOfMass()
 n_nodes = monAtlas.GetRegionNumbers()
 
 # Groups name to include in the study
-groupes = ['LG', 'controls']
+groupes = ['patients','controls']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'

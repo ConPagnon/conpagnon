@@ -351,5 +351,5 @@ def predict_behavior(vectorized_connectivity_matrices, behavioral_scores,
         stats.pearsonr(x=np.array(behavioral_scores),
                        y=behavior_prediction_positive_edges)
 
-    return R_predict_positive_model, R_predict_negative_model, all_selected_positive_features, \
-           all_selected_negative_features
+    return (R_predict_positive_model, R_predict_negative_model, all_selected_positive_features,
+            all_selected_negative_features)

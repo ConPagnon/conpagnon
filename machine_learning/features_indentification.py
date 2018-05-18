@@ -1,0 +1,41 @@
+from utils.folders_and_files_management import load_object
+import os
+import numpy as np
+from sklearn.model_selection import StratifiedShuffleSplit, cross_val_score
+from nilearn.connectome import sym_matrix_to_vec
+from sklearn.svm import LinearSVC
+
+# Load connectivity matrices
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
+connectivity_dictionary_name = 'raw_subjects_connectivity_matrices.pkl'
+subjects_connectivity_matrices = load_object(os.path.join(data_folder, connectivity_dictionary_name))
+class_names = ['controls', 'patients']
+vectorized_connectivity_matrices = sym_matrix_to_vec(
+    np.array([subjects_connectivity_matrices[class_name][s]['correlation'] for class_name
+              in class_names for s in subjects_connectivity_matrices[class_name].keys()]), discard_diagonal=True)
+# Labels vectors
+class_labels = np.hstack((np.zeros(len(subjects_connectivity_matrices[class_names[0]].keys())),
+                          np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
+
+# Number of Bootstrap (with replacement)
+bootstrap_number = 200
+
+# Number of permutation
+n_permutations = 200
+
+# Construction of classification function returning SVC weight
+n_splits = 1000
+train_size_dataset = 0.8
+test_size_dataset = 0.2
+
+cross_validation_iterator = StratifiedShuffleSplit(n_splits=n_splits, train_size=train_size_dataset,
+                                                   test_size=test_size_dataset, random_state=0)
+# SVC initialization
+svc = LinearSVC()
+
+coef_ = []
+for train_index, test_index in cross_validation_iterator.split(vectorized_connectivity_matrices, class_labels):
+    svc.fit(X=vectorized_connectivity_matrices[train_index], y=class_labels[train_index])
+    coef_.append(svc.coef_)
+
+

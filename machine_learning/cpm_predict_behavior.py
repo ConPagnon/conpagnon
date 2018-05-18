@@ -3,7 +3,6 @@ from patsy import dmatrix
 from sklearn.model_selection import LeaveOneOut
 from scipy import stats
 import pandas as pd
-
 from machine_learning.CPM_method import predictors_selection_linear_model, fit_model_on_training_set, \
     compute_summary_subjects_summary_values, predictors_selection_correlation, predictor_selection_pcorrelation
 

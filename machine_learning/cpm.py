@@ -39,10 +39,10 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary/'
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/CPM/dictionary/'
                         'raw_subjects_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary/'
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/CPM/dictionary/'
                         'z_fisher_transform_subjects_connectivity_matrices.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
@@ -54,21 +54,21 @@ subjects_matrices = subjects_connectivity_matrices
 
 # Select a subset of patients
 # Compute the connectivity matrices dictionary with factor as keys.
-group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
-    dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
-        sheetname='cohort_functional_data',
-        subjects_connectivity_matrices_dictionnary=subjects_matrices,
-        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
+#group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
+#    dictionary_operations.groupby_factor_connectivity_matrices(
+#        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+#        sheetname='cohort_functional_data',
+#        subjects_connectivity_matrices_dictionnary=subjects_matrices,
+#        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
 
-subjects_matrices = {}
-subjects_matrices['patients'] = group_by_factor_subjects_connectivity['G']
+#subjects_matrices = {}
+#subjects_matrices['patients'] = group_by_factor_subjects_connectivity['D']
 
 # Fetch patients matrices, and one behavioral score
 kind = 'tangent'
-patients_subjects_ids = list(subjects_matrices['patients'].keys())
+patients_subjects_ids = list(subjects_matrices['LesionFlip'].keys())
 # Patients matrices stack
-patients_connectivity_matrices = np.array([subjects_matrices['patients'][s][kind] for
+patients_connectivity_matrices = np.array([subjects_matrices['LesionFlip'][s][kind] for
                                            s in patients_subjects_ids])
 
 # Behavioral score
@@ -97,25 +97,25 @@ except:
 
 # Save the matrices for matlab utilisation
 # Transpose the shape to (n_features, n_features, n_subjects)
-# patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1,2,0))
+#patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1, 2, 0))
 # Put ones on the diagonal
-# for i in range(patients_connectivity_matrices_t.shape[2]):
-    # np.fill_diagonal(patients_connectivity_matrices_t[..., i], 1)
+#for i in range(patients_connectivity_matrices_t.shape[2]):
+#    np.fill_diagonal(patients_connectivity_matrices_t[..., i], 1)
 # Save the matrix in .mat format
-# patients_matrices_dict = {'patients_matrices': patients_connectivity_matrices_t}
-# savemat('/media/db242421/db242421_data/CPM_matlab_ver/patients_LG_mat.mat', patients_matrices_dict)
+#patients_matrices_dict = {'patients_matrices': patients_connectivity_matrices_t}
+#savemat('/media/db242421/db242421_data/CPM_matlab_ver/patients_LesionFlip_mat.mat', patients_matrices_dict)
 # Save gender in .mat format
-# gender_dict = {'gender': np.array(confounding_variables_data['Sexe'])}
-# savemat('/media/db242421/db242421_data/CPM_matlab_ver/gender_LG_mat.mat', gender_dict)
+#gender_dict = {'gender': np.array(confounding_variables_data['Sexe'])}
+#savemat('/media/db242421/db242421_data/CPM_matlab_ver/gender_LesionFlip_mat.mat', gender_dict)
 # Save lesion normalized
-# lesion_dict = {'lesion': np.array(confounding_variables_data['lesion_normalized'])}
-# savemat('/media/db242421/db242421_data/CPM_matlab_ver/lesion_LG_mat.mat', lesion_dict)
+#lesion_dict = {'lesion': np.array(confounding_variables_data['lesion_normalized'])}
+#savemat('/media/db242421/db242421_data/CPM_matlab_ver/lesion_LesionFlip_mat.mat', lesion_dict)
 # Save behavior
-# behavior_dict = {'behavior': np.array(behavioral_scores)}
-# savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LG_mat.mat', behavior_dict)
+#behavior_dict = {'behavior': np.array(behavioral_scores)}
+# savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LesionFlip_mat.mat', behavior_dict)
 
 tic = time.time()
-True_R_positive, True_R_negative, all_positive_features, all_negatives_features = predict_behavior(
+(True_R_positive, True_R_negative, all_positive_features, all_negatives_features) = predict_behavior(
     vectorized_connectivity_matrices=vectorized_connectivity_matrices,
     behavioral_scores=np.array(behavioral_scores),
     selection_predictor_method='correlation',
@@ -147,9 +147,8 @@ if __name__ == '__main__':
     # Permutation test
     n_permutations = 10000
 
-
     tic = time.time()
-    null_distribution = Parallel(n_jobs=-1, verbose=10, backend="multiprocessing")(delayed(predict_behavior)(
+    results_perm = Parallel(n_jobs=26, verbose=10, backend="multiprocessing")(delayed(predict_behavior)(
         vectorized_connectivity_matrices=vectorized_connectivity_matrices,
         behavioral_scores=np.random.permutation(behavioral_scores),
         selection_predictor_method='correlation',
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     tac = time.time()
     T = tac - tic
 
-    null_distribution = np.array(null_distribution)
+    null_distribution = np.array([[results_perm[i][0],results_perm[i][1]] for i in range(n_permutations)])
 
     # Compute p-value
     sorted_positive_null_distribution = sorted(null_distribution[:, 0])
@@ -174,7 +173,7 @@ if __name__ == '__main__':
 
     # Save null distribution in pickle format
     save_object(object_to_save=null_distribution,
-                saving_directory='/media/db242421/db242421_data/ConPagnon_data/CPM_results/LG_patients',
+                saving_directory='/media/db242421/db242421_data/ConPagnon_data/CPM_results/LD_patients',
                 filename='estimated_null_distribution.pkl')
 
     # plot on glass brain common negative/positive feature common accros all cross validation
@@ -191,7 +190,7 @@ if __name__ == '__main__':
     positive_sum_mask[positive_sum_mask != n_subjects] = 0
     negative_sum_mask[negative_sum_mask != n_subjects] = 0
     # Plot of histogram
-    with PdfPages('/media/db242421/db242421_data/ConPagnon_data/CPM_results/LG_patients/LG_patients.pdf') as pdf:
+    with PdfPages('/media/db242421/db242421_data/ConPagnon_data/CPM_results/LD_patients/LD_patients.pdf') as pdf:
         plt.figure()
         plt.hist(sorted_positive_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
         plt.title('Null distribution of correlation for positive features model \n'

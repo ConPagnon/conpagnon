@@ -269,7 +269,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
                       alpha=0.05, pvals_correction_method=['FDR'], nperms_maxT=10000,
                       vectorize=False, discard_diagonal=False):
     # TODO: add a way to select column containing the subjects ID, and
-    # TODO: shit it to be the index of the DataFrame
+    # TODO: shift it to be the index of the DataFrame
     """Fit a linear model on connectivity coefficients across subjects.
 
     Parameters
@@ -464,7 +464,6 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         folders_and_files_management.save_object(correction_method_regression_results,
                                                  save_regression_directory,
                                                  'regression_results.pkl')
-    
 
     return correction_method_regression_results, X_df, y, y_prediction, regression_subjects_list
 
@@ -510,7 +509,8 @@ def functional_connectivity_distribution_estimation(functional_connectivity_esti
     functional_connectivity_shape = functional_connectivity_estimate.shape
     # If it is a 2D matrix we vectorize it, discarding the diagonal to have a 1D distribution array
     if len(functional_connectivity_shape) == 2:
-        vectorized_functional_connectivity_estimate = sym_matrix_to_vec(functional_connectivity_estimate, discard_diagonal=True)
+        vectorized_functional_connectivity_estimate = sym_matrix_to_vec(functional_connectivity_estimate,
+                                                                        discard_diagonal=True)
     else:
         vectorized_functional_connectivity_estimate = functional_connectivity_estimate
 
