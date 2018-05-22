@@ -2,9 +2,10 @@ from utils.folders_and_files_management import load_object
 import os
 import numpy as np
 from nilearn.connectome import sym_matrix_to_vec
-from machine_learning.features_indentification import bootstrap_svc, bootstrap_SVC
+from machine_learning.features_indentification import bootstrap_svc, permutation_bootstrap_svc, \
+    null_distribution_classifier_weight
 import psutil
-import time
+
 # Load connectivity matrices
 data_folder = 'D:\\text_output_11042018\\dictionary'
 connectivity_dictionary_name = 'raw_subjects_connectivity_matrices.pkl'
@@ -34,18 +35,24 @@ n_physical = psutil.cpu_count(logical=False)
 n_cpu_with_logical = psutil.cpu_count(logical=True)
 
 if __name__ == '__main__':
+    # True bootstrap weight
+    bootstrap_weight = bootstrap_svc(features=vectorized_connectivity_matrices, class_labels=class_labels,
+                                     indices=bootstrap_matrix, bootstrap_number=bootstrap_number,
+                                     n_cpus=n_cpu_with_logical)
 
-    bootstrap_weight, b = bootstrap_svc(
-        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-        class_labels=class_labels,
-        indices=indices,
-        n_subjects=n_subjects,
-        bootstrap_number=bootstrap_number,
-        n_cpus=n_cpu_with_logical)
+    class_labels_perm_bootstrap_weight = permutation_bootstrap_svc(
+        features=vectorized_connectivity_matrices,
+        class_labels=class_labels, indices=indices,
+        bootstrap_number=bootstrap_number, n_cpus=n_cpu_with_logical)
 
-    TEST = bootstrap_SVC(vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-                         class_labels=class_labels,
-                         bootstrap_number=bootstrap_number)
+    null_distribution = null_distribution_classifier_weight(features=vectorized_connectivity_matrices,
+                                                            class_labels=class_labels,
+                                                            indices=indices,
+                                                            bootstrap_number=bootstrap_number,
+                                                            n_permutations=n_permutations,
+                                                            n_cpus=n_cpu_with_logical)
+
+
 
 
 
