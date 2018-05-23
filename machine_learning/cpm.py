@@ -86,7 +86,7 @@ confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variabl
                                        return_type='dataframe').drop(['Intercept'], axis=1)
 
 add_predictive_variables = confounding_variables_matrix
-significance_selection_threshold = 0.01
+significance_selection_threshold = 0.02
 
 n_subjects = vectorized_connectivity_matrices.shape[0]
 # Features selection by leave one out cross validation scheme
@@ -123,7 +123,7 @@ tic = time.time()
     selection_predictor_method='correlation',
     significance_selection_threshold=significance_selection_threshold,
     confounding_variables_matrix=None,
-    add_predictive_variables=add_predictive_variables,
+    add_predictive_variables=None,
     verbose=0)
 tac = time.time()
 T = tac - tic
