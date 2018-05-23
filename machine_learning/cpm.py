@@ -14,6 +14,7 @@ from utils.folders_and_files_management import save_object
 from nilearn.plotting import plot_connectome
 import pyximport; pyximport.install()
 from machine_learning.cythonized_version import CPM_method
+import psutil
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
@@ -97,6 +98,8 @@ try:
 except:
     pass
 
+
+
 # Save the matrices for matlab utilisation
 # Transpose the shape to (n_features, n_features, n_subjects)
 #patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1, 2, 0))
@@ -127,32 +130,20 @@ tic = time.time()
     verbose=0)
 tac = time.time()
 T = tac - tic
-# with a for loop
-#tic = time.time()
-#null_distribution_array = np.zeros((n_permutations, 2))
-#for i in range(n_permutations):
-#    behavioral_scores_perm = np.random.permutation(behavioral_scores)
-#    R_positive_perm, R_negative_perm = predict_behavior(
-#        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-#        behavioral_scores=behavioral_scores_perm,
-#        selection_predictor_method='correlation',
-#        significance_selection_threshold=significance_selection_threshold,
-#        confounding_variables_matrix=None,
-#        add_predictive_variables=None,
-#        verbose=0)
-#    null_distribution_array[:, 0] = R_positive_perm
-#    null_distribution_array[:, 1] = R_negative_perm
-#tac = time.time()
-#T = tac - tic
+
+n_permutations = 10000
+behavioral_scores_permutation_matrix = np.array([np.random.permutation(behavioral_scores)
+                                                 for n in range(n_permutations)])
+
+n_core_physical = psutil.cpu_count(logical=False)
+n_core_phys_and_log = psutil.cpu_count(logical=True)
 
 if __name__ == '__main__':
     # Permutation test
-    n_permutations = 10000
-
     tic = time.time()
-    results_perm = Parallel(n_jobs=26, verbose=10, backend="multiprocessing")(delayed(predict_behavior)(
+    results_perm = Parallel(n_jobs=n_core_physical, verbose=10, backend="multiprocessing")(delayed(predict_behavior)(
         vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-        behavioral_scores=np.random.permutation(behavioral_scores),
+        behavioral_scores=behavioral_scores_permutation_matrix[n_perm, ...],
         selection_predictor_method='correlation',
         significance_selection_threshold=significance_selection_threshold,
         confounding_variables_matrix=None,
@@ -161,7 +152,7 @@ if __name__ == '__main__':
     tac = time.time()
     T = tac - tic
 
-    null_distribution = np.array([[results_perm[i][0],results_perm[i][1]] for i in range(n_permutations)])
+    null_distribution = np.array([[results_perm[i][0], results_perm[i][1]] for i in range(n_permutations)])
 
     # Compute p-value
     sorted_positive_null_distribution = sorted(null_distribution[:, 0])
@@ -175,7 +166,7 @@ if __name__ == '__main__':
 
     # Save null distribution in pickle format
     save_object(object_to_save=null_distribution,
-                saving_directory='/media/db242421/db242421_data/ConPagnon_data/CPM_results/LD_patients',
+                saving_directory='/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02',
                 filename='estimated_null_distribution.pkl')
 
     # plot on glass brain common negative/positive feature common accros all cross validation
@@ -191,8 +182,19 @@ if __name__ == '__main__':
 
     positive_sum_mask[positive_sum_mask != n_subjects] = 0
     negative_sum_mask[negative_sum_mask != n_subjects] = 0
+
+    # Save negative and positive common features array
+    save_object(object_to_save=positive_sum_mask,
+                saving_directory='/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02',
+                filename='positive_common_features.pkl')
+
+    save_object(object_to_save=negative_sum_mask,
+                saving_directory='/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02',
+                filename='negative_common_features.pkl')
+
     # Plot of histogram
-    with PdfPages('/media/db242421/db242421_data/ConPagnon_data/CPM_results/LD_patients/LD_patients.pdf') as pdf:
+    with PdfPages('/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02'
+                  '/LG_LD_flip_gender_lesion.pdf') as pdf:
         plt.figure()
         plt.hist(sorted_positive_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
         plt.title('Null distribution of correlation for positive features model \n'

@@ -7,6 +7,7 @@ from machine_learning.features_indentification import bootstrap_svc, \
 import psutil
 import pyximport; pyximport.install()
 from machine_learning.cythonized_version import features_indentification_cython
+import time
 
 # Load connectivity matrices
 data_folder = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
@@ -42,23 +43,20 @@ null_extremum_distribution = np.zeros((n_permutations, 2))
 
 if __name__ == '__main__':
     # True bootstrap weight
-    bootstrap_weight = features_indentification_cython.bootstrap_svc(features=vectorized_connectivity_matrices, class_labels=class_labels,
+    bootstrap_weight = bootstrap_svc(features=vectorized_connectivity_matrices, class_labels=class_labels,
                                      bootstrap_array_indices=bootstrap_matrix, bootstrap_number=bootstrap_number,
                                      n_cpus_bootstrap=n_physical)
-
-    bootstrap_weight_ = bootstrap_svc(features=vectorized_connectivity_matrices, class_labels=class_labels,
-                                     bootstrap_array_indices=bootstrap_matrix, bootstrap_number=bootstrap_number,
-                                     n_cpus_bootstrap=n_physical)
-
 
     normalized_mean_weight = bootstrap_weight.mean(axis=0)/bootstrap_weight.std(axis=0)
-
-    null_distribution = features_indentification_cython.null_distribution_classifier_weight(features=vectorized_connectivity_matrices,
+    tic = time.time()
+    null_distribution = null_distribution_classifier_weight(features=vectorized_connectivity_matrices,
                                                             class_labels_perm_matrix=class_labels_permutation_matrix,
                                                             indices=indices, bootstrap_number=bootstrap_number,
                                                             n_permutations=n_permutations,
                                                             n_cpus_permutations=10,
                                                             n_cpus_bootstrap=18)
+    tac = time.time()
+    T = tac - tic
 
     # Compute normalized mean over bootstrap sample for each permutation
     normalized_mean_permutations =\
