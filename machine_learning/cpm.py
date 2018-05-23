@@ -79,7 +79,7 @@ behavioral_scores = regression_data_file['language_score'].loc[patients_subjects
 vectorized_connectivity_matrices = sym_matrix_to_vec(patients_connectivity_matrices, discard_diagonal=True)
 
 # Build confounding variable
-confounding_variables = ['Sexe']
+confounding_variables = ['Sexe', 'lesion_normalized']
 confounding_variables_data = regression_data_file[confounding_variables].loc[patients_subjects_ids]
 # Encode the confounding variable in an array
 confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variables), data=confounding_variables_data,
