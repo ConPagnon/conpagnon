@@ -49,45 +49,44 @@ def bootstrap_classification(features, class_labels, boot_indices):
     return bootstrap_coefficients
 
 
-def bootstrap_svc(features, class_labels, indices, bootstrap_number, n_cpus=1):
+def bootstrap_svc(features, class_labels, bootstrap_array_indices, bootstrap_number, n_cpus_bootstrap=1):
 
-    results_bootstrap = Parallel(n_jobs=n_cpus, verbose=1, backend="multiprocessing")(delayed(bootstrap_classification)(
+    results_bootstrap = Parallel(n_jobs=n_cpus_bootstrap, verbose=1, backend="threading")(delayed(bootstrap_classification)(
         features=features,
         class_labels=class_labels,
-        boot_indices=indices[b, ...]) for b in range(bootstrap_number))
+        boot_indices=bootstrap_array_indices[b, ...]) for b in range(bootstrap_number))
 
     return np.array(results_bootstrap)
 
 
-def permutation_bootstrap_svc(features, class_labels, indices,
-                              bootstrap_number=100, n_cpus=1):
+def permutation_bootstrap_svc(features, class_labels_perm, indices, bootstrap_number=100, n_cpus_bootstrap=1):
     """Perform classification on two binary class for each sample generated
-    by bootstrap (with replacement) and class labels permuted one time.
+    by bootstrap (with replacement) and permuted class labels vector.
     """
 
     # Number of samples
     n_subjects = features.shape[0]
     # Permute the class labels
-    class_labels_perm = np.random.permutation(class_labels)
+    # class_labels_perm = np.random.permutation(class_labels)
     # Build a array shape (n_bootstrap, n_subjects) containing bootstrap indices
     bootstrap_matrix_perm = np.random.choice(a=indices, size=(bootstrap_number, n_subjects), replace=True)
     # Perform classification on each bootstrap samples, but with labels permuted
     bootstrap_weight_perm = bootstrap_svc(features=features, class_labels=class_labels_perm,
-                                          indices=bootstrap_matrix_perm, bootstrap_number=bootstrap_number,
-                                          n_cpus=n_cpus)
+                                          bootstrap_array_indices=bootstrap_matrix_perm,
+                                          bootstrap_number=bootstrap_number, n_cpus_bootstrap=n_cpus_bootstrap)
 
     return bootstrap_weight_perm
 
 
-def null_distribution_classifier_weight(features, class_labels, indices,
-                                        bootstrap_number=100, n_permutations=500,
-                                        n_cpus=1):
+def null_distribution_classifier_weight(features, class_labels_perm_matrix, indices, bootstrap_number=100,
+                                        n_permutations=500, n_cpus_permutations=1, n_cpus_bootstrap=1):
 
     results_permutations_bootstrap = \
-        Parallel(n_jobs=n_cpus, verbose=1, backend="multiprocessing")(delayed(permutation_bootstrap_svc)(
+        Parallel(n_jobs=n_cpus_permutations, verbose=10, backend="threading")(delayed(permutation_bootstrap_svc)(
             features=features,
-            class_labels=class_labels,
+            class_labels_perm=class_labels_perm_matrix[n, ...],
             indices=indices,
-            bootstrap_number=bootstrap_number) for n in range(n_permutations))
+            bootstrap_number=bootstrap_number,
+            n_cpus_bootstrap=n_cpus_bootstrap) for n in range(n_permutations))
 
     return np.array(results_permutations_bootstrap)

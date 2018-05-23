@@ -12,6 +12,8 @@ import time
 from matplotlib.backends.backend_pdf import PdfPages
 from utils.folders_and_files_management import save_object
 from nilearn.plotting import plot_connectome
+import pyximport; pyximport.install()
+from machine_learning.cythonized_version import CPM_method
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
@@ -77,7 +79,7 @@ behavioral_scores = regression_data_file['language_score'].loc[patients_subjects
 vectorized_connectivity_matrices = sym_matrix_to_vec(patients_connectivity_matrices, discard_diagonal=True)
 
 # Build confounding variable
-confounding_variables = ['lesion_normalized', 'Sexe']
+confounding_variables = ['Sexe']
 confounding_variables_data = regression_data_file[confounding_variables].loc[patients_subjects_ids]
 # Encode the confounding variable in an array
 confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variables), data=confounding_variables_data,
