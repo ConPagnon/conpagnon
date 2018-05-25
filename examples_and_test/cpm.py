@@ -12,8 +12,6 @@ import time
 from matplotlib.backends.backend_pdf import PdfPages
 from utils.folders_and_files_management import save_object
 from nilearn.plotting import plot_connectome
-import pyximport; pyximport.install()
-from machine_learning.cythonized_version import CPM_method
 import psutil
 from plotting.display import plot_matrix
 import networkx as nx
@@ -69,7 +67,7 @@ group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
         groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
 
 subjects_matrices = {}
-subjects_matrices['patients'] = group_by_factor_subjects_connectivity['D']
+subjects_matrices['patients'] = group_by_factor_subjects_connectivity['G']
 
 # Fetch patients matrices, and one behavioral score
 kind = 'tangent'
@@ -136,7 +134,7 @@ tic = time.time()
 tac = time.time()
 T = tac - tic
 
-n_permutations = 10
+n_permutations = 10000
 behavioral_scores_permutation_matrix = np.array([np.random.permutation(behavioral_scores)
                                                  for n in range(n_permutations)])
 
@@ -146,7 +144,7 @@ n_core_phys_and_log = psutil.cpu_count(logical=True)
 if __name__ == '__main__':
     # Permutation test
     tic = time.time()
-    results_perm = Parallel(n_jobs=10, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
+    results_perm = Parallel(n_jobs=-1, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
         vectorized_connectivity_matrices=vectorized_connectivity_matrices,
         behavioral_scores=behavioral_scores_permutation_matrix[n_perm, ...],
         selection_predictor_method='correlation',
@@ -208,7 +206,7 @@ if __name__ == '__main__':
         plt.axvline(x=R_positive_thresh, color='black')
         plt.legend(['True predicted correlation', '95% threshold correlation'])
         pdf.savefig()
-        plt.show()
+        #plt.show()
 
         plt.figure()
         plt.hist(sorted_negative_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
@@ -219,7 +217,7 @@ if __name__ == '__main__':
         plt.axvline(x=R_negative_thresh, color='black')
         plt.legend(['True predicted correlation', '95% threshold correlation'])
         pdf.savefig()
-        plt.show()
+        #plt.show()
 
         # plot mask on glass brain
         plt.figure()
@@ -227,7 +225,7 @@ if __name__ == '__main__':
                         node_color=labels_colors,edge_cmap='Reds',
                         title='Edges with positive correlation to behavior')
         pdf.savefig()
-        plt.show()
+        #plt.show()
 
         # plot mask on glass brain
         plt.figure()
@@ -235,7 +233,7 @@ if __name__ == '__main__':
                         node_color=labels_colors,edge_cmap='Blues',
                         title='Edges with negative correlation to behavior')
         pdf.savefig()
-        plt.show()
+        #plt.show()
 
         # Plot matrix of common negative and positive features
         plt.figure()
@@ -243,14 +241,14 @@ if __name__ == '__main__':
                     colormap='Reds', horizontal_labels=labels_regions, vertical_labels=labels_regions,
                     linecolor='black', title='Common edges with positive correlation with behavior')
         pdf.savefig()
-        plt.show()
+        #plt.show()
 
         plt.figure()
         plot_matrix(matrix=negative_sum_mask, labels_colors=labels_colors, mpart='lower',
                     colormap='Blues', horizontal_labels=labels_regions, vertical_labels=labels_regions,
                     linecolor='black', title='Common edges with negative correlation with behavior')
         pdf.savefig()
-        plt.show()
+        #plt.show()
 
         # Generate a graph objects from adjacency matrix
         positive_features_g = nx.from_numpy_array(A=positive_sum_mask)
@@ -265,7 +263,7 @@ if __name__ == '__main__':
                 with_labels=True, node_size=10, font_size=5)
         plt.title('Edges with positive correlation with behavior')
         pdf.savefig()
-        plt.show()
+        #plt.show()
         
         # Generate a graph objects from adjacency matrix
         negative_features_g = nx.from_numpy_array(A=negative_sum_mask)
@@ -280,4 +278,4 @@ if __name__ == '__main__':
                 with_labels=True, node_size=10, font_size=5)
         plt.title('Edges with negative correlation with behavior')
         pdf.savefig()
-        plt.show()
+        #plt.show()

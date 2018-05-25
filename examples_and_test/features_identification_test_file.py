@@ -3,10 +3,9 @@ import os
 import numpy as np
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import bootstrap_svc, \
-    null_distribution_classifier_weight, permutation_bootstrap_svc
+    permutation_bootstrap_svc
 import psutil
 import pyximport; pyximport.install()
-from machine_learning.cythonized_version import features_indentification_cython
 import time
 
 # Load connectivity matrices
@@ -25,7 +24,7 @@ class_labels = np.hstack((np.zeros(len(subjects_connectivity_matrices[class_name
 bootstrap_number = 500
 
 # Number of permutation
-n_permutations = 50
+n_permutations = 5000
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
@@ -77,10 +76,6 @@ if __name__ == '__main__':
 
     # Compare each edges weight from the true mean weight normalized distribution to the minimum and
     # maximum null estimated distribution.
-
-    # For positive weight: we declare elements of normalized weight mean without permutation
-    # to be significant if they are greater than a certain percentile of the null maximum distribution
-    percentile_null_max_dist = np.percentile(null_extremum_distribution[:, 1], 95)
 
     # null distribution for maximum and minimum normalized weight
     sorted_null_maximum_dist = sorted(null_extremum_distribution[:, 1])
