@@ -5,8 +5,6 @@ from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
 from patsy import dmatrix
 from data_handling import dictionary_operations
 from machine_learning.CPM_method import predict_behavior
-from scipy.io import savemat
-from joblib import Parallel, delayed
 import matplotlib.pyplot as plt
 import time
 from matplotlib.backends.backend_pdf import PdfPages
@@ -16,6 +14,7 @@ import psutil
 from plotting.display import plot_matrix
 import networkx as nx
 import os
+from joblib import Parallel, delayed
 
 # Atlas set up
 atlas_folder = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference'
@@ -89,7 +88,7 @@ confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variabl
                                        return_type='dataframe').drop(['Intercept'], axis=1)
 
 add_predictive_variables = confounding_variables_matrix
-significance_selection_threshold = 0.003
+
 
 n_subjects = vectorized_connectivity_matrices.shape[0]
 # Features selection by leave one out cross validation scheme
@@ -100,182 +99,222 @@ try:
 except:
     pass
 
-saving_directory = '/home/db242421/CPM_results_23_05_2018/LD_gender_lesion'
-filename = 'LD_gender_lesion_' + str(significance_selection_threshold) + '.pdf'
-
-# Save the matrices for matlab utilisation
-# Transpose the shape to (n_features, n_features, n_subjects)
-#patients_connectivity_matrices_t = np.transpose(patients_connectivity_matrices, (1, 2, 0))
-# Put ones on the diagonal
-#for i in range(patients_connectivity_matrices_t.shape[2]):
-#    np.fill_diagonal(patients_connectivity_matrices_t[..., i], 1)
-# Save the matrix in .mat format
-#patients_matrices_dict = {'patients_matrices': patients_connectivity_matrices_t}
-#savemat('/media/db242421/db242421_data/CPM_matlab_ver/patients_LesionFlip_mat.mat', patients_matrices_dict)
-# Save gender in .mat format
-#gender_dict = {'gender': np.array(confounding_variables_data['Sexe'])}
-#savemat('/media/db242421/db242421_data/CPM_matlab_ver/gender_LesionFlip_mat.mat', gender_dict)
-# Save lesion normalized
-#lesion_dict = {'lesion': np.array(confounding_variables_data['lesion_normalized'])}
-#savemat('/media/db242421/db242421_data/CPM_matlab_ver/lesion_LesionFlip_mat.mat', lesion_dict)
-# Save behavior
-#behavior_dict = {'behavior': np.array(behavioral_scores)}
-# savemat('/media/db242421/db242421_data/CPM_matlab_ver/behavior_LesionFlip_mat.mat', behavior_dict)
-
-tic = time.time()
-(True_R_positive, True_R_negative, all_positive_features, all_negatives_features) = predict_behavior(
-    vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-    behavioral_scores=np.array(behavioral_scores),
-    selection_predictor_method='correlation',
-    significance_selection_threshold=significance_selection_threshold,
-    confounding_variables_matrix=None,
-    add_predictive_variables=add_predictive_variables,
-    verbose=0)
-tac = time.time()
-T = tac - tic
-
-n_permutations = 10000
-behavioral_scores_permutation_matrix = np.array([np.random.permutation(behavioral_scores)
-                                                 for n in range(n_permutations)])
-
 n_core_physical = psutil.cpu_count(logical=False)
 n_core_phys_and_log = psutil.cpu_count(logical=True)
 
+saving_directory = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/CPM/25_05_2018/LG'
+
+
+# Study the impact of threshold: choose the best threshold
+threshold = np.arange(0.001, 0.05, 0.0001)
+r_pos_ = []
+r_neg_ = []
+threshold_result = Parallel(n_jobs=n_core_phys_and_log, verbose=1)(delayed(predict_behavior)(
+    vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+    behavioral_scores=np.array(behavioral_scores),
+    selection_predictor_method='correlation',
+    significance_selection_threshold=threshold[t],
+    confounding_variables_matrix=None,
+    add_predictive_variables=add_predictive_variables,
+    verbose=0) for t in range(len(threshold)))
+
+for t in range(len(threshold)):
+    r_pos_.append(threshold_result[t][0])
+    r_neg_.append(threshold_result[t][1])
+
+r_pos_ = np.array(r_pos_)
+r_neg_ = np.array(r_neg_)
+
+# Find the optimum threshold for positive and negative features
+threshold_positive_features = round(threshold[np.where(r_pos_ == r_pos_.max())[0][0]], 4)
+threshold_negative_features = round(threshold[np.where(r_neg_ == r_neg_.max())[0][0]], 4)
+
+# plot the evolution of correlation of prediction versus the threshold
+with PdfPages(os.path.join(saving_directory, 'threshold_effect.pdf')) as pdf:
+    plt.figure()
+    plt.plot(threshold, r_pos_, 'r', 'o')
+    plt.plot(threshold, r_neg_, 'b', 'o')
+    plt.axvline(x=threshold_negative_features, color='blue')
+    plt.axvline(x=threshold_positive_features, color='red')
+    plt.xlabel('p-value threshold')
+    plt.ylabel('Correlation between true and predicted scores')
+    plt.title('Evolution of correlation between true and predicted score \n')
+    plt.legend(['Regions pairs with positive correlation to behavior',
+                'Regions pairs with negative correlation to behavior'])
+    pdf.savefig()
+    plt.show()
+
+
+print('Maximum correlation between predicted and true scores for edges with '
+      'positive correlation with behavior at p = {}, r_positive = {}'.format(threshold_positive_features,
+                                                                             r_pos_.max()))
+print('Maximum correlation between predicted and true scores for edges with '
+      'negative correlation with behavior at p = {}, r_negative = {}'.format(threshold_negative_features,
+                                                                             r_neg_.max()))
+
+
+# Build an array containing the requested number of score permutations, shape (n_permutations, n_subjects)
+n_permutations = 10000
+behavioral_scores_permutation_matrix = np.array([np.random.permutation(behavioral_scores)
+                                                 for n in range(n_permutations)])
+significance_selection_threshold = [threshold_positive_features, threshold_negative_features]
+
+
 if __name__ == '__main__':
-    # Permutation test
-    tic = time.time()
-    results_perm = Parallel(n_jobs=-1, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
-        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-        behavioral_scores=behavioral_scores_permutation_matrix[n_perm, ...],
-        selection_predictor_method='correlation',
-        significance_selection_threshold=significance_selection_threshold,
-        confounding_variables_matrix=None,
-        add_predictive_variables=add_predictive_variables,
-        verbose=0) for n_perm in range(n_permutations))
-    tac = time.time()
-    T = tac - tic
+    for thresh in significance_selection_threshold:
+        # report analysis filename
+        filename = 'LG_gender_lesion_' + str(thresh) + '.pdf'
 
-    null_distribution = np.array([[results_perm[i][0], results_perm[i][1]] for i in range(n_permutations)])
+        # Compute true correlation between predicted scores and true scores for
+        # positive and negative features
+        tic = time.time()
+        (True_R_positive, True_R_negative, all_positive_features, all_negatives_features) = predict_behavior(
+            vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+            behavioral_scores=np.array(behavioral_scores),
+            selection_predictor_method='correlation',
+            significance_selection_threshold=thresh,
+            confounding_variables_matrix=None,
+            add_predictive_variables=add_predictive_variables,
+            verbose=0)
+        tac = time.time()
+        T = tac - tic
 
-    # Compute p-value
-    sorted_positive_null_distribution = sorted(null_distribution[:, 0])
-    sorted_negative_null_distribution = sorted(null_distribution[:, 1])
+        # Permutation test
+        tic_ = time.time()
+        results_perm = Parallel(n_jobs=-1, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
+            vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+            behavioral_scores=behavioral_scores_permutation_matrix[n_perm, ...],
+            selection_predictor_method='correlation',
+            significance_selection_threshold=thresh,
+            confounding_variables_matrix=None,
+            add_predictive_variables=add_predictive_variables,
+            verbose=0) for n_perm in range(n_permutations))
+        tac_ = time.time()
+        T_ = tac_ - tic_
 
-    p_positive = (len(np.where(sorted_positive_null_distribution > True_R_positive)[0]) / (n_permutations + 1))
-    p_negative = (len(np.where(sorted_negative_null_distribution > True_R_negative)[0])/ (n_permutations + 1))
+        null_distribution = np.array([[results_perm[i][0], results_perm[i][1]] for i in range(n_permutations)])
 
-    print('For positive model, R_positive = {}'.format(True_R_positive))
-    print('For negative model, R_negative = {}'.format(True_R_negative))
+        # Compute p-value
+        sorted_positive_null_distribution = sorted(null_distribution[:, 0])
+        sorted_negative_null_distribution = sorted(null_distribution[:, 1])
 
-    # Save null distribution in pickle format
-    save_object(object_to_save=null_distribution,
-                saving_directory=saving_directory,
-                filename='estimated_null_distribution.pkl')
+        p_positive = (len(np.where(sorted_positive_null_distribution > True_R_positive)[0]) / (n_permutations + 1))
+        p_negative = (len(np.where(sorted_negative_null_distribution > True_R_negative)[0]) / (n_permutations + 1))
 
-    # plot on glass brain common negative/positive feature common accros all cross validation
-    # iterations
-    positive_features_arrays = vec_to_sym_matrix(np.array(all_positive_features),
-                                                 diagonal=np.zeros((n_subjects, n_nodes)))
-    negative_features_arrays = vec_to_sym_matrix(np.array(all_negatives_features),
-                                                 diagonal=np.zeros((n_subjects, n_nodes)))
+        print('For positive model, R_positive = {}'.format(True_R_positive))
+        print('For negative model, R_negative = {}'.format(True_R_negative))
 
-    # Find intersection node by summing all edges across subjects
-    positive_sum_mask = positive_features_arrays.sum(axis=0)
-    negative_sum_mask = negative_features_arrays.sum(axis=0)
+        # Save null distribution in pickle format
+        save_object(object_to_save=null_distribution,
+                    saving_directory=saving_directory,
+                    filename='estimated_null_distribution_' + str(thresh) + '.pkl')
 
-    positive_sum_mask[positive_sum_mask != n_subjects] = 0
-    negative_sum_mask[negative_sum_mask != n_subjects] = 0
+        # plot on glass brain common negative/positive feature common across all cross validation
+        # iterations
+        positive_features_arrays = vec_to_sym_matrix(np.array(all_positive_features),
+                                                     diagonal=np.zeros((n_subjects, n_nodes)))
+        negative_features_arrays = vec_to_sym_matrix(np.array(all_negatives_features),
+                                                     diagonal=np.zeros((n_subjects, n_nodes)))
 
-    # Save negative and positive common features array
-    save_object(object_to_save=positive_sum_mask,
-                saving_directory=saving_directory,
-                filename='positive_common_features.pkl')
+        # Find intersection node by summing all edges across subjects
+        positive_sum_mask = positive_features_arrays.sum(axis=0)
+        negative_sum_mask = negative_features_arrays.sum(axis=0)
 
-    save_object(object_to_save=negative_sum_mask,
-                saving_directory=saving_directory,
-                filename='negative_common_features.pkl')
+        positive_sum_mask[positive_sum_mask != n_subjects] = 0
+        negative_sum_mask[negative_sum_mask != n_subjects] = 0
 
-    # Plot of histogram
-    with PdfPages(os.path.join(saving_directory, filename)) as pdf:
-        plt.figure()
-        plt.hist(sorted_positive_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
-        plt.title('Null distribution of correlation for positive features model \n'
-                  'R_pos = {}, p_pos = {}'.format(True_R_positive, p_positive))
-        R_positive_thresh = np.percentile(sorted_positive_null_distribution, q=95)
-        plt.axvline(x=True_R_positive, color='red')
-        plt.axvline(x=R_positive_thresh, color='black')
-        plt.legend(['True predicted correlation', '95% threshold correlation'])
-        pdf.savefig()
-        #plt.show()
+        # Save negative and positive common features array
+        save_object(object_to_save=positive_sum_mask,
+                    saving_directory=saving_directory,
+                    filename='positive_common_features_' + str(thresh) + '.pkl')
 
-        plt.figure()
-        plt.hist(sorted_negative_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
-        plt.title('Null distribution of correlation for negative features model \n'
-                  'R_neg = {}, p_neg = {}'.format(True_R_negative, p_negative))
-        R_negative_thresh = np.percentile(sorted_negative_null_distribution, q=95)
-        plt.axvline(x=True_R_negative, color='blue')
-        plt.axvline(x=R_negative_thresh, color='black')
-        plt.legend(['True predicted correlation', '95% threshold correlation'])
-        pdf.savefig()
-        #plt.show()
+        save_object(object_to_save=negative_sum_mask,
+                    saving_directory=saving_directory,
+                    filename='negative_common_features_' + str(thresh) + '.pkl')
 
-        # plot mask on glass brain
-        plt.figure()
-        plot_connectome(adjacency_matrix=positive_sum_mask, node_coords=atlas_nodes,
-                        node_color=labels_colors,edge_cmap='Reds',
-                        title='Edges with positive correlation to behavior')
-        pdf.savefig()
-        #plt.show()
+        # Plot of histogram
+        with PdfPages(os.path.join(saving_directory, filename)) as pdf:
+            plt.figure()
+            plt.hist(sorted_positive_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5,
+                     edgecolor='black')
+            plt.title('Null distribution of correlation for positive features model \n'
+                      'R_pos = {}, p_pos = {}'.format(True_R_positive, p_positive))
+            R_positive_thresh = np.percentile(sorted_positive_null_distribution, q=95)
+            plt.axvline(x=True_R_positive, color='red')
+            plt.axvline(x=R_positive_thresh, color='black')
+            plt.legend(['True predicted correlation', '95% threshold correlation'])
+            pdf.savefig()
+            # plt.show()
 
-        # plot mask on glass brain
-        plt.figure()
-        plot_connectome(adjacency_matrix=negative_sum_mask, node_coords=atlas_nodes,
-                        node_color=labels_colors,edge_cmap='Blues',
-                        title='Edges with negative correlation to behavior')
-        pdf.savefig()
-        #plt.show()
+            plt.figure()
+            plt.hist(sorted_negative_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5,
+                     edgecolor='black')
+            plt.title('Null distribution of correlation for negative features model \n'
+                      'R_neg = {}, p_neg = {}'.format(True_R_negative, p_negative))
+            R_negative_thresh = np.percentile(sorted_negative_null_distribution, q=95)
+            plt.axvline(x=True_R_negative, color='blue')
+            plt.axvline(x=R_negative_thresh, color='black')
+            plt.legend(['True predicted correlation', '95% threshold correlation'])
+            pdf.savefig()
+            # plt.show()
 
-        # Plot matrix of common negative and positive features
-        plt.figure()
-        plot_matrix(matrix=positive_sum_mask, labels_colors=labels_colors, mpart='lower',
-                    colormap='Reds', horizontal_labels=labels_regions, vertical_labels=labels_regions,
-                    linecolor='black', title='Common edges with positive correlation with behavior')
-        pdf.savefig()
-        #plt.show()
+            # plot mask on glass brain
+            plt.figure()
+            plot_connectome(adjacency_matrix=positive_sum_mask, node_coords=atlas_nodes,
+                            node_color=labels_colors, edge_cmap='Reds',
+                            title='Edges with positive correlation to behavior')
+            pdf.savefig()
+            # plt.show()
 
-        plt.figure()
-        plot_matrix(matrix=negative_sum_mask, labels_colors=labels_colors, mpart='lower',
-                    colormap='Blues', horizontal_labels=labels_regions, vertical_labels=labels_regions,
-                    linecolor='black', title='Common edges with negative correlation with behavior')
-        pdf.savefig()
-        #plt.show()
+            # plot mask on glass brain
+            plt.figure()
+            plot_connectome(adjacency_matrix=negative_sum_mask, node_coords=atlas_nodes,
+                            node_color=labels_colors, edge_cmap='Blues',
+                            title='Edges with negative correlation to behavior')
+            pdf.savefig()
+            # plt.show()
 
-        # Generate a graph objects from adjacency matrix
-        positive_features_g = nx.from_numpy_array(A=positive_sum_mask)
-        positive_features_edges = positive_features_g.edges()
-        positive_features_non_zeros_g = nx.Graph(positive_features_edges)
-        positive_features_nodes = positive_features_non_zeros_g.nodes()
-        positives_nodes_labels_dict = dict({node: labels_regions[node] for node in positive_features_nodes})
-        positives_nodes_labels_colors = dict({node: labels_colors[node] for node in positive_features_nodes})
+            # Plot matrix of common negative and positive features
+            plt.figure()
+            plot_matrix(matrix=positive_sum_mask, labels_colors=labels_colors, mpart='lower',
+                        colormap='Reds', horizontal_labels=labels_regions, vertical_labels=labels_regions,
+                        linecolor='black', title='Common edges with positive correlation with behavior')
+            pdf.savefig()
+            # plt.show()
 
-        plt.figure()
-        nx.draw(positive_features_non_zeros_g, labels=positives_nodes_labels_dict,
-                with_labels=True, node_size=10, font_size=5)
-        plt.title('Edges with positive correlation with behavior')
-        pdf.savefig()
-        #plt.show()
-        
-        # Generate a graph objects from adjacency matrix
-        negative_features_g = nx.from_numpy_array(A=negative_sum_mask)
-        negative_features_edges = negative_features_g.edges()
-        negative_features_non_zeros_g = nx.Graph(negative_features_edges)
-        negative_features_nodes = negative_features_non_zeros_g.nodes()
-        negatives_nodes_labels_dict = dict({node: labels_regions[node] for node in negative_features_nodes})
-        negatives_nodes_labels_colors = dict({node: labels_colors[node] for node in negative_features_nodes})
+            plt.figure()
+            plot_matrix(matrix=negative_sum_mask, labels_colors=labels_colors, mpart='lower',
+                        colormap='Blues', horizontal_labels=labels_regions, vertical_labels=labels_regions,
+                        linecolor='black', title='Common edges with negative correlation with behavior')
+            pdf.savefig()
+            # plt.show()
 
-        plt.figure()
-        nx.draw(negative_features_non_zeros_g, labels=negatives_nodes_labels_dict,
-                with_labels=True, node_size=10, font_size=5)
-        plt.title('Edges with negative correlation with behavior')
-        pdf.savefig()
-        #plt.show()
+            # Generate a graph objects from adjacency matrix
+            positive_features_g = nx.from_numpy_array(A=positive_sum_mask)
+            positive_features_edges = positive_features_g.edges()
+            positive_features_non_zeros_g = nx.Graph(positive_features_edges)
+            positive_features_nodes = positive_features_non_zeros_g.nodes()
+            positives_nodes_labels_dict = dict({node: labels_regions[node] for node in positive_features_nodes})
+            positives_nodes_labels_colors = dict({node: labels_colors[node] for node in positive_features_nodes})
+
+            plt.figure()
+            nx.draw(positive_features_non_zeros_g, labels=positives_nodes_labels_dict,
+                    with_labels=True, node_size=10, font_size=5)
+            plt.title('Edges with positive correlation with behavior')
+            pdf.savefig()
+            # plt.show()
+
+            # Generate a graph objects from adjacency matrix
+            negative_features_g = nx.from_numpy_array(A=negative_sum_mask)
+            negative_features_edges = negative_features_g.edges()
+            negative_features_non_zeros_g = nx.Graph(negative_features_edges)
+            negative_features_nodes = negative_features_non_zeros_g.nodes()
+            negatives_nodes_labels_dict = dict({node: labels_regions[node] for node in negative_features_nodes})
+            negatives_nodes_labels_colors = dict({node: labels_colors[node] for node in negative_features_nodes})
+
+            plt.figure()
+            nx.draw(negative_features_non_zeros_g, labels=negatives_nodes_labels_dict,
+                    with_labels=True, node_size=10, font_size=5)
+            plt.title('Edges with negative correlation with behavior')
+            pdf.savefig()
+            # plt.show()
