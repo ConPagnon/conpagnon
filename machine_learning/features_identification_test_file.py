@@ -3,7 +3,7 @@ import os
 import numpy as np
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import bootstrap_svc, \
-    null_distribution_classifier_weight
+    null_distribution_classifier_weight, permutation_bootstrap_svc
 import psutil
 import pyximport; pyximport.install()
 from machine_learning.cythonized_version import features_indentification_cython
@@ -25,7 +25,7 @@ class_labels = np.hstack((np.zeros(len(subjects_connectivity_matrices[class_name
 bootstrap_number = 500
 
 # Number of permutation
-n_permutations = 10000
+n_permutations = 50
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
@@ -43,29 +43,59 @@ null_extremum_distribution = np.zeros((n_permutations, 2))
 
 if __name__ == '__main__':
     # True bootstrap weight
+    tic_bootstrap = time.time()
+    print('Performing classification on {} bootstrap sample...'.format(bootstrap_number))
     bootstrap_weight = bootstrap_svc(features=vectorized_connectivity_matrices, class_labels=class_labels,
                                      bootstrap_array_indices=bootstrap_matrix, bootstrap_number=bootstrap_number,
-                                     n_cpus_bootstrap=n_physical)
+                                     n_cpus_bootstrap=n_physical, verbose=1)
+    tac_bootstrap = time.time()
+    t_bootstrap = tac_bootstrap - tic_bootstrap
 
     normalized_mean_weight = bootstrap_weight.mean(axis=0)/bootstrap_weight.std(axis=0)
-    tic = time.time()
-    null_distribution = null_distribution_classifier_weight(features=vectorized_connectivity_matrices,
-                                                            class_labels_perm_matrix=class_labels_permutation_matrix,
-                                                            indices=indices, bootstrap_number=bootstrap_number,
-                                                            n_permutations=n_permutations,
-                                                            n_cpus_permutations=10,
-                                                            n_cpus_bootstrap=18)
-    tac = time.time()
-    T = tac - tic
 
-    # Compute normalized mean over bootstrap sample for each permutation
-    normalized_mean_permutations =\
-        np.array([(null_distribution[n, ...].mean(axis=0)/null_distribution[n, ...].std(axis=0))
-                  for n in range(n_permutations)])
+    # Try with a classical for loop
+    null_distribution = np.zeros((n_permutations, vectorized_connectivity_matrices.shape[1]))
+    tic_permutations = time.time()
+    for n in range(n_permutations):
+        print('Performing permutation number {} out of {}'.format(n, n_permutations))
+        # Perform the classification of each bootstrap sample, but with the labels shuffled
+        bootstrap_weight_perm = permutation_bootstrap_svc(features=vectorized_connectivity_matrices,
+                                                          class_labels_perm=class_labels_permutation_matrix[n, ...],
+                                                          indices=indices,
+                                                          bootstrap_number=bootstrap_number,
+                                                          n_cpus_bootstrap=n_physical,
+                                                          verbose=1)
+        # Compute the normalized mean of weight for the current permutation
+        normalized_mean_weight_perm = bootstrap_weight_perm.mean(axis=0) / bootstrap_weight_perm.std(axis=0)
+        # Save it in the null distribution array
+        null_distribution[n, ...] = normalized_mean_weight_perm
+    tac_permutations = time.time() - tic_permutations
 
     # Find minimum and maximum weight in the normalized mean for each permutations
     null_extremum_distribution[:, 0], null_extremum_distribution[:, 1] = \
-        normalized_mean_permutations.min(axis=1), normalized_mean_permutations.max(axis=1)
+        null_distribution.min(axis=1), null_distribution.max(axis=1)
+
+    # Compare each edges weight from the true mean weight normalized distribution to the minimum and
+    # maximum null estimated distribution.
+
+    # For positive weight: we declare elements of normalized weight mean without permutation
+    # to be significant if they are greater than a certain percentile of the null maximum distribution
+    percentile_null_max_dist = np.percentile(null_extremum_distribution[:, 1], 95)
+
+    # null distribution for maximum and minimum normalized weight
+    sorted_null_maximum_dist = sorted(null_extremum_distribution[:, 1])
+    sorted_null_minimum_dist = sorted(null_extremum_distribution[:, 0])
+
+    # p values array
+    p_values_max = np.zeros(vectorized_connectivity_matrices.shape[1])
+    p_values_min = np.zeros(vectorized_connectivity_matrices.shape[1])
+
+    for feature in range(normalized_mean_weight.shape[0]):
+        p_values_max[feature] = \
+            (len(np.where(sorted_null_maximum_dist > normalized_mean_weight[feature])[0]) / (n_permutations + 1))
+        p_values_min[feature] = \
+            (len(np.where(sorted_null_minimum_dist < normalized_mean_weight[feature])[0]) / (n_permutations + 1))
+
 
 
 

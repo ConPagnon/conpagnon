@@ -15,15 +15,19 @@ from nilearn.plotting import plot_connectome
 import pyximport; pyximport.install()
 from machine_learning.cythonized_version import CPM_method
 import psutil
+from plotting.display import plot_matrix
+import networkx as nx
+import os
+
 # Atlas set up
-atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
+atlas_folder = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference/atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
@@ -42,14 +46,14 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/CPM/dictionary/'
+    full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/dictionary/'
                         'raw_subjects_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/CPM/dictionary/'
+    full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/dictionary/'
                         'z_fisher_transform_subjects_connectivity_matrices.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
-    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
+    excel_file_path='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/regression_data/regression_data.xlsx',
     sheetname='cohort_functional_data')
 
 # Type of subjects connectivity matrices
@@ -57,21 +61,21 @@ subjects_matrices = subjects_connectivity_matrices
 
 # Select a subset of patients
 # Compute the connectivity matrices dictionary with factor as keys.
-#group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
-#    dictionary_operations.groupby_factor_connectivity_matrices(
-#        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx',
-#        sheetname='cohort_functional_data',
-#        subjects_connectivity_matrices_dictionnary=subjects_matrices,
-#        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
+group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
+    dictionary_operations.groupby_factor_connectivity_matrices(
+        population_data_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/regression_data/regression_data.xlsx',
+        sheetname='cohort_functional_data',
+        subjects_connectivity_matrices_dictionnary=subjects_matrices,
+        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
 
-#subjects_matrices = {}
-#subjects_matrices['patients'] = group_by_factor_subjects_connectivity['D']
+subjects_matrices = {}
+subjects_matrices['patients'] = group_by_factor_subjects_connectivity['D']
 
 # Fetch patients matrices, and one behavioral score
 kind = 'tangent'
-patients_subjects_ids = list(subjects_matrices['LesionFlip'].keys())
+patients_subjects_ids = list(subjects_matrices['patients'].keys())
 # Patients matrices stack
-patients_connectivity_matrices = np.array([subjects_matrices['LesionFlip'][s][kind] for
+patients_connectivity_matrices = np.array([subjects_matrices['patients'][s][kind] for
                                            s in patients_subjects_ids])
 
 # Behavioral score
@@ -87,7 +91,7 @@ confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variabl
                                        return_type='dataframe').drop(['Intercept'], axis=1)
 
 add_predictive_variables = confounding_variables_matrix
-significance_selection_threshold = 0.02
+significance_selection_threshold = 0.003
 
 n_subjects = vectorized_connectivity_matrices.shape[0]
 # Features selection by leave one out cross validation scheme
@@ -98,7 +102,8 @@ try:
 except:
     pass
 
-
+saving_directory = '/home/db242421/CPM_results_23_05_2018/LD_gender_lesion'
+filename = 'LD_gender_lesion_' + str(significance_selection_threshold) + '.pdf'
 
 # Save the matrices for matlab utilisation
 # Transpose the shape to (n_features, n_features, n_subjects)
@@ -126,12 +131,12 @@ tic = time.time()
     selection_predictor_method='correlation',
     significance_selection_threshold=significance_selection_threshold,
     confounding_variables_matrix=None,
-    add_predictive_variables=None,
+    add_predictive_variables=add_predictive_variables,
     verbose=0)
 tac = time.time()
 T = tac - tic
 
-n_permutations = 10000
+n_permutations = 10
 behavioral_scores_permutation_matrix = np.array([np.random.permutation(behavioral_scores)
                                                  for n in range(n_permutations)])
 
@@ -141,7 +146,7 @@ n_core_phys_and_log = psutil.cpu_count(logical=True)
 if __name__ == '__main__':
     # Permutation test
     tic = time.time()
-    results_perm = Parallel(n_jobs=n_core_physical, verbose=10, backend="multiprocessing")(delayed(predict_behavior)(
+    results_perm = Parallel(n_jobs=10, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
         vectorized_connectivity_matrices=vectorized_connectivity_matrices,
         behavioral_scores=behavioral_scores_permutation_matrix[n_perm, ...],
         selection_predictor_method='correlation',
@@ -166,7 +171,7 @@ if __name__ == '__main__':
 
     # Save null distribution in pickle format
     save_object(object_to_save=null_distribution,
-                saving_directory='/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02',
+                saving_directory=saving_directory,
                 filename='estimated_null_distribution.pkl')
 
     # plot on glass brain common negative/positive feature common accros all cross validation
@@ -185,16 +190,15 @@ if __name__ == '__main__':
 
     # Save negative and positive common features array
     save_object(object_to_save=positive_sum_mask,
-                saving_directory='/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02',
+                saving_directory=saving_directory,
                 filename='positive_common_features.pkl')
 
     save_object(object_to_save=negative_sum_mask,
-                saving_directory='/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02',
+                saving_directory=saving_directory,
                 filename='negative_common_features.pkl')
 
     # Plot of histogram
-    with PdfPages('/home/db242421/CPM_results_23_05_2018/LG_LDFLIP_gender_lesion_0.02'
-                  '/LG_LD_flip_gender_lesion.pdf') as pdf:
+    with PdfPages(os.path.join(saving_directory, filename)) as pdf:
         plt.figure()
         plt.hist(sorted_positive_null_distribution, 'auto', histtype='bar', normed=True, alpha=0.5, edgecolor='black')
         plt.title('Null distribution of correlation for positive features model \n'
@@ -230,5 +234,50 @@ if __name__ == '__main__':
         plot_connectome(adjacency_matrix=negative_sum_mask, node_coords=atlas_nodes,
                         node_color=labels_colors,edge_cmap='Blues',
                         title='Edges with negative correlation to behavior')
+        pdf.savefig()
+        plt.show()
+
+        # Plot matrix of common negative and positive features
+        plt.figure()
+        plot_matrix(matrix=positive_sum_mask, labels_colors=labels_colors, mpart='lower',
+                    colormap='Reds', horizontal_labels=labels_regions, vertical_labels=labels_regions,
+                    linecolor='black', title='Common edges with positive correlation with behavior')
+        pdf.savefig()
+        plt.show()
+
+        plt.figure()
+        plot_matrix(matrix=negative_sum_mask, labels_colors=labels_colors, mpart='lower',
+                    colormap='Blues', horizontal_labels=labels_regions, vertical_labels=labels_regions,
+                    linecolor='black', title='Common edges with negative correlation with behavior')
+        pdf.savefig()
+        plt.show()
+
+        # Generate a graph objects from adjacency matrix
+        positive_features_g = nx.from_numpy_array(A=positive_sum_mask)
+        positive_features_edges = positive_features_g.edges()
+        positive_features_non_zeros_g = nx.Graph(positive_features_edges)
+        positive_features_nodes = positive_features_non_zeros_g.nodes()
+        positives_nodes_labels_dict = dict({node: labels_regions[node] for node in positive_features_nodes})
+        positives_nodes_labels_colors = dict({node: labels_colors[node] for node in positive_features_nodes})
+
+        plt.figure()
+        nx.draw(positive_features_non_zeros_g, labels=positives_nodes_labels_dict,
+                with_labels=True, node_size=10, font_size=5)
+        plt.title('Edges with positive correlation with behavior')
+        pdf.savefig()
+        plt.show()
+        
+        # Generate a graph objects from adjacency matrix
+        negative_features_g = nx.from_numpy_array(A=negative_sum_mask)
+        negative_features_edges = negative_features_g.edges()
+        negative_features_non_zeros_g = nx.Graph(negative_features_edges)
+        negative_features_nodes = negative_features_non_zeros_g.nodes()
+        negatives_nodes_labels_dict = dict({node: labels_regions[node] for node in negative_features_nodes})
+        negatives_nodes_labels_colors = dict({node: labels_colors[node] for node in negative_features_nodes})
+
+        plt.figure()
+        nx.draw(negative_features_non_zeros_g, labels=negatives_nodes_labels_dict,
+                with_labels=True, node_size=10, font_size=5)
+        plt.title('Edges with negative correlation with behavior')
         pdf.savefig()
         plt.show()
