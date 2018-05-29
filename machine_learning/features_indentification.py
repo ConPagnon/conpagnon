@@ -90,3 +90,63 @@ def null_distribution_classifier_weight(features, class_labels_perm_matrix, indi
             n_cpus_bootstrap=n_cpus_bootstrap) for n in range(n_permutations))
 
     return np.array(results_permutations_bootstrap)
+
+
+def k_largest_index_argsort(a, k, reverse_order=False):
+    """Returns the k+1 largest element in a an array
+    """
+    idx = np.argsort(a.ravel())[:-k - 1:-1]
+    if reverse_order:
+        idx = idx[::-1]
+    return np.column_stack(np.unravel_index(idx, a.shape))
+
+
+def k_smallest_index_argsort(a, k, reverse_order=False):
+    idx = np.argsort(a.ravel())[:k + 1:1]
+    if reverse_order:
+        idx = idx[::-1]
+    return np.column_stack(np.unravel_index(idx, a.shape))
+
+
+def remove_reversed_duplicates(iterable):
+    # Create a set for already seen elements
+    seen = set()
+    for item in iterable:
+        # Lists are mutable so we need tuples for the set-operations.
+        tup = tuple(item)
+        if tup not in seen:
+            # If the tuple is not in the set append it in REVERSED order.
+            seen.add(tup[::-1])
+            # If you also want to remove normal duplicates uncomment the next line
+            # seen.add(tup)
+            yield item
+
+
+def rank_top_features_weight(coefficients_array, top_features_number,
+                             features_labels):
+
+    # Find the k largest/smallest index couple coefficients in the array
+    top_positive_coefficients_indices = k_largest_index_argsort(a=coefficients_array,
+                                                                k=top_features_number,
+                                                                reverse_order=True)
+
+    top_negative_coefficients_indices = k_smallest_index_argsort(a=coefficients_array,
+                                                                 k=top_features_number,
+                                                                 reverse_order=False)
+    # Stack the k largest/smallest couple coefficient vector array
+    top_coefficients_indices = np.vstack([top_negative_coefficients_indices,
+                                          top_positive_coefficients_indices])
+
+    # In the top coefficient stack, we have symmetric pair, due to symmetric connectivity
+    # behavior, we only keep one pairs
+    top_coefficients_indices_ = np.array(list(remove_reversed_duplicates(top_coefficients_indices)))
+
+    # We construct an array of feature name based on top_coefficients_ couple index
+    features_labels_couple = np.array([features_labels[top_coefficients_indices_[i]]
+                                       for i in range(top_coefficients_indices_.shape[0])])
+
+    # Fetch the weight in the normalized mean array based on indices stacked
+    # in top_coefficients_indices
+    top_weights = coefficients_array[top_coefficients_indices_[:, 0], top_coefficients_indices_[:, 1]]
+
+    return top_weights, top_coefficients_indices_, features_labels_couple
