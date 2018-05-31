@@ -58,7 +58,7 @@ class_labels = np.hstack((np.zeros(len(subjects_connectivity_matrices[class_name
 bootstrap_number = 500
 
 # Number of permutation
-n_permutations = 10
+n_permutations = 10000
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         n_cpus_permutations=1,
         n_cpus_bootstrap=n_physical,
         verbose_bootstrap=0,
-        verbose_permutations=11,
+        verbose_permutations=n_permutations,
         joblib_tmp_folder='/media/db242421/db242421_data/tmp_joblib')
     tac_permutations_ = time.time()
 

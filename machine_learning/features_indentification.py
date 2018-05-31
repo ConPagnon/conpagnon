@@ -1,9 +1,42 @@
+"""
+This module enable the identification of discriminative brain
+connections when performing classification between two groups
+with connectivity coefficients as features.
+
+The classification is performed with a Support Vector Machine (SVM)
+algorithm with a linear kernel. The C constant is set to 1.
+
+References
+----------
+.. [1] Bernard Ng, Gaël Varoquaux, Jean-Baptiste Poline, Michael D. Greicius,
+       Bertrand Thirion, "Transport on Riemannian Manifold for Connectivity-based
+       brain decoding", IEEE Transactions on Medical Imaging, 2015.
+
+Author: Dhaif BEKHA.
+"""
+
 import numpy as np
 from sklearn.svm import LinearSVC
 from joblib import Parallel, delayed
 
 
-def bootstrap_SVC(vectorized_connectivity_matrices, class_labels, bootstrap_number):
+def timer(start, end):
+    """Print measured time between two point in the code
+
+    Parameters
+    ----------
+    start: float
+        The start of the measure
+    end: float
+        The end of the measure
+
+    """
+    hours, rem = divmod(end-start, 3600)
+    minutes, seconds = divmod(rem, 60)
+    print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+
+
+def bootstrap_svc_(vectorized_connectivity_matrices, class_labels, bootstrap_number):
     """Fit Support Vector Machine with linear kernel on bootstrap sample
     """
 
@@ -79,17 +112,25 @@ def permutation_bootstrap_svc(features, class_labels_perm, indices, bootstrap_nu
 
 
 def null_distribution_classifier_weight(features, class_labels_perm_matrix, indices, bootstrap_number=100,
-                                        n_permutations=500, n_cpus_permutations=1, n_cpus_bootstrap=1):
+                                        n_permutations=500, n_cpus_permutations=1, n_cpus_bootstrap=1,
+                                        verbose_bootstrap=1, verbose_permutations=1, joblib_tmp_folder='/tmp'):
 
     results_permutations_bootstrap = \
-        Parallel(n_jobs=n_cpus_permutations, verbose=100, backend="multiprocessing")(delayed(permutation_bootstrap_svc)(
-            features=features,
-            class_labels_perm=class_labels_perm_matrix[n, ...],
-            indices=indices,
-            bootstrap_number=bootstrap_number,
-            n_cpus_bootstrap=n_cpus_bootstrap) for n in range(n_permutations))
+        Parallel(n_jobs=n_cpus_permutations, backend="multiprocessing",
+                 verbose=verbose_permutations, temp_folder=joblib_tmp_folder)(delayed(permutation_bootstrap_svc)(
+                    features=features,
+                    class_labels_perm=class_labels_perm_matrix[n, ...],
+                    indices=indices,
+                    bootstrap_number=bootstrap_number,
+                    n_cpus_bootstrap=n_cpus_bootstrap,
+                    verbose=verbose_bootstrap) for n in range(n_permutations))
 
-    return np.array(results_permutations_bootstrap)
+    # The results is an array of shape (n_permutations, n_bootstrap, n_features), we compute
+    # mean over bootstrap sample for each permutations
+    results_permutations_bootstrap = np.array(results_permutations_bootstrap)
+    null_distribution = results_permutations_bootstrap.mean(axis=1)/results_permutations_bootstrap.std(axis=1)
+
+    return null_distribution
 
 
 def k_largest_index_argsort(a, k, reverse_order=False):
