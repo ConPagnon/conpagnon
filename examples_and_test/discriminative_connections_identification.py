@@ -95,6 +95,7 @@ if __name__ == '__main__':
 
     normalized_mean_weight = bootstrap_weight.mean(axis=0)/bootstrap_weight.std(axis=0)
 
+    print('Performing permutation testing...')
     tic_permutations_ = time.time()
     null_distribution = null_distribution_classifier_weight(
         features=vectorized_connectivity_matrices,
@@ -108,8 +109,6 @@ if __name__ == '__main__':
         verbose_permutations=11,
         joblib_tmp_folder='/media/db242421/db242421_data/tmp_joblib')
     tac_permutations_ = time.time()
-    print('Performed {} permutation in : {} '.format(n_permutations,
-                                                     timer(start=tic_permutations_, end=tac_permutations_)))
 
     # Save the null distribution to avoid
     save_object(object_to_save=null_distribution, saving_directory=save_directory,
