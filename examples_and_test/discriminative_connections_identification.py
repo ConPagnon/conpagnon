@@ -4,7 +4,7 @@ import numpy as np
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import bootstrap_svc, \
      rank_top_features_weight, remove_reversed_duplicates, \
-     null_distribution_classifier_weight, timer
+     null_distribution_classifier_weight
 import psutil
 import time
 import matplotlib.pyplot as plt
@@ -58,7 +58,7 @@ class_labels = np.hstack((np.zeros(len(subjects_connectivity_matrices[class_name
 bootstrap_number = 500
 
 # Number of permutation
-n_permutations = 50
+n_permutations = 10
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
@@ -146,18 +146,14 @@ if __name__ == '__main__':
         plt.axvline(x=p95, color='black')
         plt.title('Null distribution of maximum normalized weight mean')
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         plt.figure()
         plt.hist(sorted_null_minimum_dist, 'auto',  histtype='bar', alpha=0.5, edgecolor='black')
         # The five 5% extreme values among minimum distribution
         p5 = np.percentile(sorted_null_minimum_dist, q=5)
         plt.axvline(x=p5, color='black')
-        plt.title('Null distribution of maximum normalized weight mean')
+        plt.title('Null distribution of minimum normalized weight mean')
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         # Rebuild vectorized p values array
         p_max_values_array = array_rebuilder(vectorized_array=p_values_max,
@@ -181,8 +177,6 @@ if __name__ == '__main__':
                         node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
                         title='Features weight')
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         # Find the top features among the normalized mean weight distribution
         top_features_number = 50
@@ -192,20 +186,20 @@ if __name__ == '__main__':
             features_labels=labels_regions)
 
         # plot the top weight in a histogram fashion
-        plt.figure(figsize=(15, 10), constrained_layout=True)
+        fig = plt.figure(figsize=(15, 10), constrained_layout=True)
+
         weight_colors = ['blue' if weight < 0 else 'red' for weight in top_weights]
         plt.bar(np.arange(len(top_weights)), list(top_weights), color=weight_colors,
                 edgecolor='black',
                 alpha=0.5)
         plt.xticks(np.arange(0,  len(top_weights)), top_weight_labels, rotation=60,
                    ha='right')
-
+        for label in range(len(plt.gca().get_xticklabels())):
+            plt.gca().get_xticklabels()[label].set_color(weight_colors[label])
         plt.xlabel('Features names')
         plt.ylabel('Features weights')
         plt.title('Top {} features ranking of normalized mean weight'.format(top_features_number))
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         # Plot the top features weight on glass brain
         top_weights_mask = np.zeros((n_nodes, n_nodes), dtype=bool)
@@ -218,8 +212,6 @@ if __name__ == '__main__':
                         node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
                         title='Top {} features weight'.format(top_features_number))
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         # Plot on glass brain the significant positive features weight
         plt.figure()
@@ -227,8 +219,6 @@ if __name__ == '__main__':
                         node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
                         title='Significant positive weight', edge_cmap='Reds')
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         # Plot on glass brain the significant negative features weight
         plt.figure()
@@ -236,8 +226,6 @@ if __name__ == '__main__':
                         node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
                         title='Significant negative weight', edge_cmap='Blues')
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         # Matrix view of significant positive and negative weight
         plt.figure()
@@ -245,16 +233,15 @@ if __name__ == '__main__':
                     colormap='Blues', linecolor='black', title='Significant negative weight',
                     vertical_labels=labels_regions, horizontal_labels=labels_regions)
         pdf.savefig()
-        plt.show()
-        plt.close()
 
         plt.figure()
         plot_matrix(matrix=p_max_significant, labels_colors=labels_colors, mpart='lower',
                     colormap='Reds', linecolor='black', title='Significant positive weight',
                     vertical_labels=labels_regions, horizontal_labels=labels_regions)
         pdf.savefig()
+
         plt.show()
-        plt.close()
+        plt.close("all")
 
         # Print the significant features, that survive permutation testing
         significant_positive_features_indices = \
