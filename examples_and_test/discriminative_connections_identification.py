@@ -240,7 +240,7 @@ if __name__ == '__main__':
                     vertical_labels=labels_regions, horizontal_labels=labels_regions)
         pdf.savefig()
 
-        plt.show()
+       # plt.show()
         plt.close("all")
 
         # Print the significant features, that survive permutation testing
