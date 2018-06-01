@@ -4,7 +4,7 @@ import numpy as np
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import bootstrap_svc, \
      rank_top_features_weight, remove_reversed_duplicates, \
-     null_distribution_classifier_weight
+     permutation_bootstrap_svc
 import psutil
 import time
 import matplotlib.pyplot as plt
@@ -51,14 +51,14 @@ vectorized_connectivity_matrices = sym_matrix_to_vec(
               in class_names for s in subjects_connectivity_matrices[class_name].keys()]),
     discard_diagonal=True)
 # Labels vectors
-class_labels = np.hstack((np.zeros(len(subjects_connectivity_matrices[class_names[0]].keys())),
-                          np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
+class_labels = np.hstack((np.ones(len(subjects_connectivity_matrices[class_names[0]].keys())),
+                          -1*np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
 
 # Number of Bootstrap (with replacement)
 bootstrap_number = 500
 
 # Number of permutation
-n_permutations = 10000
+n_permutations = 10
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
@@ -95,20 +95,23 @@ if __name__ == '__main__':
 
     normalized_mean_weight = bootstrap_weight.mean(axis=0)/bootstrap_weight.std(axis=0)
 
-    print('Performing permutation testing...')
-    tic_permutations_ = time.time()
-    null_distribution = null_distribution_classifier_weight(
-        features=vectorized_connectivity_matrices,
-        class_labels_perm_matrix=class_labels_permutation_matrix,
-        indices=indices,
-        bootstrap_number=bootstrap_number,
-        n_permutations=n_permutations,
-        n_cpus_permutations=1,
-        n_cpus_bootstrap=n_physical,
-        verbose_bootstrap=0,
-        verbose_permutations=n_permutations,
-        joblib_tmp_folder='/media/db242421/db242421_data/tmp_joblib')
-    tac_permutations_ = time.time()
+    # Try with a classical for loop
+    null_distribution = np.zeros((n_permutations, vectorized_connectivity_matrices.shape[1]))
+    tic_permutations = time.time()
+    for n in range(n_permutations):
+        print('Performing permutation number {} out of {}'.format(n, n_permutations))
+        # Perform the classification of each bootstrap sample, but with the labels shuffled
+        bootstrap_weight_perm = permutation_bootstrap_svc(features=vectorized_connectivity_matrices,
+                                                          class_labels_perm=class_labels_permutation_matrix[n, ...],
+                                                          indices=indices,
+                                                          bootstrap_number=bootstrap_number,
+                                                          n_cpus_bootstrap=n_physical,
+                                                          verbose=1)
+        # Compute the normalized mean of weight for the current permutation
+        normalized_mean_weight_perm = bootstrap_weight_perm.mean(axis=0) / bootstrap_weight_perm.std(axis=0)
+        # Save it in the null distribution array
+        null_distribution[n, ...] = normalized_mean_weight_perm
+    tac_permutations = time.time() - tic_permutations
 
     # Save the null distribution to avoid
     save_object(object_to_save=null_distribution, saving_directory=save_directory,
