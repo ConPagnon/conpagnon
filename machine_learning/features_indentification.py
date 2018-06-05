@@ -18,6 +18,7 @@ Author: Dhaif BEKHA.
 import numpy as np
 from sklearn.svm import LinearSVC
 from joblib import Parallel, delayed
+import time
 
 
 def timer(start, end):
@@ -63,8 +64,24 @@ def bootstrap_svc_(vectorized_connectivity_matrices, class_labels, bootstrap_num
 
 def bootstrap_classification(features, class_labels, boot_indices):
     """Perform classification on two binary class for each sample generated
-    by bootstrap (with replacement) and class labels permuted one time.
+    by bootstrap (with replacement).
 
+    Parameters
+    ----------
+    features: numpy.ndarray, shape (n_samples, n_features)
+        The connectivity matrices in a vectorized form, that is
+        each row is a subjects and each column is a pair of regions. Only
+        the lower part of connectivity matrices should be given.
+    class_labels: numpy.ndarray, shape (n_samples, )
+        The class labels of each subjects, permuted one time.
+    boot_indices: numpy.ndarray, shape (n_samples, )
+        The array containing the indices of bootstrapped
+        subjects.
+
+    Returns
+    -------
+    output: nunmpy.ndarray, shape (n_features, )
+        The weight of the linear SVM estimated on the boostrap sample.
     """
 
     svc = LinearSVC()
@@ -79,74 +96,180 @@ def bootstrap_classification(features, class_labels, boot_indices):
     return bootstrap_coefficients
 
 
-def bootstrap_svc(features, class_labels, bootstrap_array_indices, bootstrap_number, n_cpus_bootstrap=1,
-                  verbose=0, backend='multiprocessing'):
+def bootstrap_svc(features, class_labels,
+                  bootstrap_array_indices,
+                  n_cpus_bootstrap=1,
+                  verbose=0,
+                  backend='multiprocessing'):
+    """Perform classification between two binary class on
+    bootstrapped samples.
 
-    results_bootstrap = Parallel(n_jobs=n_cpus_bootstrap, verbose=verbose,
-                                 backend=backend)(delayed(bootstrap_classification)(
-                                    features=features,
-                                    class_labels=class_labels,
-                                    boot_indices=bootstrap_array_indices[b, ...]) for b in range(bootstrap_number))
+    Parameters
+    ----------
+    features: numpy.ndarray, shape (n_samples, n_features)
+        The connectivity matrices in a vectorized form, that is
+        each row is a subjects and each column is a pair of regions. Only
+        the lower part of connectivity matrices should be given.
+    class_labels: numpy.ndarray, shape (n_sample, )
+        The class labels of each subjects.
+    bootstrap_array_indices: numpy.ndarray, shape (n_bootstrap, n_features)
+        A array containing the bootstrapped indices. Each row
+        contain the indices to generate a bootstrapped sample.
+    n_cpus_bootstrap: int, optional
+        The number CPU to be used concurrently during computation on
+        bootstrap sample.  Default is one, like a classical
+        for loop over bootstrap sample.
+    backend: str, optional
+        The method used to execute concurrent task. This argument
+        is passed to the Parallel function in the joblib package.
+        Default is multiprocessing.
+    verbose: int, optional
+        The verbosity level during parallel computation. This
+        argument is passed to Parallel function in the joblib package.
+
+    Returns
+    -------
+    output: numpy.ndarray, shape (n_bootstrap, n_features)
+        The array of estimated features weights, for each
+        bootstrapped sample.
+    """
+    bootstrap_number = bootstrap_array_indices.shape[0]
+    results_bootstrap = Parallel(
+        n_jobs=n_cpus_bootstrap, verbose=verbose,
+        backend=backend)(delayed(bootstrap_classification)(
+                            features=features,
+                            class_labels=class_labels,
+                            boot_indices=bootstrap_array_indices[b, ...])
+                         for b in range(bootstrap_number))
 
     return np.array(results_bootstrap)
 
 
-def permutation_bootstrap_svc(features, class_labels_perm, indices, bootstrap_number=500,
-                              n_cpus_bootstrap=1, verbose=0, backend='multiprocessing'):
+def permutation_bootstrap_svc(features, class_labels_perm,
+                              n_permutations=1000,
+                              bootstrap_number=500,
+                              n_cpus_bootstrap=1,
+                              backend='multiprocessing',
+                              verbose_bootstrap=0,
+                              verbose_permutation=0):
     """Perform classification on two binary class for each sample generated
     by bootstrap (with replacement) and permuted class labels vector.
+
+    Parameters
+    ----------
+    features: numpy.ndarray, shape (n_samples, n_features)
+        The connectivity matrices in a vectorized form, that is
+        each row is a subjects and each column is a pair of regions. Only
+        the lower part of connectivity matrices should be given.
+    class_labels_perm: numpy.ndarray, shape (n_permutations, n_samples)
+        The class labels array: each row contain the subjects labels
+        permuted one time.
+    n_permutations: int, optional
+        The number of permutations. Default is 1000.
+    bootstrap_number: int, optional
+        The number of bootstrap sample to generate. Defaults is 500.
+    n_cpus_bootstrap: int, optional
+        The number CPU to be used concurrently during computation
+        on bootstrap sample. Default is one, like a classical
+        for loop over bootstrap sample.
+    backend: str, optional
+        The method used to execute concurrent task. This argument
+        is passed to the Parallel function in the joblib package.
+        Default is multiprocessing.
+    verbose_bootstrap: int, optional
+        The verbosity level during parallel computation. This
+        argument is passed to Parallel function in the joblib package.
+    verbose_permutation: int, optional
+        If equal to 1, print the progression of the permutations testing.
+        Default is 1.
+
+    Returns
+    -------
+    output: numpy.ndarray, shape (n_features, )
+        The normalized features weights mean, estimated by classification
+        with a linear SVM, over bootstrap sample
     """
 
-    # Number of samples
-    n_subjects = features.shape[0]
-    # Permute the class labels
-    # Build a array shape (n_bootstrap, n_subjects) containing bootstrap indices
-    bootstrap_matrix_perm = np.random.choice(a=indices, size=(bootstrap_number, n_subjects), replace=True)
-    # Perform classification on each bootstrap samples, but with labels permuted
-    bootstrap_weight_perm = bootstrap_svc(features=features, class_labels=class_labels_perm,
-                                          bootstrap_array_indices=bootstrap_matrix_perm,
-                                          bootstrap_number=bootstrap_number, n_cpus_bootstrap=n_cpus_bootstrap,
-                                          verbose=verbose, backend=backend)
+    # Initialization of the normalized mean features weight over
+    # N permutations
+    null_distribution = np.zeros((n_permutations, features.shape[1]))
+    # indices of subjects for bootstrapping
+    indices = np.arange(features.shape[0])
 
-    return bootstrap_weight_perm
-
-
-def null_distribution_classifier_weight(features, class_labels_perm_matrix, indices, bootstrap_number=100,
-                                        n_permutations=500, n_cpus_permutations=1, n_cpus_bootstrap=1,
-                                        verbose_bootstrap=1, verbose_permutations=1, joblib_tmp_folder='/tmp'):
-
-    results_permutations_bootstrap = \
-        Parallel(n_jobs=n_cpus_permutations, backend="multiprocessing",
-                 verbose=verbose_permutations, temp_folder=joblib_tmp_folder)(delayed(permutation_bootstrap_svc)(
-                    features=features,
-                    class_labels_perm=class_labels_perm_matrix[n, ...],
-                    indices=indices,
-                    bootstrap_number=bootstrap_number,
-                    n_cpus_bootstrap=n_cpus_bootstrap,
-                    verbose=verbose_bootstrap) for n in range(n_permutations))
-
-    # The results is an array of shape (n_permutations, n_bootstrap, n_features), we compute
-    # mean over bootstrap sample for each permutations
-    results_permutations_bootstrap = np.array(results_permutations_bootstrap)
-    null_distribution = results_permutations_bootstrap.mean(axis=1)/results_permutations_bootstrap.std(axis=1)
+    tic_permutations = time.time()
+    for n in range(n_permutations):
+        if verbose_permutation == 1:
+            print('Performing permutation number {} out of {}'.format(n, n_permutations))
+        # Generate a bootstrap array indices for the current permutations
+        bootstrap_indices_perm = np.random.choice(a=indices, size=(bootstrap_number, features.shape[0]),
+                                                  replace=True)
+        # Perform the classification of each bootstrap sample, but with the labels shuffled
+        bootstrap_weight_perm = bootstrap_svc(features=features,
+                                              class_labels=class_labels_perm[n, ...],
+                                              bootstrap_array_indices=bootstrap_indices_perm,
+                                              verbose=verbose_bootstrap,
+                                              backend=backend,
+                                              n_cpus_bootstrap=n_cpus_bootstrap)
+        # Compute the normalized mean of weight for the current permutation
+        normalized_mean_weight_perm = bootstrap_weight_perm.mean(axis=0) / bootstrap_weight_perm.std(axis=0)
+        # Save it in the null distribution array
+        null_distribution[n, ...] = normalized_mean_weight_perm
+    tac_permutations = time.time() - tic_permutations
+    print('Elapsed time for {} permutations: {} min'.format(n_permutations, tac_permutations/60))
 
     return null_distribution
 
 
-def k_largest_index_argsort(a, k, reverse_order=False):
-    """Returns the k+1 largest element in a an array
+def k_largest_index_argsort(arr, k, reverse_order=False):
+    """Returns the k+1 largest element indices in a an array
+
+    Parameters
+    ----------
+    arr: numpy.ndarray
+        A multi-dimensional array.
+    k: int
+        The number of largest elements indices to return.
+    reverse_order: bool
+        If True, the indices are returned from the largest to
+        smallest element.
+
+    Returns
+    -------
+        output: numpy.ndarray
+            The array of the k+1 largest element indices.
+            The shape is the same of the input array.
+
     """
-    idx = np.argsort(a.ravel())[:-k - 1:-1]
+    idx = np.argsort(arr.ravel())[:-k - 1:-1]
     if reverse_order:
         idx = idx[::-1]
-    return np.column_stack(np.unravel_index(idx, a.shape))
+    return np.column_stack(np.unravel_index(idx, arr.shape))
 
 
-def k_smallest_index_argsort(a, k, reverse_order=False):
-    idx = np.argsort(a.ravel())[:k + 1:1]
+def k_smallest_index_argsort(arr, k, reverse_order=False):
+    """Returns the k+1 smallest element indices in a an array
+
+    Parameters
+    ----------
+    arr: numpy.ndarray
+        A multi-dimensional array.
+    k: int
+        The number of smallest elements indices to return.
+    reverse_order: bool
+        If True, the indices are returned from the largest to
+        smallest element.
+
+    Returns
+    -------
+        output: numpy.ndarray
+            The array of the k+1 smallest element indices.
+            The shape is the same of the input array.
+    """
+
+    idx = np.argsort(arr.ravel())[:k + 1:1]
     if reverse_order:
         idx = idx[::-1]
-    return np.column_stack(np.unravel_index(idx, a.shape))
+    return np.column_stack(np.unravel_index(idx, arr.shape))
 
 
 def remove_reversed_duplicates(iterable):
@@ -167,12 +290,10 @@ def rank_top_features_weight(coefficients_array, top_features_number,
                              features_labels):
 
     # Find the k largest/smallest index couple coefficients in the array
-    top_positive_coefficients_indices = k_largest_index_argsort(a=coefficients_array,
-                                                                k=top_features_number,
+    top_positive_coefficients_indices = k_largest_index_argsort(arr=coefficients_array, k=top_features_number,
                                                                 reverse_order=True)
 
-    top_negative_coefficients_indices = k_smallest_index_argsort(a=coefficients_array,
-                                                                 k=top_features_number,
+    top_negative_coefficients_indices = k_smallest_index_argsort(arr=coefficients_array, k=top_features_number,
                                                                  reverse_order=False)
     # Stack the k largest/smallest couple coefficient vector array
     top_coefficients_indices = np.vstack([top_negative_coefficients_indices,

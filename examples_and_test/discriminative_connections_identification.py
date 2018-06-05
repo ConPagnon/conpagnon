@@ -88,30 +88,18 @@ if __name__ == '__main__':
     tic_bootstrap = time.time()
     print('Performing classification on {} bootstrap sample...'.format(bootstrap_number))
     bootstrap_weight = bootstrap_svc(features=vectorized_connectivity_matrices, class_labels=class_labels,
-                                     bootstrap_array_indices=bootstrap_matrix, bootstrap_number=bootstrap_number,
-                                     n_cpus_bootstrap=n_physical, verbose=1)
+                                     bootstrap_array_indices=bootstrap_matrix, n_cpus_bootstrap=n_physical, verbose=1)
     tac_bootstrap = time.time()
     t_bootstrap = tac_bootstrap - tic_bootstrap
 
     normalized_mean_weight = bootstrap_weight.mean(axis=0)/bootstrap_weight.std(axis=0)
 
-    # Try with a classical for loop
-    null_distribution = np.zeros((n_permutations, vectorized_connectivity_matrices.shape[1]))
-    tic_permutations = time.time()
-    for n in range(n_permutations):
-        print('Performing permutation number {} out of {}'.format(n, n_permutations))
-        # Perform the classification of each bootstrap sample, but with the labels shuffled
-        bootstrap_weight_perm = permutation_bootstrap_svc(features=vectorized_connectivity_matrices,
-                                                          class_labels_perm=class_labels_permutation_matrix[n, ...],
-                                                          indices=indices,
-                                                          bootstrap_number=bootstrap_number,
-                                                          n_cpus_bootstrap=n_physical,
-                                                          verbose=1)
-        # Compute the normalized mean of weight for the current permutation
-        normalized_mean_weight_perm = bootstrap_weight_perm.mean(axis=0) / bootstrap_weight_perm.std(axis=0)
-        # Save it in the null distribution array
-        null_distribution[n, ...] = normalized_mean_weight_perm
-    tac_permutations = time.time() - tic_permutations
+    null_distribution = permutation_bootstrap_svc(features=vectorized_connectivity_matrices,
+                                                  class_labels_perm=class_labels_permutation_matrix,
+                                                  n_permutations=n_permutations,
+                                                  n_cpus_bootstrap=n_physical,
+                                                  verbose_bootstrap=1,
+                                                  verbose_permutation=1)
 
     # Save the null distribution to avoid
     save_object(object_to_save=null_distribution, saving_directory=save_directory,
