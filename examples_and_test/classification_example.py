@@ -44,6 +44,9 @@ save_object(object_to_save=mean_score_dict,
             saving_directory='/media/db242421/db242421_data/AICHA_test',
             filename='mean_accuracy_score.pkl')
 
+mean_score_dict = load_object(full_path_to_object='/media/db242421/db242421_data/'
+                                                  'AICHA_test/mean_accuracy_score.pkl')
+
 # bar plot of classification results for the different metrics
 plt.figure()
 sns.barplot(x=list(mean_score_dict.keys()), y=list(mean_score_dict.values()))

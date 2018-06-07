@@ -19,6 +19,8 @@ import numpy as np
 from sklearn.svm import LinearSVC
 from joblib import Parallel, delayed
 import time
+from scipy.stats import norm
+from statsmodels.stats.multitest import multipletests
 
 
 def timer(start, end):
@@ -312,3 +314,80 @@ def rank_top_features_weight(coefficients_array, top_features_number,
     top_weights = coefficients_array[top_coefficients_indices_[:, 0], top_coefficients_indices_[:, 1]]
 
     return top_weights, top_coefficients_indices_, features_labels_couple
+
+
+def features_weights_max_t_correction(null_distribution_features_weights,
+                                      normalized_mean_weight):
+    """Compute features weight corrected p values with
+    the estimated null distribution of normalized mean features weight.
+
+    Parameters
+    ----------
+    null_distribution_features_weights: numpy.ndarray, shape (n_permutations, n_features)
+        The estimated null distribution of normalized mean of  features weights
+        estimated with class labels permutations, and bootstrap.
+    normalized_mean_weight: numpy.ndarray, shape (n_features, )
+        The normalized mean of features weight estimated on bootstrapped sample.
+
+    Returns
+    -------
+    output 1: numpy.ndarray, shape (
+    """
+    # Retrieve the number of permutation and features
+    n_permutations = null_distribution_features_weights.shape[0]
+    n_features = null_distribution_features_weights.shape[1]
+
+    null_min_and_max_distribution = np.zeros((n_permutations, 2))
+
+    # Find minimum and maximum weight in the normalized mean for each permutations
+    null_min_and_max_distribution[:, 0], null_min_and_max_distribution[:, 1] = \
+        null_distribution_features_weights.min(axis=1), \
+        null_distribution_features_weights.max(axis=1)
+
+    # Compare each edges weight from the true mean weight normalized distribution to the minimum and
+    # maximum null estimated distribution.
+
+    # null distribution for maximum and minimum normalized weight
+    sorted_null_maximum_dist = sorted(null_min_and_max_distribution[:, 1])
+    sorted_null_minimum_dist = sorted(null_min_and_max_distribution[:, 0])
+
+    # p values array
+    p_values_max = np.zeros(n_features)
+    p_values_min = np.zeros(n_features)
+
+    for feature in range(normalized_mean_weight.shape[0]):
+        p_values_max[feature] = \
+            (len(np.where(sorted_null_maximum_dist > normalized_mean_weight[feature])[0]) / (n_permutations + 1))
+        p_values_min[feature] = \
+            (len(np.where(sorted_null_minimum_dist < normalized_mean_weight[feature])[0]) / (n_permutations + 1))
+
+    return sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min
+
+
+def features_weights_parametric_correction(null_distribution_features_weights,
+                                           normalized_mean_weight,
+                                           method='fdr_bh',
+                                           alpha=.05):
+
+    # Compute the p-values in a parametric way
+    # The mean normalized features weight over all permutation
+    mean_normalized_weight_perm = null_distribution_features_weights.mean(axis=0)
+    # the standard deviation of the mean normalized weight over all permutation
+    std_normalized_weight_perm = null_distribution_features_weights.std(axis=0)
+    # p values array initialisation
+    p_values_array = np.zeros(normalized_mean_weight.shape[0])
+    # We compute for each features weight the corresponding
+    # p values.
+    for j in range(normalized_mean_weight.shape[0]):
+        p_values_array[j] = 2*min(1-norm.cdf(x=normalized_mean_weight[j],
+                                             loc=mean_normalized_weight_perm[j],
+                                             scale=std_normalized_weight_perm[j]),
+                                  norm.cdf(x=normalized_mean_weight[j],
+                                           loc=mean_normalized_weight_perm[j],
+                                           scale=std_normalized_weight_perm[j]))
+    # Account with multiple comparison
+    reject, p_values_corrected, _, _ = multipletests(pvals=p_values_array,
+                                                     alpha=alpha,
+                                                     method=method)
+
+    return p_values_corrected

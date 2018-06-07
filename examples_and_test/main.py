@@ -889,3 +889,22 @@ sns.barplot(x=list(mean_scores_dict.keys()), y=list(mean_scores_dict.values()))
 plt.xlabel('kind')
 plt.ylabel('Mean scores of classification')
 plt.title('Mean scores of classification using different kind of connectivity')
+
+
+from utils.folders_and_files_management import load_object
+from data_handling.data_management import read_excel_file
+from scipy.io import savemat, loadmat
+
+subjects_matrices = load_object(
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/patient_controls/'
+                        'dictionary/z_fisher_transform_subjects_connectivity_matrices.pkl')
+variable_data = read_excel_file(excel_file_path='/media/db242421/db242421_data/GraphVar/test/avcnn_variables.xlsx',
+                                sheetname='Feuille1')
+subjects_ids = variable_data['Subj_ID']
+
+for subject in subjects_ids:
+    subject_dict = {}
+    subject_mat = subjects_matrices['patients'][subject]['tangent']
+    subject_dict['TangentMatrix_' + subject] = subject_mat
+    savemat(os.path.join('/media/db242421/db242421_data/GraphVar/test/', 'TangentMatrix_' + subject + '.mat'),
+            subject_dict)
