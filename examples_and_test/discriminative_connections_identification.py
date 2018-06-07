@@ -70,7 +70,7 @@ class_labels = np.hstack((-1*np.ones(len(subjects_connectivity_matrices[class_na
 bootstrap_number = 500
 
 # Number of permutation
-n_permutations = 10
+n_permutations = 1000
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
