@@ -17,34 +17,27 @@ import os
 from joblib import Parallel, delayed
 
 # Atlas set up
-atlas_folder = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference'
-atlas_name = 'atlas4D_2.nii'
+atlas_folder = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/AICHA_test/references_img'
+atlas_name = 'AICHA4D.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/AICHA_test/references_img/AICHA4D_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
-colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
-          'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
-          'lightpink']
-# Number of regions in each user defined networks
-networks = [2, 10, 2, 6, 10, 2, 8, 6, 8, 8, 6, 4]
 # Transformation of string colors list to an RGB color array,
 # all colors ranging between 0 and 1.
-labels_colors = (1./255)*monAtlas.UserLabelsColors(networks=networks,
-                                                   colors=colors)
-# Fetch nodes coordinates
+labels_colors = monAtlas.RandomNodesLabelsColors()
 atlas_nodes = monAtlas.GetCenterOfMass()
 # Fetch number of nodes in the parcellation
 n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/dictionary/'
-                        'raw_subjects_connectivity_matrices.pkl')
+    full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/AICHA_test'
+                        'aicha_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
     full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/dictionary/'
                         'z_fisher_transform_subjects_connectivity_matrices.pkl')
@@ -102,14 +95,14 @@ except:
 n_core_physical = psutil.cpu_count(logical=False)
 n_core_phys_and_log = psutil.cpu_count(logical=True)
 
-saving_directory = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/CPM/25_05_2018/LG'
+saving_directory = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/AICHA_test/CPM_AICHA'
 
 
 # Study the impact of threshold: choose the best threshold
 threshold = np.arange(0.001, 0.05, 0.0001)
 r_pos_ = []
 r_neg_ = []
-threshold_result = Parallel(n_jobs=n_core_phys_and_log, verbose=1)(delayed(predict_behavior)(
+threshold_result = Parallel(n_jobs=n_core_physical, verbose=1)(delayed(predict_behavior)(
     vectorized_connectivity_matrices=vectorized_connectivity_matrices,
     behavioral_scores=np.array(behavioral_scores),
     selection_predictor_method='correlation',
@@ -181,7 +174,7 @@ if __name__ == '__main__':
 
         # Permutation test
         tic_ = time.time()
-        results_perm = Parallel(n_jobs=-1, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
+        results_perm = Parallel(n_jobs=n_core_physical, verbose=1, backend="multiprocessing")(delayed(predict_behavior)(
             vectorized_connectivity_matrices=vectorized_connectivity_matrices,
             behavioral_scores=behavioral_scores_permutation_matrix[n_perm, ...],
             selection_predictor_method='correlation',
@@ -261,29 +254,31 @@ if __name__ == '__main__':
             # plot mask on glass brain
             plt.figure()
             plot_connectome(adjacency_matrix=positive_sum_mask, node_coords=atlas_nodes,
-                            node_color=labels_colors, edge_cmap='Reds',
-                            title='Edges with positive correlation to behavior')
+                            edge_cmap='Reds',
+                            title='Edges with positive correlation to behavior',
+                            node_size=10)
             pdf.savefig()
             # plt.show()
 
             # plot mask on glass brain
             plt.figure()
             plot_connectome(adjacency_matrix=negative_sum_mask, node_coords=atlas_nodes,
-                            node_color=labels_colors, edge_cmap='Blues',
-                            title='Edges with negative correlation to behavior')
+                            edge_cmap='Blues',
+                            title='Edges with negative correlation to behavior',
+                            node_size=10)
             pdf.savefig()
             # plt.show()
 
             # Plot matrix of common negative and positive features
             plt.figure()
-            plot_matrix(matrix=positive_sum_mask, labels_colors=labels_colors, mpart='lower',
+            plot_matrix(matrix=positive_sum_mask, mpart='lower',
                         colormap='Reds', horizontal_labels=labels_regions, vertical_labels=labels_regions,
                         linecolor='black', title='Common edges with positive correlation with behavior')
             pdf.savefig()
             # plt.show()
 
             plt.figure()
-            plot_matrix(matrix=negative_sum_mask, labels_colors=labels_colors, mpart='lower',
+            plot_matrix(matrix=negative_sum_mask, mpart='lower',
                         colormap='Blues', horizontal_labels=labels_regions, vertical_labels=labels_regions,
                         linecolor='black', title='Common edges with negative correlation with behavior')
             pdf.savefig()
