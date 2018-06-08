@@ -148,8 +148,8 @@ def bootstrap_svc(features, class_labels,
 
 
 def permutation_bootstrap_svc(features, class_labels_perm,
+                              bootstrap_array_perm,
                               n_permutations=1000,
-                              bootstrap_number=500,
                               n_cpus_bootstrap=1,
                               backend='multiprocessing',
                               verbose_bootstrap=0,
@@ -168,8 +168,8 @@ def permutation_bootstrap_svc(features, class_labels_perm,
         permuted one time.
     n_permutations: int, optional
         The number of permutations. Default is 1000.
-    bootstrap_number: int, optional
-        The number of bootstrap sample to generate. Defaults is 500.
+    bootstrap_array_perm:,numpy.ndarray, shape (n_permutations, n_bootstrap, n_samples)
+        A array which contain a number of bootstrap array indices for each permutations.
     n_cpus_bootstrap: int, optional
         The number CPU to be used concurrently during computation
         on bootstrap sample. Default is one, like a classical
@@ -195,20 +195,16 @@ def permutation_bootstrap_svc(features, class_labels_perm,
     # Initialization of the normalized mean features weight over
     # N permutations
     null_distribution = np.zeros((n_permutations, features.shape[1]))
-    # indices of subjects for bootstrapping
-    indices = np.arange(features.shape[0])
 
     tic_permutations = time.time()
     for n in range(n_permutations):
         if verbose_permutation == 1:
             print('Performing permutation number {} out of {}'.format(n, n_permutations))
         # Generate a bootstrap array indices for the current permutations
-        bootstrap_indices_perm = np.random.choice(a=indices, size=(bootstrap_number, features.shape[0]),
-                                                  replace=True)
         # Perform the classification of each bootstrap sample, but with the labels shuffled
         bootstrap_weight_perm = bootstrap_svc(features=features,
                                               class_labels=class_labels_perm[n, ...],
-                                              bootstrap_array_indices=bootstrap_indices_perm,
+                                              bootstrap_array_indices=bootstrap_array_perm[n, ...],
                                               verbose=verbose_bootstrap,
                                               backend=backend,
                                               n_cpus_bootstrap=n_cpus_bootstrap)
