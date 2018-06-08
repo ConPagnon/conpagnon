@@ -43,20 +43,12 @@ atlas_nodes = monAtlas.GetCenterOfMass()
 n_nodes = monAtlas.GetRegionNumbers()
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
-connectivity_dictionary_name = 'raw_subjects_connectivity_matrices.pkl'
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/' \
+              'All_impaired_non_impaired_lang'
+connectivity_dictionary_name = 'connectivity_matrices_all_impaired_non_impaired.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder, connectivity_dictionary_name))
 
-# Optional: drop some subjects of the subjects matrices dictionary
-subjects_to_drop = ['sub18_mg110111', 'sub21_yg120001', 'sub23_lf120459', 'sub26_as110192',
-                    'sub41_sa130332', 'sub20_hd120032', 'sub24_ed110159', 'sub25_ec110149',
-                    'sub38_mv130274', 'sub37_la130266', 'sub02_rf110332', 'sub03_mc120272',
-                    'sub01_rm110247']
-
-for subject in subjects_to_drop:
-    subjects_connectivity_matrices['patients'].pop(subject, None)
-
-class_names = ['controls', 'patients']
+class_names = ['L_Clin_Atyp_pat', 'L_Clin_Typ_pat']
 metric = 'tangent'
 vectorized_connectivity_matrices = sym_matrix_to_vec(
     np.array([subjects_connectivity_matrices[class_name][s][metric] for class_name
@@ -93,9 +85,40 @@ n_cpu_with_logical = psutil.cpu_count(logical=True)
 # Generate a permuted class labels array
 class_labels_permutation_matrix = np.array([np.random.permutation(class_labels) for n in range(n_permutations)])
 
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results'
-report_filename = 'features_identification_controls_LG_ACM_patients_labels_FDR.pdf'
-text_report_filename = 'features_identification_controls_LG_ACM_patients_FDR.txt'
+bootstrap_array_perm = np.random.choice(a=indices,
+                                        size=(n_permutations, bootstrap_number,
+                                              n_subjects),
+                                        replace=True)
+# Sanity check
+for n in range(n_permutations):
+    for b in range(bootstrap_number):
+        bootstrapped_permuted_labels = class_labels_permutation_matrix[n, bootstrap_array_perm[n, b, ...]]
+        count_labels_occurence = len(np.unique(bootstrapped_permuted_labels))
+        if count_labels_occurence == 2:
+            pass
+        else:
+            print(n)
+            print(b)
+            # We replace the problematic bootstrap
+            new_bootstrap_indices = np.random.choice(a=indices, size=len(indices),
+                                                     replace=True)
+            bootstrap_array_perm[n , b, ...] = new_bootstrap_indices
+            new_bootstrap_class_labels_permuted = class_labels_permutation_matrix[n, new_bootstrap_indices]
+            class_labels_permutation_matrix[n, ...] = new_bootstrap_class_labels_permuted
+
+for n in range(n_permutations):
+    for b in range(bootstrap_number):
+        bootstrapped_permuted_labels = class_labels_permutation_matrix[n, bootstrap_array_perm[n, b, ...]]
+        count_labels_occurence = len(np.unique(bootstrapped_permuted_labels))
+        if count_labels_occurence != 2:
+            print(n)
+            print(b)
+
+
+save_directory = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/' \
+                 'All_impaired_non_impaired_lang'
+report_filename = 'features_identification_all_impaired_non_impaired_FDR.pdf'
+text_report_filename = 'features_identification_all_impaired_non_impaired_FDR.txt'
 if __name__ == '__main__':
     # True bootstrap weight
     tic_bootstrap = time.time()
@@ -112,6 +135,7 @@ if __name__ == '__main__':
     # Estimation of null distribution of normalized mean weight
     null_distribution = permutation_bootstrap_svc(features=vectorized_connectivity_matrices,
                                                   class_labels_perm=class_labels_permutation_matrix,
+                                                  bootstrap_array_perm=bootstrap_array_perm,
                                                   n_permutations=n_permutations,
                                                   n_cpus_bootstrap=n_physical,
                                                   verbose_bootstrap=1,
@@ -316,6 +340,7 @@ if __name__ == '__main__':
                             node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
                             title='Significant positive weight after {} correction'.format(correction),
                             edge_cmap='Reds')
+
             pdf.savefig()
 
             # Plot on glass brain the significant negative features weight
@@ -404,3 +429,4 @@ if __name__ == '__main__':
                 significant_positive_features_labels[positive_feature][1],
                 significant_positive_features_indices[positive_feature][0],
                 significant_positive_features_indices[positive_feature][1]))
+
