@@ -11,7 +11,7 @@ Example code: time series extraction with individual atlases
 """
 
 # Groups name to include in the study
-groups = ['patients', 'controls']
+groups = ['LG', 'LD']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -33,9 +33,9 @@ subjects_ID_data_path = \
 # Full to the following directories: individual atlases images,
 # individual text labels files, and individual confounds directories.
 individual_atlases_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/atlas/aicha_atlas'
+    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_V2'
 individual_atlases_labels_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/atlas/aicha_atlas_labels'
+    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_labels_V2'
 individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
@@ -71,5 +71,5 @@ total_extraction_ts = (end - start)/60.
 
 # Save the subjects time series dictionary
 save_object(object_to_save=times_series_individual_atlases,
-            saving_directory='/media/db242421/db242421_data/AICHA_test',
-            filename='times_series_aicha_atlas.pkl')
+            saving_directory='/media/db242421/db242421_data/ConPagnon_data/features_identification_results/LG_LD',
+            filename='times_series_' + groups[0] + '_' + groups[1] + '.pkl')

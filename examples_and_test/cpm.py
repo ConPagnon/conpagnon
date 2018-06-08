@@ -36,7 +36,7 @@ n_nodes = monAtlas.GetRegionNumbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
-    full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/AICHA_test'
+    full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/AICHA_test/'
                         'aicha_connectivity_matrices.pkl')
 Z_subjects_connectivity_matrices = load_object(
     full_path_to_object='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/dictionary/'
