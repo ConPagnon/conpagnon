@@ -15,17 +15,18 @@ from data_handling import atlas
 from plotting.display import plot_matrix
 from utils.folders_and_files_management import save_object
 from matplotlib.backends.backend_pdf import PdfPages
-
+import csv
+from data_handling.data_management import read_excel_file
 
 # Atlas set up
-atlas_folder = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference'
+atlas_folder = 'D:\\FunConnect\\atlas_reference'
 atlas_name = 'atlas4D_2.nii'
 monAtlas = atlas.Atlas(path=atlas_folder,
                        name=atlas_name)
 # Atlas path
 atlas_path = monAtlas.fetch_atlas()
 # Read labels regions files
-labels_text_file = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = 'D:\\FunConnect\\atlas_reference\\atlas4D_2_labels.csv'
 labels_regions = monAtlas.GetLabels(labels_text_file)
 # User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
@@ -43,20 +44,19 @@ atlas_nodes = monAtlas.GetCenterOfMass()
 n_nodes = monAtlas.GetRegionNumbers()
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/' \
-              'All_impaired_non_impaired_lang'
-connectivity_dictionary_name = 'connectivity_matrices_all_impaired_non_impaired.pkl'
+data_folder = 'D:\\FunConnect\\LG_ACM_patients_controls'
+connectivity_dictionary_name = 'LG_acm_controls_connectivity_matrices.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder, connectivity_dictionary_name))
 
-class_names = ['L_Clin_Atyp_pat', 'L_Clin_Typ_pat']
+class_names = ['patients', 'controls']
 metric = 'tangent'
 vectorized_connectivity_matrices = sym_matrix_to_vec(
     np.array([subjects_connectivity_matrices[class_name][s][metric] for class_name
               in class_names for s in subjects_connectivity_matrices[class_name].keys()]),
     discard_diagonal=True)
 # Labels vectors
-class_labels = np.hstack((-1*np.ones(len(subjects_connectivity_matrices[class_names[0]].keys())),
-                          1*np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
+class_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[class_names[0]].keys())),
+                          -1*np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
 
 # Number of Bootstrap (with replacement)
 bootstrap_number = 500
@@ -106,6 +106,7 @@ for n in range(n_permutations):
             new_bootstrap_class_labels_permuted = class_labels_permutation_matrix[n, new_bootstrap_indices]
             class_labels_permutation_matrix[n, ...] = new_bootstrap_class_labels_permuted
 
+print('Verifying that bootstrapped sample labels classes contain two labels....')
 for n in range(n_permutations):
     for b in range(bootstrap_number):
         bootstrapped_permuted_labels = class_labels_permutation_matrix[n, bootstrap_array_perm[n, b, ...]]
@@ -115,10 +116,9 @@ for n in range(n_permutations):
             print(b)
 
 
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/' \
-                 'All_impaired_non_impaired_lang'
-report_filename = 'features_identification_all_impaired_non_impaired_FDR.pdf'
-text_report_filename = 'features_identification_all_impaired_non_impaired_FDR.txt'
+save_directory = 'D:\\FunConnect\\LG_ACM_patients_controls'
+report_filename = 'features_identification_LG_ACM_controls_funco_FDR.pdf'
+text_report_filename = 'features_identification_LG_ACM_controls_funco_FDR.txt'
 if __name__ == '__main__':
     # True bootstrap weight
     tic_bootstrap = time.time()
@@ -126,24 +126,29 @@ if __name__ == '__main__':
     bootstrap_weight = bootstrap_svc(features=vectorized_connectivity_matrices,
                                      class_labels=class_labels,
                                      bootstrap_array_indices=bootstrap_matrix,
-                                     n_cpus_bootstrap=n_physical,
+                                     n_cpus_bootstrap=n_cpu_with_logical,
                                      verbose=1)
     tac_bootstrap = time.time()
     t_bootstrap = tac_bootstrap - tic_bootstrap
 
     normalized_mean_weight = bootstrap_weight.mean(axis=0)/bootstrap_weight.std(axis=0)
+
+    save_object(object_to_save=normalized_mean_weight, saving_directory=save_directory,
+                filename='normalized_mean_weight.pkl')
     # Estimation of null distribution of normalized mean weight
     null_distribution = permutation_bootstrap_svc(features=vectorized_connectivity_matrices,
                                                   class_labels_perm=class_labels_permutation_matrix,
                                                   bootstrap_array_perm=bootstrap_array_perm,
                                                   n_permutations=n_permutations,
-                                                  n_cpus_bootstrap=n_physical,
+                                                  n_cpus_bootstrap=n_cpu_with_logical,
                                                   verbose_bootstrap=1,
                                                   verbose_permutation=1)
 
     # Save the null distribution to avoid
-    save_object(object_to_save=null_distribution, saving_directory=save_directory,
-                filename='null_distribution.pkl')
+    #save_object(object_to_save=null_distribution, saving_directory=save_directory,
+     #           filename='null_distribution.pkl')
+
+    null_distribution = load_object(os.path.join(save_directory, 'null_distribution.pkl'))
 
     if correction == 'max_t':
 
@@ -272,7 +277,7 @@ if __name__ == '__main__':
                 np.array([labels_regions[significant_negative_features_indices[i]] for i
                           in range(significant_negative_features_indices.shape[0])])
     else:
-        # Perform another type of correction
+        # Perform another type of correction like FDR, ....
         p_values_corrected = features_weights_parametric_correction(
             null_distribution_features_weights=null_distribution,
             normalized_mean_weight=normalized_mean_weight,
@@ -291,6 +296,17 @@ if __name__ == '__main__':
                                      dtype=int)
         p_max_significant = np.array((p_values_corrected_array < alpha) & (normalized_mean_weight_array > 0),
                                      dtype=int)
+
+        first_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[0]][s][metric] for s in
+                                            subjects_connectivity_matrices[class_names[0]].keys()]).mean(axis=0)
+        second_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[1]][s][metric] for s in
+                                             subjects_connectivity_matrices[class_names[1]].keys()]).mean(axis=0)
+        # Take the mean difference and masking all connection except the surviving ones for
+        # surviving negative and positive features weight
+        mean_difference_positive_mask = np.multiply(first_class_mean_matrix - second_class_mean_matrix,
+                                                    p_max_significant)
+        mean_difference_negative_mask = np.multiply(first_class_mean_matrix - second_class_mean_matrix,
+                                                    p_min_significant)
 
         with PdfPages(os.path.join(save_directory, report_filename)) as pdf:
 
@@ -343,12 +359,30 @@ if __name__ == '__main__':
 
             pdf.savefig()
 
+            # Plot on glass brain the mean difference in connectivity between
+            # the two groups for surviving positive weight
+            plt.figure()
+            plot_connectome(adjacency_matrix=mean_difference_positive_mask,
+                            node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
+                            title='Mean difference in connectivity {} - {} (positive weights)'.format(
+                                class_names[0],
+                                class_names[1]))
+            pdf.savefig()
+
             # Plot on glass brain the significant negative features weight
             plt.figure()
             plot_connectome(adjacency_matrix=p_min_significant,
                             node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
                             title='Significant negative weight after {} correction'.format(correction),
                             edge_cmap='Blues')
+            pdf.savefig()
+
+            plt.figure()
+            plot_connectome(adjacency_matrix=mean_difference_negative_mask,
+                            node_coords=atlas_nodes, node_color=labels_colors, colorbar=True,
+                            title='Mean difference in connectivity {} - {} (negative weights)'.format(
+                                class_names[0],
+                                class_names[1]))
             pdf.savefig()
 
             # Matrix view of significant positive and negative weight
@@ -430,3 +464,43 @@ if __name__ == '__main__':
                 significant_positive_features_indices[positive_feature][0],
                 significant_positive_features_indices[positive_feature][1]))
 
+    # write in text file some significant pairs, with language scores
+    regions_to_write = significant_positive_features_indices
+    patients_ids = list(subjects_connectivity_matrices['patients'].keys())
+    patients_matrices = np.array([subjects_connectivity_matrices['patients'][s][metric]
+                                  for s in patients_ids])
+    language_scores = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
+                                      sheetname='cohort_functional_data')['language_score']
+
+    gender = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
+                            sheetname='cohort_functional_data')['Sexe']
+
+    lesion_volume = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
+                                    sheetname='cohort_functional_data')['lesion_normalized']
+
+    language_profil = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
+                                      sheetname='cohort_functional_data')['langage_clinique']
+    header = ['subjects', 'connectivity', 'language_score', 'gender', 'lesion_volume', 'language_profil']
+    for region in regions_to_write:
+        region_csv = os.path.join(save_directory, 'pos_connection',
+                                  labels_regions[region[0]] + '_' + labels_regions[region[1]] + '.csv')
+        with open(os.path.join(region_csv), "w", newline='') as csv_file:
+            writer = csv.writer(csv_file, delimiter=',')
+            writer.writerow(header)
+            for line in range(len(patients_ids)):
+                writer.writerow([patients_ids[line], patients_matrices[line, region[0], region[1]],
+                                 language_scores.loc[patients_ids[line]], gender[patients_ids[line]],
+                                 lesion_volume[patients_ids[line]], language_profil[patients_ids[line]]])
+
+from nilearn.connectome import ConnectivityMeasure
+
+# figure vite fait
+network_to_plot = ['DMN', 'Executive',
+                   'Language',  'MTL',
+                   'Salience', 'Sensorimotor', 'Visuospatial',
+                   'Primary_Visual', 'Secondary_Visual',
+                   'Precuneus', 'Basal Ganglia']
+
+
+atlas_xlsx = 'D:\\FunConnect\\regression_data.xlsx'
+atlas_info = read_excel_file(atlas_xlsx, shee)
