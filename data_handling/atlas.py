@@ -19,7 +19,7 @@ ComPagnon version 2.0
 
 """
 
-Création de la classe de base Atlas
+Atlas class for easy manipulation of atlas.
 """
 
 
@@ -45,11 +45,7 @@ class Atlas:
     GetCenterOfMass
         Return tha array of coordinates of center of mass to
         each atlas regions.
-        
-    RandomNodesLabelsColors
-        Generate an array of randoms colors to the labels for
-        display purposes.
-        
+
     UserLabelsColors
         Generate an array of users defined colors to the 
         labels for display purpose.
@@ -79,7 +75,7 @@ class Atlas:
         """
         return os.path.join(self.path, self.name)
         
-    def loadAtlas(self): 
+    def load_atlas(self):
         """Load the atlas image and return the corresponding
         4D numpy array.
         
@@ -89,12 +85,12 @@ class Atlas:
         atlas_data = atlas_obj.get_data()
         return atlas_data
     
-    def GetRegionNumbers(self):
+    def get_region_numbers(self):
         
         """Return the number of regions of the atlas
         
         """
-        atlas_data = self.loadAtlas()
+        atlas_data = self.load_atlas()
         region_numbers = atlas_data.shape[3]
         return region_numbers
         
@@ -132,50 +128,32 @@ class Atlas:
             
         return labels
         
-    def GetCenterOfMass(self, asanarray = False):
+    def get_center_of_mass(self, asanarray=False):
         """Compute centers of mass of the different atlas regions.
         
         Parameters
         ----------
-        
         asanarray : bool, optional
             If True, then the array are return if numpy.array of 
             shape (number of regions, 3).
             
         Returns
         -------
-        
         output : list or numpy.array
             The coordinates of the centers of mass for each regions 
             of the atlas.
 
-        
         """
         
-        regions_center = [plotting.find_xyz_cut_coords(roi) for roi in image.iter_img(imgs= 
-                          os.path.join(self.path, self.name))]
+        regions_center = [plotting.find_xyz_cut_coords(roi) for roi in image.iter_img(
+            imgs=os.path.join(self.path, self.name))]
     
         if asanarray:
             regions_center = np.array(regions_center)
         
         return regions_center
-    
-    
-    def RandomNodesLabelsColors(self):
-        """Generates randoms labels colors for each label of the atlas.
-        
-        """
-        # On recupere le nombres de labels, soit le nombre de régions
-        n_labels = self.GetRegionNumbers()
-        
-        # On genere un tableaux, de triplet reprensentant une couleur dans l'espace RGB
-        nodes_colors = np.random.rand(n_labels, 3)
-        
-        random_nodes_colors = dict([(i,nodes_colors[i]) for i in range(n_labels)])
-        
-        return random_nodes_colors
-        
-    def UserLabelsColors(self, networks, colors):
+
+    def user_labels_colors(self, networks, colors):
         """Generates user defined labels colors for each label of the atlas.
         
         Parameters 
@@ -202,42 +180,31 @@ class Atlas:
         [1] https://matplotlib.org/examples/color/named_colors.html
         
         """
-        # nombre de reseaux entré
+        # Number of network detected
         n_networks = len(networks)
-        # Nombre de couleurs entré
+        # Number of colors, must match the number of network
         n_colors = len(colors)
 
-        
-        #Si le nombre de couleurs diffère de celui du nombre de reseaux on 
-        #choisit les couleurs de facon aléatoire et on affiche un warning
-        if n_networks != n_colors:
-            warnings.warn("Le nombre de couleur est differente du nombre de reseau,les couleurs seront choisies au hasard")
-            random_colors = self.RandomNodesLabelsColors()
-            labels_colors = np.array(random_colors.values())
-        elif n_networks == n_colors:
-            #On convertis les noms en couleurs RGB
-            name_colors_to_rgb = [ webcolors.name_to_rgb(colors[i]) for i in range(n_colors) ]
-            #On convertis la liste de tuple en tableaux de tableaux
-            rgb_labels_colors = np.array(name_colors_to_rgb)
-            #Je crée un labels factice de zeros pour pouvoir enmpiler 
-            #les couleurs des different reseaux
-            labels_colors = np.zeros([1,3])
-            for i in range(n_networks):
-                #Je crée un tableau de labels temporaire pour le reseaux i
-                tmp_labels_colors = np.zeros([networks[i], 3])
-                #On remplis tous les labels appartenant au reseaux i par la bonne 
-                #couleur
-                tmp_labels_colors[:] = rgb_labels_colors[i]
-                #On concatene le tableaux de labels du reseau i avec le tableau 
-                #general regroupant toutes les couleurs
-                labels_colors = np.append(labels_colors, tmp_labels_colors,axis=0)
-            #On efface la premiere ligne qui était un labels factice
-            labels_colors = np.delete(labels_colors, 0, axis = 0)
+        name_colors_to_rgb = [webcolors.name_to_rgb(colors[i]) for i in range(n_colors)]
+        # convert string color name to rgb triplet
+        rgb_labels_colors = np.array(name_colors_to_rgb)
+        # Fill an array containing the colors for each regions, according to
+        # network groups
+        labels_colors = np.zeros([1,3])
+        for i in range(n_networks):
+            # temporary array for current networks labels
+            tmp_labels_colors = np.zeros([networks[i], 3])
+            # Fill the temporary array with the labels corresponding to the current network
+            tmp_labels_colors[:] = rgb_labels_colors[i]
+            # We append the current network labels colors array to the general array
+            labels_colors = np.append(labels_colors, tmp_labels_colors,axis=0)
+        # Delete the first line
+        labels_colors = np.delete(labels_colors, 0, axis=0)
         return labels_colors
 
 
 def fetch_atlas_functional_network(atlas_excel_file, sheetname, network_column_name):
-    """Return a dictionnary containing information for all functional networks.
+    """Return a dictionary containing information for all functional networks.
        Information for all network is simply fetch in the excel file.
 
     Parameters
@@ -260,10 +227,8 @@ def fetch_atlas_functional_network(atlas_excel_file, sheetname, network_column_n
     # Find the different network
     # List of networks
     networks_name_list = list(set(df[network_column_name]))
-    # number of networks
-    n_networks = len(networks_name_list)
 
-    # Create a dictionnary with networks name as keys, and all the corresponding information columns
+    # Create a dictionary with networks name as keys, and all the corresponding information columns
     # as values.
     networks_dictionary = dict.fromkeys(networks_name_list)
     # Group by functional network according to the labels in network_column_name
@@ -317,5 +282,61 @@ def generate_3d_img_network(reference_4datlas, atlas_information_xlsx_file, netw
             # Save the network 3D image in NiFti format
             nb.save(img=nb.Nifti1Image(dataobj=network_3d_array, affine=atlas_affine),
                     filename=os.path.join(save_network_img_directory, '3d_labels_' + network + '.nii'))
+
+
+def closest_colour(requested_colour):
+    min_colours = {}
+    for key, name in webcolors.css3_hex_to_names.items():
+        r_c, g_c, b_c = webcolors.hex_to_rgb(key)
+        rd = (r_c - requested_colour[0]) ** 2
+        gd = (g_c - requested_colour[1]) ** 2
+        bd = (b_c - requested_colour[2]) ** 2
+        min_colours[(rd + gd + bd)] = name
+    return min_colours[min(min_colours.keys())]
+
+
+def get_colour_name(requested_colour):
+    try:
+        closest_name = actual_name = webcolors.rgb_to_name(requested_colour)
+    except ValueError:
+        closest_name = closest_colour(requested_colour)
+        actual_name = None
+    return actual_name, closest_name
+
+
+def fetch_atlas(atlas_folder, atlas_name, labels_text_file=None,
+                colors_labels='auto',
+                network_regions_number='auto',
+                labels='auto'):
+    """Return important information from an atlas file.
+
+    """
+
+    atlas_ = Atlas(path=atlas_folder,
+                   name=atlas_name)
+
+    # Fetch nodes coordinates
+    atlas_nodes = atlas_.get_center_of_mass()
+    # Fetch number of nodes in the atlas
+    n_nodes = atlas_.get_region_numbers()
+    # Atlas path
+    if labels == 'auto':
+        labels_regions = np.arange(n_nodes)
+    else:
+        labels_regions = atlas_.GetLabels(labels_text_file)
+    if (colors_labels == 'auto') & (type(network_regions_number) == list):
+        n_network = len(network_regions_number)
+        # Generate n_network random colors
+        random_colors = np.random.randint(0, 256, size=(n_network, 3))
+        # Convert list of triplet to name with webcolors
+        regions_colors_name = [get_colour_name(random_colors[i])[1] for i in range(n_network)]
+        # Generate the colors for each labels according to the network they belong
+        labels_colors = atlas_.user_labels_colors(networks=network_regions_number,
+                                                  colors=regions_colors_name)
+    else:
+        labels_colors = atlas_.user_labels_colors(networks=network_regions_number,
+                                                  colors=colors_labels)
+
+    return atlas_nodes, labels_regions, labels_colors, n_nodes
 
 
