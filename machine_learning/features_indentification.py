@@ -13,6 +13,10 @@ References
        brain decoding", IEEE Transactions on Medical Imaging, 2015.
 
 Author: Dhaif BEKHA.
+
+
+# TODO: code a function permutation_svc to estimate the null distribution without
+# TODO: bootstrapping, because when sample size is too small, bootstrap with replacement fail.
 """
 
 import numpy as np
@@ -286,6 +290,27 @@ def remove_reversed_duplicates(iterable):
 
 def rank_top_features_weight(coefficients_array, top_features_number,
                              features_labels):
+    """Establish a ranking of the most important features from the classifier, based
+    on weights magnitude.
+
+    Parameters
+    ----------
+    coefficients_array: numpy.ndarray, shape (n_features, n_features)
+        The 2D array containing the features weights to rank.
+    top_features_number: int
+        The desired number of top features.
+    features_labels: list
+        The features labels list
+
+    Returns
+    -------
+    output 1: numpy.ndarray, shape (n_top_features + 1, )
+        The desired top features weights
+    output 2: numpy.ndarray, shape (n_top_features +1, 2)
+        The positions of each top features weights
+    output 3: numpy.ndarray, shape (n_top_features +1, 2)
+        The roi labels couple corresponding to top features.
+    """
 
     # Find the k largest/smallest index couple coefficients in the array
     top_positive_coefficients_indices = k_largest_index_argsort(arr=coefficients_array, k=top_features_number,
@@ -319,10 +344,10 @@ def features_weights_max_t_correction(null_distribution_features_weights,
 
     Parameters
     ----------
-    null_distribution_features_weights: numpy.ndarray, shape (n_permutations, n_features)
+    null_distribution_features_weights: numpy.ndarray, shape (n_permutations, (n_features*(n_features - 1)/2))
         The estimated null distribution of normalized mean of  features weights
         estimated with class labels permutations, and bootstrap.
-    normalized_mean_weight: numpy.ndarray, shape (n_features, )
+    normalized_mean_weight: numpy.ndarray, shape ( (n_features*(n_features - 1)/2), )
         The normalized mean of features weight estimated on bootstrapped sample.
 
     Returns
@@ -364,6 +389,28 @@ def features_weights_parametric_correction(null_distribution_features_weights,
                                            normalized_mean_weight,
                                            method='fdr_bh',
                                            alpha=.05):
+    """Parametric estimation of p-values for each features weight using the estimated
+    null distribution and fitting it's mean and standard deviation with normal law.
+
+    Parameters
+    ----------
+    null_distribution_features_weights: numpy.ndarray of shape (n_permutation,  (n_features*(n_features - 1)/2))
+        The normalized mean features weights for each permutations.
+    normalized_mean_weight: numpy.ndarray, shape ( (n_features*(n_features - 1)/2), )
+        The estimated normalized mean features weights from bootstrapped samples.
+    method: str, optional
+        The correction method. There are multiple possible choices, please
+        consults the statsmodels library. Default is the False Discovery Rate
+        correction (FDR).
+    alpha: float, optional
+        The type I error rate threshold. Default is 0.05.
+
+    Returns
+    -------
+    output: numpy.ndarray, shape ((n_features*(n_features - 1)/2), )
+        The corrected p-values array.
+
+    """
 
     # Compute the p-values in a parametric way
     # The mean normalized features weight over all permutation
@@ -387,3 +434,95 @@ def features_weights_parametric_correction(null_distribution_features_weights,
                                                      method=method)
 
     return p_values_corrected
+
+
+def find_top_features(normalized_mean_weight_array, labels_regions, top_features_number=50):
+    """Find the top features weight in the normalized mean weight array, and mask the other
+    features weight outside the ranking.
+
+    Parameters
+    ----------
+    normalized_mean_weight_array: numpy.ndarray shape (n_features,n_features)
+        The array of each normalized mean feature weight, computed after bootstrapping.
+    labels_regions: list
+        The list of feature label.
+    top_features_number: int
+        The top features number to keep.
+
+    Returns
+    -------
+    output 1: numpy.ndarray, shape(n_features, n_features)
+        The normalized mean weight array containing the top features weight values
+        and zero elsewhere.
+    output 2: numpy.ndarray, shape(top_features_number + 1, )
+        The top features weights.
+    output 3: numpy.ndarray, shape(top_features_number + 1, 2)
+        The indices of the top features in the normalized mean weights array.
+    output 4: numpy.ndarray, shape(top_features_number + 1, 2)
+        The labels of the top features in the normalized mean weights array.
+    """
+
+    n_nodes = normalized_mean_weight_array.shape[0]
+    # Find the top features among the normalized mean weight distribution
+
+    top_weights, top_coefficients_indices, top_weight_labels = rank_top_features_weight(
+        coefficients_array=normalized_mean_weight_array,
+        top_features_number=top_features_number,
+        features_labels=labels_regions)
+
+    # Plot the top features weight on glass brain
+    top_weights_mask = np.zeros((n_nodes, n_nodes), dtype=bool)
+    top_weights_mask[top_coefficients_indices[:, 0], top_coefficients_indices[:, 1]] = True
+    normalized_mean_weight_array_top_features = np.multiply(normalized_mean_weight_array,
+                                                            top_weights_mask)
+    normalized_mean_weight_array_top_features += normalized_mean_weight_array_top_features.T
+
+    return normalized_mean_weight_array_top_features, top_weights, top_coefficients_indices, top_weight_labels
+
+
+def find_significant_features_indices(p_positive_features_significant,
+                                      p_negative_features_significant,
+                                      features_labels):
+    """Return regions indices and corresponding labels for s
+    surviving features after permutation testing, for both
+    negative and positive features weight.
+
+    Parameters
+    ----------
+    p_positive_features_significant: numpy.ndarray, shape (n_features, n_features)
+        An array containing the weight for a associated significant p-values features for
+        positive weights, and zero elsewhere.
+    p_negative_features_significant: numpy.ndarray, shape (n_features, n_features)
+        An array containing the weight for a associated significant p-values features for
+        negative weights, and zero elsewhere.
+    features_labels: numpy.ndarray, shape (n_features, )
+        The features labels.
+
+    Returns
+    -------
+    output 1: numpy.ndarray, shape (n_significant_features, 2)
+        The indices array of significant positive weighted features.
+    output 2: numpy.ndarray, shape (n_significant_features, 2)
+        The indices array of significant negative weighted features.
+    output 3: numpy.ndarray, shape (n_significant_features, 2)
+        The labels array of significant positive weighted features.
+    output 4: numpy.ndarray, shape (n_significant_features, 2)
+        The labels array of significant negative weighted features.
+
+    """
+
+    significant_positive_features_indices = \
+        np.array(list(remove_reversed_duplicates(np.array(np.where(p_positive_features_significant != 0)).T)))
+    significant_positive_features_labels = \
+        np.array([features_labels[significant_positive_features_indices[i]] for i
+                  in range(significant_positive_features_indices.shape[0])])
+
+    significant_negative_features_indices = \
+        np.array(list(remove_reversed_duplicates(np.array(np.where(p_negative_features_significant != 0)).T)))
+
+    significant_negative_features_labels = \
+        np.array([features_labels[significant_negative_features_indices[i]] for i
+                  in range(significant_negative_features_indices.shape[0])])
+
+    return significant_positive_features_indices, significant_negative_features_indices, \
+           significant_positive_features_labels, significant_negative_features_labels
