@@ -30,9 +30,9 @@ labels_regions = monAtlas.GetLabels(labels_text_file)
 # Transformation of string colors list to an RGB color array,
 # all colors ranging between 0 and 1.
 labels_colors = monAtlas.RandomNodesLabelsColors()
-atlas_nodes = monAtlas.GetCenterOfMass()
+atlas_nodes = monAtlas.get_center_of_mass()
 # Fetch number of nodes in the parcellation
-n_nodes = monAtlas.GetRegionNumbers()
+n_nodes = monAtlas.get_region_numbers()
 
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
