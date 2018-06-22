@@ -4,7 +4,6 @@ from nilearn import image
 from nilearn import plotting
 import pandas as pd
 import webcolors
-import warnings
 import nibabel as nb
 
 # !/usr/bin/env python3
@@ -304,10 +303,11 @@ def get_colour_name(requested_colour):
     return actual_name, closest_name
 
 
-def fetch_atlas(atlas_folder, atlas_name, labels_text_file=None,
+def fetch_atlas(atlas_folder, atlas_name,
                 colors_labels='auto',
                 network_regions_number='auto',
-                labels='auto'):
+                labels='auto',
+                normalize_colors = False):
     """Return important information from an atlas file.
 
     """
@@ -323,7 +323,9 @@ def fetch_atlas(atlas_folder, atlas_name, labels_text_file=None,
     if labels == 'auto':
         labels_regions = np.arange(n_nodes)
     else:
-        labels_regions = atlas_.GetLabels(labels_text_file)
+        labels_regions = atlas_.GetLabels(labels)
+    # if the user give a list containing the number of regions in each networks,
+    # but not the colors
     if (colors_labels == 'auto') & (type(network_regions_number) == list):
         n_network = len(network_regions_number)
         # Generate n_network random colors
@@ -333,9 +335,24 @@ def fetch_atlas(atlas_folder, atlas_name, labels_text_file=None,
         # Generate the colors for each labels according to the network they belong
         labels_colors = atlas_.user_labels_colors(networks=network_regions_number,
                                                   colors=regions_colors_name)
+        if normalize_colors:
+            labels_colors = (1/255)*labels_colors
+    # if the user doesn't give any colors labels nor networks region number
+    # we create random color for each regions labels
+    elif (colors_labels == 'auto') & (network_regions_number == 'auto'):
+        # Generate n_network random colors
+        random_colors = np.random.randint(0, 256, size=(n_nodes, 3))
+        # Convert list of triplet to name with webcolors
+        regions_colors_name = [get_colour_name(random_colors[i])[1] for i in range(n_nodes)]
+        # Generate the colors for each labels according to the network they belong
+        labels_colors = regions_colors_name
+        if normalize_colors:
+            labels_colors = (1/255)*np.array(labels_colors)
     else:
         labels_colors = atlas_.user_labels_colors(networks=network_regions_number,
                                                   colors=colors_labels)
+        if normalize_colors:
+            labels_colors = (1/255)*labels_colors
 
     return atlas_nodes, labels_regions, labels_colors, n_nodes
 
