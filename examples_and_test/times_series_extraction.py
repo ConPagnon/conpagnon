@@ -11,7 +11,7 @@ Example code: time series extraction with individual atlases
 """
 
 # Groups name to include in the study
-groups = ['LG', 'LD']
+groups = [ 'patients', 'controls']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -71,5 +71,5 @@ total_extraction_ts = (end - start)/60.
 
 # Save the subjects time series dictionary
 save_object(object_to_save=times_series_individual_atlases,
-            saving_directory='/media/db242421/db242421_data/ConPagnon_data/features_identification_results/LG_LD',
-            filename='times_series_' + groups[0] + '_' + groups[1] + '.pkl')
+            saving_directory='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary',
+            filename='times_series_individual_atlases.pkl')

@@ -8,11 +8,13 @@ from data_handling.data_management import read_csv
 from plotting.display import plot_matrix
 import os
 
-saving_data_dir = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/LG_LD'
+saving_data_dir = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
 
 # Load the time series dictionary
-times_series = load_object(os.path.join(saving_data_dir, 'times_series_LG_LD.pkl'))
+times_series = load_object(os.path.join(saving_data_dir,
+                                        'times_series_individual_atlases.pkl'))
 
+groups = list(times_series.keys())
 # For some reason, you may want to discard some subjects (optional), comment with #
 # if you don't
 # subjects_to_drop = ['sub13_vl110480', 'sub14_rs120006', 'sub43_mc130373', 'sub40_np130304',
@@ -35,7 +37,7 @@ connectivity_matrices = ccm.individual_connectivity_matrices(
 # Save the connectivity matrices dictionary
 save_object(object_to_save=connectivity_matrices,
             saving_directory=saving_data_dir,
-            filename='connectivity_matrices_LG_LD.pkl')
+            filename='connectivity_matrices_' + groups[0] + '_' + groups[1] + '.pkl')
 
 # Compute the mean connectivity matrices of each groups in
 # the dictionary
@@ -46,7 +48,7 @@ mean_connectivity_matrices = ccm.group_mean_connectivity(
 # Save the mean connectivity matrices dictionary
 save_object(object_to_save=mean_connectivity_matrices,
             saving_directory=saving_data_dir,
-            filename='mean_connectivity_matrices_LG_LD.pkl')
+            filename='mean_connectivity_matrices_' + groups[0] + '_' + groups[1] + '.pkl')
 
 
 atlas_labels = read_csv(csv_file='/media/db242421/db242421_data/AICHA_test/aicha_labels.csv')['labels']
