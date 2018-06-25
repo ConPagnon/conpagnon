@@ -9,15 +9,10 @@ from plotting import display
 from matplotlib.backends import backend_pdf
 from data_handling import data_management
 import os
-import errno
 import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy.stats import ttest_ind
-from statsmodels.sandbox.stats.multicomp import multipletests
-from random import sample
 from math import ceil
 # Reload all module
 importlib.reload(data_management)
@@ -43,26 +38,21 @@ Created on Mon Sep 18 16:37:22 2017
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
-monAtlas = atlas.Atlas(path=atlas_folder,
-                       name=atlas_name)
-# Atlas path
-atlas_path = monAtlas.fetch_atlas()
-# Read labels regions files
 labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
-labels_regions = monAtlas.GetLabels(labels_text_file)
-# User defined colors for labels ROIs regions
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
           'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
           'lightpink']
 # Number of regions in each user defined networks
 networks = [2, 10, 2, 6, 10, 2, 8, 6, 8, 8, 6, 4]
-# Transformation of string colors list to an RGB color array,
-# all colors ranging between 0 and 1.
-labels_colors = (1./255) * monAtlas.user_labels_colors(networks=networks, colors=colors)
-# Fetch nodes coordinates
-atlas_nodes = monAtlas.get_center_of_mass()
-# Fetch number of nodes in the parcellation
-n_nodes = monAtlas.get_region_numbers()
+# Atlas path
+# Read labels regions files
+atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
+    atlas_folder=atlas_folder,
+    atlas_name=atlas_name,
+    network_regions_number=networks,
+    colors_labels=colors,
+    labels=labels_text_file,
+    normalize_colors=True)
 
 # Groups name to include in the study
 groupes = ['patients', 'controls']
@@ -94,9 +84,13 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LG_LangScore'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls'
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
+# Figure directory which can be useful for illustrating
+output_figure_directory_path = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/figures'
+output_figure_directory = data_management.create_directory(directory=output_figure_directory_path,
+                                                           erase_previous=True)
 # Cohort behavioral data
 cohort_excel_file_path = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
@@ -182,8 +176,8 @@ raw_data_color1, raw_data_color2, raw_data_color3 = 'blue', 'red', 'green'
 hist_color = ['blue', 'red', 'green']
 fit_color = ['blue', 'red', 'green']
 # Display results
-# with backend_pdf.PdfPages(os.path.join(directory, 'overall_connectivity_distribution.pdf')) as pdf:
-for kind in kinds:
+with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'overall_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
         plt.figure()
         for groupe in groupes:
             display.display_gaussian_connectivity_fit(
@@ -196,8 +190,8 @@ for kind in kinds:
                 xtitle='Functional connectivity coefficient', ytitle='proportion of edges',
                 legend_fitted='{} gaussian fitted distribution'.format(groupe),
                 legend_data=groupe, display_fit='no', ms=0.5)
-        #plt.show()
-#        pdf.savefig()
+        pdf.savefig()
+        plt.show()
 # Extract homotopic connectivity coefficients on connectivity matrices
 # Homotopic roi couple position in the connectivity matrices.
 homotopic_roi_indices = np.array([
@@ -223,11 +217,29 @@ try:
 except ValueError:
     print('Number of regions in the left and the right side are not equal !')
 
-# Extract from the Z fisher subject connectivity dictionnary the connectivity coefficients of interest
+# Extract from the Z fisher subject connectivity dictionary the connectivity coefficients of interest
 homotopic_connectivity = ccm.subjects_mean_connectivity_(
     subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
     connectivity_coefficient_position=homotopic_roi_indices, kinds=kinds,
     groupes=groupes)
+
+# Compute mean and standard deviation assuming gaussian behavior
+homotopic_distribution_parameters = dict.fromkeys(groupes)
+for groupe in groupes:
+    homotopic_distribution_parameters[groupe] = dict.fromkeys(kinds)
+    for kind in kinds:
+        # Stack the mean homotopic connectivity of each subject for the current group
+        subjects_mean_homotopic_connectivity = np.array(
+            [homotopic_connectivity[groupe][subject][kind]['mean connectivity']
+             for subject in homotopic_connectivity[groupe].keys()])
+        # Estimate the mean and std assuming a Gaussian behavior
+        subjects_mean_homotopic_connectivity_, mean_homotopic_estimation, std_homotopic_estimation = \
+            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_homotopic_connectivity)
+        # Fill a dictionnary saving the results for each groups and kind
+        homotopic_distribution_parameters[groupe][kind] = {
+            'subjects mean homotopic connectivity': subjects_mean_homotopic_connectivity_,
+            'homotopic distribution mean': mean_homotopic_estimation,
+            'homotopic distribution standard deviation': std_homotopic_estimation}
 
 # Left roi first, and right roi in second
 new_roi_order = np.concatenate((left_regions_indices, right_regions_indices), axis=0)
@@ -235,23 +247,27 @@ new_labels_regions = [labels_regions[i] for i in new_roi_order]
 new_labels_colors = labels_colors[new_roi_order, :]
 
 # Group by roi matrix
-for kind in kinds:
-    for groupe in groupes:
-        display.plot_matrix(
-            matrix=Z_mean_groups_connectivity_matrices[groupe][kind][:, new_roi_order][new_roi_order],
-            mpart='all', labels_colors=new_labels_colors, horizontal_labels=new_labels_regions,
-            vertical_labels=new_labels_regions, title='mean ' + kind + ' ' + groupe, linewidths=0)
+with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'mean_connectivity_matrices.pdf')) as pdf:
+    for kind in kinds:
+        for groupe in groupes:
+            display.plot_matrix(
+                matrix=Z_mean_groups_connectivity_matrices[groupe][kind][:, new_roi_order][new_roi_order],
+                mpart='all', labels_colors=new_labels_colors, horizontal_labels=new_labels_regions,
+                vertical_labels=new_labels_regions, title='mean ' + kind + ' ' + groupe, linewidths=0)
+            pdf.savefig()
+            plt.show()
+
+with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'mean_difference_connectivity_matrices.pdf')) as pdf:
+    for kind in kinds:
+        difference = Z_mean_groups_connectivity_matrices[groupes[0]][kind][:, new_roi_order][new_roi_order] - \
+                     Z_mean_groups_connectivity_matrices[groupes[1]][kind][:, new_roi_order][new_roi_order]
+
+        display.plot_matrix(matrix=difference,
+                            mpart='all', labels_colors=new_labels_colors, horizontal_labels=new_labels_regions,
+                            vertical_labels=new_labels_regions,
+                            title=groupes[0] + '-' + groupes[1] + ' mean ' + kind + ' difference', linewidths=0)
+        pdf.savefig()
         plt.show()
-
-for kind in kinds:
-    difference = Z_mean_groups_connectivity_matrices[groupes[0]][kind][:, new_roi_order][new_roi_order] - \
-                 Z_mean_groups_connectivity_matrices[groupes[1]][kind][:, new_roi_order][new_roi_order]
-
-    display.plot_matrix(matrix=difference,
-                        mpart='all', labels_colors=new_labels_colors, horizontal_labels=new_labels_regions,
-                        vertical_labels=new_labels_regions,
-                        title=groupes[0] + '-' + groupes[1] + ' mean ' + kind + ' difference', linewidths=0)
-    plt.show()
 
 # Connectivity intra-network
 intra_network_connectivity_dict, network_dict, network_labels_list, network_label_colors = \
@@ -259,8 +275,10 @@ intra_network_connectivity_dict, network_dict, network_labels_list, network_labe
         subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
         groupes=groupes, kinds=kinds,
         atlas_file=atlas_excel_file,
-        sheetname=sheetname, roi_indices_column_name='atlas4D index',
-        network_column_name='network', color_of_network_column='Color')
+        sheetname=sheetname,
+        roi_indices_column_name='atlas4D index',
+        network_column_name='network',
+        color_of_network_column='Color')
 
 # We can compute the homotopic connectivity for each network, i.e a intra-network homotopic connectivity
 homotopic_intra_network_connectivity_d = dict.fromkeys(network_labels_list)
@@ -277,7 +295,7 @@ for network in network_labels_list:
         kinds=kinds, groupes=groupes)
     homotopic_intra_network_connectivity_d[network] = network_homotopic_d
 
-# Create a homotopic intra-network dictionnary with the same structure as the overall intra network dictionnary
+# Create a homotopic intra-network dictionary with the same structure as the overall intra network dictionary
 homotopic_intranetwork_d = dict.fromkeys(groupes)
 for groupe in groupes:
     homotopic_intranetwork_d[groupe] = dict.fromkeys(Z_subjects_connectivity_matrices[groupe].keys())
@@ -290,6 +308,57 @@ for groupe in groupes:
                 homotopic_intranetwork_d[groupe][subject][kind][network] =\
                     {'network connectivity strength':
                      homotopic_intra_network_connectivity_d[network][groupe][subject][kind]['mean connectivity']}
+
+# estimate mean and std for each network, for the display of the intra-network homotopic connectivity
+network_homotopic_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    network_homotopic_distribution_parameters[network] = dict.fromkeys(groupes)
+    for groupe in groupes:
+        network_homotopic_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+        for kind in kinds:
+            # Stack the mean homotopic connectivity of each subject for the current group
+            subjects_mean_homotopic_connectivity = np.array(
+                [homotopic_intra_network_connectivity_d[network][groupe][subject][kind]['mean connectivity']
+                 for subject in homotopic_intra_network_connectivity_d[network][groupe].keys()])
+            # Estimate the mean and std assuming a Gaussian behavior
+            subjects_mean_homotopic_connectivity_, mean_homotopic_estimation, std_homotopic_estimation = \
+                parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_homotopic_connectivity)
+            # Fill a dictionnary saving the results for each groups and kind
+            network_homotopic_distribution_parameters[network][groupe][kind] = {
+                'subjects mean homotopic connectivity': subjects_mean_homotopic_connectivity_,
+                'homotopic distribution mean': mean_homotopic_estimation,
+                'homotopic distribution standard deviation': std_homotopic_estimation}
+
+# Display for each network the mean homotopic distribution for all group
+# Gaussian fit of homotopic connectivity
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_network_homotopic_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            plt.figure(constrained_layout=True)
+            for groupe in groupes:
+
+                group_connectivity = network_homotopic_distribution_parameters[network][groupe][kind]['subjects mean homotopic connectivity']
+                group_mean = network_homotopic_distribution_parameters[network][groupe][kind]['homotopic distribution mean']
+                group_std = network_homotopic_distribution_parameters[network][groupe][kind]['homotopic distribution standard deviation']
+                display.display_gaussian_connectivity_fit(
+                    vectorized_connectivity=group_connectivity,
+                    estimate_mean=group_mean,
+                    estimate_std=group_std,
+                    raw_data_colors=hist_color[groupes.index(groupe)],
+                    fitted_distribution_color=fit_color[groupes.index(groupe)],
+                    title='',
+                    xtitle='Functional connectivity', ytitle='Density (a.u)',
+                    legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=6)
+                plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                            linewidth=4)
+                plt.title('Mean homotopic distribution  for {} and network {}'.format(kind,network))
+
+            pdf.savefig()
+            plt.show()
+
 
 # Save the whole brain intra-network connectivity
 data_management.csv_from_intra_network_dictionary(subjects_dictionary=intra_network_connectivity_dict,
@@ -330,9 +399,9 @@ group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file=population_text_data,
         sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
-        groupes=['LG'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
+        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
 
-# Create ipsilesional and contralesional dictionnary
+# Create ipsilesional and contralesional dictionary
 ipsi_dict = {}
 contra_dict = {}
 
@@ -366,7 +435,7 @@ for attribute in factor_keys:
             contra_dict[attribute][s] = right_connectivity[attribute][s]
 
 
-# Construct a corresponding ipsilesional and contralesional dictionnary for controls
+# Construct a corresponding ipsilesional and contralesional dictionary for controls
 n_left_tot = len(ipsi_dict[('G')])
 n_right_tot = len(ipsi_dict[('D')])
 
@@ -438,16 +507,16 @@ contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
                n_left_contralesional_controls['controls']])
 
 # Finally, we have to merge ipsilesional/contralesional dictionaries of the different group
-# Merge the dictionnary to build the overall contra and ipsi-lesional
-# subjects connectivity matrices dictionnary
+# Merge the dictionary to build the overall contra and ipsi-lesional
+# subjects connectivity matrices dictionary
 
 # First, the two group of patients
 ipsilesional_patients_connectivity_matrices = {
-    'LG': {**ipsi_dict[('G')]},
+    'patients': {**ipsi_dict[('G')], **ipsi_dict['D']}
     }
 
 contralesional_patients_connectivity_matrices = {
-     'LG': { **contra_dict[('G')]},
+     'patients': { **contra_dict[('G')], **contra_dict['G']},
    }
 
 # Merged overall patients and controls dictionaries
@@ -493,7 +562,7 @@ contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
 # connectivity matrices
 whole_brain_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
     subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
-    groupes=['patients', 'controls'], kinds=kinds)
+    groupes=groupes, kinds=kinds)
 
 
 # Save the ipsilesional intra-network connectivity for each groups and network
@@ -539,7 +608,6 @@ for group in groupes:
                                             delimiter=',')
 
 # Save the whole brain mean connectivity
-groupes = ['patients']
 for group in groupes:
     for kind in kinds:
         data_management.csv_from_dictionary(subjects_dictionary=whole_brain_mean_connectivity,
