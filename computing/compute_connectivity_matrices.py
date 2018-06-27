@@ -19,6 +19,10 @@ from utils import array_operation
 import webcolors
 import itertools
 from math import sqrt
+from data_handling.data_management import remove_duplicate
+
+
+
 
 
 def create_connectivity_mask(time_series_dictionary, groupes):
@@ -1112,7 +1116,7 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
                                                  kinds, atlas_file, sheetname,
                                                  network_column_name, roi_indices_column_name):
     """Compute for each subjects, the inter network connectivity matrices
-    # TODO : Instead of atlas file give the choice to directly give a dictionnary containing the useful information.
+
     Parameters
     ----------
     subjects_individual_matrices_dictionnary: dict
@@ -1167,6 +1171,12 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
     subjects_inter_network_connectivity_matrices = dict.fromkeys(groupes)
     n_network = len(network_labels_list)
 
+    # Build the network labels order from network possible
+    # pair list for plotting purpose
+    network_possible_pairs_array = np.array(network_possible_pairs)
+    network_labels_order = remove_duplicate(seq=list(network_possible_pairs_array[:, 1]))
+    network_labels_order.insert(0, network_possible_pairs[0][0])
+
     # Initialize a dictionnary for each network
     # Extract the inter network connectivity matrix
     for groupe in groupes:
@@ -1213,16 +1223,16 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
     
                 subjects_inter_network_connectivity_matrices[groupe][subject][kind] = \
                     vec_to_sym_matrix(np.array(all_inter_network_strength), diagonal=np.ones(n_network)/sqrt(2))
-    # TODO: quand meme renvoyer un dictionnaire pour les PAIRES de reseaux
-    return subjects_inter_network_connectivity_matrices
+
+    return subjects_inter_network_connectivity_matrices, network_labels_order
 
 
-def mean_of_flatten_connectivity_matrices(subjects_individual_matrices_dictionnary, groupes, kinds):
+def mean_of_flatten_connectivity_matrices(subjects_individual_matrices_dictionary, groupes, kinds):
     """Return the flat mean connectivity for each subjects.
 
     Parameters
     ----------
-    subjects_individual_matrices_dictionnary: dict
+    subjects_individual_matrices_dictionary: dict
         The subjects connectivity dictionnary containing connectivity matrices
         and corresponding mask array for discarded rois, for each group.
     groupes: list
@@ -1244,21 +1254,21 @@ def mean_of_flatten_connectivity_matrices(subjects_individual_matrices_dictionna
     The subjects connectivity matrices shouldn't be vectorized, the shape should
     be (n_features, n_features).
     """
-    connectivity_of_interest = dict.fromkeys(list(subjects_individual_matrices_dictionnary.keys()))
+    connectivity_of_interest = dict.fromkeys(list(subjects_individual_matrices_dictionary.keys()))
     for groupe in groupes:
-        subjects_list = subjects_individual_matrices_dictionnary[groupe].keys()
+        subjects_list = subjects_individual_matrices_dictionary[groupe].keys()
         connectivity_of_interest[groupe] = dict.fromkeys(list(subjects_list))
         for subject in subjects_list:
             connectivity_of_interest[groupe][subject] = dict.fromkeys(kinds)
             for kind in kinds:
                 # Vectorize the array for the current kind
                 diag_connectivity, vectorize_connectivity = array_operation.vectorizer(
-                    numpy_array=subjects_individual_matrices_dictionnary[groupe][subject][kind],
+                    numpy_array=subjects_individual_matrices_dictionary[groupe][subject][kind],
                     discard_diagonal=True,
                     array_type='numeric')
                 # Vectorize the corresponding boolean mask
                 diag_mask, vectorize_mask = array_operation.vectorizer(
-                    numpy_array=subjects_individual_matrices_dictionnary[groupe][subject]['masked_array'],
+                    numpy_array=subjects_individual_matrices_dictionary[groupe][subject]['masked_array'],
                     discard_diagonal=True,
                     array_type='boolean')
                 # Compute the masked mean accounting for discarded ROIs
