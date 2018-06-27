@@ -14,6 +14,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from math import ceil
+from connectivity_statistics import regression_analysis_model
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -95,6 +96,11 @@ output_figure_directory = data_management.create_directory(directory=output_figu
 cohort_excel_file_path = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data')
+
+# Clean the behavioral data by keeping only the subjects in the study
+subjects_list = open(subjects_ID_data_path).read().split()
+behavioral_data = behavioral_data.loc[subjects_list]
+
 
 # save a CSV file format for the behavioral data
 behavioral_data.to_csv(os.path.join(output_csv_directory, 'behavioral_data.csv'))
@@ -246,6 +252,56 @@ new_roi_order = np.concatenate((left_regions_indices, right_regions_indices), ax
 new_labels_regions = [labels_regions[i] for i in new_roi_order]
 new_labels_colors = labels_colors[new_roi_order, :]
 
+# Compute whole brain mean connectivity for each subjects i.e  the mean of the flatten subjects
+# connectivity matrices
+whole_brain_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
+    subjects_individual_matrices_dictionary=Z_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
+
+# Estimate mean and standard deviation of whole brain mean connectivity for each group and kinds
+whole_brain_mean_connectiviy_parameters = dict.fromkeys(groupes)
+for groupe in groupes:
+    whole_brain_mean_connectiviy_parameters[groupe] = dict.fromkeys(kinds)
+    for kind in kinds:
+        # Stack the mean homotopic connectivity of each subject for the current group
+        subjects_mean_whole_brain_connectivity = np.array(
+            [whole_brain_mean_connectivity[groupe][subject][kind]['mean connectivity']
+             for subject in whole_brain_mean_connectivity[groupe].keys()])
+        # Estimate the mean and std assuming a Gaussian behavior
+        subjects_mean_whole_brain_connectivity_, mean_estimation, std_estimation = \
+            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_whole_brain_connectivity)
+        # Fill a dictionnary saving the results for each groups and kind
+        whole_brain_mean_connectiviy_parameters[groupe][kind] = {
+            'subjects mean whole brain connectivity': subjects_mean_whole_brain_connectivity_,
+            'whole brain distribution mean': mean_estimation,
+            'whole brain distribution standard deviation': std_estimation}
+
+# Display results: whole brain mean connectivity
+with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                       'whole_brain_mean_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
+        plt.figure()
+        for groupe in groupes:
+            group_connectivity = whole_brain_mean_connectiviy_parameters[groupe][kind][
+                'subjects mean whole brain connectivity']
+            group_mean = whole_brain_mean_connectiviy_parameters[groupe][kind][
+                'whole brain distribution mean']
+            group_std = whole_brain_mean_connectiviy_parameters[groupe][kind][
+                'whole brain distribution standard deviation']
+            display.display_gaussian_connectivity_fit(
+                vectorized_connectivity=group_connectivity,
+                estimate_mean=group_mean,
+                estimate_std=group_std,
+                raw_data_colors=hist_color[groupes.index(groupe)],
+                fitted_distribution_color=fit_color[groupes.index(groupe)],
+                title='Whole brain mean connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
+                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5)
+            plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                        linewidth=4)
+        pdf.savefig()
+        plt.show()
+
 # Group by roi matrix
 with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'mean_connectivity_matrices.pdf')) as pdf:
     for kind in kinds:
@@ -338,7 +394,6 @@ for kind in kinds:
         for network in network_labels_list:
             plt.figure(constrained_layout=True)
             for groupe in groupes:
-
                 group_connectivity = network_homotopic_distribution_parameters[network][groupe][kind]['subjects mean homotopic connectivity']
                 group_mean = network_homotopic_distribution_parameters[network][groupe][kind]['homotopic distribution mean']
                 group_std = network_homotopic_distribution_parameters[network][groupe][kind]['homotopic distribution standard deviation']
@@ -359,7 +414,6 @@ for kind in kinds:
             pdf.savefig()
             plt.show()
 
-
 # Save the whole brain intra-network connectivity
 data_management.csv_from_intra_network_dictionary(subjects_dictionary=intra_network_connectivity_dict,
                                                   groupes=groupes, kinds=kinds,
@@ -375,6 +429,17 @@ data_management.csv_from_intra_network_dictionary(subjects_dictionary=homotopic_
                                                   field_to_write='network connectivity strength',
                                                   output_directory=output_csv_directory,
                                                   csv_prefix='intra_homotopic')
+# Save the whole brain mean connectivity
+for group in groupes:
+    for kind in kinds:
+        data_management.csv_from_dictionary(subjects_dictionary=whole_brain_mean_connectivity,
+                                            groupes=groupes,
+                                            kinds=kinds,
+                                            field_to_write='mean connectivity',
+                                            header=['subjects', 'mean_connectivity'],
+                                            csv_filename='mean_connectivity.csv',
+                                            output_directory=os.path.join(output_csv_directory, kind),
+                                            delimiter=',')
 
 # Save the whole brain homotopic connectivity
 for group in groupes:
@@ -389,17 +454,14 @@ for group in groupes:
                                             delimiter=',')
 
 # Overall and Within network, ipsilesional and contralesional connectivity differences
-population_text_data = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
-# Drop subjects if wanted
-subjects_to_drop = ['sub40_np130304']
-
-
-# Compute the connectivity matrices dictionnary with factor as keys.
+# Compute the connectivity matrices dictionary with factor as keys.
 group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
     dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file=population_text_data,
-        sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
-        groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
+        population_data_file=cohort_excel_file_path,
+        sheetname='cohort_functional_data',
+        subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        groupes=['patients'], factors=['Lesion'],
+        drop_subjects_list=None)
 
 # Create ipsilesional and contralesional dictionary
 ipsi_dict = {}
@@ -500,11 +562,11 @@ n_right_contralesional_controls, n_right_contra_controls_ids = \
                         'discard_diagonal': False,
                         'vectorize': False}, subjects_id_list=leftout_controls_id)
 
-# Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionnary
+# Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionary
 contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
     new_key='controls',
-    dict_list=[
-               n_left_contralesional_controls['controls']])
+    dict_list=[n_left_contralesional_controls['controls'],
+               n_right_contralesional_controls['controls']])
 
 # Finally, we have to merge ipsilesional/contralesional dictionaries of the different group
 # Merge the dictionary to build the overall contra and ipsi-lesional
@@ -516,7 +578,7 @@ ipsilesional_patients_connectivity_matrices = {
     }
 
 contralesional_patients_connectivity_matrices = {
-     'patients': { **contra_dict[('G')], **contra_dict['G']},
+     'patients': {**contra_dict[('G')], **contra_dict['D']},
    }
 
 # Merged overall patients and controls dictionaries
@@ -553,17 +615,9 @@ contralesional_intra_network_connectivity_dict, \
 
 # Compute of mean ipsilesional distribution
 ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices,
-    groupes=groupes, kinds=kinds)
+    subjects_individual_matrices_dictionary=ipsilesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
 contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
-    groupes=groupes, kinds=kinds)
-# Compute whole brain mean connectivity for each subjects i.e  the mean of the flatten subjects
-# connectivity matrices
-whole_brain_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
-    groupes=groupes, kinds=kinds)
-
+    subjects_individual_matrices_dictionary=contralesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
 
 # Save the ipsilesional intra-network connectivity for each groups and network
 data_management.csv_from_intra_network_dictionary(subjects_dictionary=ipsilesional_intra_network_connectivity_dict,
@@ -607,44 +661,55 @@ for group in groupes:
                                             output_directory=os.path.join(output_csv_directory, kind),
                                             delimiter=',')
 
-# Save the whole brain mean connectivity
-for group in groupes:
-    for kind in kinds:
-        data_management.csv_from_dictionary(subjects_dictionary=whole_brain_mean_connectivity,
-                                            groupes=[group],
-                                            kinds=[kind],
-                                            field_to_write='mean connectivity',
-                                            header=['subjects', 'mean_connectivity'],
-                                            csv_filename='mean_connectivity.csv',
-                                            output_directory=os.path.join('/media/db242421/db242421_data/ConPagnon_data'
-                                                                          '/25042018_Patients_LangScore', kind),
-                                            delimiter=',')
-
-
 # Compute the inter-network connectivity for whole brain:
-subjects_inter_network_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices, groupes=groupes, kinds=kinds,
-    atlas_file=atlas_excel_file, sheetname=sheetname, network_column_name='network',
-    roi_indices_column_name='atlas4D index')
+subjects_inter_network_connectivity_matrices, inter_network_labels = \
+    ccm.inter_network_subjects_connectivity_matrices(
+        subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        groupes=groupes, kinds=kinds,
+        atlas_file=atlas_excel_file,
+        sheetname=sheetname,
+        network_column_name='network',
+        roi_indices_column_name='atlas4D index')
 
 
 # Compute ipsilesional inter-network connectivity
-subjects_inter_network_ipsilesional_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds,
-    atlas_file=atlas_excel_file, sheetname='Hemisphere_regions', network_column_name='network',
-    roi_indices_column_name='index')
+subjects_inter_network_ipsilesional_connectivity_matrices, ipsi_inter_network_labels = \
+    ccm.inter_network_subjects_connectivity_matrices(
+        subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices,
+        groupes=groupes,
+        kinds=kinds,
+        atlas_file=atlas_excel_file,
+        sheetname='Hemisphere_regions', network_column_name='network',
+        roi_indices_column_name='index')
 
 # Compute contralesional inter-network connectivity
-subjects_inter_network_contralesional_connectivity_matrices = ccm.inter_network_subjects_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices, groupes=groupes,
-    kinds=kinds,
-    atlas_file=atlas_excel_file, sheetname='Hemisphere_regions', network_column_name='network',
-    roi_indices_column_name='index')
+subjects_inter_network_contralesional_connectivity_matrices, contra_inter_network_labels = \
+    ccm.inter_network_subjects_connectivity_matrices(
+        subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
+        groupes=groupes,
+        kinds=kinds,
+        atlas_file=atlas_excel_file,
+        sheetname='Hemisphere_regions',
+        network_column_name='network',
+        roi_indices_column_name='index')
 
 # Now save the different dictionary for the current analysis
-# Save the times series dictionary
 save_dict_path = os.path.join(output_csv_directory, 'dictionary')
 dictionary_output_directory = data_management.create_directory(save_dict_path)
+# Save the labels order for inter-network connectivity: whole brain, ipsi/contra-lesional
+folders_and_files_management.save_object(object_to_save=inter_network_labels,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='whole_brain_inter_networks_labels.pkl')
+
+folders_and_files_management.save_object(object_to_save=ipsi_inter_network_labels,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='ipsi_inter_networks_labels.pkl')
+
+folders_and_files_management.save_object(object_to_save=contra_inter_network_labels,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='contra_inter_networks_labels.pkl')
+
+# Save the times series dictionary
 folders_and_files_management.save_object(object_to_save=times_series_individual_atlases,
                                          saving_directory=dictionary_output_directory,
                                          filename='times_series_individual_atlases.pkl')
@@ -660,6 +725,10 @@ folders_and_files_management.save_object(object_to_save=Z_subjects_connectivity_
 folders_and_files_management.save_object(object_to_save=Z_mean_groups_connectivity_matrices,
                                          saving_directory=dictionary_output_directory,
                                          filename='z_fisher_groups_mean_connectivity_matrices.pkl')
+# Save the whole brain mean connectivity dictionary
+folders_and_files_management.save_object(object_to_save=whole_brain_mean_connectivity,
+                                         saving_directory=dictionary_output_directory,
+                                         filename='whole_brain_mean_connectivity.pkl')
 # Save the whole brain homotopic connectivity dictionary
 folders_and_files_management.save_object(object_to_save=homotopic_connectivity,
                                          saving_directory=dictionary_output_directory,
@@ -693,35 +762,21 @@ folders_and_files_management.save_object(object_to_save=subjects_inter_network_c
                                          saving_directory=dictionary_output_directory,
                                          filename='subjects_inter_network_contra_connectivity_matrices.pkl')
 
-# Stastical analysis
-# Overall homotopic, ipsilesional and contralesional connectivity with respect to groups, controling for gender
-# with a linear model
-kinds_to_model  = ['correlation', 'partial correlation', 'tangent']
-groups_in_models = ['LG']
+# Statistical analysis
+kinds_to_model = ['correlation', 'partial correlation', 'tangent']
+groups_in_models = ['patients', 'controls']
 
 # data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
 correction_method = 'FDR'
 # Fit three linear model for the three type of overall connections
-models_to_build = ['mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
+models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
 variables_model = ['Groupe', 'Sexe']
 
 # formulation of the model
-model_formula = 'language_score + Sexe + lesion_normalized'
-
-# Load behavioral data
-# cohort_excel_file_path = 'D:\\regression_data\\regression_data.xlsx'
-behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
-                                                  sheetname='cohort_functional_data')
-#output_csv_directory = 'D:\\text_output_11042018'
-# Clean the data: drop subjects if needed
-drop_subjects_list = ['sub40_np130304']
-if drop_subjects_list:
-    behavioral_data_cleaned = behavioral_data.drop(drop_subjects_list)
-else:
-    behavioral_data_cleaned = behavioral_data
+model_formula = 'Groupe +  Sexe'
 
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
@@ -733,14 +788,24 @@ ipsi_contra_model_network_list = ['DMN', 'Executive',
                       'Salience', 'Sensorimotor', 'Visuospatial',
                       'Primary_Visual', 'Secondary_Visual']
 
-from connectivity_statistics import regression_analysis_model
+
+regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
+                                                          kinds=kinds_to_model,
+                                                          root_analysis_directory=output_csv_directory,
+                                                          whole_brain_model=models_to_build,
+                                                          variables_in_model=variables_model,
+                                                          behavioral_dataframe=behavioral_data,
+                                                          correction_method=['FDR'],
+                                                          alpha=0.05)
+
+
 regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
                                                             kinds=kinds_to_model,
                                                             networks_list=model_network_list,
                                                             root_analysis_directory=output_csv_directory,
                                                             network_model=['intra', 'intra_homotopic'],
                                                             variables_in_model=variables_model,
-                                                            behavioral_dataframe=behavioral_data_cleaned,
+                                                            behavioral_dataframe=behavioral_data,
                                                             correction_method=['FDR', 'maxT'],
                                                             alpha=0.05)
 
@@ -750,25 +815,16 @@ regression_analysis_model.regression_analysis_network_level(groups=groups_in_mod
                                                             root_analysis_directory=output_csv_directory,
                                                             network_model=['ipsi_intra', 'contra_intra'],
                                                             variables_in_model=variables_model,
-                                                            behavioral_dataframe=behavioral_data_cleaned,
+                                                            behavioral_dataframe=behavioral_data,
                                                             correction_method=['FDR','maxT'],
                                                             alpha=0.05)
-
-regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
-                                                          kinds=kinds_to_model,
-                                                          root_analysis_directory=output_csv_directory,
-                                                          whole_brain_model=models_to_build,
-                                                          variables_in_model=variables_model,
-                                                          behavioral_dataframe=behavioral_data_cleaned,
-                                                          correction_method=['FDR', 'maxT'],
-                                                          alpha=0.05)
 
 regression_analysis_model.regression_analysis_whole_brain(groups=['patients'],
                                                           kinds=kinds,
                                                           root_analysis_directory='/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore',
                                                           whole_brain_model=['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional'],
                                                           variables_in_model=['language_score', 'Sexe', 'lesion_normalized'],
-                                                          behavioral_dataframe=behavioral_data_cleaned,
+                                                          behavioral_dataframe=behavioral_data,
                                                           correction_method=['FDR', 'maxT'],
                                                           alpha=0.05)
 
