@@ -301,3 +301,12 @@ def merge_list_dataframes(list_dataframes):
                 list_dataframes)
 
     return df
+
+
+def remove_duplicate(seq):
+    """Remove duplicate in a sequence of items while keeping
+    the order.
+    """
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
