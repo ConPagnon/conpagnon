@@ -69,8 +69,7 @@ colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
 networks = [2, 10, 2, 6, 10, 2, 8, 6, 8, 8, 6, 4]
 # Transformation of string colors list to an RGB color array,
 # all colors ranging between 0 and 1.
-labels_colors = (1./255)*monAtlas.UserLabelsColors(networks=networks,
-                                                   colors=colors)
+labels_colors = (1./255) * monAtlas.user_labels_colors(networks=networks, colors=colors)
 
 from matplotlib import colors
 cmap = colors.ListedColormap(labels_colors)
