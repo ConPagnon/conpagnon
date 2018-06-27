@@ -587,11 +587,9 @@ for kind in kinds:
 
 # Compute of mean ipsilesional distribution
 ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices,
-    groupes=groupes, kinds=kinds)
+    subjects_individual_matrices_dictionary=ipsilesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
 contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
-    groupes=groupes, kinds=kinds)
+    subjects_individual_matrices_dictionary=contralesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
 
 import itertools
 # Perform t-test for all possible pairs without replacement
