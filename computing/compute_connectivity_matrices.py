@@ -13,16 +13,13 @@ from data_handling import atlas
 import numpy as np
 from nilearn import input_data
 from nilearn.connectome import ConnectivityMeasure, vec_to_sym_matrix
-from utils.array_operation import append_masks, masked_arrays_mean, check_2d, vectorizer
+from utils.array_operation import masked_arrays_mean, check_2d, vectorizer
 from copy import deepcopy
 from utils import array_operation
 import webcolors
 import itertools
 from math import sqrt
 from data_handling.data_management import remove_duplicate
-
-
-
 
 
 def create_connectivity_mask(time_series_dictionary, groupes):
@@ -114,7 +111,7 @@ def time_series_extraction_with_individual_atlases(root_fmri_data_directory, gro
         The full path to the data file containing the subjects IDs.
         
     group_data : dict
-        A multi-levels dictionnary structured as follow :
+        A multi-levels dictionary structured as follow :
             - The first keys level is the different groups
             to study.
             - The second level keys is the subjects IDs for
@@ -1192,7 +1189,7 @@ def inter_network_subjects_connectivity_matrices(subjects_individual_matrices_di
                     inter_network_coefficient_to_sum = []
                     inter_network_coefficient_to_sum_mask = []
                     # Fetch the roi index in 4D atlas of the first network
-                    # in the pair via the network dictionnary, and number of rois
+                    # in the pair via the network dictionary, and number of rois
                     first_network_roi_index = network_dict[pair_of_network[0]]['dataframe'][roi_indices_column_name]
                     # Fetch the roi index in 4D atlas of the second network in the pair
                     second_network_roi_index = network_dict[pair_of_network[1]]['dataframe'][roi_indices_column_name]
