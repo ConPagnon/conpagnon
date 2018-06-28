@@ -375,8 +375,8 @@ for network in network_labels_list:
         for kind in kinds:
             # Stack the mean homotopic connectivity of each subject for the current group
             subjects_mean_intra_network_connectivity = np.array(
-                [intra_network_connectivity_dict[network][groupe][subject][kind]['mean connectivity']
-                 for subject in intra_network_connectivity_dict[network][groupe].keys()])
+                [intra_network_connectivity_dict[groupe][subject][kind][network]['network connectivity strength']
+                 for subject in intra_network_connectivity_dict[groupe].keys()])
             # Estimate the mean and std assuming a Gaussian behavior
             subjects_mean_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
                 parametric_tests.functional_connectivity_distribution_estimation(
@@ -389,7 +389,7 @@ for network in network_labels_list:
 
 for kind in kinds:
     with backend_pdf.PdfPages(os.path.join(output_figure_directory,
-                                           kind + 'intra_network_connectivity_distribution.pdf')) as pdf:
+                                           kind + '_intra_network_connectivity_distribution.pdf')) as pdf:
 
         for network in network_labels_list:
             plt.figure(constrained_layout=True)
@@ -1010,11 +1010,19 @@ regression_analysis_model.regression_analysis_internetwork_level(
 output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls'
 results_directory = os.path.join(output_csv_directory, 'regression_analysis')
 output_figure_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/figures'
-model_to_plot = ['mean_connectivity', 'mean_homotpic', 'mean_ipsilesional', 'mean_contralesional']
-model_network_list = ['DMN', 'Executive',
+model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
+# network: ipsi, contra, intra
+model_network_list_1 = ['DMN', 'Executive',
                       'Language',  'MTL',
                       'Salience', 'Sensorimotor', 'Visuospatial',
                       'Primary_Visual', 'Secondary_Visual']
+# network: whole brain scores
+model_network_list_2 = ['DMN', 'Auditory', 'Executive',
+                         'Language', 'Basal_Ganglia', 'MTL',
+                         'Salience', 'Sensorimotor', 'Visuospatial',
+                         'Primary_Visual', 'Precuneus', 'Secondary_Visual']
+
+model_network_list = model_network_list_2
 
 # Colors of network in the order of model networks list
 atlas_information_colors = atlas_information[['network', 'Color']]
@@ -1025,14 +1033,6 @@ network_colors = [np.array(atlas_information_colors.loc[network]['Color'])[0] fo
 # Variable of interest
 variables_of_interest = ['Groupe[T.P]', 'Sexe[T.M]']
 dict_results_variables = dict.fromkeys(variables_of_interest)
-
-# Create network directory for network figures
-for network in model_network_list:
-    for kind in kinds:
-        # Create a directory for each network
-        network_figure_directory = os.path.join(output_figure_directory, network, kind)
-        data_management.create_directory(directory=network_figure_directory,
-                                         erase_previous=True)
 
 # Global connectivity composite scores
 for variable in variables_of_interest:
@@ -1077,7 +1077,8 @@ for variable in variables_of_interest:
         # plt.show()
 
 # Network composite scores measures
-network_model = ['ipsi_intra', 'contra_intra']
+network_model = ['intra_homotopic']
+model_network_list = model_network_list_2
 for tt in network_model:
     for variable in variables_of_interest:
         for kind in kinds:
