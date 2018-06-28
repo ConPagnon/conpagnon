@@ -364,6 +364,59 @@ intra_network_connectivity_dict, network_dict, network_labels_list, network_labe
         network_column_name='network',
         color_of_network_column='Color')
 
+# Estimation of mean intra network connectivity mean and std 
+intra_network_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    intra_network_distribution_parameters[network] = dict.fromkeys(groupes)
+    for groupe in groupes:
+        intra_network_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+        for kind in kinds:
+            # Stack the mean homotopic connectivity of each subject for the current group
+            subjects_mean_intra_network_connectivity = np.array(
+                [intra_network_connectivity_dict[network][groupe][subject][kind]['mean connectivity']
+                 for subject in intra_network_connectivity_dict[network][groupe].keys()])
+            # Estimate the mean and std assuming a Gaussian behavior
+            subjects_mean_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
+                parametric_tests.functional_connectivity_distribution_estimation(
+                    subjects_mean_intra_network_connectivity)
+            # Fill a dictionary saving the results for each groups and kind
+            intra_network_distribution_parameters[network][groupe][kind] = {
+                'subjects mean intra connectivity': subjects_mean_intra_network_connectivity_,
+                'intra distribution mean': mean_intra_estimation,
+                'intra distribution standard deviation': std_intra_estimation}
+
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + 'intra_network_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            plt.figure(constrained_layout=True)
+            for groupe in groupes:
+                group_connectivity = intra_network_distribution_parameters[network][groupe][kind][
+                    'subjects mean intra connectivity']
+                group_mean = intra_network_distribution_parameters[network][groupe][kind][
+                    'intra distribution mean']
+                group_std = intra_network_distribution_parameters[network][groupe][kind][
+                    'intra distribution standard deviation']
+                display.display_gaussian_connectivity_fit(
+                    vectorized_connectivity=group_connectivity,
+                    estimate_mean=group_mean,
+                    estimate_std=group_std,
+                    raw_data_colors=hist_color[groupes.index(groupe)],
+                    fitted_distribution_color=fit_color[groupes.index(groupe)],
+                    title='',
+                    xtitle='Functional connectivity', ytitle='Density (a.u)',
+                    legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=6)
+                plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                            linewidth=4)
+                plt.title('Mean intra connectivity distribution  for {} and network {}'.format(kind,
+                                                                                               network))
+
+            pdf.savefig()
+            plt.show()
+
+
 # We can compute the homotopic connectivity for each network, i.e a intra-network homotopic connectivity
 homotopic_intra_network_connectivity_d = dict.fromkeys(network_labels_list)
 for network in network_labels_list:
@@ -372,7 +425,7 @@ for network in network_labels_list:
     # Extract connectivity coefficient couple corresponding to homotopic regions in the network
     network_homotopic_couple_ind = np.array([couple for couple in homotopic_roi_indices if (couple[0] or couple[1])
                                              in network_roi_ind])
-    # Compute homotopic connectivity dictionnary for the current network
+    # Compute homotopic connectivity dictionary for the current network
     network_homotopic_d = ccm.subjects_mean_connectivity_(
         subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
         connectivity_coefficient_position=network_homotopic_couple_ind,
@@ -417,14 +470,17 @@ for network in network_labels_list:
 # Gaussian fit of homotopic connectivity
 for kind in kinds:
     with backend_pdf.PdfPages(os.path.join(output_figure_directory,
-                                           kind + '_network_homotopic_connectivity_distribution.pdf')) as pdf:
+                                           kind + 'intra_network_connectivity_distribution.pdf')) as pdf:
 
         for network in network_labels_list:
             plt.figure(constrained_layout=True)
             for groupe in groupes:
-                group_connectivity = network_homotopic_distribution_parameters[network][groupe][kind]['subjects mean homotopic connectivity']
-                group_mean = network_homotopic_distribution_parameters[network][groupe][kind]['homotopic distribution mean']
-                group_std = network_homotopic_distribution_parameters[network][groupe][kind]['homotopic distribution standard deviation']
+                group_connectivity = network_homotopic_distribution_parameters[network][groupe][kind][
+                    'subjects mean homotopic connectivity']
+                group_mean = network_homotopic_distribution_parameters[network][groupe][kind][
+                    'homotopic distribution mean']
+                group_std = network_homotopic_distribution_parameters[network][groupe][kind][
+                    'homotopic distribution standard deviation']
                 display.display_gaussian_connectivity_fit(
                     vectorized_connectivity=group_connectivity,
                     estimate_mean=group_mean,
@@ -943,13 +999,32 @@ from plotting.display import t_and_p_values_barplot
 output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls'
 results_directory = os.path.join(output_csv_directory, 'regression_analysis')
 output_figure_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/figures'
-model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
+model_to_plot = ['mean_connectivity', 'mean_homotpic', 'mean_ipsilesional', 'mean_contralesional']
+model_network_list = ['DMN', 'Executive',
+                      'Language',  'MTL',
+                      'Salience', 'Sensorimotor', 'Visuospatial',
+                      'Primary_Visual', 'Secondary_Visual']
+
+# Colors of network in the order of model networks list
+atlas_information_colors = atlas_information[['network', 'Color']]
+atlas_information_colors.set_index('network', inplace=True)
+network_colors = [np.array(atlas_information_colors.loc[network]['Color'])[0] for network in
+                  model_network_list]
 
 # Variable of interest
 variables_of_interest = ['Groupe[T.P]', 'Sexe[T.M]']
 dict_results_variables = dict.fromkeys(variables_of_interest)
-for variable in variables_of_interest:
 
+# Create network directory for network figures
+for network in model_network_list:
+    for kind in kinds:
+        # Create a directory for each network
+        network_figure_directory = os.path.join(output_figure_directory, network, kind)
+        data_management.create_directory(directory=network_figure_directory,
+                                         erase_previous=True)
+
+# Global connectivity composite scores
+for variable in variables_of_interest:
     for kind in kinds:
         # For each king, fetch t values, and corrected p values
         t_values = []
@@ -989,3 +1064,49 @@ for variable in variables_of_interest:
                                    xlabel_size=2)
             pdf.savefig()
         #plt.show()
+
+# Network composite scores measures
+network_model = ['ipsi_intra', 'contra_intra']
+for tt in network_model:
+    for variable in variables_of_interest:
+        for kind in kinds:
+            # For each kind, fetch t values, and corrected p values
+            t_values = []
+            corrected_p_values = []
+            for network in model_network_list:
+                # Read parameters file
+                model_result = data_management.read_csv(
+                    csv_file=os.path.join(results_directory, kind, network, tt + '_parameters.csv'))
+                # Fetch t values, and corrected p values for the current model
+                variable_t_values = np.array(model_result.loc[model_result['variables'] == variable]['t'])[0]
+                t_values.append(variable_t_values)
+                variable_p_values = np.array(model_result.loc[model_result['variables'] == variable][
+                                                 'FDRcorrected_pvalues'])[0]
+                corrected_p_values.append(variable_p_values)
+
+            # Display the barplot for t and p values for each kind and variables
+            with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                                   kind, variable + '_' + tt + '_pdf')) as pdf:
+                t_and_p_values_barplot(t_values=t_values,
+                                       p_values=corrected_p_values,
+                                       alpha_level=alpha,
+                                       xlabel_color=network_colors,
+                                       bar_labels=model_network_list,
+                                       t_xlabel='',
+                                       t_ylabel='t scores',
+                                       p_xlabel='',
+                                       p_ylabel='FDR corrected p values',
+                                       t_title='{} network : {} effect for \n {} - {}. ({})'.format(
+                                           tt,
+                                           variable,
+                                           groupes[0],
+                                           groupes[1],
+                                           kind),
+                                       p_title='{} network: {} effect for \n {} - {}. ({})'.format(
+                                           tt,
+                                           variable,
+                                           groupes[0],
+                                           groupes[1],
+                                           kind),
+                                       xlabel_size=2)
+                pdf.savefig()
