@@ -247,6 +247,34 @@ for groupe in groupes:
             'homotopic distribution mean': mean_homotopic_estimation,
             'homotopic distribution standard deviation': std_homotopic_estimation}
 
+
+with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                       'mean_homotopic_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
+        plt.figure()
+        for groupe in groupes:
+            group_connectivity = homotopic_distribution_parameters[groupe][kind][
+                'subjects mean homotopic connectivity']
+            group_mean = homotopic_distribution_parameters[groupe][kind][
+                'homotopic distribution mean']
+            group_std = homotopic_distribution_parameters[groupe][kind][
+                'homotopic distribution standard deviation']
+            display.display_gaussian_connectivity_fit(
+                vectorized_connectivity=group_connectivity,
+                estimate_mean=group_mean,
+                estimate_std=group_std,
+                raw_data_colors=hist_color[groupes.index(groupe)],
+                fitted_distribution_color=fit_color[groupes.index(groupe)],
+                title='Whole brain mean homotopic connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
+                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5)
+            plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                        linewidth=4)
+        pdf.savefig()
+        plt.show()
+
+
 # Left roi first, and right roi in second
 new_roi_order = np.concatenate((left_regions_indices, right_regions_indices), axis=0)
 new_labels_regions = [labels_regions[i] for i in new_roi_order]
@@ -535,7 +563,8 @@ n_right_ipsilesional_controls, n_right_ipsi_controls_ids = \
 # Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionnary
 ipsilesional_controls_dictionary = dictionary_operations.merge_dictionary(
     new_key='controls',
-    dict_list=[n_left_ipsilesional_controls['controls']])
+    dict_list=[n_left_ipsilesional_controls['controls'],
+               n_right_ipsilesional_controls['controls']])
 
 # In the same, we have to generate, a "contralesional" dictionary for the
 # controls group
@@ -784,11 +813,12 @@ model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Primary_Visual', 'Precuneus', 'Secondary_Visual']
 
 ipsi_contra_model_network_list = ['DMN', 'Executive',
-                      'Language',  'MTL',
-                      'Salience', 'Sensorimotor', 'Visuospatial',
-                      'Primary_Visual', 'Secondary_Visual']
+                                  'Language',  'MTL',
+                                  'Salience', 'Sensorimotor', 'Visuospatial',
+                                  'Primary_Visual', 'Secondary_Visual']
 
-
+# Analysis of whole brain connectivity, whole brain mean homotopic connectivity,
+# mean ipsilesional and contralesional connectivity. Joint correction for 4 models.
 regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
                                                           kinds=kinds_to_model,
                                                           root_analysis_directory=output_csv_directory,
@@ -798,232 +828,164 @@ regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_model
                                                           correction_method=['FDR'],
                                                           alpha=0.05)
 
-
+# Analysis of intra-network mean homotopic connectivity: correction for 12 models.
 regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
                                                             kinds=kinds_to_model,
                                                             networks_list=model_network_list,
                                                             root_analysis_directory=output_csv_directory,
-                                                            network_model=['intra', 'intra_homotopic'],
+                                                            network_model=['intra_homotopic'],
                                                             variables_in_model=variables_model,
                                                             behavioral_dataframe=behavioral_data,
-                                                            correction_method=['FDR', 'maxT'],
+                                                            correction_method=['FDR'],
                                                             alpha=0.05)
-
+# Analysis of mean intra-network connectivity, mean ipsilesional intra-network connectivity,
+# mean contralesional intra-network connectivity. Except for Basal Ganglia, Precuneus,
+# and Auditory because for these network intra-network connectivity is just homotopic
+# connectivity.
 regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
                                                             kinds=kinds_to_model,
                                                             networks_list=ipsi_contra_model_network_list,
                                                             root_analysis_directory=output_csv_directory,
-                                                            network_model=['ipsi_intra', 'contra_intra'],
+                                                            network_model=['intra', 'ipsi_intra', 'contra_intra'],
                                                             variables_in_model=variables_model,
                                                             behavioral_dataframe=behavioral_data,
-                                                            correction_method=['FDR','maxT'],
+                                                            correction_method=['FDR'],
                                                             alpha=0.05)
-
-regression_analysis_model.regression_analysis_whole_brain(groups=['patients'],
-                                                          kinds=kinds,
-                                                          root_analysis_directory='/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore',
-                                                          whole_brain_model=['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional'],
-                                                          variables_in_model=['language_score', 'Sexe', 'lesion_normalized'],
-                                                          behavioral_dataframe=behavioral_data,
-                                                          correction_method=['FDR', 'maxT'],
-                                                          alpha=0.05)
 
 # Inter-network statistic : whole brain, ipsilesional and contralesional
 inter_network_model = 'overall_inter_network'
 # Whole brain internetwork
 # Load the dictionary
 whole_brain_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(output_csv_directory, 'dictionary',  'subjects_inter_network_connectivity_matrices.pkl'))
-
+    full_path_to_object=os.path.join(output_csv_directory, 'dictionary',
+                                     'subjects_inter_network_connectivity_matrices.pkl'))
+# Load the network labels list for plotting purpose when plotting the inter-network
+# matrices
+whole_brain_internetwork_labels = folders_and_files_management.load_object(
+    os.path.join(output_csv_directory, 'dictionary', 'whole_brain_inter_networks_labels.pkl'))
 
 regression_analysis_model.regression_analysis_internetwork_level(
     internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices,
     groups_in_model=groups_in_models,
     behavioral_data_path=cohort_excel_file_path,
     sheet_name='cohort_functional_data',
-    subjects_to_drop=drop_subjects_list,
+    subjects_to_drop=None,
     model_formula=model_formula,
     kinds_to_model=kinds_to_model,
     root_analysis_directory=output_csv_directory,
     inter_network_model=inter_network_model,
     network_labels_list=network_labels_list,
     network_labels_colors=network_label_colors,
-    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
-    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
-    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    pvals_correction_method=['FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
+    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
     alpha=0.05)
 
-    # Ipsilesional inter-network analysis
+# Ipsilesional inter-network analysis
 ipsi_internetwork_model = 'ipsi_inter_network'
 ipsi_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(output_csv_directory,
-                                     'dictionary/subjects_inter_network_ipsi_connectivity_matrices.pkl'))
+    full_path_to_object=os.path.join(
+        output_csv_directory, 'dictionary/subjects_inter_network_ipsi_connectivity_matrices.pkl'))
+
+# Load the network labels list for plotting purpose when plotting the inter-network
+# matrices
+ipsilesional_internetwork_labels = folders_and_files_management.load_object(
+    os.path.join(output_csv_directory, 'dictionary', 'ipsi_inter_networks_labels.pkl'))
 
 regression_analysis_model.regression_analysis_internetwork_level(
     internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices,
     groups_in_model=groups_in_models,
     behavioral_data_path=cohort_excel_file_path,
     sheet_name='cohort_functional_data',
-    subjects_to_drop=drop_subjects_list,
+    subjects_to_drop=None,
     model_formula=model_formula,
     kinds_to_model=kinds_to_model,
     root_analysis_directory=output_csv_directory,
     inter_network_model=ipsi_internetwork_model,
-    network_labels_list=network_labels_list ,
+    network_labels_list=ipsilesional_internetwork_labels,
     network_labels_colors=network_label_colors,
-    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
-    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
-    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    pvals_correction_method=['FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
+    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
     alpha=0.05)
-    # Contralesional inter-network analysis
+
+# Contralesional inter-network analysis
 contra_internetwork_model = 'contra_inter_network'
 contra_internetwork_matrices = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(output_csv_directory,
                                      'dictionary/subjects_inter_network_contra_connectivity_matrices.pkl'))
+# Load the network labels list for plotting purpose when plotting the inter-network
+# matrices
+contralesional_internetwork_labels = folders_and_files_management.load_object(
+    os.path.join(output_csv_directory, 'dictionary', 'contra_inter_networks_labels.pkl'))
 
 regression_analysis_model.regression_analysis_internetwork_level(
     internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices,
     groups_in_model=groups_in_models,
     behavioral_data_path=cohort_excel_file_path,
     sheet_name='cohort_functional_data',
-    subjects_to_drop=drop_subjects_list,
+    subjects_to_drop=None,
     model_formula=model_formula,
     kinds_to_model=kinds_to_model,
     root_analysis_directory=output_csv_directory,
     inter_network_model=contra_internetwork_model,
     network_labels_list=network_labels_list ,
     network_labels_colors=network_label_colors,
-    pvals_correction_method=['maxT', 'FDR'], vectorize=True,
-    discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
-    compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
+    pvals_correction_method=['FDR'], vectorize=True,
+    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
+    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
     alpha=0.05)
 
-
-# Display of results: For each network, take the t-value for : intra-network, homotopic intra network, ipsilesional
-# intra network, contralesional intra-network
-network_to_plot = ['DMN', 'Executive',
-                   'Language',  'MTL',
-                   'Salience', 'Sensorimotor', 'Visuospatial',
-                   'Primary_Visual', 'Secondary_Visual']
-
-from data_handling import data_management
+# Display of the results
 from plotting.display import t_and_p_values_barplot
-from itertools import repeat
-network_color_df = data_management.shift_index_column(atlas_information[['network', 'Color']], 'network')
-
-network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network_to_plot]
-
+# The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
+# mean contralesional
+output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls'
+results_directory = os.path.join(output_csv_directory, 'regression_analysis')
+output_figure_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/figures'
 model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
-bar_label = ['G', 'H', 'CL', 'IPS']
 
-results_directory = '/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore/regression_analysis'
-model_dictionary = dict.fromkeys(network_to_plot)
+# Variable of interest
+variables_of_interest = ['Groupe[T.P]', 'Sexe[T.M]']
+dict_results_variables = dict.fromkeys(variables_of_interest)
+for variable in variables_of_interest:
 
-output_fig_folder = '/media/db242421/db242421_data/ConPagnon_data/figures_Patients_LangScore'
+    for kind in kinds:
+        # For each king, fetch t values, and corrected p values
+        t_values = []
+        corrected_p_values = []
+        for model in model_to_plot:
+            # Read parameters file
+            model_result = data_management.read_csv(
+                csv_file=os.path.join(results_directory, kind, model + '_parameters.csv'))
+            # Fetch t values, and corrected p values for the current model
+            variable_t_values = np.array(model_result.loc[model_result['variables'] == variable]['t'])[0]
+            t_values.append(variable_t_values)
+            variable_p_values = np.array(model_result.loc[model_result['variables'] == variable][
+                                             'FDRcorrected_pvalues'])[0]
+            corrected_p_values.append(variable_p_values)
 
-for network in network_to_plot:
-    all_models_t = []
-    all_models_p = []
-    for model in model_to_plot:
-        model_result = pd.read_csv(os.path.join(results_directory, 'tangent', network,
-                                                model + '_parameters.csv'))
-        all_models_t.append(model_result['t'].loc[1])
-        all_models_p.append(model_result['FDRcorrected_pvalues'].loc[1])
+        # Display the barplot for t and p values for each kind and variables
+        with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind + '_' + variable +
+                                               '_wb_homo_ipsi_contra.pdf')) as pdf:
 
-    model_dictionary[network] = {'t_values': all_models_t, 'p_values': all_models_p}
-
-# For the whole brain model
-whole_brain_t = []
-whole_brain_p = []
-for model in model_to_plot:
-    model_result = pd.read_csv(os.path.join(results_directory, 'tangent', model + '_parameters.csv'))
-    whole_brain_t.append(model_result['t'].loc[2])
-    whole_brain_p.append(model_result['maxTcorrected_pvalues'].loc[2])
-
-
-with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
-
-    for network in network_to_plot:
-        #plt.figure()
-        xlabel_color = [x for item in [network_color[network_to_plot.index(network)]] for
-                        x in repeat(network_color[network_to_plot.index(network)], len(model_to_plot))]
-        t_and_p_values_barplot(t_values=model_dictionary[network]['t_values'],
-                               p_values=model_dictionary[network]['p_values'],
-                               alpha_level=0.05,
-                               xlabel_color=xlabel_color, bar_labels=bar_label,
-                               t_xlabel=' ', t_ylabel='t statistic', p_xlabel=' ', p_ylabel='corrected p value',
-                               t_title=network, p_title=network, xlabel_size=20
-                               )
-        pdf.savefig()
-
-
-with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
-    t_and_p_values_barplot(t_values=whole_brain_t,
-                           p_values=whole_brain_p,
-                           alpha_level=0.05,
-                           xlabel_color=['black', 'black', 'black', 'black'], bar_labels=bar_label,
-                           t_xlabel=' ', t_ylabel='t statistic', p_xlabel=' ', p_ylabel='corrected p value',
-                           t_title='', p_title='', xlabel_size=20
-                           )
-    pdf.savefig()
-
-
-# Illustration for may 15 presentation
-from matplotlib import colors
-cmap = colors.ListedColormap(labels_colors)
-from nilearn.plotting import plot_prob_atlas, plot_connectome
-from data_handling import data_management
-
-reference_anatomical_image = '/media/db242421/db242421_data/ConPagnon_data/atlas/' \
-                             'atlas_reference/wanat1_nc110193-2604_20110427_02.nii'
-plot_prob_atlas(maps_img=atlas_path,  view_type='filled_contours', title='AVCnn resting state atlas',
-                draw_cross=False, cut_coords=(0,0,0), threshold=0., alpha=0.7,
-                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
-                            'figures_presentation_15052018/atlas_avcnn_72rois_ver/roi_plot_on_MNI.pdf',
-                cmap=cmap)
-plt.show()
-# TODO: Batch all this figure !!!!
-# Plot each network on a glass brain
-network_to_plot = ['Sensorimotor', 'Visuospatial', 'Salience'
-                   ]
-network_color_df = data_management.shift_index_column(atlas_information[['network', 'Color']],
-                                                      'network')
-
-network_nodes_df = data_management.shift_index_column(atlas_information[['network', 'x_', 'y_', 'z_']],
-                                                      'network')
-
-network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network_to_plot]
-n_regions_network = [len(list((network_color_df.loc[n]['Color']))) for n in network_to_plot]
-
-with backend_pdf.PdfPages('/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
-                          'figures_presentation_15052018/atlas_avcnn_72rois_ver/one_side_inter_network_sensorimotor_language.pdf') as pdf:
-    for network in network_to_plot:
-        plt.figure()
-        plot_connectome(adjacency_matrix=np.zeros((n_regions_network[network_to_plot.index(network)],
-                                                   n_regions_network[network_to_plot.index(network)])),
-                        node_coords=np.array(network_nodes_df.loc[network]),
-                        node_color=network_color[network_to_plot.index(network)],
-                        title=network + ' network', display_mode='lyrz')
-        pdf.savefig()
-
-        plt.show()
-
-
-# One side plot
-network_node_ = network_nodes_df.loc[['Sensorimotor', 'Visuospatial', 'Salience']]
-chosen_node_ = network_node_.iloc[[0,2,4,6,7,10,11,14,16,18]]
-chosen_node_adjacency_matrix = np.zeros((chosen_node_.shape[0], chosen_node_.shape[0]))
-plot_connectome(adjacency_matrix=chosen_node_adjacency_matrix, node_coords=np.array(chosen_node_),
-                node_color=network_color, title='Sensorimotor, Visuospatial and Salience',
-                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/figures_presentation_15052018/'
-                            'atlas_avcnn_72rois_ver/One_side_sensorimotor_visuospatial_salience.pdf')
-plt.show()
-
-
-# Plot the full set of nodes on the glass brain
-plot_connectome(adjacency_matrix=np.zeros((n_nodes, n_nodes)),
-                node_coords=atlas_nodes,
-                node_color=labels_colors,
-                title='AVCnn atlas', display_mode='lyrz',
-                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
-                            'figures_presentation_15052018/atlas_avcnn_72rois_ver/empty_glass_brain.pdf')
+            t_and_p_values_barplot(t_values=t_values,
+                                   p_values=corrected_p_values,
+                                   alpha_level=alpha,
+                                   xlabel_color=['black', 'black', 'black', 'black'],
+                                   bar_labels=model_to_plot,
+                                   t_xlabel='',
+                                   t_ylabel='t scores',
+                                   p_xlabel='',
+                                   p_ylabel='FDR corrected p values',
+                                   t_title='{} effect for {} - {}. ({})'.format(variable,
+                                                                                groupes[0],
+                                                                                groupes[1],
+                                                                                kind),
+                                   p_title='{} effect for {} - {}. ({})'.format(variable,
+                                                                                groupes[0],
+                                                                                groupes[1],
+                                                                                kind),
+                                   xlabel_size=2)
+            pdf.savefig()
+        #plt.show()
