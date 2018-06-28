@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import ceil
 from connectivity_statistics import regression_analysis_model
+from plotting.display import t_and_p_values_barplot
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -33,6 +34,7 @@ Created on Mon Sep 18 16:37:22 2017
 
 @author: Dhaif BEKHA(dhaif.bekha@cea.fr)
 
+Analysis of AVCnn cohort : patients and controls.
 
 """
 
@@ -459,8 +461,9 @@ for network in network_labels_list:
                  for subject in homotopic_intra_network_connectivity_d[network][groupe].keys()])
             # Estimate the mean and std assuming a Gaussian behavior
             subjects_mean_homotopic_connectivity_, mean_homotopic_estimation, std_homotopic_estimation = \
-                parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_homotopic_connectivity)
-            # Fill a dictionnary saving the results for each groups and kind
+                parametric_tests.functional_connectivity_distribution_estimation(
+                    subjects_mean_homotopic_connectivity)
+            # Fill a dictionary saving the results for each groups and kind
             network_homotopic_distribution_parameters[network][groupe][kind] = {
                 'subjects mean homotopic connectivity': subjects_mean_homotopic_connectivity_,
                 'homotopic distribution mean': mean_homotopic_estimation,
@@ -493,7 +496,7 @@ for kind in kinds:
                     legend_data=groupe, display_fit='yes', ms=6)
                 plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
                             linewidth=4)
-                plt.title('Mean homotopic distribution  for {} and network {}'.format(kind,network))
+                plt.title('Mean homotopic distribution  for {} and network {}'.format(kind, network))
 
             pdf.savefig()
             plt.show()
@@ -559,7 +562,7 @@ right_connectivity = ccm.extract_sub_connectivity_matrices(
     subjects_connectivity_matrices=group_by_factor_subjects_connectivity,
     kinds=kinds, regions_index=right_regions_indices)
 
-# Fill ipsi-lesional and contra-lesional dictionnary
+# Fill ipsi-lesional and contra-lesional dictionary
 for attribute in factor_keys:
     subject_for_this_attribute = list(population_df_by_factor[attribute])
     ipsi_dict[attribute] = dict.fromkeys(subject_for_this_attribute)
@@ -582,8 +585,8 @@ for attribute in factor_keys:
 
 
 # Construct a corresponding ipsilesional and contralesional dictionary for controls
-n_left_tot = len(ipsi_dict[('G')])
-n_right_tot = len(ipsi_dict[('D')])
+n_left_tot = len(ipsi_dict['G'])
+n_right_tot = len(ipsi_dict['D'])
 
 # Compute the percentage of right lesion and left lesion
 n_total_patients = n_left_tot + n_right_tot
@@ -614,9 +617,10 @@ n_right_ipsilesional_controls, n_right_ipsi_controls_ids = \
         groupe='controls', n_matrices=int(n_right_hemisphere),
         extract_kwargs={'kinds': kinds, 'regions_index': right_regions_indices,
                         'discard_diagonal': False,
-                        'vectorize': False}, subjects_id_list=leftout_controls_id)
+                        'vectorize': False},
+        subjects_id_list=leftout_controls_id)
 
-# Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionnary
+# Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionary
 ipsilesional_controls_dictionary = dictionary_operations.merge_dictionary(
     new_key='controls',
     dict_list=[n_left_ipsilesional_controls['controls'],
@@ -659,11 +663,11 @@ contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
 
 # First, the two group of patients
 ipsilesional_patients_connectivity_matrices = {
-    'patients': {**ipsi_dict[('G')], **ipsi_dict['D']}
+    'patients': {**ipsi_dict['G'], **ipsi_dict['D']}
     }
 
 contralesional_patients_connectivity_matrices = {
-     'patients': {**contra_dict[('G')], **contra_dict['D']},
+     'patients': {**contra_dict['G'], **contra_dict['D']},
    }
 
 # Merged overall patients and controls dictionaries
@@ -684,8 +688,10 @@ ipsilesional_intra_network_connectivity_dict, \
         subjects_individual_matrices_dictionnary=ipsilesional_subjects_connectivity_matrices,
         groupes=groupes, kinds=kinds,
         atlas_file=atlas_excel_file,
-        sheetname='Hemisphere_regions', roi_indices_column_name='index',
-        network_column_name='network', color_of_network_column='Color')
+        sheetname='Hemisphere_regions',
+        roi_indices_column_name='index',
+        network_column_name='network',
+        color_of_network_column='Color')
 
 # Compute the intra-network connectivity for the contralesional hemisphere in
 # groups
@@ -695,14 +701,20 @@ contralesional_intra_network_connectivity_dict, \
         subjects_individual_matrices_dictionnary=contralesional_subjects_connectivity_matrices,
         groupes=groupes, kinds=kinds,
         atlas_file=atlas_excel_file,
-        sheetname='Hemisphere_regions', roi_indices_column_name='index',
-        network_column_name='network', color_of_network_column='Color')
+        sheetname='Hemisphere_regions',
+        roi_indices_column_name='index',
+        network_column_name='network',
+        color_of_network_column='Color')
 
 # Compute of mean ipsilesional distribution
 ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionary=ipsilesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
+    subjects_individual_matrices_dictionary=ipsilesional_subjects_connectivity_matrices,
+    groupes=groupes,
+    kinds=kinds)
 contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionary=contralesional_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
+    subjects_individual_matrices_dictionary=contralesional_subjects_connectivity_matrices,
+    groupes=groupes,
+    kinds=kinds)
 
 # Save the ipsilesional intra-network connectivity for each groups and network
 data_management.csv_from_intra_network_dictionary(subjects_dictionary=ipsilesional_intra_network_connectivity_dict,
@@ -985,7 +997,7 @@ regression_analysis_model.regression_analysis_internetwork_level(
     kinds_to_model=kinds_to_model,
     root_analysis_directory=output_csv_directory,
     inter_network_model=contra_internetwork_model,
-    network_labels_list=network_labels_list ,
+    network_labels_list=network_labels_list,
     network_labels_colors=network_label_colors,
     pvals_correction_method=['FDR'], vectorize=True,
     discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
@@ -993,7 +1005,6 @@ regression_analysis_model.regression_analysis_internetwork_level(
     alpha=0.05)
 
 # Display of the results
-from plotting.display import t_and_p_values_barplot
 # The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
 # mean contralesional
 output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls'
@@ -1063,7 +1074,7 @@ for variable in variables_of_interest:
                                                                                 kind),
                                    xlabel_size=2)
             pdf.savefig()
-        #plt.show()
+        # plt.show()
 
 # Network composite scores measures
 network_model = ['ipsi_intra', 'contra_intra']
