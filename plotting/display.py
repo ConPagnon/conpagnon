@@ -340,6 +340,7 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
     # Put in grey the bar above the type I error threshold
     bar_color = [xlabel_color[i] if (pvalues[i] < alpha_level) else 'grey'
                  for i in range(len(bar_labels))]
+    plt.figure(constrained_layout=True)
     ax = sns.barplot(x=bar_labels, y=pvalues, palette=bar_color)
     plt.xlabel(p_xlabel, size=xlabel_size)
     plt.ylabel(p_ylabel, size=ylabel_size)
@@ -353,9 +354,9 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
                label=str(alpha_level) + ' threshold', colors='red')
     plt.title(p_title)
     plt.legend()
-    #plt.show()
+   # plt.show()
     # Plot the T statistic distribution
-    plt.figure()
+    plt.figure(constrained_layout=True)
     ax = sns.barplot(x=bar_labels, y=tvalues, palette=bar_color)
     plt.xlabel(t_xlabel, size=xlabel_size)
     plt.ylabel(t_ylabel, size=ylabel_size)
@@ -364,7 +365,7 @@ def t_and_p_values_barplot(t_values, p_values, alpha_level, xlabel_color, bar_la
         xtick.set_fontsize(size_label)
         xtick.set_rotation(90)
     plt.title(t_title)
-    #plt.show()
+   # plt.show()
 
 
 def seaborn_scatterplot(x, y, data, figure_title, **kwargs):
