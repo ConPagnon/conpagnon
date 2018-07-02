@@ -682,6 +682,109 @@ contralesional_subjects_connectivity_matrices = dictionary_operations.merge_dict
                contralesional_patients_connectivity_matrices]
 )
 
+# Estimate mean and std of ipsilesional connectivity assuming gaussian behavior
+# Compute of mean ipsilesional distribution
+ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
+    subjects_individual_matrices_dictionary=ipsilesional_subjects_connectivity_matrices,
+    groupes=groupes,
+    kinds=kinds)
+contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
+    subjects_individual_matrices_dictionary=contralesional_subjects_connectivity_matrices,
+    groupes=groupes,
+    kinds=kinds)
+
+# Estimate mean and standard deviation of mean ipsilesional connectivity
+ipsilesional_mean_connectivity_parameters = dict.fromkeys(groupes)
+for groupe in groupes:
+    ipsilesional_mean_connectivity_parameters[groupe] = dict.fromkeys(kinds)
+    for kind in kinds:
+        # Stack the mean homotopic connectivity of each subject for the current group
+        subjects_mean_ipsi_connectivity = np.array(
+            [ipsilesional_mean_connectivity[groupe][subject][kind]['mean connectivity']
+             for subject in ipsilesional_mean_connectivity[groupe].keys()])
+        # Estimate the mean and std assuming a Gaussian behavior
+        subjects_mean_ipsi_connectivity_, mean_estimation, std_estimation = \
+            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_ipsi_connectivity)
+        # Fill a dictionary saving the results for each groups and kind
+        ipsilesional_mean_connectivity_parameters[groupe][kind] = {
+            'subjects mean ipsilesional connectivity': subjects_mean_ipsi_connectivity_,
+            'ipsilesional distribution mean': mean_estimation,
+            'ipsilesional distribution standard deviation': std_estimation}
+
+# Plot the distribution of mean ipsilesional connectivity assuming gaussian
+# behavior
+with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                       'ipsilesional_mean_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
+        plt.figure()
+        for groupe in groupes:
+            group_connectivity = ipsilesional_mean_connectivity_parameters[groupe][kind][
+                'subjects mean ipsilesional connectivity']
+            group_mean = ipsilesional_mean_connectivity_parameters[groupe][kind][
+                'ipsilesional distribution mean']
+            group_std = ipsilesional_mean_connectivity_parameters[groupe][kind][
+                'ipsilesional distribution standard deviation']
+            display.display_gaussian_connectivity_fit(
+                vectorized_connectivity=group_connectivity,
+                estimate_mean=group_mean,
+                estimate_std=group_std,
+                raw_data_colors=hist_color[groupes.index(groupe)],
+                fitted_distribution_color=fit_color[groupes.index(groupe)],
+                title='Ipsilesional mean connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
+                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5)
+            plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                        linewidth=4)
+        pdf.savefig()
+        plt.show()
+        
+# Estimate mean and standard deviation of mean contralesional connectivity
+contralesional_mean_connectivity_parameters = dict.fromkeys(groupes)
+for groupe in groupes:
+    contralesional_mean_connectivity_parameters[groupe] = dict.fromkeys(kinds)
+    for kind in kinds:
+        # Stack the mean homotopic connectivity of each subject for the current group
+        subjects_mean_contra_connectivity = np.array(
+            [contralesional_mean_connectivity[groupe][subject][kind]['mean connectivity']
+             for subject in contralesional_mean_connectivity[groupe].keys()])
+        # Estimate the mean and std assuming a Gaussian behavior
+        subjects_mean_contra_connectivity_, mean_estimation, std_estimation = \
+            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_contra_connectivity)
+        # Fill a dictionary saving the results for each groups and kind
+        contralesional_mean_connectivity_parameters[groupe][kind] = {
+            'subjects mean contralesional connectivity': subjects_mean_contra_connectivity_,
+            'contralesional distribution mean': mean_estimation,
+            'contralesional distribution standard deviation': std_estimation}
+
+# Plot the distribution of mean ipsilesional connectivity assuming gaussian
+# behavior
+with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                       'contralesional_mean_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
+        plt.figure()
+        for groupe in groupes:
+            group_connectivity = contralesional_mean_connectivity_parameters[groupe][kind][
+                'subjects mean contralesional connectivity']
+            group_mean = contralesional_mean_connectivity_parameters[groupe][kind][
+                'contralesional distribution mean']
+            group_std = contralesional_mean_connectivity_parameters[groupe][kind][
+                'contralesional distribution standard deviation']
+            display.display_gaussian_connectivity_fit(
+                vectorized_connectivity=group_connectivity,
+                estimate_mean=group_mean,
+                estimate_std=group_std,
+                raw_data_colors=hist_color[groupes.index(groupe)],
+                fitted_distribution_color=fit_color[groupes.index(groupe)],
+                title='Contralesional mean connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
+                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5)
+            plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                        linewidth=4)
+        pdf.savefig()
+        plt.show()
+
 # Compute the intra-network connectivity for the ipsilesional hemisphere in
 # groups
 ipsilesional_intra_network_connectivity_dict, \
@@ -694,6 +797,61 @@ ipsilesional_intra_network_connectivity_dict, \
         roi_indices_column_name='index',
         network_column_name='network',
         color_of_network_column='Color')
+
+# Estimate mean and standard deviation of ipsilesional intra network parameters
+ipsi_intra_network_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+        ipsi_intra_network_distribution_parameters[network] = dict.fromkeys(groupes)
+        for groupe in groupes:
+            ipsi_intra_network_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+            for kind in kinds:
+                # Stack the mean homotopic connectivity of each subject for the current group
+                subjects_mean_ipsi_intra_network_connectivity = np.array(
+                    [ipsilesional_intra_network_connectivity_dict[groupe][subject][kind][network][
+                         'network connectivity strength']
+                     for subject in ipsilesional_intra_network_connectivity_dict[groupe].keys()])
+                # Estimate the mean and std assuming a Gaussian behavior
+                subjects_mean_ipsi_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
+                    parametric_tests.functional_connectivity_distribution_estimation(
+                        subjects_mean_ipsi_intra_network_connectivity)
+                # Fill a dictionary saving the results for each groups and kind
+                ipsi_intra_network_distribution_parameters[network][groupe][kind] = {
+                    'subjects mean ipsi intra connectivity': subjects_mean_ipsi_intra_network_connectivity_,
+                    'ipsi intra distribution mean': mean_intra_estimation,
+                    'ipsi intra distribution standard deviation': std_intra_estimation}
+
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_ipsi_intra_network_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+                plt.figure(constrained_layout=True)
+                for groupe in groupes:
+                    group_connectivity = ipsi_intra_network_distribution_parameters[network][groupe][kind][
+                        'subjects mean ipsi intra connectivity']
+                    group_mean = ipsi_intra_network_distribution_parameters[network][groupe][kind][
+                        'ipsi intra distribution mean']
+                    group_std =  ipsi_intra_network_distribution_parameters[network][groupe][kind][
+                        'ipsi intra distribution standard deviation']
+                    display.display_gaussian_connectivity_fit(
+                        vectorized_connectivity=group_connectivity,
+                        estimate_mean=group_mean,
+                        estimate_std=group_std,
+                        raw_data_colors=hist_color[groupes.index(groupe)],
+                        fitted_distribution_color=fit_color[groupes.index(groupe)],
+                        title='',
+                        xtitle='Functional connectivity', ytitle='Density (a.u)',
+                        legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                        legend_data=groupe, display_fit='yes', ms=6)
+                    plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                                linewidth=4)
+                    plt.title('Mean ipsi intra connectivity distribution  for {} and network {}'.format(kind,
+                                                                                                        network))
+
+                pdf.savefig()
+                plt.show()
 
 # Compute the intra-network connectivity for the contralesional hemisphere in
 # groups
@@ -708,15 +866,60 @@ contralesional_intra_network_connectivity_dict, \
         network_column_name='network',
         color_of_network_column='Color')
 
-# Compute of mean ipsilesional distribution
-ipsilesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionary=ipsilesional_subjects_connectivity_matrices,
-    groupes=groupes,
-    kinds=kinds)
-contralesional_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
-    subjects_individual_matrices_dictionary=contralesional_subjects_connectivity_matrices,
-    groupes=groupes,
-    kinds=kinds)
+# Estimate mean and standard deviation of contralesional intra network parameters
+contra_intra_network_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+        contra_intra_network_distribution_parameters[network] = dict.fromkeys(groupes)
+        for groupe in groupes:
+            contra_intra_network_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+            for kind in kinds:
+                # Stack the mean homotopic connectivity of each subject for the current group
+                subjects_mean_contra_intra_network_connectivity = np.array(
+                    [contralesional_intra_network_connectivity_dict[groupe][subject][kind][network][
+                         'network connectivity strength']
+                     for subject in contralesional_intra_network_connectivity_dict[groupe].keys()])
+                # Estimate the mean and std assuming a Gaussian behavior
+                subjects_mean_contra_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
+                    parametric_tests.functional_connectivity_distribution_estimation(
+                        subjects_mean_contra_intra_network_connectivity)
+                # Fill a dictionary saving the results for each groups and kind
+                contra_intra_network_distribution_parameters[network][groupe][kind] = {
+                    'subjects mean contra intra connectivity': subjects_mean_contra_intra_network_connectivity_,
+                    'contra intra distribution mean': mean_intra_estimation,
+                    'contra intra distribution standard deviation': std_intra_estimation}
+
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_contra_intra_network_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+                plt.figure(constrained_layout=True)
+                for groupe in groupes:
+                    group_connectivity = contra_intra_network_distribution_parameters[network][groupe][kind][
+                        'subjects mean contra intra connectivity']
+                    group_mean = contra_intra_network_distribution_parameters[network][groupe][kind][
+                        'contra intra distribution mean']
+                    group_std = contra_intra_network_distribution_parameters[network][groupe][kind][
+                        'contra intra distribution standard deviation']
+                    display.display_gaussian_connectivity_fit(
+                        vectorized_connectivity=group_connectivity,
+                        estimate_mean=group_mean,
+                        estimate_std=group_std,
+                        raw_data_colors=hist_color[groupes.index(groupe)],
+                        fitted_distribution_color=fit_color[groupes.index(groupe)],
+                        title='',
+                        xtitle='Functional connectivity', ytitle='Density (a.u)',
+                        legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                        legend_data=groupe, display_fit='yes', ms=6)
+                    plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                                linewidth=4)
+                    plt.title('Mean contra intra connectivity distribution  for {} and network {}'.format(kind,
+                                                                                                        network))
+
+                pdf.savefig()
+                plt.show()
 
 # Save the ipsilesional intra-network connectivity for each groups and network
 data_management.csv_from_intra_network_dictionary(subjects_dictionary=ipsilesional_intra_network_connectivity_dict,
@@ -1066,16 +1269,23 @@ for variable in variables_of_interest:
                                    t_ylabel='t scores',
                                    p_xlabel='',
                                    p_ylabel='FDR corrected p values',
-                                   t_title='{} effect. ({})'.format(variable, kind),
-                                   p_title='{} effect. ({})'.format(variable,
-                                                                    kind),
+                                   t_title='{} effect for \n {} - {} ({})'.format(
+                                       variable,
+                                       (groupes[2] if variable == 'langage_clinique[T.C]' else groupes[1]),
+                                       groupes[0],
+                                       kind),
+                                   p_title='{} effect for \n {} - {} ({})'.format(
+                                       variable,
+                                       (groupes[2] if variable == 'langage_clinique[T.C]' else groupes[1]),
+                                       groupes[0],
+                                       kind),
                                    xlabel_size=2)
             pdf.savefig()
         # plt.show()
 
 # Network composite scores measures
-network_model = ['intra_homotopic']
-model_network_list = model_network_list_2
+network_model = ['intra']
+model_network_list = model_network_list_1
 for tt in network_model:
     for variable in variables_of_interest:
         for kind in kinds:
@@ -1108,14 +1318,14 @@ for tt in network_model:
                                        t_title='{} network : {} effect for \n {} - {}. ({})'.format(
                                            tt,
                                            variable,
+                                           (groupes[2] if variable == 'langage_clinique[T.C]' else groupes[1]),
                                            groupes[0],
-                                           groupes[1],
                                            kind),
-                                       p_title='{} network: {} effect for \n {} - {}. ({})'.format(
+                                       p_title='{} network : {} effect for \n {} - {}. ({})'.format(
                                            tt,
                                            variable,
+                                           (groupes[2] if variable == 'langage_clinique[T.C]' else groupes[1]),
                                            groupes[0],
-                                           groupes[1],
                                            kind),
                                        xlabel_size=2)
                 pdf.savefig()
