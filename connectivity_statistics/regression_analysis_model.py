@@ -15,6 +15,9 @@ import numpy as np
 from statsmodels.sandbox.stats.multicomp import multipletests
 from matplotlib.backends.backend_pdf import PdfPages
 from plotting import display
+import statsmodels.api as sm
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
 
 def regression_analysis_network_level(groups, kinds, networks_list, root_analysis_directory,
                                       network_model, variables_in_model, behavioral_dataframe,
@@ -288,8 +291,6 @@ def regression_analysis_internetwork_level(internetwork_subjects_connectivity_di
             for corr_method in pvals_correction_method:
                 # Fetch the results of the model 
                 corr_method_results = regression_results[corr_method]['results']
-    
-        
                 # iterate over all the keys of dictionary results, i.e
                 # all variable
                 for variable in corr_method_results.keys():  
@@ -318,3 +319,161 @@ def regression_analysis_internetwork_level(internetwork_subjects_connectivity_di
                         figure_size=(12, 9))
                     pdf.savefig()
 
+
+def write_raw_data(output_csv_directory, kinds, groups, models, variables_in_model,
+                   behavioral_dataframe):
+    """Write the response variable along with the co-variables in a unique
+    dataframe inside a csv files.
+
+    Parameters
+    ----------
+    output_csv_directory: str
+        The directory path containing the data for each connectivity
+        metric. It should contain one folder for each metric in you're analysis.
+    kinds: list
+        The list of connectivity metric needed in the statistical analysis.
+    groups: list
+        The list of subjects group names needed in the statistical analysis.
+    models: list
+        The list of models needed in the analysis. The model name should be
+        contain in the group csv data.
+    variables_in_model: list
+        The list of co-variables to add to the response variable.
+    behavioral_dataframe: pandas.DataFrame
+        A pandas dataframe containing the co-variables to add. Note
+        that the dataframe must have a columns called 'subjects' with the
+        identifier of each subjects. The response variable dataframe and
+        the behavioral dataframe will be merge considering the subject
+        columns as index.
+
+    """
+    # Read and concatenate list of the data for each group
+    for model in models:
+        for kind in kinds:
+            # Read and concatenate the data for each group to build the response variable
+            response_variable_data = data_management.concatenate_dataframes([data_management.read_csv(
+                csv_file=os.path.join(output_csv_directory, kind, group + '_' + kind + '_' + model +
+                                      '.csv')) for group in groups])
+            # Make the 'subjects' column the index of the response variable dataframe
+            response_variable_data = data_management.shift_index_column(
+                panda_dataframe=response_variable_data,
+                columns_to_index=['subjects'])
+            # Merge the response variable dataframe and the behavioral
+            # dataframe to build the overall dataframe
+            model_dataframe = data_management.merge_by_index(
+                dataframe1=response_variable_data,
+                dataframe2=behavioral_dataframe[variables_in_model])
+
+            model_dataframe.to_csv(os.path.join(output_csv_directory, kind, model + '_raw_data.csv'))
+
+
+def write_raw_data_network(output_csv_directory, kinds, groups, models, variables_in_model,
+                           behavioral_dataframe, network_list):
+    """Write the response variable along with the co-variables in a unique
+    dataframe inside a csv files, at the network level.
+
+    Parameters
+    ----------
+    output_csv_directory: str
+        The directory path containing the data for each connectivity
+        metric. It should contain one folder for each metric in you're analysis.
+    kinds: list
+        The list of connectivity metric needed in the statistical analysis.
+    groups: list
+        The list of subjects group names needed in the statistical analysis.
+    models: list
+        The list of models needed in the analysis. The model name should be
+        contain in the group csv data.
+    variables_in_model: list
+        The list of co-variables to add to the response variable.
+    behavioral_dataframe: pandas.DataFrame
+        A pandas dataframe containing the co-variables to add. Note
+        that the dataframe must have a columns called 'subjects' with the
+        identifier of each subjects. The response variable dataframe and
+        the behavioral dataframe will be merge considering the subject
+        columns as index.
+    network_list: list
+        The list of network names. Each network  in each connectivity metric
+        should have a directory containing the data for each group.
+    """
+    for network in network_list:
+        # Read and concatenate list of the data for each group
+        for model in models:
+            for kind in kinds:
+                # Read and concatenate the data for each group to build the response variable
+                response_variable_data = data_management.concatenate_dataframes([data_management.read_csv(
+                    csv_file=os.path.join(output_csv_directory, kind, network, group + '_' + model + '_' + network +
+                                          '_connectivity.csv')) for group in groups])
+                # Make the 'subjects' column the index of the response variable dataframe
+                response_variable_data = data_management.shift_index_column(
+                    panda_dataframe=response_variable_data,
+                    columns_to_index=['subjects'])
+                # Merge the response variable dataframe and the behavioral
+                # dataframe to build the overall dataframe
+                model_dataframe = data_management.merge_by_index(
+                    dataframe1=response_variable_data,
+                    dataframe2=behavioral_dataframe[variables_in_model])
+
+                model_dataframe.to_csv(os.path.join(output_csv_directory, kind, network, model + '_raw_data.csv'))
+
+
+def anova_with_post_hoc_whole_brain(groups, kinds, root_analysis_directory,
+                                    whole_brain_model, variables_in_model,
+                                    behavioral_dataframe,
+                                    correction_method=['FDR'], alpha=0.05):
+    """Perform a ANOVA analysis, i.e comparing the mean of the continuous response
+    variable with respect to one categorical independent variable (with different
+    level). ANOVA follow with post hoc analysis (t-test between all possible groups pairs).
+
+    :param groups:
+    :param kinds:
+    :param root_analysis_directory:
+    :param whole_brain_model:
+    :param variables_in_model:
+    :param behavioral_dataframe:
+    :param correction_method:
+    :param alpha:
+    :return:
+    """
+
+    # The design matrix is the same for all model
+    design_matrix = dmatrix('+'.join(variables_in_model), behavioral_dataframe, return_type='dataframe')
+    # For each model: read the csv for each group, concatenate resultings dataframe, and append
+    # (merging by index) all variable of interest in the model.
+    for kind in kinds:
+        # directory where the data are
+        data_directory = os.path.join(root_analysis_directory,
+                                      kind)
+        all_model_response = []
+        for model in whole_brain_model:
+            # List of the corresponding dataframes
+            model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
+                csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
+                for group in groups])
+            # Shift index to be the subjects identifiers
+            model_dataframe = data_management.shift_index_column(panda_dataframe=model_dataframe,
+                                                                 columns_to_index=['subjects'])
+            # Add variables in the model to complete the overall DataFrame
+            model_dataframe = data_management.merge_by_index(dataframe1=model_dataframe,
+                                                             dataframe2=behavioral_dataframe[variables_in_model])
+            # Build the model formula: the variable to explain is the first column of the
+            # dataframe, and we add to the left all variable in the model
+            model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_in_model)
+            # Build response, and design matrix from the model model formulation
+            model_response, model_design = \
+                parametric_tests.design_matrix_builder(dataframe=model_dataframe,
+                                                       formula=model_formulation,
+                                                       return_type='dataframe')
+            # regression with a simple OLS model
+            model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
+
+            # Creation of a directory for the current analysis, ANOVA results
+            # will be stored in a sub-directory called ANOVA
+            regression_output_directory = folders_and_files_management.create_directory(
+                directory=os.path.join(root_analysis_directory, 'regression_analysis/ANOVA', kind))
+            # Perform one-way ANOVA with statsmodel
+            model_anova = sm.stats.anova_lm(model_fit, typ=2)
+            # Compute t-test between all pairs of groups in the
+            # analysis
+            tukey_analysis = pairwise_tukeyhsd(model_dataframe[model],
+                                               model_dataframe[variables_in_model])
