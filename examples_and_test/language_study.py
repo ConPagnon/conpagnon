@@ -1237,7 +1237,6 @@ network_colors = [np.array(atlas_information_colors.loc[network]['Color'])[0] fo
 
 # Variable of interest
 variables_of_interest = ['langage_clinique[T.C]', 'langage_clinique[T.N]']
-dict_results_variables = dict.fromkeys(variables_of_interest)
 
 # Global connectivity composite scores
 for variable in variables_of_interest:
@@ -1284,11 +1283,11 @@ for variable in variables_of_interest:
         # plt.show()
 
 # Network composite scores measures
-network_model = ['intra']
-model_network_list = model_network_list_1
+network_model = ['intra_homotopic']
+model_network_list = model_network_list_2
 for tt in network_model:
     for variable in variables_of_interest:
-        for kind in kinds:
+        for kind in kinds[0:1]:
             # For each kind, fetch t values, and corrected p values
             t_values = []
             corrected_p_values = []
