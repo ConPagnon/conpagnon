@@ -15,6 +15,7 @@ import os
 import errno
 import copy
 from scipy import linalg
+import statsmodels.formula.api as smf
 importlib.reload(pre_preprocessing)
 importlib.reload(array_operation)
 importlib.reload(ccm)
@@ -370,8 +371,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     # Mass univariate testing using MUOLS library
     mod = mulm.MUOLS(Y=y, X=X).fit()
     raw_tvals, raw_pvals, dfree = mod.t_test(contrasts=contrasts,
-                                                   pval=compute_pvalues,
-                                                   two_tailed=pvalues_tail)
+                                             pval=compute_pvalues,
+                                             two_tailed=pvalues_tail)
     
     # Compute prediction of the models
     y_prediction = mod.predict(X=X)
@@ -1059,6 +1060,18 @@ def ols_regression(y, X):
     ols_model = sm.OLS(endog=y, exog=X)
     # Fit of the model
     ols_model_fit = ols_model.fit()
+
+    return ols_model_fit
+
+
+def ols_regression_formula(formula, data):
+    """Fit a linear model with a formula API in R style.
+
+    :param formula:
+    :param data:
+    :return:
+    """
+    ols_model_fit = smf.ols(formula=formula, data=data).fit()
 
     return ols_model_fit
 
