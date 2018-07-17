@@ -16,7 +16,10 @@ from statsmodels.sandbox.stats.multicomp import multipletests
 from matplotlib.backends.backend_pdf import PdfPages
 from plotting import display
 import statsmodels.api as sm
-from statsmodels.stats.multicomp import pairwise_tukeyhsd
+import pandas as pd
+import statsmodels.stats.multicomp as multi
+from scipy import stats
+
 
 
 def regression_analysis_network_level(groups, kinds, networks_list, root_analysis_directory,
@@ -417,36 +420,62 @@ def write_raw_data_network(output_csv_directory, kinds, groups, models, variable
                 model_dataframe.to_csv(os.path.join(output_csv_directory, kind, network, model + '_raw_data.csv'))
 
 
-def anova_with_post_hoc_whole_brain(groups, kinds, root_analysis_directory,
-                                    whole_brain_model, variables_in_model,
-                                    behavioral_dataframe,
-                                    correction_method=['FDR'], alpha=0.05):
-    """Perform a ANOVA analysis, i.e comparing the mean of the continuous response
-    variable with respect to one categorical independent variable (with different
-    level). ANOVA follow with post hoc analysis (t-test between all possible groups pairs).
+def one_way_anova(models, groups, behavioral_dataframe, kinds,
+                  correction_method, root_analysis_directory,
+                  variables_in_model,
+                  alpha=.05):
+    """Perform one way ANOVA analysis followed by a post hoc analysis with t test,
+    and multiple comparison correction.
 
-    :param groups:
-    :param kinds:
-    :param root_analysis_directory:
-    :param whole_brain_model:
-    :param variables_in_model:
-    :param behavioral_dataframe:
-    :param correction_method:
-    :param alpha:
-    :return:
+    Parameters
+    ----------
+    models: list
+        List of models. The list model is defined as the string in the filename
+        containing the raw data for each groups.
+    groups: list
+        The list of group in the study.
+    behavioral_dataframe: pandas.DataFrame
+        The dataframe containing the variable to study in the ANOVA analysis.
+        The dataframe must contain a column named "subjects" containing the
+        identifier for each subjects.
+    kinds: list
+        The list of the different connectivity metrics you want to
+        perform the analysis.
+    correction_method: list
+        The list of multiple comparison correction method, as available
+        in the statsmodels library.
+    root_analysis_directory: string
+        The full path to the directory containing the raw data.
+    variables_in_model: list
+        A list containing the categorical variable to study.
+    alpha: float, optional
+        The type I error threshold. The default is 0.05.
+
+    Notes
+    -----
+    If models in a list containing more than one elements,
+    the p values are jointly corrected for all models.
+
     """
-
-    # The design matrix is the same for all model
-    design_matrix = dmatrix('+'.join(variables_in_model), behavioral_dataframe, return_type='dataframe')
-    # For each model: read the csv for each group, concatenate resultings dataframe, and append
+    # For each model: read the csv for each group, concatenate resulting dataframe, and append
     # (merging by index) all variable of interest in the model.
     for kind in kinds:
         # directory where the data are
         data_directory = os.path.join(root_analysis_directory,
                                       kind)
-        all_model_response = []
-        for model in whole_brain_model:
-            # List of the corresponding dataframes
+        # Store the p value of all the tested model for multiple
+        # comparison correction
+        all_model_p_values_f_test = []
+        # Store the p values resulting in all possible contrast
+        # t test for multiple comparison correction
+        all_model_post_hoc_p_values = []
+
+        # Creation of a directory for the current analysis, ANOVA results
+        # will be stored in a sub-directory called ANOVA
+        regression_output_directory = folders_and_files_management.create_directory(
+            directory=os.path.join(root_analysis_directory, 'regression_analysis/ANOVA', kind))
+        for model in models:
+            # List of the corresponding dataframe
             model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
                 csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
                 for group in groups])
@@ -459,21 +488,288 @@ def anova_with_post_hoc_whole_brain(groups, kinds, root_analysis_directory,
             # Build the model formula: the variable to explain is the first column of the
             # dataframe, and we add to the left all variable in the model
             model_formulation = model_dataframe.columns[0] + '~' + '+'.join(variables_in_model)
-            # Build response, and design matrix from the model model formulation
-            model_response, model_design = \
-                parametric_tests.design_matrix_builder(dataframe=model_dataframe,
-                                                       formula=model_formulation,
-                                                       return_type='dataframe')
             # regression with a simple OLS model
-            model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
+            model_fit = parametric_tests.ols_regression_formula(formula=model_formulation,
+                                                                data=model_dataframe)
 
-            # Creation of a directory for the current analysis, ANOVA results
-            # will be stored in a sub-directory called ANOVA
-            regression_output_directory = folders_and_files_management.create_directory(
-                directory=os.path.join(root_analysis_directory, 'regression_analysis/ANOVA', kind))
             # Perform one-way ANOVA with statsmodel
             model_anova = sm.stats.anova_lm(model_fit, typ=2)
             # Compute t-test between all pairs of groups in the
-            # analysis
-            tukey_analysis = pairwise_tukeyhsd(model_dataframe[model],
-                                               model_dataframe[variables_in_model])
+            # analysis with tukey HSD analysis
+            model_tukey_analysis = multi.MultiComparison(
+                model_dataframe[model_dataframe.columns[0]],
+                model_dataframe[variables_in_model[0]])
+            model_tukey_analysis_results = model_tukey_analysis.tukeyhsd()
+            # tukey t-score are t score scaled by sqrt(2)
+            model_t_scores = \
+                model_tukey_analysis_results.meandiffs / model_tukey_analysis_results.std_pairs / np.sqrt(2)
+            # Compute two-sided uncorrected p values
+            model_raw_p_values = stats.t.sf(np.abs(model_t_scores), 50)*2
+
+            # Stack the p values for the F test of the current model
+            all_model_p_values_f_test.append(model_anova['PR(>F)'].loc[variables_in_model[0]])
+            # Stack the p values for all contrast for the current model
+            all_model_post_hoc_p_values.append(model_raw_p_values)
+
+            # In the report the contrast is group 2 - group 1, build a dataframe to store
+            # the results
+            post_hoc_dataframe = pd.DataFrame(data=model_tukey_analysis_results._results_table.data[1:],
+                                              columns=model_tukey_analysis_results._results_table.data[0])
+            # Add t scores for each contrast and raw p values
+            post_hoc_dataframe = post_hoc_dataframe.assign(t=model_t_scores, p_values=model_raw_p_values)
+            # Save: the results containing the F value and p value for the model
+            model_anova.to_csv(os.path.join(regression_output_directory,
+                                            model + '_f_test_parameters.csv'),
+                               index=False)
+            # Save the parameters results of the post hoc analysis
+            data_management.dataframe_to_csv(dataframe=post_hoc_dataframe,
+                                             path=os.path.join(regression_output_directory,
+                                                               model + '_post_hoc_parameters.csv'),
+                                             index=False)
+
+        # Correct the p values for all model, and post-hoc t test
+
+        # The user can choose different correction method
+        p_values_correction_post_hoc_all_method = np.zeros((len(correction_method), len(models),
+                                                            np.array(all_model_post_hoc_p_values).shape[1]))
+        p_values_correction_f_test_all_method = np.zeros((len(correction_method), len(models)))
+        for correction in correction_method:
+
+            # Correction with the chosen method for the p value of all between group t test
+            all_model_p_values_post_hoc_array = np.array(all_model_post_hoc_p_values)
+            post_hoc_t_test_corrected_p_values = multipletests(
+                pvals=all_model_p_values_post_hoc_array.flatten(),
+                method=correction,
+                alpha=alpha)[1].reshape(all_model_p_values_post_hoc_array.shape)
+
+            p_values_correction_post_hoc_all_method[correction_method.index(correction), ...] = \
+                post_hoc_t_test_corrected_p_values
+
+            # Correction with the chosen method for the p value of the whole model
+            all_model_p_values_f_test_array = np.array(all_model_p_values_f_test)
+            f_test_corrected_p_values = multipletests(
+                pvals=all_model_p_values_f_test_array.flatten(),
+                method=correction,
+                alpha=alpha)[1].reshape(all_model_p_values_f_test_array.shape)
+
+            p_values_correction_f_test_all_method[correction_method.index(correction), ...] =\
+                f_test_corrected_p_values
+
+        # Finally we can now append the corrected p value for all the chosen method in
+        # for all model in the csv file
+        for model in models:
+            # Read the parameters file of the model for the f test first
+            f_test_model_parameters = data_management.read_csv(os.path.join(
+                regression_output_directory, model + '_f_test_parameters.csv'))
+            # Add the corrected p values for all the correction method
+            post_hoc_model_parameters = data_management.read_csv(os.path.join(
+                regression_output_directory, model + '_post_hoc_parameters.csv'))
+
+            # Append the corrected p values
+            for correction in correction_method:
+                corrected_p_value_column_name = correction + '_p_value'
+                post_hoc_model_parameters[corrected_p_value_column_name] = \
+                    p_values_correction_post_hoc_all_method[correction_method.index(correction),
+                                                            models.index(model), ...]
+
+                f_test_model_parameters[corrected_p_value_column_name] = \
+                    p_values_correction_f_test_all_method[correction_method.index(correction),
+                                                          models.index(model)]
+
+                post_hoc_model_parameters.to_csv(os.path.join(regression_output_directory,
+                                                              model + '_post_hoc_parameters.csv'),
+                                                 index=False)
+
+                f_test_model_parameters.to_csv(os.path.join(regression_output_directory,
+                                                            model + '_f_test_parameters.csv'),
+                                               index=False)
+
+
+def one_way_anova_network(root_analysis_directory, kinds, groups,
+                          networks_list, models, behavioral_dataframe,
+                          variables_in_model, correction_method, alpha=0.05):
+    """Perform a one way ANOVA at the network level.
+
+    Parameters
+    ----------
+    models: list
+        List of models. The list model is defined as the string in the filename
+        containing the raw data for each groups.
+    groups: list
+        The list of group in the study.
+    networks_list: lsit
+        The list of network to include in the analysis
+    behavioral_dataframe: pandas.DataFrame
+        The dataframe containing the variable to study in the ANOVA analysis.
+        The dataframe must contain a column named "subjects" containing the
+        identifier for each subjects.
+    kinds: list
+        The list of the different connectivity metrics you want to
+        perform the analysis.
+    correction_method: list
+        The list of multiple comparison correction method, as available
+        in the statsmodels library.
+    root_analysis_directory: string
+        The full path to the directory containing the raw data.
+    variables_in_model: list
+        A list containing the categorical variable to study.
+    alpha: float, optional
+        The type I error threshold. The default is 0.05.
+
+    Notes
+    -----
+    If models  and network_list is a list
+    containing more than one elements, the p values
+    are jointly corrected for the number of models * number of networks.
+
+    """
+
+    for kind in kinds:
+        # List to stack the p values from the F test of the model
+        all_network_f_test_p_values = []
+        # List to stack the p values from all possible contrast from
+        # the post hoc t test
+        all_network_post_hoc_test_p_values = []
+        for network in networks_list:
+            for model in models:
+                # Creation of a directory for the current analysis, ANOVA results
+                # will be stored for each network
+                regression_output_directory = folders_and_files_management.create_directory(
+                    directory=os.path.join(root_analysis_directory, 'regression_analysis/ANOVA', kind,
+                                           network))
+
+                network_data_directory = os.path.join(root_analysis_directory, kind, network)
+                # Concatenate all the intra-network dataframe
+                network_model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
+                    csv_file=os.path.join(network_data_directory, group + '_' + model + '_' +
+                                          network + '_' + 'connectivity.csv')) for group in groups])
+                # Shift index to be the subjects identifiers
+                network_model_dataframe = data_management.shift_index_column(
+                    panda_dataframe=network_model_dataframe,
+                    columns_to_index=['subjects'])
+                # Add variables in the model to complete the overall DataFrame
+                network_model_dataframe = data_management.merge_by_index(
+                    dataframe1=network_model_dataframe,
+                    dataframe2=behavioral_dataframe[variables_in_model])
+                # Build response variable vector, build matrix design
+                network_response, network_design = parametric_tests.design_matrix_builder(
+                    dataframe=network_model_dataframe,
+                    formula=network_model_dataframe.columns[0] + '~' + '+'.join(variables_in_model)
+                )
+                # Build the model formula: the variable to explain is the first column of the
+                # dataframe, and we add to the left all variable in the model
+                model_formulation = network_model_dataframe.columns[0] + '~' + '+'.join(variables_in_model)
+                # regression with a simple OLS model
+                network_model_fit = parametric_tests.ols_regression_formula(formula=model_formulation,
+                                                                    data=network_model_dataframe)
+
+                # Perform one-way ANOVA with statsmodel
+                network_model_anova = sm.stats.anova_lm(network_model_fit, typ=2)
+                # Compute t-test between all pairs of groups in the
+                # analysis with tukey HSD analysis for the current network
+                network_model_tukey_analysis = multi.MultiComparison(
+                    network_model_dataframe[network_model_dataframe.columns[0]],
+                    network_model_dataframe[variables_in_model[0]])
+                network_model_tukey_analysis_results = network_model_tukey_analysis.tukeyhsd()
+                # tukey t-score are t score scaled by sqrt(2)
+                network_model_t_scores = \
+                    network_model_tukey_analysis_results.meandiffs / network_model_tukey_analysis_results.std_pairs / np.sqrt(2)
+                # Compute two-sided uncorrected p values
+                network_model_raw_p_values = stats.t.sf(np.abs(network_model_t_scores), 50) * 2
+
+                # Stack the p values for the F test of the current model
+                all_network_f_test_p_values.append(network_model_anova['PR(>F)'].loc[variables_in_model[0]])
+                # Stack the p values for all contrast for the current model
+                all_network_post_hoc_test_p_values.append(network_model_raw_p_values)
+
+                # In the report the contrast is group 2 - group 1, build a dataframe to store
+                # the results
+                post_hoc_dataframe = pd.DataFrame(data=network_model_tukey_analysis_results._results_table.data[1:],
+                                                  columns=network_model_tukey_analysis_results._results_table.data[0])
+                # Add t scores for each contrast and raw p values
+                post_hoc_dataframe = post_hoc_dataframe.assign(t=network_model_t_scores,
+                                                               p_values=network_model_raw_p_values)
+                # Save: the results containing the F value and p value for the model
+                network_model_anova.to_csv(os.path.join(regression_output_directory,
+                                                        model + '_f_test_parameters.csv'),
+                                           index=False)
+                # Save the parameters results of the post hoc analysis
+                data_management.dataframe_to_csv(dataframe=post_hoc_dataframe,
+                                                 path=os.path.join(regression_output_directory,
+                                                                   model + '_post_hoc_parameters.csv'),
+                                                 index=False)
+
+        # Convert list of post hoc t test p value,
+        # and f test p value in array
+        # I squeeze it to get rid of the first (1, ...) dimension
+        all_models_post_hoc_t_test_array = np.squeeze(np.array(all_network_post_hoc_test_p_values))
+        all_models_f_test_p_values_array = np.array(all_network_f_test_p_values)
+
+        # The user can choose different correction method
+        p_values_correction_post_hoc_all_method = np.zeros((len(correction_method), len(models)*len(networks_list),
+                                                            all_models_post_hoc_t_test_array.shape[1]))
+        p_values_correction_f_test_all_method = np.zeros((len(correction_method), len(models)*len(networks_list)))
+
+        # Loop over the correction method wanted by the user
+        for correction in correction_method:
+
+            # Correction with the chosen method for the p value of all between group t test
+            post_hoc_t_test_corrected_p_values = multipletests(
+                pvals=all_models_post_hoc_t_test_array.flatten(),
+                method=correction,
+                alpha=alpha)[1].reshape(all_models_post_hoc_t_test_array.shape)
+
+            p_values_correction_post_hoc_all_method[correction_method.index(correction), ...] = \
+                post_hoc_t_test_corrected_p_values
+
+            # Correction with the chosen method for the p value of the whole model
+            f_test_corrected_p_values = multipletests(
+                pvals=all_models_f_test_p_values_array.flatten(),
+                method=correction,
+                alpha=alpha)[1].reshape(all_models_f_test_p_values_array.shape)
+
+            p_values_correction_f_test_all_method[correction_method.index(correction), ...] =\
+                f_test_corrected_p_values
+
+        # Reshape the array of corrected p values for easy
+        # writing in parameters files
+        reshape_p_values_correction_post_hoc_all_method = p_values_correction_post_hoc_all_method.flatten().reshape(
+            (len(correction_method), len(networks_list), len(models), all_models_post_hoc_t_test_array.shape[1]))
+
+        reshape_p_values_correction_f_test_all_method = p_values_correction_f_test_all_method.flatten().reshape(
+            (len(correction_method), len(networks_list), len(models), 1)
+        )
+
+        for model in models:
+            for network in networks_list:
+
+                regression_output_directory = folders_and_files_management.create_directory(
+                    directory=os.path.join(root_analysis_directory, 'regression_analysis/ANOVA', kind,
+                                           network))
+                # Read the parameters file of the model for the f test first
+                f_test_model_parameters = data_management.read_csv(os.path.join(
+                    regression_output_directory, model + '_f_test_parameters.csv'))
+                # Add the corrected p values for all the correction method
+                post_hoc_model_parameters = data_management.read_csv(os.path.join(
+                    regression_output_directory, model + '_post_hoc_parameters.csv'))
+
+                # Append the corrected p values
+                for correction in correction_method:
+                    corrected_p_value_column_name = correction + '_p_value'
+                    post_hoc_model_parameters[corrected_p_value_column_name] = \
+                        reshape_p_values_correction_post_hoc_all_method[correction_method.index(correction),
+                                                                        networks_list.index(network),
+                                                                        models.index(model), ...]
+
+                    f_test_model_parameters[corrected_p_value_column_name] = \
+                        reshape_p_values_correction_f_test_all_method[correction_method.index(correction),
+                                                                      networks_list.index(network),
+                                                                      models.index(model), 0]
+
+                    post_hoc_model_parameters.to_csv(os.path.join(regression_output_directory,
+                                                                  model + '_post_hoc_parameters.csv'),
+                                                     index=False)
+
+                    f_test_model_parameters.to_csv(os.path.join(regression_output_directory,
+                                                                model + '_f_test_parameters.csv'),
+                                                   index=False)
