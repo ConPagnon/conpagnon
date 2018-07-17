@@ -597,7 +597,7 @@ def one_way_anova_network(root_analysis_directory, kinds, groups,
         containing the raw data for each groups.
     groups: list
         The list of group in the study.
-    networks_list: lsit
+    networks_list: list
         The list of network to include in the analysis
     behavioral_dataframe: pandas.DataFrame
         The dataframe containing the variable to study in the ANOVA analysis.
