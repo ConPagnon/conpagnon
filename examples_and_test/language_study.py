@@ -87,7 +87,7 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA'
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
 # Figure directory which can be useful for illustrating
@@ -102,8 +102,6 @@ behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_f
 # Clean the behavioral data by keeping only the subjects in the study
 subjects_list = open(subjects_ID_data_path).read().split()
 behavioral_data = behavioral_data.loc[subjects_list]
-
-
 # save a CSV file format for the behavioral data
 behavioral_data.to_csv(os.path.join(output_csv_directory, 'behavioral_data.csv'))
 
@@ -150,7 +148,7 @@ total_extraction_ts = (end - start)/60.
 # Covariance estimator
 covariance_estimator = covariance.LedoitWolf()
 
-# Choose the time series dictionnary
+# Choose the time series dictionary
 time_series_dict = times_series_individual_atlases
 
 # Computing for each metric, and each subjects in each groups,
@@ -1072,7 +1070,7 @@ groups_in_models = groupes
 # Choose the correction method
 correction_method = 'FDR'
 # Fit three linear model for the three type of overall connections
-models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
+models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
 
 # variables in the model
 variables_model = ['langage_clinique']
@@ -1089,6 +1087,16 @@ ipsi_contra_model_network_list = ['DMN', 'Executive',
                                   'Language',  'MTL',
                                   'Salience', 'Sensorimotor', 'Visuospatial',
                                   'Primary_Visual', 'Secondary_Visual']
+
+correction_methods = ['fdr_bh', 'bonferroni']
+
+# Put a column named subject in the behavioral dataframe
+behavioral_dataframe = data_management.read_csv(os.path.join(output_csv_directory, 'behavioral_data.csv'))
+behavioral_data = behavioral_dataframe.rename(columns={behavioral_dataframe.columns[0]: 'subjects'})
+# Shift index to be the subjects identifiers
+behavioral_data = data_management.shift_index_column(
+    panda_dataframe=behavioral_data,
+    columns_to_index=['subjects'])
 
 # Analysis of whole brain connectivity, whole brain mean homotopic connectivity,
 # mean ipsilesional and contralesional connectivity. Joint correction for 4 models.
@@ -1209,13 +1217,51 @@ regression_analysis_model.regression_analysis_internetwork_level(
     compute_pvalues='True', pvalues_tail='True', NA_action='drop',
     alpha=0.05)
 
+# Perform a one way ANOVA with language status as variable
+
+# Whole brain models
+regression_analysis_model.one_way_anova(models=models_to_build,
+                                        groups=groupes,
+                                        behavioral_dataframe=behavioral_data,
+                                        kinds=kinds,
+                                        correction_method=correction_methods,
+                                        root_analysis_directory=output_csv_directory,
+                                        variables_in_model=variables_model,
+                                        alpha=alpha)
+
+# Network models: intra homotopic
+regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
+                                                kinds=kinds,
+                                                groups=groupes,
+                                                networks_list=model_network_list,
+                                                models=['intra_homotopic'],
+                                                correction_method=correction_methods,
+                                                variables_in_model=variables_model,
+                                                alpha=alpha,
+                                                behavioral_dataframe=behavioral_data)
+# Network models: contra intra, ipsi intra, intra.
+regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
+                                                kinds=kinds,
+                                                groups=groupes,
+                                                networks_list=ipsi_contra_model_network_list,
+                                                models=['intra', 'contra_intra', 'ipsi_intra'],
+                                                correction_method=correction_methods,
+                                                variables_in_model=variables_model,
+                                                alpha=alpha,
+                                                behavioral_dataframe=behavioral_data)
+
+# TODO: write a function to perform a one way ANOVA with internetwork matrices.
+
+
+
 # Display of the results
 # The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
 # mean contralesional
-output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study'
+output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA'
 results_directory = os.path.join(output_csv_directory, 'regression_analysis')
 output_figure_directory = os.path.join(output_csv_directory, 'figures')
 model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
+network_model_to_plot = ['intra', 'ipsi_intra', 'contra_intra']
 # network: ipsi, contra, intra
 model_network_list_1 = ['DMN', 'Executive',
                       'Language',  'MTL',
@@ -1227,7 +1273,7 @@ model_network_list_2 = ['DMN', 'Auditory', 'Executive',
                          'Salience', 'Sensorimotor', 'Visuospatial',
                          'Primary_Visual', 'Precuneus', 'Secondary_Visual']
 
-model_network_list = model_network_list_2
+model_network_list = model_network_list_1
 
 # Colors of network in the order of model networks list
 atlas_information_colors = atlas_information[['network', 'Color']]
@@ -1237,6 +1283,9 @@ network_colors = [np.array(atlas_information_colors.loc[network]['Color'])[0] fo
 
 # Variable of interest
 variables_of_interest = ['langage_clinique[T.C]', 'langage_clinique[T.N]']
+
+# Correction method
+correction_methods = ['fdr_bh', 'bonferroni']
 
 # Global connectivity composite scores
 for variable in variables_of_interest:
@@ -1328,3 +1377,184 @@ for tt in network_model:
                                            kind),
                                        xlabel_size=2)
                 pdf.savefig()
+
+
+# One way anova:
+
+# Number of post hoc comparison inside each model
+n_post_hoc_comparison = 3
+# Set contrast name, and number of contrast for post hoc analysis
+contrasts_name = ['Controls-Impaired language',
+                  'Non impaired language-Impaired language',
+                  'Non impaired language-Controls']
+n_contrast = len(contrasts_name)
+
+# whole brain levels
+# Fetch the results for the model (F test) and plot it.
+for kind in kinds:
+    # F test values for all modes
+    f_test_values = []
+    # Array to stack the p values for each f test and each model, for each method
+    f_test_p_values = np.zeros((len(correction_methods), len(model_to_plot)))
+
+    # Array to stack the p values for the
+    # post hoc t test between all contrast for all model
+    # for each method
+    post_hoc_t_test_p_values = np.zeros((len(correction_methods), len(model_to_plot), n_post_hoc_comparison))
+
+    # Post hoc p values
+    post_hoc_t_values = []
+
+    for model in model_to_plot:
+
+        # F test parameters files
+        f_test_parameters = data_management.read_csv(
+            csv_file=os.path.join(results_directory, 'ANOVA', kind, model + '_f_test_parameters.csv')
+        )
+        # Post hoc t test parameters files
+        post_hoc_parameters = data_management.read_csv(
+            csv_file=os.path.join(results_directory, 'ANOVA', kind, model + '_post_hoc_parameters.csv')
+        )
+
+        f_value = f_test_parameters['F'].iloc[0]
+        f_test_values.append(f_value)
+
+        post_hoc_t_values.append(np.array(post_hoc_parameters['t']))
+        for correction in correction_methods:
+            f_test_p_values[correction_methods.index(correction), model_to_plot.index(model), ...] = \
+                f_test_parameters[correction + '_p_value'].iloc[0]
+            post_hoc_t_test_p_values[correction_methods.index(correction), model_to_plot.index(model), ...] = \
+                np.array(post_hoc_parameters[correction + '_p_value'])
+
+    # Save results in pdf files for the f test model
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind,
+                                           kind + '_whole_brain_models_f_test.pdf')) as pdf:
+        for correction in correction_methods:
+            # Plot f values for each model on the same plot
+            t_and_p_values_barplot(t_values=f_test_values,
+                                   p_values=f_test_p_values[correction_methods.index(correction), ...],
+                                   alpha_level=alpha,
+                                   xlabel_color=['black'] * len(model_to_plot),
+                                   bar_labels=model_to_plot,
+                                   t_xlabel='',
+                                   t_ylabel='F values',
+                                   p_xlabel='',
+                                   p_ylabel=correction + ' corrected p values',
+                                   t_title='One way ANOVA with language profile as factors, \n ({}, {})'.format(
+                                       kind,
+                                       correction + '_corrected'),
+                                   p_title='One way ANOVA with language profile as factors, \n ({}, {})'.format(
+                                       kind,
+                                       correction + '_corrected'))
+            pdf.savefig()
+            plt.show()
+
+    # Save results in pdf files for the post hoc t test: one file per
+    # contrast
+    for contrast in contrasts_name:
+        with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind,
+                                                kind + '_' + contrast + '_whole_brain_model_t_values.pdf')) as pdf:
+            for correction in correction_methods:
+                # Plot f values for each model on the same plot
+                t_and_p_values_barplot(t_values=np.array(post_hoc_t_values)[:, contrasts_name.index(contrast)],
+                                       p_values=post_hoc_t_test_p_values[correction_methods.index(correction), :,
+                                                                         contrasts_name.index(contrast)],
+                                       alpha_level=alpha,
+                                       xlabel_color=['black'] * len(model_to_plot),
+                                       bar_labels=model_to_plot,
+                                       t_xlabel='',
+                                       t_ylabel='t values',
+                                       p_xlabel='',
+                                       p_ylabel=correction + ' corrected p values',
+                                       t_title='One way ANOVA with language profile as factors, \n ({}, {}), '
+                                               '\n {}'.format(kind, correction + '_corrected', contrast),
+                                       p_title='One way ANOVA with language profile as factors, \n ({}, {}), '
+                                               '\n {}'.format(kind, correction + '_corrected', contrast))
+                pdf.savefig()
+                plt.show()
+
+
+# Plot at the network levels
+for kind in kinds:
+    for model in network_model_to_plot:
+        # Post hoc p values for all network
+        post_hoc_t_values = []
+        # F test values for all network
+        f_test_values = []
+        # Array to stack the p values for each f test and each model, for each method
+        f_test_p_values = np.zeros((len(correction_methods), len(model_network_list)))
+
+        # Array to stack the p values for all post hoc t test
+        # for all network, for all correction method
+        post_hoc_t_test_p_values = np.zeros((len(correction_methods), len(model_network_list),
+                                             n_post_hoc_comparison))
+        for network in model_network_list:
+
+            # F test parameters files
+            f_test_parameters = data_management.read_csv(
+                csv_file=os.path.join(results_directory, 'ANOVA', kind, network,
+                                      model + '_f_test_parameters.csv')
+            )
+            # Post hoc t test parameters files
+            post_hoc_parameters = data_management.read_csv(
+                csv_file=os.path.join(results_directory, 'ANOVA', kind, network,
+                                      model + '_post_hoc_parameters.csv')
+            )
+
+            f_value = f_test_parameters['F'].iloc[0]
+            f_test_values.append(f_value)
+
+            post_hoc_t_values.append(np.array(post_hoc_parameters['t']))
+
+            for correction in correction_methods:
+                f_test_p_values[correction_methods.index(correction), model_network_list.index(network), ...] = \
+                    f_test_parameters[correction + '_p_value'].iloc[0]
+                post_hoc_t_test_p_values[correction_methods.index(correction), model_network_list.index(network), ...] = \
+                    np.array(post_hoc_parameters[correction + '_p_value'])
+
+        # Now plot F value, post hoc t values
+        with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind,
+                                               kind + '_' + model + '_f_test_all_network.pdf')) as pdf:
+            for correction in correction_methods:
+                # F test plot
+                t_and_p_values_barplot(t_values=f_test_values,
+                                       p_values=f_test_p_values[correction_methods.index(correction)],
+                                       alpha_level=alpha,
+                                       xlabel_color=network_colors,
+                                       bar_labels=model_network_list,
+                                       t_xlabel='',
+                                       t_ylabel='F test values',
+                                       p_xlabel='',
+                                       p_ylabel=correction + ' corrected p values',
+                                       p_title='Network level ({}) ANOVA with language profile as factors, '
+                                               '\n ({}, {})'.format(model, kind, correction + '_corrected'),
+                                       t_title='Network level ({}) ANOVA with language profile as factors, '
+                                               '\n ({}, {})'.format(model, kind, correction + '_corrected'))
+                pdf.savefig()
+                plt.show()
+
+        # Now, plot the post hoc t test results for all
+        # possible contrast
+        for contrast in contrasts_name:
+            with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind,
+                                                   kind + '_' + contrast + '_' + model + '_t_values.pdf')) as pdf:
+                for correction in correction_methods:
+                    # Plot t values for the current contrast
+                    t_and_p_values_barplot(t_values=np.array(post_hoc_t_values)[:, contrasts_name.index(contrast)],
+                                           p_values=post_hoc_t_test_p_values[correction_methods.index(correction), :,
+                                                                             contrasts_name.index(contrast)],
+                                           alpha_level=alpha,
+                                           xlabel_color=network_colors,
+                                           bar_labels=model_network_list,
+                                           t_xlabel='',
+                                           t_ylabel='t values',
+                                           p_xlabel='',
+                                           p_ylabel=correction + '_corrected_p_values',
+                                           t_title='Network level ({}) ANOVA with language profile as factors, '
+                                                   '\n ({}, {}), '
+                                                   '\n {}'.format(model, kind, correction + '_corrected', contrast),
+                                           p_title='Network level ({}) ANOVA with language profile as factors, '
+                                                   '\n ({}, {}), '
+                                                   '\n {}'.format(model, kind, correction + '_corrected', contrast))
+                    pdf.savefig()
+                    plt.show()
