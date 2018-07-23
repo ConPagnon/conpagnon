@@ -137,3 +137,129 @@ with PdfPages(os.path.join(save_figures, 'classif.pdf')) as pdf:
     plt.title('Mean scores of classification using different kind of connectivity')
     pdf.savefig()
     plt.show()
+
+# Display of results: For each network, take the t-value for : intra-network, homotopic intra network, ipsilesional
+# intra network, contralesional intra-network
+network_to_plot = ['DMN', 'Executive',
+                   'Language', 'MTL',
+                   'Salience', 'Sensorimotor', 'Visuospatial',
+                   'Primary_Visual', 'Secondary_Visual']
+
+from data_handling import data_management
+from plotting.display import t_and_p_values_barplot
+from itertools import repeat
+
+network_color_df = data_management.shift_index_column(atlas_information[['network', 'Color']], 'network')
+
+network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network_to_plot]
+
+model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
+bar_label = ['G', 'H', 'CL', 'IPS']
+
+results_directory = '/media/db242421/db242421_data/ConPagnon_data/25042018_Patients_LangScore/regression_analysis'
+model_dictionary = dict.fromkeys(network_to_plot)
+
+output_fig_folder = '/media/db242421/db242421_data/ConPagnon_data/figures_Patients_LangScore'
+
+for network in network_to_plot:
+    all_models_t = []
+    all_models_p = []
+    for model in model_to_plot:
+        model_result = pd.read_csv(os.path.join(results_directory, 'tangent', network,
+                                                model + '_parameters.csv'))
+        all_models_t.append(model_result['t'].loc[1])
+        all_models_p.append(model_result['FDRcorrected_pvalues'].loc[1])
+
+    model_dictionary[network] = {'t_values': all_models_t, 'p_values': all_models_p}
+
+# For the whole brain model
+whole_brain_t = []
+whole_brain_p = []
+for model in model_to_plot:
+    model_result = pd.read_csv(os.path.join(results_directory, 'tangent', model + '_parameters.csv'))
+    whole_brain_t.append(model_result['t'].loc[2])
+    whole_brain_p.append(model_result['maxTcorrected_pvalues'].loc[2])
+
+with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
+
+    for network in network_to_plot:
+        # plt.figure()
+        xlabel_color = [x for item in [network_color[network_to_plot.index(network)]] for
+                        x in repeat(network_color[network_to_plot.index(network)], len(model_to_plot))]
+        t_and_p_values_barplot(t_values=model_dictionary[network]['t_values'],
+                               p_values=model_dictionary[network]['p_values'],
+                               alpha_level=0.05,
+                               xlabel_color=xlabel_color, bar_labels=bar_label,
+                               t_xlabel=' ', t_ylabel='t statistic', p_xlabel=' ', p_ylabel='corrected p value',
+                               t_title=network, p_title=network, xlabel_size=20
+                               )
+        pdf.savefig()
+
+with backend_pdf.PdfPages(os.path.join(output_fig_folder, 'patients_LangScore_3.pdf')) as pdf:
+    t_and_p_values_barplot(t_values=whole_brain_t,
+                           p_values=whole_brain_p,
+                           alpha_level=0.05,
+                           xlabel_color=['black', 'black', 'black', 'black'], bar_labels=bar_label,
+                           t_xlabel=' ', t_ylabel='t statistic', p_xlabel=' ', p_ylabel='corrected p value',
+                           t_title='', p_title='', xlabel_size=20
+                           )
+    pdf.savefig()
+
+# Illustration for may 15 presentation
+from matplotlib import colors
+
+cmap = colors.ListedColormap(labels_colors)
+from nilearn.plotting import plot_prob_atlas, plot_connectome
+from data_handling import data_management
+
+reference_anatomical_image = '/media/db242421/db242421_data/ConPagnon_data/atlas/' \
+                             'atlas_reference/wanat1_nc110193-2604_20110427_02.nii'
+plot_prob_atlas(maps_img=atlas_path, view_type='filled_contours', title='AVCnn resting state atlas',
+                draw_cross=False, cut_coords=(0, 0, 0), threshold=0., alpha=0.7,
+                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
+                            'figures_presentation_15052018/atlas_avcnn_72rois_ver/roi_plot_on_MNI.pdf',
+                cmap=cmap)
+plt.show()
+# TODO: Batch all this figure !!!!
+# Plot each network on a glass brain
+network_to_plot = ['Sensorimotor', 'Visuospatial', 'Salience'
+                   ]
+network_color_df = data_management.shift_index_column(atlas_information[['network', 'Color']],
+                                                      'network')
+
+network_nodes_df = data_management.shift_index_column(atlas_information[['network', 'x_', 'y_', 'z_']],
+                                                      'network')
+
+network_color = [list(set(network_color_df.loc[n]['Color']))[0] for n in network_to_plot]
+n_regions_network = [len(list((network_color_df.loc[n]['Color']))) for n in network_to_plot]
+
+with backend_pdf.PdfPages('/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
+                          'figures_presentation_15052018/atlas_avcnn_72rois_ver/one_side_inter_network_sensorimotor_language.pdf') as pdf:
+    for network in network_to_plot:
+        plt.figure()
+        plot_connectome(adjacency_matrix=np.zeros((n_regions_network[network_to_plot.index(network)],
+                                                   n_regions_network[network_to_plot.index(network)])),
+                        node_coords=np.array(network_nodes_df.loc[network]),
+                        node_color=network_color[network_to_plot.index(network)],
+                        title=network + ' network', display_mode='lyrz')
+        pdf.savefig()
+
+        plt.show()
+
+# One side plot
+network_node_ = network_nodes_df.loc[['Sensorimotor', 'Visuospatial', 'Salience']]
+chosen_node_ = network_node_.iloc[[0, 2, 4, 6, 7, 10, 11, 14, 16, 18]]
+chosen_node_adjacency_matrix = np.zeros((chosen_node_.shape[0], chosen_node_.shape[0]))
+plot_connectome(adjacency_matrix=chosen_node_adjacency_matrix, node_coords=np.array(chosen_node_),
+                node_color=network_color, title='Sensorimotor, Visuospatial and Salience',
+                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/figures_presentation_15052018/'
+                            'atlas_avcnn_72rois_ver/One_side_sensorimotor_visuospatial_salience.pdf')
+plt.show()
+
+# Plot the full set of nodes on the glass brain
+plot_connectome(adjacency_matrix=np.zeros((n_nodes, n_nodes)),
+                node_coords=atlas_nodes,
+                node_color=labels_colors,
+                title='AVCnn atlas', display_mode='lyrz',
+                output_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/'
+                            'figures_presentation_15052018/atlas_avcnn_72rois_ver/empty_glass_brain.pdf')
