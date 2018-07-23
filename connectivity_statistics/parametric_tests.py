@@ -267,7 +267,7 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
 def linear_regression(connectivity_data, data, formula, NA_action,
                       kind, subjects_to_drop=None, sheetname=None,save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
-                      alpha=0.05, pvals_correction_method=['FDR'], nperms_maxT=10000,
+                      alpha=0.05, pvals_correction_method=['fdr_bh'], nperms_maxT=10000,
                       vectorize=False, discard_diagonal=False):
     # TODO: add a way to select column containing the subjects ID, and
     # TODO: shift it to be the index of the DataFrame
@@ -406,16 +406,16 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         # Save a dictionnary with the principal
         regression_results = dict.fromkeys(covariable_name)
         
-        if corr_method == 'FDR':
+        if corr_method in ['fdr_bh', 'bonferroni']:
             
             # Flatten the array of raw p-values
             raw_p_shape = raw_pvals.shape
             # Call fdr correction, and reshape the results to (n_variable, n_features)
             pvalues_vec_corrected = multipletests(pvals=raw_pvals.flatten(),
-                                                   method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+                                                   method=corr_method, alpha=alpha)[1].reshape(raw_p_shape)
             
             reject_ = multipletests(pvals=raw_pvals.flatten(),
-                                                   method='fdr_bh', alpha=alpha)[0].reshape(raw_p_shape)
+                                                   method=corr_method, alpha=alpha)[0].reshape(raw_p_shape)
         
         elif corr_method == 'maxT':
             # Inference with the maximum statistic method :
