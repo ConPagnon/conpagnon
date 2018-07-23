@@ -21,10 +21,9 @@ import statsmodels.stats.multicomp as multi
 from scipy import stats
 
 
-
 def regression_analysis_network_level(groups, kinds, networks_list, root_analysis_directory,
                                       network_model, variables_in_model, behavioral_dataframe,
-                                      correction_method=['FDR'], alpha=0.05,
+                                      correction_method=['fdr_bh'], alpha=0.05,
                                       two_tailed=True, n_permutations=10000):
     """Regress a linear model at the network level
     """
@@ -99,10 +98,10 @@ def regression_analysis_network_level(groups, kinds, networks_list, root_analysi
                                                              saving_directory=os.path.join(root_analysis_directory,
                                                                                            'regression_analysis', kind),
                                                              filename=model+'_network_maximum_statistic_null.pkl')
-                elif corr_method == 'FDR':
+                elif corr_method in ['fdr_bh', 'bonferroni']:
                     raw_p_shape = raw_p.shape
                     fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
-                                                           method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+                                                           method=corr_method, alpha=alpha)[1].reshape(raw_p_shape)
                     corrected_p_values = fdr_corrected_p_values
                 else:
                     # return raw p
@@ -208,10 +207,10 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                     saving_directory=os.path.join(root_analysis_directory,
                                                   'regression_analysis', kind),
                                                   filename='whole_brain_connectivity_maximum_statistic_null.pkl')
-            elif corr_method == 'FDR':
+            elif corr_method in ['fdr_bh', 'bonferroni']:
                 raw_p_shape = raw_p.shape
                 fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
-                                                       method='fdr_bh', alpha=alpha)[1].reshape(raw_p_shape)
+                                                       method=corr_method, alpha=alpha)[1].reshape(raw_p_shape)
                 corrected_p_values = fdr_corrected_p_values
             else:
                 corrected_p_values = raw_p
@@ -232,7 +231,7 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
 def regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary, groups_in_model, behavioral_data_path,
                                            sheet_name, subjects_to_drop, model_formula, kinds_to_model,  root_analysis_directory,
                                            inter_network_model, network_labels_list, network_labels_colors,
-                                           pvals_correction_method=['maxT', 'FDR'], vectorize=True,
+                                           pvals_correction_method=['fdr_bh'], vectorize=True,
                                            discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
                                            compute_pvalues = 'True', pvalues_tail = 'True', NA_action='drop',
                                            alpha=0.05
@@ -265,7 +264,7 @@ def regression_analysis_internetwork_level(internetwork_subjects_connectivity_di
             data=behavioral_data_path,
             sheetname=sheet_name,
             subjects_to_drop=subjects_to_drop,
-            pvals_correction_method=['FDR', 'maxT'],
+            pvals_correction_method=pvals_correction_method,
             save_regression_directory=inter_network_analysis_output,
             kind=kind,
             NA_action=NA_action,
