@@ -29,7 +29,7 @@ importlib.reload(dictionary_operations)
 
 groups = ['impaired_language', 'non_impaired_language', 'controls']
 kinds = ['tangent', 'partial correlation', 'correlation']
-models = ['intra', 'intra_homotopic']
+models = ['mean_homotopic']
 variables_in_model = ['langage_clinique']
 root_analysis_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_anova'
 # Put a name for the subjects columns
