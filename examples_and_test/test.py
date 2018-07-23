@@ -26,22 +26,23 @@ importlib.reload(data_architecture)
 importlib.reload(dictionary_operations)
 
 
-data_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/dictionary'
-output_directory = '/media/db242421/db242421_data/ConPagnon_data/test'
+# data_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/dictionary'
+data_directory = 'D:\\test_language_ml\\dictionary'
+output_directory = 'D:\\test_language_ml'
 kind = 'tangent'
 # Load subjects matrices: just ACM lesion here
 Z_subjects_matrices = load_object(os.path.join(data_directory,
                                                'z_fisher_transform_subjects_connectivity_matrices.pkl'))
 
 # Load behavioral data file
-behavioral_data = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/regression_data/regression_data.xlsx'
+behavioral_data = 'D:\\test_language_ml\\behavioral_data.xlsx'
 regression_data_file = data_management.read_excel_file(
     excel_file_path=behavioral_data,
     sheetname='cohort_functional_data')
 
 # Load atlas ROIs labels for writing purpose
 # Atlas excel information file
-atlas_excel_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas_version2.xlsx'
+atlas_excel_file = 'D:\\atlas_AVCnn\\atlas_version2.xlsx'
 sheetname = 'complete_atlas'
 atlas_information = pd.read_excel(atlas_excel_file, sheetname='complete_atlas')
 atlas_roi_labels = list(atlas_information['anatomical label'])
@@ -56,23 +57,28 @@ group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
         groupes=['patients'], factors=['langage_clinique'], drop_subjects_list=None)
 
 # In this dataset, I have Impaired and non Impaired language
-groups = ['Non_impaired_language', 'Impaired_language']
+groups = ['Non_impaired_language', 'Impaired_language', 'controls']
 language_connectivity_dictionary = dict.fromkeys(groups)
 # Subjects connectivity matrices for both group
 language_connectivity_dictionary['Impaired_language'] = group_by_factor_subjects_connectivity['A']
 language_connectivity_dictionary['Non_impaired_language'] = group_by_factor_subjects_connectivity['N']
+language_connectivity_dictionary['controls'] = Z_subjects_matrices['controls']
 # Subject list for both group
 impaired_language_subjects_list = list(language_connectivity_dictionary['Impaired_language'].keys())
 non_impaired_language_subjects_list = list(language_connectivity_dictionary['Non_impaired_language'].keys())
-# Subjects labels
-language_subjects_labels = np.hstack((np.zeros(len(non_impaired_language_subjects_list)),
-                                      np.ones(len(impaired_language_subjects_list))))
+controls_subjects_list = list(language_connectivity_dictionary['controls'].keys())
+
 # Stack matrices
+class_name_to_classify = ['Non_impaired_language','controls']
 vectorized_connectivity_matrices = sym_matrix_to_vec(
     np.array([language_connectivity_dictionary[class_name][s][kind]
-              for class_name in groups
+              for class_name in class_name_to_classify
               for s in language_connectivity_dictionary[class_name].keys()]),
     discard_diagonal=True)
+
+# Subjects labels
+language_subjects_labels = np.hstack((np.zeros(len(non_impaired_language_subjects_list)),
+                                      np.ones(len(controls_subjects_list))))
 
 # Run SVM classification
 from sklearn import svm
@@ -87,17 +93,20 @@ kernel = 'linear'
 C = 1
 # Support Vector Classification object
 svc = svm.SVC(C=C, kernel=kernel)
-
+from sklearn.multiclass import OneVsRestClassifier
 # Compute classification score between impaired language
 # and non impaired language groups
-svm_scores = cross_val_score(estimator=svm.SVC(C=1, kernel='linear'),
+svm_scores = cross_val_score(estimator=svc,
                              X=vectorized_connectivity_matrices,
                              y=language_subjects_labels,
-                             cv=sss, scoring='accuracy')
+                             cv=loo, scoring='accuracy')
 
 mean_accuracy = round(np.mean(svm_scores), 2)*100
-std_accuracy = round(np.std(svm_scores), 2)*100
 
 print('Mean prediction accuracy : {}%'.format(mean_accuracy))
 
-# Feature ranking and elimination
+# Feature ranking and elimination, and classification: binary task
+for train, test in loo.split(X=vectorized_connectivity_matrices, y=language_subjects_labels):
+    # Perform two sample t test in training test between
+    # the two classes
+    class_one
