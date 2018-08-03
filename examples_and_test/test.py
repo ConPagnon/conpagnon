@@ -50,7 +50,7 @@ for network in networks:
         # rename the columns
         model_data.columns = [model + '_' + network + '_connectivity']
         # Stack the dataframe
-        data_to_merge.append(model_data)t
+        data_to_merge.append(model_data)
 # build the giant dataframe
 all_models_data = data_management.merge_list_dataframes(data_to_merge)
 all_models_data_T = all_models_data.T
