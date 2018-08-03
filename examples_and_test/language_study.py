@@ -87,7 +87,7 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V3'
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
 # Figure directory which can be useful for illustrating
@@ -1068,7 +1068,7 @@ groups_in_models = groupes
 
 # data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
-correction_method = 'FDR'
+correction_method = ['fdr_bh', 'bonferonni']
 # Fit three linear model for the three type of overall connections
 models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
 
@@ -1220,25 +1220,30 @@ regression_analysis_model.regression_analysis_internetwork_level(
 # Perform a one way ANOVA with language status as variable
 
 # Whole brain models
-regression_analysis_model.one_way_anova(models=models_to_build,
-                                        groups=groupes,
-                                        behavioral_dataframe=behavioral_data,
-                                        kinds=kinds,
-                                        correction_method=correction_methods,
-                                        root_analysis_directory=output_csv_directory,
-                                        variables_in_model=variables_model,
-                                        alpha=alpha)
+for model in models_to_build:
+
+    regression_analysis_model.one_way_anova(models=[model],
+                                            groups=groupes,
+                                            behavioral_dataframe=behavioral_data,
+                                            kinds=kinds,
+                                            correction_method=correction_methods,
+                                            root_analysis_directory=output_csv_directory,
+                                            variables_in_model=variables_model,
+                                            alpha=alpha)
 
 # Network models: intra homotopic
-regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
-                                                kinds=kinds,
-                                                groups=groupes,
-                                                networks_list=model_network_list,
-                                                models=['intra_homotopic'],
-                                                correction_method=correction_methods,
-                                                variables_in_model=variables_model,
-                                                alpha=alpha,
-                                                behavioral_dataframe=behavioral_data)
+models_network = ['intra', 'intra_homotopic']
+for model in models_network:
+
+    regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
+                                                    kinds=kinds,
+                                                    groups=groupes,
+                                                    networks_list=model_network_list,
+                                                    models=[model],
+                                                    correction_method=correction_methods,
+                                                    variables_in_model=variables_model,
+                                                    alpha=alpha,
+                                                    behavioral_dataframe=behavioral_data)
 # Network models: contra intra, ipsi intra, intra.
 regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
                                                 kinds=kinds,
@@ -1257,11 +1262,11 @@ regression_analysis_model.one_way_anova_network(root_analysis_directory=output_c
 # Display of the results
 # The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
 # mean contralesional
-output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA'
+output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V2'
 results_directory = os.path.join(output_csv_directory, 'regression_analysis')
 output_figure_directory = os.path.join(output_csv_directory, 'figures')
 model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
-network_model_to_plot = ['intra', 'ipsi_intra', 'contra_intra']
+network_model_to_plot = ['contra_intra', 'ipsi_intra']
 # network: ipsi, contra, intra
 model_network_list_1 = ['DMN', 'Executive',
                       'Language',  'MTL',
