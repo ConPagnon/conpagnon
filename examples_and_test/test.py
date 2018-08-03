@@ -6,14 +6,16 @@ from machine_learning import classification
 from connectivity_statistics import parametric_tests
 from plotting import display
 from data_handling import data_management
-from utils.folders_and_files_management import load_object
 import os
 import numpy as np
 import pandas as pd
-from nilearn.connectome import sym_matrix_to_vec
-from sklearn.model_selection import LeaveOneOut, StratifiedShuffleSplit, KFold, GridSearchCV
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVR
+from scipy.stats import t
+from plotting.display import plot_matrix
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.pyplot as plt
+from statsmodels.stats.multitest import multipletests
+from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
+import webcolors
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -25,88 +27,109 @@ importlib.reload(classification)
 importlib.reload(data_architecture)
 importlib.reload(dictionary_operations)
 
+# Build a giant dataset: all connectitivity type in columns, and subjects id in lines
 
-# data_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_ACM_controls/dictionary'
-data_directory = 'D:\\test_language_ml\\dictionary'
-output_directory = 'D:\\test_language_ml'
-kind = 'tangent'
-# Load subjects matrices: just ACM lesion here
-Z_subjects_matrices = load_object(os.path.join(data_directory,
-                                               'z_fisher_transform_subjects_connectivity_matrices.pkl'))
+root_data_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior/language_score/tangent'
 
-# Load behavioral data file
-behavioral_data = 'D:\\test_language_ml\\behavioral_data.xlsx'
-regression_data_file = data_management.read_excel_file(
-    excel_file_path=behavioral_data,
-    sheetname='cohort_functional_data')
 
-# Load atlas ROIs labels for writing purpose
-# Atlas excel information file
-atlas_excel_file = 'D:\\atlas_AVCnn\\atlas_version2.xlsx'
-sheetname = 'complete_atlas'
-atlas_information = pd.read_excel(atlas_excel_file, sheetname='complete_atlas')
-atlas_roi_labels = list(atlas_information['anatomical label'])
+models = ['contra_intra', 'ipsi_intra', 'intra_homotopic']
+networks = ['DMN', 'Executive', 'Language',  'MTL',
+           'Salience', 'Sensorimotor', 'Visuospatial',
+           'Primary_Visual', 'Secondary_Visual']
+data_to_merge = []
 
-# Select a subset of patients
-# Compute the connectivity matrices dictionary with factor as keys.
-group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
-    dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file=behavioral_data,
-        sheetname='cohort_functional_data',
-        subjects_connectivity_matrices_dictionnary=Z_subjects_matrices,
-        groupes=['patients'], factors=['langage_clinique'], drop_subjects_list=None)
+for network in networks:
+    for model in models:
+        # Read the model dataframe
+        raw_model_data = pd.read_csv(os.path.join(root_data_directory, network, 'patients_' + model + '_' + network +
+                                              '_connectivity.csv'))
 
-# In this dataset, I have Impaired and non Impaired language
-groups = ['Non_impaired_language', 'Impaired_language', 'controls']
-language_connectivity_dictionary = dict.fromkeys(groups)
-# Subjects connectivity matrices for both group
-language_connectivity_dictionary['Impaired_language'] = group_by_factor_subjects_connectivity['A']
-language_connectivity_dictionary['Non_impaired_language'] = group_by_factor_subjects_connectivity['N']
-language_connectivity_dictionary['controls'] = Z_subjects_matrices['controls']
-# Subject list for both group
-impaired_language_subjects_list = list(language_connectivity_dictionary['Impaired_language'].keys())
-non_impaired_language_subjects_list = list(language_connectivity_dictionary['Non_impaired_language'].keys())
-controls_subjects_list = list(language_connectivity_dictionary['controls'].keys())
+        # Shift index to subjects nip
+        model_data = data_management.shift_index_column(panda_dataframe=raw_model_data,
+                                                        columns_to_index=['subjects'])
+        # rename the columns
+        model_data.columns = [model + '_' + network + '_connectivity']
+        # Stack the dataframe
+        data_to_merge.append(model_data)t
+# build the giant dataframe
+all_models_data = data_management.merge_list_dataframes(data_to_merge)
+all_models_data_T = all_models_data.T
+all_models_data_T.to_csv('/media/db242421/db242421_data/ConPagnon_data/test/all_connectivity_T.csv')
+all_models_data.to_csv('/media/db242421/db242421_data/ConPagnon_data/test/all_connectivity.csv')
 
-# Stack matrices
-class_name_to_classify = ['Non_impaired_language','controls']
-vectorized_connectivity_matrices = sym_matrix_to_vec(
-    np.array([language_connectivity_dictionary[class_name][s][kind]
-              for class_name in class_name_to_classify
-              for s in language_connectivity_dictionary[class_name].keys()]),
-    discard_diagonal=True)
+from scipy.stats import pearsonr
+# Some statistic test
+alpha = 0.05
 
-# Subjects labels
-language_subjects_labels = np.hstack((np.zeros(len(non_impaired_language_subjects_list)),
-                                      np.ones(len(controls_subjects_list))))
+R_mat = all_models_data.corr()
+labels = list(R_mat.index)
+df = 25
+# Convert in T mat
+T_mat = (np.sqrt(df) * np.abs(R_mat)) / (np.sqrt(np.ones(R_mat.shape[0]) - R_mat ** 2))
+# compute p values
+P_mat = t.sf(np.abs(T_mat), df) * 2
 
-# Run SVM classification
-from sklearn import svm
-# Leave one out Cross validation scheme
-loo = LeaveOneOut()
-# Stratified cross validation scheme
-sss = StratifiedShuffleSplit(n_splits=10000)
-# K-fold evaluation scheme
-kfold = KFold(n_splits=5, shuffle=True)
-# SVM kernel
-kernel = 'linear'
-C = 1
-# Support Vector Classification object
-svc = svm.SVC(C=C, kernel=kernel)
-from sklearn.multiclass import OneVsRestClassifier
-# Compute classification score between impaired language
-# and non impaired language groups
-svm_scores = cross_val_score(estimator=svc,
-                             X=vectorized_connectivity_matrices,
-                             y=language_subjects_labels,
-                             cv=loo, scoring='accuracy')
+# Vectorize the P matrix
 
-mean_accuracy = round(np.mean(svm_scores), 2)*100
+P_mat_vec = sym_matrix_to_vec(P_mat, discard_diagonal=True)
 
-print('Mean prediction accuracy : {}%'.format(mean_accuracy))
 
-# Feature ranking and elimination, and classification: binary task
-for train, test in loo.split(X=vectorized_connectivity_matrices, y=language_subjects_labels):
-    # Perform two sample t test in training test between
-    # the two classes
-    class_one
+P_mat_vec_corrected = multipletests(pvals=P_mat_vec, method='fdr_bh', alpha=alpha)[1]
+
+P_mat_corrected = vec_to_sym_matrix(P_mat_vec_corrected, diagonal=np.ones(R_mat.shape[0])*(1/np.sqrt(2)))
+np.savetxt(fname='/media/db242421/db242421_data/ConPagnon_data/test/pcorrected.csv', X=P_mat_corrected,
+           delimiter=',', header="")
+
+
+labels_color = ['goldenrod', 'indianred', 'sienna', 'lightpink', 'turquoise', 'black', 'darkslategray',
+                'orchid', 'limegreen']
+labels_color = [webcolors.name_to_rgb(i) for i in labels_color]
+
+# Re-index the matrices, sorted the rows and columns by connectivity type
+sorted_labels = sorted(labels)
+#new_sorted_labels = sorted_labels[9:18] + sorted_labels[18:27] + sorted_labels[27:36] + sorted_labels[0:9]
+new_sorted_labels = sorted_labels[9:18] + sorted_labels[18:27] + sorted_labels[0:9]
+
+sorted_labels_colors = (1/255)*np.array(labels_color + labels_color + labels_color + labels_color)
+new_index_order = np.array([labels.index(i) for i in new_sorted_labels])
+
+# Re-index correlation matrix
+R_mat = np.array(R_mat)
+R_mat_reindex = R_mat[new_index_order, :]
+R_mat_reindex = R_mat_reindex[:, new_index_order]
+
+# Re-index p corrected matrices
+P_mat_corrected_reindex = P_mat_corrected[new_index_order, :]
+P_mat_corrected_reindex = P_mat_corrected_reindex[:, new_index_order]
+
+with PdfPages('/media/db242421/db242421_data/ConPagnon_data/test/P_mat_corrected_fdr_bh_wo_intra_' +
+              str(alpha) + '.pdf') as pdf:
+
+    plot_matrix(matrix=R_mat_reindex, mpart='all',
+                vmin=-1, vmax=1, horizontal_labels=new_sorted_labels,
+                vertical_labels=new_sorted_labels, linecolor='black',
+                title='Correlation between connectivity types in patients',
+                labels_colors=sorted_labels_colors)
+    pdf.savefig()
+    plt.show()
+
+    plot_matrix(matrix=P_mat_corrected_reindex, mpart='lower',
+                colormap='hot', vmin=0, vmax=alpha, horizontal_labels=new_sorted_labels,
+                vertical_labels=new_sorted_labels, linecolor='black',
+                title='Significant P values, alpha = {}'.format(alpha),
+                labels_colors=sorted_labels_colors)
+    pdf.savefig()
+    plt.show()
+
+    # Corresponding correlation matrix
+    mask = P_mat_corrected_reindex < alpha
+    R_mat_masked = np.multiply(mask, R_mat_reindex)
+
+    plot_matrix(matrix=R_mat_masked, mpart='lower',
+                vmin=-1, vmax=1, horizontal_labels=new_sorted_labels,
+                vertical_labels=new_sorted_labels, linecolor='black',
+                title='Significant correlation',
+                labels_colors=sorted_labels_colors)
+    pdf.savefig()
+    plt.show()
+
