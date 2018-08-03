@@ -37,12 +37,15 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/LG_ACM_patients_controls'
-connectivity_dictionary_name = 'LG_acm_controls_connectivity_matrices.pkl'
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V3/dictionary'
+connectivity_dictionary_name = 'z_fisher_transform_subjects_connectivity_matrices.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder,
                                                           connectivity_dictionary_name))
+subjects_connectivity_matrices['patients'] = {**subjects_connectivity_matrices['non_impaired_language'],
+                                              **subjects_connectivity_matrices['impaired_language']}
 
-class_names = list(subjects_connectivity_matrices.keys())
+#class_names = list(subjects_connectivity_matrices.keys())
+class_names = ['patients', 'controls']
 metric = 'tangent'
 
 # Vectorize the connectivity for classification
@@ -65,7 +68,7 @@ second_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[
 
 # choose the top features weight number to plot
 top_features_number = 50
-node_size = 10
+node_size = 15
 # Labels vectors
 class_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[class_names[0]].keys())),
                           -1*np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
@@ -104,8 +107,8 @@ bootstrap_array_perm = np.random.choice(a=indices,
                                               n_subjects),
                                         replace=True)
 
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/features_identification_results/' \
-                 'LG_ACM_patients_controls'
+save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V2/' \
+                 'discriminative_connection_identification/patients_controls'
 
 # report name for features visualisation and parameters text report
 report_filename = 'features_identification_' + class_names[0] + '_' + class_names[1] + '_' + str(alpha) + \
@@ -181,9 +184,6 @@ if __name__ == '__main__':
                           labels_regions=labels_regions)
 
     if correction == 'max_t':
-        null_distribution = load_object(full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/'
-                                                            'features_identification_results/'
-                                                            'LG_ACM_patients_controls/null_distribution.pkl')
         # Corrected p values with the maximum statistic
         sorted_null_maximum_dist,  sorted_null_minimum_dist, p_value_positive_weights, p_value_negative_weights = \
             features_weights_max_t_correction(null_distribution_features_weights=null_distribution,
@@ -214,6 +214,14 @@ if __name__ == '__main__':
                                                     p_positive_features_significant)
         mean_difference_negative_mask = np.multiply(first_class_mean_matrix - second_class_mean_matrix,
                                                     p_negative_features_significant)
+
+        # Mask for all significant connection, for both,
+        # positive and negative weight
+        p_all_significant_features = p_positive_features_significant + p_negative_features_significant
+
+        # Take the mean difference for the overall significant features mask
+        mean_difference_all_significant_features_mask = np.multiply(first_class_mean_matrix - second_class_mean_matrix,
+                                                                    p_all_significant_features)
 
         with PdfPages(os.path.join(save_directory, report_filename)) as pdf:
             # Plot the estimated null distribution
@@ -268,65 +276,75 @@ if __name__ == '__main__':
                             node_color=labels_colors)
             pdf.savefig()
 
-            # Plot on glass brain the significant positive features weight
-            plt.figure()
-            plot_connectome(adjacency_matrix=p_positive_features_significant,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Significant positive weight', edge_cmap='Reds',
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+            if np.where(p_all_significant_features == 1)[0].size != 0:
 
-            # Plot on glass brain the mean difference in connectivity between
-            # the two groups for surviving positive weight
-            plt.figure()
-            plot_connectome(adjacency_matrix=mean_difference_positive_mask,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Difference in connectivity {} - {} (positive weights)'.format(
-                                class_names[0],
-                                class_names[1]),
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+                # Plot on glass brain the significant positive features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=p_positive_features_significant,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant positive weight', edge_cmap='Reds',
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
 
-            # Plot on glass brain the significant negative features weight
-            plt.figure()
-            plot_connectome(adjacency_matrix=p_negative_features_significant,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Significant negative weight', edge_cmap='Blues',
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+                # Plot on glass brain the mean difference in connectivity between
+                # the two groups for surviving positive weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=mean_difference_positive_mask,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Difference in connectivity {} - {} (positive weights)'.format(
+                                    class_names[0],
+                                    class_names[1]),
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
 
-            plt.figure()
-            plot_connectome(adjacency_matrix=mean_difference_negative_mask,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Difference in connectivity {} - {} (negative weights)'.format(
-                                class_names[0],
-                                class_names[1]),
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+                # Plot on glass brain the significant negative features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=p_negative_features_significant,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant negative weight', edge_cmap='Blues',
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
 
-            # Matrix view of significant positive and negative weight
-            plt.figure()
-            plot_matrix(matrix=p_negative_features_significant, labels_colors='auto', mpart='all',
-                        colormap='Blues', linecolor='black', title='Significant negative weight',
-                        vertical_labels=labels_regions, horizontal_labels=labels_regions)
-            pdf.savefig()
+                plt.figure()
+                plot_connectome(adjacency_matrix=mean_difference_negative_mask,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Difference in connectivity {} - {} (negative weights)'.format(
+                                    class_names[0],
+                                    class_names[1]),
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
 
-            plt.figure()
-            plot_matrix(matrix=p_positive_features_significant, labels_colors='auto', mpart='all',
-                        colormap='Reds', linecolor='black', title='Significant positive weight',
-                        vertical_labels=labels_regions, horizontal_labels=labels_regions)
-            pdf.savefig()
+                plt.figure()
+                plot_connectome(adjacency_matrix=mean_difference_all_significant_features_mask,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Difference in connectivity {} - {} (all weights)'.format(
+                                    class_names[0],
+                                    class_names[1]),
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
 
-            plt.close("all")
+                # Matrix view of significant positive and negative weight
+                plt.figure()
+                plot_matrix(matrix=p_negative_features_significant, labels_colors='auto', mpart='all',
+                            colormap='Blues', linecolor='black', title='Significant negative weight',
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
+
+                plt.figure()
+                plot_matrix(matrix=p_positive_features_significant, labels_colors='auto', mpart='all',
+                            colormap='Reds', linecolor='black', title='Significant positive weight',
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
+
+                plt.close("all")
 
     else:
-        null_distribution = load_object(full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/'
-                                                            'features_identification_results/'
-                                                            'LG_ACM_patients_controls/null_distribution.pkl')
+
         # Perform another type of correction like FDR, ....
         p_values_corrected = features_weights_parametric_correction(
             null_distribution_features_weights=null_distribution,
@@ -357,6 +375,14 @@ if __name__ == '__main__':
                                                     p_positive_features_significant)
         mean_difference_negative_mask = np.multiply(first_class_mean_matrix - second_class_mean_matrix,
                                                     p_negative_features_significant)
+
+        # Mask for all significant connection, for both,
+        # positive and negative weight
+        p_all_significant_features = p_positive_features_significant + p_negative_features_significant
+
+        # Take the mean difference for the overall significant features mask
+        mean_difference_all_significant_features_mask = np.multiply(first_class_mean_matrix - second_class_mean_matrix,
+                                                                    p_all_significant_features)
 
         # plot the top weight in a histogram fashion
         with PdfPages(os.path.join(save_directory, report_filename)) as pdf:
@@ -392,64 +418,76 @@ if __name__ == '__main__':
                             node_size=node_size,
                             node_color=labels_colors)
             pdf.savefig()
-            # Plot on glass brain the significant positive features weight
-            plt.figure()
-            plot_connectome(adjacency_matrix=p_positive_features_significant,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Significant positive weight after {} correction'.format(correction),
-                            edge_cmap='Reds',
-                            node_size=node_size,
-                            node_color=labels_colors)
+            if np.where(p_all_significant_features == 1)[0].size != 0:
 
-            pdf.savefig()
+                # Plot on glass brain the significant positive features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=p_positive_features_significant,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant positive weight after {} correction'.format(correction),
+                                edge_cmap='Reds',
+                                node_size=node_size,
+                                node_color=labels_colors)
 
-            # the two groups for surviving positive weight
-            plt.figure()
-            plot_connectome(adjacency_matrix=mean_difference_positive_mask,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Difference in connectivity {} - {} (positive weights)'.format(
-                                class_names[0],
-                                class_names[1]),
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+                pdf.savefig()
 
-            # Plot on glass brain the significant negative features weight
-            plt.figure()
-            plot_connectome(adjacency_matrix=p_negative_features_significant,
-                            node_coords=atlas_nodes, colorbar=True,
+                # the two groups for surviving positive weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=mean_difference_positive_mask,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Difference in connectivity {} - {} (positive weights)'.format(
+                                    class_names[0],
+                                    class_names[1]),
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                # Plot on glass brain the significant negative features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=p_negative_features_significant,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant negative weight after {} correction'.format(correction),
+                                edge_cmap='Blues',
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                plt.figure()
+                plot_connectome(adjacency_matrix=mean_difference_negative_mask,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Mean difference in connectivity {} - {} (negative weights)'.format(
+                                    class_names[0],
+                                    class_names[1]),
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                plt.figure()
+                plot_connectome(adjacency_matrix=mean_difference_all_significant_features_mask,
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Difference in connectivity {} - {} (all weights)'.format(
+                                    class_names[0],
+                                    class_names[1]),
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                # Matrix view of significant positive and negative weight
+                plt.figure()
+                plot_matrix(matrix=p_negative_features_significant, labels_colors=labels_colors, mpart='all',
+                            colormap='Blues', linecolor='black',
                             title='Significant negative weight after {} correction'.format(correction),
-                            edge_cmap='Blues',
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
 
-            plt.figure()
-            plot_connectome(adjacency_matrix=mean_difference_negative_mask,
-                            node_coords=atlas_nodes, colorbar=True,
-                            title='Mean difference in connectivity {} - {} (negative weights)'.format(
-                                class_names[0],
-                                class_names[1]),
-                            node_size=node_size,
-                            node_color=labels_colors)
-            pdf.savefig()
+                plt.figure()
+                plot_matrix(matrix=p_positive_features_significant, labels_colors=labels_colors, mpart='all',
+                            colormap='Reds', linecolor='black',
+                            title='Significant positive weight after {} correction'.format(correction),
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
 
-            # Matrix view of significant positive and negative weight
-            plt.figure()
-            plot_matrix(matrix=p_negative_features_significant, labels_colors=labels_colors, mpart='all',
-                        colormap='Blues', linecolor='black',
-                        title='Significant negative weight after {} correction'.format(correction),
-                        vertical_labels=labels_regions, horizontal_labels=labels_regions)
-            pdf.savefig()
-
-            plt.figure()
-            plot_matrix(matrix=p_positive_features_significant, labels_colors=labels_colors, mpart='all',
-                        colormap='Reds', linecolor='black',
-                        title='Significant positive weight after {} correction'.format(correction),
-                        vertical_labels=labels_regions, horizontal_labels=labels_regions)
-            pdf.savefig()
-
-            plt.close("all")
+                plt.close("all")
 
     # Write a small report in a text file
     with open(os.path.join(save_directory, text_report_filename), 'w') as output_results:
@@ -499,30 +537,3 @@ if __name__ == '__main__':
                 significant_positive_features_indices[positive_feature][0],
                 significant_positive_features_indices[positive_feature][1]))
 
-    # write in text file some significant pairs, with language scores
-#    regions_to_write = significant_positive_features_indices
-#    patients_ids = list(subjects_connectivity_matrices['patients'].keys())
-#    patients_matrices = np.array([subjects_connectivity_matrices['patients'][s][metric]
-#                                  for s in patients_ids])
-#    language_scores = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
-#                                    sheetname='cohort_functional_data')['language_score']
-
-#    gender = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
-#                            sheetname='cohort_functional_data')['Sexe']
-
-#    lesion_volume = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
-#                                    sheetname='cohort_functional_data')['lesion_normalized']
-
-#    language_profil = read_excel_file('D:\\FunConnect\\regression_data.xlsx',
-#                                      sheetname='cohort_functional_data')['langage_clinique']
-#    header = ['subjects', 'connectivity', 'language_score', 'gender', 'lesion_volume', 'language_profil']
-#    for region in regions_to_write:
-#        region_csv = os.path.join(save_directory, 'pos_connection',
-#                                  labels_regions[region[0]] + '_' + labels_regions[region[1]] + '.csv')
-#        with open(os.path.join(region_csv), "w", newline='') as csv_file:
-#            writer = csv.writer(csv_file, delimiter=',')
-#            writer.writerow(header)
-#            for line in range(len(patients_ids)):
-#                writer.writerow([patients_ids[line], patients_matrices[line, region[0], region[1]],
-#                                 language_scores.loc[patients_ids[line]], gender[patients_ids[line]],
-#                                 lesion_volume[patients_ids[line]], language_profil[patients_ids[line]]])
