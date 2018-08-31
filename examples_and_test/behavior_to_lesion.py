@@ -32,7 +32,7 @@ for subject in subjects_list:
     # flatten the array for a PCA later on
     all_lesion_flatten.append(np.array(subject_lesion_array.flatten(), dtype=np.int8))
 
-flatten_lesions = np.array(all_lesion_flatten, dtype=np.bool)
+flatten_lesions = np.array(all_lesion_flatten, dtype=np.int8)
 all_lesion_array = np.array(all_images, dtype=np.int8)
 
 # Compute lesion overlap image
@@ -44,3 +44,5 @@ nb.save(img=lesion_overlap_nifti, filename="/media/db242421/db242421_data/ConPag
 
 # Save flatten array
 flatten_lesions.tofile("/media/db242421/db242421_data/ConPagnon_data/lesion_map.txt")
+np.savetxt('/media/db242421/db242421_data/ConPagnon_data/lesion_map.txt',
+           flatten_lesions, delimiter = ',')
