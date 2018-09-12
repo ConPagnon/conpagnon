@@ -132,3 +132,9 @@ for component in components_names:
             str(percentage_of_variance_each_components[components_names.index(component)])[0:3]),
         output_file=os.path.join(saving_directory, component + '.svg'))
     plt.show()
+
+# plot on glass brain the lesion mapping
+plot_glass_brain(stat_map_img=lesion_overlap_nifti, plot_abs=False,
+                 cmap="hot", colorbar=True,
+                 title="Lesion overlap of NAIS MCA stroke",
+                 output_file=os.path.join(saving_directory, "lesion_mapping.svg"))
