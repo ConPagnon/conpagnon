@@ -7,16 +7,17 @@ import os
 import glob
 import nibabel as nb
 from utils.folders_and_files_management import save_object
-from sklearn.preprocessing import StandardScaler
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-from sklearn.decomposition import PCA
+import decimal
+import matplotlib.pyplot as plt
+from nilearn.plotting import plot_glass_brain
 
 # Set path, read subjects list
 lesions_root_directory = "/media/db242421/db242421_data/AVCnn_2016_DARTEL/AVCnn_data/patients"
+controls_root_directory = "/media/db242421/db242421_data/AVCnn_2016_DARTEL/AVCnn_data/control"
+controls_list_txt = ""
 subjects_list_txt = "/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients.txt"
 subjects_list = pd.read_csv(subjects_list_txt, header=None)[0]
-saving_directory = "/media/db242421/db242421_data/ConPagnon_reports/resultsPCA"
+saving_directory = "/media/db242421/db242421_data/ConPagnon_reports/lesion_behavior_mapping"
 
 all_images = []
 all_lesion_flatten = []
@@ -27,7 +28,7 @@ someone_lesion_map = load_img(os.path.join(lesions_root_directory,
 target_affine = someone_lesion_map.affine
 target_shape = someone_lesion_map.shape
 
-# Read and load lesion image for each subject
+# Read and load lesion image for each subject,
 for subject in subjects_list:
     # path to the subject image
     subject_lesion_path = os.path.join(lesions_root_directory, subject, 'lesion')
@@ -41,7 +42,7 @@ for subject in subjects_list:
     subject_lesion_array = subject_lesion.get_data()
     # Append lesion array to all images list
     all_images.append(subject_lesion_array)
-    # flatten the array for a PCA later on
+    # flatten the lesion array for a PCA later on
     all_lesion_flatten.append(np.array(subject_lesion_array.flatten(),
                                        dtype=np.int8))
 
@@ -55,29 +56,64 @@ lesion_overlap_array = np.sum(all_lesion_array, axis=0)
 lesion_overlap_nifti = nb.Nifti1Image(dataobj=lesion_overlap_array,
                                       affine=target_affine)
 nb.save(img=lesion_overlap_nifti,
-        filename="/media/db242421/db242421_data/ConPagnon_reports/overlap_acm.nii")
+        filename=os.path.join(saving_directory, "overlap_acm.nii"))
 
 # Save flatten lesion map
-save_object(object_to_save=lesions_maps, 
+save_object(object_to_save=lesions_maps,
             saving_directory=saving_directory,
             filename='lesion_maps_acm.pkl')
 # Save flatten lesion array in numpy format
 np.save(os.path.join(saving_directory, "lesion_maps.npy"),
         arr=lesions_maps)
-# Perform principal components analysis on
-# lesion map
-sc = StandardScaler()
-scaled_lesion_maps = sc.fit_transform(lesions_maps)
 
-pca = PCA(n_components=0.9)
-scaled_lesion_maps = pca.fit_transform(scaled_lesion_maps)
+# Reduce the number of voxels, with a mask
+# unused voxel is background information
+lesions_maps_sum = np.sum(lesions_maps, axis=0)
+mask = np.where(lesions_maps_sum >= 1)[0]
+lesions_maps_masked = lesions_maps[..., mask]
+# Perform a truncated svd
+from sklearn.decomposition import TruncatedSVD
+svd_lesions_maps = TruncatedSVD(n_components=14)
 
-explained_variance = pca.explained_variance_ratio_
-cumulative_sum_of_variance = explained_variance.cumsum()
+svd_lesions_maps_reduced = svd_lesions_maps.fit_transform(lesions_maps_masked)
+svd_lesions_maps_reconstructed = svd_lesions_maps.inverse_transform(svd_lesions_maps_reduced)
+
+# Compute loading defined as eigenvectors scaled by
+# the squared root of singular values
+svd_lesion_maps_loadings = svd_lesions_maps.components_.T * \
+                           np.sqrt(svd_lesions_maps.explained_variance_)
+svd_lesion_maps_loadings = svd_lesion_maps_loadings.T
+
+print("Percentage of variance explained with {} components "
+      "retained: {}%".format(svd_lesions_maps.n_components,
+                             round(svd_lesions_maps.explained_variance_ratio_.sum()*100, 2)))
+# Percentage of variance explained by each retained components
+D = decimal.Decimal
+percentage_of_variance_each_components = np.array([round(np.float(
+    D(str(svd_lesions_maps.explained_variance_ratio_[i])).quantize(D('0.001'), rounding=decimal.ROUND_UP)), 3)
+                                          for i in range(svd_lesions_maps.n_components)])*100
+# reconstruct each principal components as an image
+# projecting loadings back to brain space
+loading_nii_img = {}
+for c in range(svd_lesions_maps.n_components):
+    # initialize an flatten empty image
+    pc_loading_on_brain = np.zeros(lesions_maps.shape[1])
+    # Fill the voxels in the mask by the voxels loading
+    # from PCA
+    pc_loading_on_brain[mask] = svd_lesion_maps_loadings[c, ...]
+    # Reshape the array of pc loading
+    pc_loading_on_brain_reshaped = pc_loading_on_brain.reshape(target_shape)
+    # Convert in a nifti image
+    pc_loading_on_brain_reshaped_nii = nb.Nifti1Image(dataobj=pc_loading_on_brain_reshaped,
+                                                      affine=target_affine)
+    loading_nii_img["PC"+str(c+1)] = pc_loading_on_brain_reshaped_nii
+    # Save in nifti format
+    nb.save(img=pc_loading_on_brain_reshaped_nii,
+            filename=os.path.join(saving_directory, 'PC_' + str(c) + '.nii'))
 
 # Construct a dataframe with the PCA result
-columns_names = ['PC{}'.format(i) for i in range(1, len(cumulative_sum_of_variance)+1)]
-pca_results_df = pd.DataFrame(data=scaled_lesion_maps,
+columns_names = ['PC{}'.format(i) for i in range(1, svd_lesions_maps.n_components+1)]
+pca_results_df = pd.DataFrame(data=svd_lesions_maps_reduced,
                               columns=columns_names)
 pca_results_df.head()
 # rename index with subject identifier
@@ -85,32 +121,14 @@ pca_results_df = pca_results_df.rename(index=subjects_list)
 pca_results_df.to_csv(index_label="subjects",
                       path_or_buf=os.path.join(saving_directory, "pca_lesion_map.csv"))
 
-# It interesting to see the reconstruction based on the principal components in
-# the image space
-inverse_lesion_maps = pca.inverse_transform(scaled_lesion_maps)
-# Reshape to image format
-inverse_lesions_maps_array = np.zeros((inverse_lesion_maps.shape[0],
-                                       target_shape[0], target_shape[1],
-                                       target_shape[2]))
-for s in range(inverse_lesion_maps.shape[0]):
-    inverse_lesions_maps_array[s, ...] = np.reshape(inverse_lesion_maps[s, ...],
-                                                    newshape=target_shape)
-
-# Compute the reconstructed overlap image
-reconstructed_overlap_lesions = np.sum(inverse_lesions_maps_array, axis=0)
-reconstructed_overlap_lesions_img = nb.Nifti1Image(dataobj=reconstructed_overlap_lesions,
-                                                   affine=target_affine)
-nb.save(img=reconstructed_overlap_lesions_img,
-        filename=os.path.join(saving_directory, "reconstructed_overlap_acm.nii"))
-
-# Add clinical variable
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive'
-         ]
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/avccn-b1a97159e635.json',
-    scope)
-client = gspread.authorize(creds)
-
-# Access AVCnn spreadsheets
-acm_data_spreadsheet = client.open('Resting State AVCnn: cohort data').sheet1
+components_names = list(loading_nii_img.keys())
+for component in components_names:
+    plt.figure()
+    plot_glass_brain(
+        stat_map_img=loading_nii_img[component], plot_abs=False,
+        cmap="RdBu_r", colorbar=True,
+        title="{} loadings: {} % of variance explained".format(
+            component,
+            str(percentage_of_variance_each_components[components_names.index(component)])[0:3]),
+        output_file=os.path.join(saving_directory, component + '.svg'))
+    plt.show()
