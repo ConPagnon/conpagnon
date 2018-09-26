@@ -75,7 +75,7 @@ individual_atlas_labels_extension = '*.csv'
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/subjects_ID.txt'
+    '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients_and_controls.txt'
 
 # Full to the following directories: individual atlases images,
 # individual text labels files, and individual confounds directories.
@@ -87,7 +87,7 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V3'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls'
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
 # Figure directory which can be useful for illustrating
@@ -286,9 +286,9 @@ whole_brain_mean_connectivity = ccm.mean_of_flatten_connectivity_matrices(
     subjects_individual_matrices_dictionary=Z_subjects_connectivity_matrices, groupes=groupes, kinds=kinds)
 
 # Estimate mean and standard deviation of whole brain mean connectivity for each group and kinds
-whole_brain_mean_connectiviy_parameters = dict.fromkeys(groupes)
+whole_brain_mean_connectivity_parameters = dict.fromkeys(groupes)
 for groupe in groupes:
-    whole_brain_mean_connectiviy_parameters[groupe] = dict.fromkeys(kinds)
+    whole_brain_mean_connectivity_parameters[groupe] = dict.fromkeys(kinds)
     for kind in kinds:
         # Stack the mean homotopic connectivity of each subject for the current group
         subjects_mean_whole_brain_connectivity = np.array(
@@ -298,7 +298,7 @@ for groupe in groupes:
         subjects_mean_whole_brain_connectivity_, mean_estimation, std_estimation = \
             parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_whole_brain_connectivity)
         # Fill a dictionnary saving the results for each groups and kind
-        whole_brain_mean_connectiviy_parameters[groupe][kind] = {
+        whole_brain_mean_connectivity_parameters[groupe][kind] = {
             'subjects mean whole brain connectivity': subjects_mean_whole_brain_connectivity_,
             'whole brain distribution mean': mean_estimation,
             'whole brain distribution standard deviation': std_estimation}
@@ -309,11 +309,11 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
     for kind in kinds:
         plt.figure()
         for groupe in groupes:
-            group_connectivity = whole_brain_mean_connectiviy_parameters[groupe][kind][
+            group_connectivity = whole_brain_mean_connectivity_parameters[groupe][kind][
                 'subjects mean whole brain connectivity']
-            group_mean = whole_brain_mean_connectiviy_parameters[groupe][kind][
+            group_mean = whole_brain_mean_connectivity_parameters[groupe][kind][
                 'whole brain distribution mean']
-            group_std = whole_brain_mean_connectiviy_parameters[groupe][kind][
+            group_std = whole_brain_mean_connectivity_parameters[groupe][kind][
                 'whole brain distribution standard deviation']
             display.display_gaussian_connectivity_fit(
                 vectorized_connectivity=group_connectivity,
@@ -1066,11 +1066,9 @@ folders_and_files_management.save_object(object_to_save=subjects_inter_network_c
 kinds_to_model = ['correlation', 'partial correlation', 'tangent']
 groups_in_models = groupes
 
-# data_directory = os.path.join('D:\\text_output_11042018', kind)
-# Choose the correction method
-correction_method = ['fdr_bh', 'bonferonni']
 # Fit three linear model for the three type of overall connections
-models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional', 'mean_ipsilesional']
+models_to_build = ['mean_connectivity', 'mean_homotopic',
+                   'mean_contralesional', 'mean_ipsilesional']
 
 # variables in the model
 variables_model = ['langage_clinique']
@@ -1098,152 +1096,29 @@ behavioral_data = data_management.shift_index_column(
     panda_dataframe=behavioral_data,
     columns_to_index=['subjects'])
 
-# Analysis of whole brain connectivity, whole brain mean homotopic connectivity,
-# mean ipsilesional and contralesional connectivity. Joint correction for 4 models.
-regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
-                                                          kinds=kinds_to_model,
-                                                          root_analysis_directory=output_csv_directory,
-                                                          whole_brain_model=models_to_build,
-                                                          variables_in_model=variables_model,
-                                                          behavioral_dataframe=behavioral_data,
-                                                          correction_method=['FDR'],
-                                                          alpha=0.05)
-
-# Analysis of intra-network mean homotopic connectivity: correction for 12 models.
-regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
-                                                            kinds=kinds_to_model,
-                                                            networks_list=model_network_list,
-                                                            root_analysis_directory=output_csv_directory,
-                                                            network_model=['intra_homotopic'],
-                                                            variables_in_model=variables_model,
-                                                            behavioral_dataframe=behavioral_data,
-                                                            correction_method=['FDR'],
-                                                            alpha=0.05)
-# Analysis of mean intra-network connectivity, mean ipsilesional intra-network connectivity,
-# mean contralesional intra-network connectivity. Except for Basal Ganglia, Precuneus,
-# and Auditory because for these network intra-network connectivity is just homotopic
-# connectivity.
-regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
-                                                            kinds=kinds_to_model,
-                                                            networks_list=ipsi_contra_model_network_list,
-                                                            root_analysis_directory=output_csv_directory,
-                                                            network_model=['intra', 'ipsi_intra', 'contra_intra'],
-                                                            variables_in_model=variables_model,
-                                                            behavioral_dataframe=behavioral_data,
-                                                            correction_method=['FDR'],
-                                                            alpha=0.05)
-
-# Inter-network statistic : whole brain, ipsilesional and contralesional
-inter_network_model = 'overall_inter_network'
-# Whole brain internetwork
-# Load the dictionary
-whole_brain_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(output_csv_directory, 'dictionary',
-                                     'subjects_inter_network_connectivity_matrices.pkl'))
-# Load the network labels list for plotting purpose when plotting the inter-network
-# matrices
-whole_brain_internetwork_labels = folders_and_files_management.load_object(
-    os.path.join(output_csv_directory, 'dictionary', 'whole_brain_inter_networks_labels.pkl'))
-
-regression_analysis_model.regression_analysis_internetwork_level(
-    internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices,
-    groups_in_model=groups_in_models,
-    behavioral_data_path=cohort_excel_file_path,
-    sheet_name='cohort_functional_data',
-    subjects_to_drop=None,
-    model_formula=model_formula,
-    kinds_to_model=kinds_to_model,
-    root_analysis_directory=output_csv_directory,
-    inter_network_model=inter_network_model,
-    network_labels_list=network_labels_list,
-    network_labels_colors=network_label_colors,
-    pvals_correction_method=['FDR'], vectorize=True,
-    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
-    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
-    alpha=0.05)
-
-# Ipsilesional inter-network analysis
-ipsi_internetwork_model = 'ipsi_inter_network'
-ipsi_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(
-        output_csv_directory, 'dictionary/subjects_inter_network_ipsi_connectivity_matrices.pkl'))
-
-# Load the network labels list for plotting purpose when plotting the inter-network
-# matrices
-ipsilesional_internetwork_labels = folders_and_files_management.load_object(
-    os.path.join(output_csv_directory, 'dictionary', 'ipsi_inter_networks_labels.pkl'))
-
-regression_analysis_model.regression_analysis_internetwork_level(
-    internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices,
-    groups_in_model=groups_in_models,
-    behavioral_data_path=cohort_excel_file_path,
-    sheet_name='cohort_functional_data',
-    subjects_to_drop=None,
-    model_formula=model_formula,
-    kinds_to_model=kinds_to_model,
-    root_analysis_directory=output_csv_directory,
-    inter_network_model=ipsi_internetwork_model,
-    network_labels_list=ipsilesional_internetwork_labels,
-    network_labels_colors=network_label_colors,
-    pvals_correction_method=['FDR'], vectorize=True,
-    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
-    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
-    alpha=0.05)
-
-# Contralesional inter-network analysis
-contra_internetwork_model = 'contra_inter_network'
-contra_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(output_csv_directory,
-                                     'dictionary/subjects_inter_network_contra_connectivity_matrices.pkl'))
-# Load the network labels list for plotting purpose when plotting the inter-network
-# matrices
-contralesional_internetwork_labels = folders_and_files_management.load_object(
-    os.path.join(output_csv_directory, 'dictionary', 'contra_inter_networks_labels.pkl'))
-
-regression_analysis_model.regression_analysis_internetwork_level(
-    internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices,
-    groups_in_model=groups_in_models,
-    behavioral_data_path=cohort_excel_file_path,
-    sheet_name='cohort_functional_data',
-    subjects_to_drop=None,
-    model_formula=model_formula,
-    kinds_to_model=kinds_to_model,
-    root_analysis_directory=output_csv_directory,
-    inter_network_model=contra_internetwork_model,
-    network_labels_list=network_labels_list,
-    network_labels_colors=network_label_colors,
-    pvals_correction_method=['FDR'], vectorize=True,
-    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
-    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
-    alpha=0.05)
 
 # Perform a one way ANOVA with language status as variable
-
 # Whole brain models
-for model in models_to_build:
-
-    regression_analysis_model.one_way_anova(models=[model],
-                                            groups=groupes,
-                                            behavioral_dataframe=behavioral_data,
-                                            kinds=kinds,
-                                            correction_method=correction_methods,
-                                            root_analysis_directory=output_csv_directory,
-                                            variables_in_model=variables_model,
-                                            alpha=alpha)
+regression_analysis_model.one_way_anova(models=models_to_build,
+                                        groups=groupes,
+                                        behavioral_dataframe=behavioral_data,
+                                        kinds=kinds,
+                                        correction_method=correction_methods,
+                                        root_analysis_directory=output_csv_directory,
+                                        variables_in_model=variables_model,
+                                        alpha=alpha)
 
 # Network models: intra homotopic
-models_network = ['intra', 'intra_homotopic']
-for model in models_network:
+regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
+                                                kinds=kinds,
+                                                groups=groupes,
+                                                networks_list=model_network_list,
+                                                models=['intra_homotopic'],
+                                                correction_method=correction_methods,
+                                                variables_in_model=variables_model,
+                                                alpha=alpha,
+                                                behavioral_dataframe=behavioral_data)
 
-    regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
-                                                    kinds=kinds,
-                                                    groups=groupes,
-                                                    networks_list=model_network_list,
-                                                    models=[model],
-                                                    correction_method=correction_methods,
-                                                    variables_in_model=variables_model,
-                                                    alpha=alpha,
-                                                    behavioral_dataframe=behavioral_data)
 # Network models: contra intra, ipsi intra, intra.
 regression_analysis_model.one_way_anova_network(root_analysis_directory=output_csv_directory,
                                                 kinds=kinds,
@@ -1256,17 +1131,14 @@ regression_analysis_model.one_way_anova_network(root_analysis_directory=output_c
                                                 behavioral_dataframe=behavioral_data)
 
 # TODO: write a function to perform a one way ANOVA with internetwork matrices.
-
-
-
 # Display of the results
 # The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
 # mean contralesional
-output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V2'
+output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls'
 results_directory = os.path.join(output_csv_directory, 'regression_analysis')
 output_figure_directory = os.path.join(output_csv_directory, 'figures')
 model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
-network_model_to_plot = ['contra_intra', 'ipsi_intra']
+network_model_to_plot = ['intra', 'contra_intra', 'ipsi_intra']
 # network: ipsi, contra, intra
 model_network_list_1 = ['DMN', 'Executive',
                       'Language',  'MTL',
@@ -1385,7 +1257,6 @@ for tt in network_model:
 
 
 # One way anova:
-
 # Number of post hoc comparison inside each model
 n_post_hoc_comparison = 3
 # Set contrast name, and number of contrast for post hoc analysis
