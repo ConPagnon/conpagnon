@@ -75,7 +75,7 @@ individual_atlas_labels_extension = '*.csv'
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/subjects_ID.txt'
+    '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients.txt'
 
 # Full to the following directories: individual atlases images,
 # individual text labels files, and individual confounds directories.
@@ -87,8 +87,8 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior'
-score = 'MDIbetter'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM'
+score = 'wisc_cube_zscores'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path_score,
                                                         erase_previous=True)
@@ -996,10 +996,10 @@ correction_method = ['fdr_bh', 'bonferroni']
 models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
-variables_model = ['MDIbetter', 'Sexe', 'lesion_normalized']
+variables_model = ['wisc_cube_zscores', 'Sexe', 'lesion_normalized']
 
 # formulation of the model
-model_formula = 'MDIbetter +  Sexe + lesion_normalized'
+model_formula = 'wisc_cube_zscores +  Sexe + lesion_normalized'
 
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
@@ -1013,46 +1013,39 @@ ipsi_contra_model_network_list = ['DMN', 'Executive',
 
 # Analysis of whole brain connectivity, whole brain mean homotopic connectivity,
 # mean ipsilesional and contralesional connectivity. Joint correction for 4 models.
-for model in models_to_build:
-
-    regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
-                                                              kinds=kinds_to_model,
-                                                              root_analysis_directory=output_csv_directory,
-                                                              whole_brain_model=[model],
-                                                              variables_in_model=variables_model,
-                                                              behavioral_dataframe=behavioral_data,
-                                                              correction_method=correction_method,
-                                                              alpha=0.05)
+regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
+                                                          kinds=kinds_to_model,
+                                                          root_analysis_directory=output_csv_directory,
+                                                          whole_brain_model=models_to_build,
+                                                          variables_in_model=variables_model,
+                                                          behavioral_dataframe=behavioral_data,
+                                                          correction_method=correction_method,
+                                                          alpha=0.05)
 
 # Analysis of intra-network mean homotopic connectivity: correction for 12 models.
-intra_intraHomotopic_network_model = ['intra', 'intra_homotopic']
-for model in intra_intraHomotopic_network_model:
-
-    regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
-                                                                kinds=kinds_to_model,
-                                                                networks_list=model_network_list,
-                                                                root_analysis_directory=output_csv_directory,
-                                                                network_model=[model],
-                                                                variables_in_model=variables_model,
-                                                                behavioral_dataframe=behavioral_data,
-                                                                correction_method=correction_method,
-                                                                alpha=0.05)
+regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
+                                                            kinds=kinds_to_model,
+                                                            networks_list=model_network_list,
+                                                            root_analysis_directory=output_csv_directory,
+                                                            network_model=['intra_homotopic'],
+                                                            variables_in_model=variables_model,
+                                                            behavioral_dataframe=behavioral_data,
+                                                            correction_method=correction_method,
+                                                            alpha=0.05)
 # Analysis of mean intra-network connectivity, mean ipsilesional intra-network connectivity,
 # mean contralesional intra-network connectivity. Except for Basal Ganglia, Precuneus,
 # and Auditory because for these network intra-network connectivity is just homotopic
 # connectivity.
-ipsi_contra_model = ['ipsi_intra', 'contra_intra']
-for model in ipsi_contra_model:
-
-    regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
-                                                                kinds=kinds_to_model,
-                                                                networks_list=ipsi_contra_model_network_list,
-                                                                root_analysis_directory=output_csv_directory,
-                                                                network_model=[model],
-                                                                variables_in_model=variables_model,
-                                                                behavioral_dataframe=behavioral_data,
-                                                                correction_method=correction_method,
-                                                                alpha=0.05)
+regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
+                                                            kinds=kinds_to_model,
+                                                            networks_list=ipsi_contra_model_network_list,
+                                                            root_analysis_directory=output_csv_directory,
+                                                            network_model=['ipsi_intra', 'contra_intra',
+                                                                           'intra'],
+                                                            variables_in_model=variables_model,
+                                                            behavioral_dataframe=behavioral_data,
+                                                            correction_method=correction_method,
+                                                            alpha=0.05)
 
 # Inter-network statistic : whole brain, ipsilesional and contralesional
 inter_network_model = 'overall_inter_network'
@@ -1141,7 +1134,7 @@ regression_analysis_model.regression_analysis_internetwork_level(
 # Display of the results
 # The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
 # mean contralesional
-output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior/MDIbetter'
+output_csv_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/wisc_cube_zscores'
 results_directory = os.path.join(output_csv_directory, 'regression_analysis')
 output_figure_directory = os.path.join(output_csv_directory, 'figures')
 model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
@@ -1156,7 +1149,7 @@ model_network_list_2 = ['DMN', 'Auditory', 'Executive',
                          'Salience', 'Sensorimotor', 'Visuospatial',
                          'Primary_Visual', 'Precuneus', 'Secondary_Visual']
 
-model_network_list = model_network_list_1
+model_network_list = model_network_list_2
 
 # Colors of network in the order of model networks list
 atlas_information_colors = atlas_information[['network', 'Color']]
@@ -1165,9 +1158,9 @@ network_colors = [np.array(atlas_information_colors.loc[network]['Color'])[0] fo
                   model_network_list]
 
 # Variable of interest
-variables_of_interest = ['MDIbetter', 'Sexe[T.M]', 'lesion_normalized']
+variables_of_interest = ['wisc_cube_zscores', 'Sexe[T.M]', 'lesion_normalized']
 dict_results_variables = dict.fromkeys(variables_of_interest)
-correction = 'bonferroni'
+correction = 'fdr_bh'
 # Global connectivity composite scores
 for variable in variables_of_interest:
     for kind in kinds:
@@ -1213,9 +1206,9 @@ for variable in variables_of_interest:
             plt.show()
 
 # Network composite scores measures
-network_model = ['ipsi_intra', 'contra_intra']
-model_network_list = model_network_list_1
-correction = 'fdr_bh'
+network_model = ['intra_homotopic']
+model_network_list = model_network_list_2
+correction = 'bonferroni'
 for tt in network_model:
     for variable in variables_of_interest:
         for kind in kinds:
