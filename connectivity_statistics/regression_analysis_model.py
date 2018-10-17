@@ -19,6 +19,7 @@ import statsmodels.api as sm
 import pandas as pd
 import statsmodels.stats.multicomp as multi
 from scipy import stats
+from pathlib import Path
 
 
 def regression_analysis_network_level(groups, kinds, networks_list, root_analysis_directory,
@@ -772,3 +773,108 @@ def one_way_anova_network(root_analysis_directory, kinds, groups,
                     f_test_model_parameters.to_csv(os.path.join(regression_output_directory,
                                                                 model + '_f_test_parameters.csv'),
                                                    index=False)
+
+
+def joint_models_correction(root_analysis_directory, kinds, models,
+                            correction_methods,
+                            networks=None, alpha=0.05):
+    """Performs a joint models correction for the whole brains models,
+    or the networks models.
+
+
+    """
+    for kind in kinds:
+        if networks is None:
+            # loop over the models
+            all_models_p_values = []
+            for model in models:
+                # read current model dataframe
+                model_df = pd.read_csv(os.path.join(root_analysis_directory, kind,
+                                                    model + '_parameters.csv'))
+                # Fetch the raw p_values
+                all_models_p_values.append(model_df['p_value'])
+
+            # Convert list to array of shape (n_models, n_tests)
+            # each row (beta_0, beta_1, ...., beta_N) for the N variables in
+            # the model.
+            all_models_p_values_array = np.array(all_models_p_values)
+            # Flatten the array
+            all_models_p_values_array_flat = all_models_p_values_array.flatten()
+
+            # Feed the flat p values array to chosen correction method
+            for correction in correction_methods:
+                _, corrected_p_values, _, _ = multipletests(pvals=all_models_p_values_array_flat,
+                                                            alpha=alpha,
+                                                            method=correction)
+
+                # rebuild the array
+                corrected_p_values_array = corrected_p_values.reshape(len(models), model_df.shape[0])
+
+                # Append in the corresponding CSV model the corrected p values
+                for model in models:
+                    # read current model dataframe
+                    model_df = pd.read_csv(os.path.join(root_analysis_directory, kind,
+                                                        model + '_parameters.csv'))
+                    # Append the corrected p value column
+                    model_df[correction + "corrected_pvalues"] = corrected_p_values_array[models.index(model), ...]
+                    # Overwrite the dataframe
+                    model_df.to_csv(os.path.join(root_analysis_directory, kind,
+                                                 model + '_parameters.csv'),
+                                    index=False)
+
+        else:
+            all_models_p_values = []
+            for model in models:
+                network_model_p_values = []
+                for network in networks:
+                    model_network_df_path = Path(os.path.join(root_analysis_directory, kind, network,
+                                                              model + '_parameters.csv'))
+                    if model_network_df_path.exists():
+
+                        model_network_df = pd.read_csv(os.path.join(root_analysis_directory, kind,
+                                                                    network, model + '_parameters.csv'))
+                        network_model_p_values.append(model_network_df['p_value'])
+
+                    else:
+                        pass
+                # Convert to array
+                network_model_p_values_array = np.array(network_model_p_values)
+
+                # Append the network array of the model
+                all_models_p_values.append(network_model_p_values_array)
+
+            # convert it to array
+            all_models_p_values_array = np.array(all_models_p_values)
+            list_of_p_values = []
+
+            for i in range(len(models)):
+                list_of_p_values.append(all_models_p_values_array[i])
+            # Flatten the nested list of p values
+            all_models_p_values_list_flat = data_management.flatten(values=list_of_p_values)
+
+            for correction in correction_methods:
+                _, corrected_p_values, _, _ = multipletests(pvals=all_models_p_values_list_flat,
+                                                            alpha=alpha,
+                                                            method=correction)
+                # Rebuild the nested list of p values
+                corrected_p_values_unflatten = data_management.unflatten(corrected_p_values, list_of_p_values)
+
+                # Write the corrected p values in corresponding CSV
+                for model in models:
+                    for network in networks:
+                        model_network_df_path = Path(os.path.join(root_analysis_directory, kind, network,
+                                                                  model + '_parameters.csv'))
+                        if model_network_df_path.exists():
+                            model_network_df = pd.read_csv(os.path.join(root_analysis_directory, kind,
+                                                                        network, model + '_parameters.csv'))
+                            # Append the corrected p value column
+                            model_network_df[correction + "corrected_pvalues"] = \
+                                corrected_p_values_unflatten[models.index(model)][networks.index(network), ...]
+
+                            # Overwrite the dataframe
+                            model_network_df.to_csv(os.path.join(root_analysis_directory, kind, network,
+                                                                 model + '_parameters.csv'),
+                                                    index=False)
+
+                        else:
+                            pass
