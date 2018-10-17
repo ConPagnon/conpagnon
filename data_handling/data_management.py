@@ -310,3 +310,64 @@ def remove_duplicate(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
+
+
+def _flatten(values):
+    if isinstance(values, np.ndarray):
+        yield values.flatten()
+    else:
+        for value in values:
+            yield from _flatten(value)
+
+
+def _unflatten(flat_values, prototype, offset):
+    if isinstance(prototype, np.ndarray):
+        shape = prototype.shape
+        new_offset = offset + np.product(shape)
+        value = flat_values[offset:new_offset].reshape(shape)
+        return value, new_offset
+    else:
+        result = []
+        for value in prototype:
+            value, offset = _unflatten(flat_values, value, offset)
+            result.append(value)
+        return result, offset
+
+
+def flatten(values):
+    """Flatten a list of numpy ND-array
+
+    Parameters
+    ----------
+    values: list
+        A list of numpy array, with same or different dimensions.
+
+    Returns
+    -------
+    output: numpy.array
+        A flat array (one dimensional array) containing all
+        the values in the same order of the list of array.
+
+    """
+    return np.concatenate(list(_flatten(values)))
+
+
+def unflatten(flat_values, prototype):
+    """Unflatten a one dimension array of values to the
+    original list of array.
+
+    Parameters
+    ----------
+    flat_values: numpy.ndarray
+        The numpy array containing the values.
+    prototype: list
+        The original list of numpy array.
+
+    Returns
+    -------
+    output: list
+        A list of array with the same structure as prototype.
+    """
+    result, offset = _unflatten(flat_values, prototype, 0)
+    assert(offset == len(flat_values))
+    return result
