@@ -3,7 +3,8 @@ from utils import folders_and_files_management
 from computing import compute_connectivity_matrices as ccm
 import time
 from utils.folders_and_files_management import save_object
-
+from data_handling import atlas
+import matplotlib.pyplot as plt
 
 """
 Example code: time series extraction with individual atlases
@@ -71,5 +72,35 @@ total_extraction_ts = (end - start)/60.
 
 # Save the subjects time series dictionary
 save_object(object_to_save=times_series_individual_atlases,
-            saving_directory='/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary',
-            filename='times_series_individual_atlases.pkl')
+            saving_directory='/media/db242421/db242421_data/Presentation/Royaumont',
+            filename='times_series_individual_atlases_patients_controls.pkl')
+
+
+# Illustration: time series plot
+# Atlas set up
+atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
+atlas_name = 'atlas4D_2.nii'
+labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
+          'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
+          'lightpink']
+# Number of regions in each user defined networks
+networks = [2, 10, 2, 6, 10, 2, 8, 6, 8, 8, 6, 4]
+# Atlas path
+# Read labels regions files
+atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
+    atlas_folder=atlas_folder,
+    atlas_name=atlas_name,
+    network_regions_number=networks,
+    colors_labels=colors,
+    labels=labels_text_file,
+    normalize_colors=True)
+
+# Take one subject image for illustration
+# purpose
+one_subjects_time_series = times_series_individual_atlases['controls']['sub27_ea130507']['time_series']
+for region in range(n_nodes):
+    plt.figure()
+    plt.plot(range(0, one_subjects_time_series.shape[0]),
+             one_subjects_time_series[:,region], '-', 'redtup')
+    plt.show()
