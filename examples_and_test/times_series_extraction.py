@@ -102,5 +102,9 @@ one_subjects_time_series = times_series_individual_atlases['controls']['sub27_ea
 for region in range(n_nodes):
     plt.figure()
     plt.plot(range(0, one_subjects_time_series.shape[0]),
-             one_subjects_time_series[:,region], '-', 'redtup')
+             one_subjects_time_series[:,region], '-', color=tuple(labels_colors[region]))
+    plt.xlabel('Temps')
+    plt.ylabel('Intensité normée')
+    plt.title(labels_regions[region])
+    plt.savefig('/media/db242421/db242421_data/Presentation/Royaumont/' + labels_regions[region] + '.png')
     plt.show()
