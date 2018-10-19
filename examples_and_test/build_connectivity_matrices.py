@@ -4,15 +4,14 @@ from sklearn.covariance import LedoitWolf
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 import matplotlib.pyplot as plt
-from data_handling.data_management import read_csv
 from plotting.display import plot_matrix
 import os
-
-saving_data_dir = '/media/db242421/db242421_data/ConPagnon_data/patient_controls/dictionary'
+from data_handling import atlas
+saving_data_dir = '/media/db242421/db242421_data/Presentation/Royaumont/'
 
 # Load the time series dictionary
 times_series = load_object(os.path.join(saving_data_dir,
-                                        'times_series_individual_atlases.pkl'))
+                                        'times_series_individual_atlases_patients_controls.pkl'))
 
 groups = list(times_series.keys())
 # For some reason, you may want to discard some subjects (optional), comment with #
@@ -51,8 +50,27 @@ save_object(object_to_save=mean_connectivity_matrices,
             filename='mean_connectivity_matrices_' + groups[0] + '_' + groups[1] + '.pkl')
 
 
-atlas_labels = read_csv(csv_file='/media/db242421/db242421_data/AICHA_test/aicha_labels.csv')['labels']
-with PdfPages('/media/db242421/db242421_data/AICHA_test/mean_matrices.pdf') as pdf:
+# Illustration: time series plot
+# Atlas set up
+atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
+atlas_name = 'atlas4D_2.nii'
+labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
+          'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
+          'lightpink']
+# Number of regions in each user defined networks
+networks = [2, 10, 2, 6, 10, 2, 8, 6, 8, 8, 6, 4]
+# Atlas path
+# Read labels regions files
+atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
+    atlas_folder=atlas_folder,
+    atlas_name=atlas_name,
+    network_regions_number=networks,
+    colors_labels=colors,
+    labels=labels_text_file,
+    normalize_colors=True)
+
+with PdfPages('/media/db242421/db242421_data/Presentation/Royaumont/mean_matrices.pdf') as pdf:
     for group in mean_connectivity_matrices.keys():
         for metric in metrics:
             plt.figure()
@@ -62,26 +80,12 @@ with PdfPages('/media/db242421/db242421_data/AICHA_test/mean_matrices.pdf') as p
                         linewidths=0,
                         linecolor='black',
                         title='mean {} matrix ({})'.format(group, metric),
-                        horizontal_labels=atlas_labels,
-                        vertical_labels=atlas_labels,
-                        labels_size=2.5, mpart='all',
+                        horizontal_labels=labels_regions,
+                        vertical_labels=labels_regions,
+                        labels_colors=labels_colors,
+                        labels_size=8, mpart='all',
                         vmax=+np.abs(np.max(m)),
                         vmin=-np.abs(np.max(m)))
             pdf.savefig()
             plt.show()
             plt.close('all')
-
-
-with PdfPages('/media/db242421/db242421_data/AICHA_test/mean_difference_matrices.pdf') as pdf:
-    for metric in metrics:
-        mean_difference_connectivity = \
-            mean_connectivity_matrices['controls'][metric] - mean_connectivity_matrices['patients'][metric]
-        plt.figure()
-        plot_matrix(matrix=mean_difference_connectivity, linewidths=0,
-                    linecolor='black', title='mean {} matrix ({})'.format('patients - controls', metric),
-                    horizontal_labels=atlas_labels, vertical_labels=atlas_labels,
-                    labels_size=2.5, mpart='all')
-
-        pdf.savefig()
-        plt.show()
-        plt.close('all')
