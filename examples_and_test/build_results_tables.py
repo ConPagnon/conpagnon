@@ -34,10 +34,10 @@ root_analysis_directory = '/media/db242421/db242421_data/ConPagnon_data/patients
                           'pc1_language_zscores/regression_analysis'
 results_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/' \
                     'pc1_language_zscores/regression_analysis/tangent'
-summary_results_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/' \
-                            'pc1_language_zscores/regression_analysis/tangent/summary'
+summary_results_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/pc1_language_zscores/' \
+                            'regression_analysis/tangent/summary'
 # models to read
-network_models = ['intra', 'contra_intra', 'ipsi_intra']
+network_models = ['intra_homotopic']
 whole_brain_models = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional',
                       'mean_ipsilesional']
 
@@ -45,7 +45,8 @@ whole_brain_models = ['mean_connectivity', 'mean_homotopic', 'mean_contralesiona
 variable_to_read = ['pc1_language_zscores', 'Sexe[T.M]', 'lesion_normalized']
 
 network_name = ['DMN', 'Executive', 'Language', 'MTL', 'Primary_Visual',
-                'Salience', 'Secondary_Visual', 'Sensorimotor', 'Visuospatial']
+                'Salience', 'Secondary_Visual', 'Sensorimotor', 'Visuospatial',
+                'Basal_Ganglia', 'Precuneus', 'Auditory']
 
 kinds = ['correlation', 'partial correlation', 'tangent']
 correction_methods = ['fdr_bh', 'bonferroni']

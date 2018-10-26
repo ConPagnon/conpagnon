@@ -9,7 +9,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 import os
 from plotting import display
 
-save_figures_dir = 'C://Users//Dhaïf//Documents//prez royaumont'
+save_figures_dir = '/media/db242421/db242421_data/Presentation/Royaumont'
 
 # Load the connectivity matrices dictionary
 subjects_connectivity_matrices = load_object(os.path.join(save_figures_dir,
