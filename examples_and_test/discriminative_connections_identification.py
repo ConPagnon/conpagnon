@@ -37,7 +37,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V3/dictionary'
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/dictionary'
 connectivity_dictionary_name = 'z_fisher_transform_subjects_connectivity_matrices.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder,
                                                           connectivity_dictionary_name))
@@ -45,7 +45,7 @@ subjects_connectivity_matrices['patients'] = {**subjects_connectivity_matrices['
                                               **subjects_connectivity_matrices['impaired_language']}
 
 #class_names = list(subjects_connectivity_matrices.keys())
-class_names = ['patients', 'controls']
+class_names = ['impaired_language', 'non_impaired_language']
 metric = 'tangent'
 
 # Vectorize the connectivity for classification
@@ -74,10 +74,10 @@ class_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[class_nam
                           -1*np.ones(len(subjects_connectivity_matrices[class_names[1]].keys()))))
 
 # Number of Bootstrap (with replacement)
-bootstrap_number = 500
+bootstrap_number = 1
 
 # Number of permutation
-n_permutations = 1000
+n_permutations = 10000
 
 # Number of subjects
 n_subjects = vectorized_connectivity_matrices.shape[0]
@@ -107,8 +107,8 @@ bootstrap_array_perm = np.random.choice(a=indices,
                                               n_subjects),
                                         replace=True)
 
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_V2/' \
-                 'discriminative_connection_identification/patients_controls'
+save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls' \
+                 '/discriminative_connection_identification'
 
 # report name for features visualisation and parameters text report
 report_filename = 'features_identification_' + class_names[0] + '_' + class_names[1] + '_' + str(alpha) + \
