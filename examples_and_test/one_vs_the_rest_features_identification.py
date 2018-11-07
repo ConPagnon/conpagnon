@@ -113,12 +113,12 @@ with PdfPages(os.path.join(save_figures, 'one_vs_the_rest.pdf')) as pdf:
         pdf.savefig()
         plt.show()
 
-from sklearn.model_selection import cross_val_score, StratifiedShuffleSplit
+from sklearn.model_selection import cross_val_score, StratifiedShuffleSplit, cross_validate
 
 sss = StratifiedShuffleSplit(n_splits=10000)
 
 scores = cross_val_score(estimator=one_vs_the_rest_classifier, X=vectorized_connectivity_matrices,
-                         y=class_labels, cv=sss, verbose=1, n_jobs=4)
+                         y=class_labels, cv=sss, verbose=1, n_jobs=4, groups=class_labels)
 mean_score = scores.mean()
 std_score = scores.std()
 
@@ -126,8 +126,8 @@ print('One vs All classification accuracy: {} % +- {} %'.format(mean_score*100,
                                                                 std_score*100))
 
 n_subjects = vectorized_connectivity_matrices.shape[0]
-bootstrap_number = 100
-n_permutations = 10
+bootstrap_number = 500
+n_permutations = 10000
 n_classes = len(np.unique(class_labels))
 # Indices to bootstrap
 indices = np.arange(n_subjects)
@@ -143,12 +143,19 @@ bootstrap_array_perm = np.random.choice(a=indices,
                                         size=(n_permutations, bootstrap_number,
                                               n_subjects),
                                         replace=True)
+# Correction method
+correction = 'max_t'
+n_physical = psutil.cpu_count(logical=False)
+alpha = .05
 
+top_features_number = 50
+
+node_size = 15
 bootstrap_weights = one_against_all_bootstrap(features=vectorized_connectivity_matrices,
-                                                        class_labels=class_labels,
-                                                        bootstrap_array_indices=bootstrap_matrix,
-                                                        n_cpus_bootstrap=8,
-                                                        verbose=1)
+                                              class_labels=class_labels,
+                                              bootstrap_array_indices=bootstrap_matrix,
+                                              n_cpus_bootstrap=n_physical,
+                                              verbose=1)
 
 normalized_mean_weight = bootstrap_weights.mean(axis=0)/bootstrap_weights.std(axis=0)
 
@@ -160,7 +167,7 @@ null_distribution = one_against_all_permutation_bootstrap(features=vectorized_co
                                                           bootstrap_array_perm=bootstrap_array_perm,
                                                           n_classes=3,
                                                           n_permutations=n_permutations,
-                                                          n_cpus_bootstrap=8,
+                                                          n_cpus_bootstrap=n_physical,
                                                           verbose_bootstrap=1,
                                                           verbose_permutation=1)
 
@@ -173,7 +180,8 @@ normalized_mean_weight_array = np.zeros((n_classes, n_nodes, n_nodes))
 for group in range(n_classes):
 
     normalized_mean_weight_array[group, ...] = array_rebuilder(normalized_mean_weight[group, ...],
-                                                   'numeric', diagonal=np.zeros(n_nodes))
+                                                               'numeric',
+                                                               diagonal=np.zeros(n_nodes))
 # Find top features for each class
 all_classes_normalized_mean_weight_array_top_features = np.zeros((n_classes, n_nodes, n_nodes))
 all_classes_top_weights = []
@@ -183,7 +191,8 @@ for group in range(n_classes):
 
     normalized_mean_weight_array_top_features, top_weights, top_coefficients_indices, top_weight_labels = \
         find_top_features(normalized_mean_weight_array=normalized_mean_weight_array[group, ...],
-                          labels_regions=labels_regions)
+                          labels_regions=labels_regions,
+                          top_features_number=top_features_number)
     all_classes_normalized_mean_weight_array_top_features[group, ...] = normalized_mean_weight_array_top_features
     all_classes_top_weights.append(top_weights)
     all_classes_top_coefficients_indices.append(top_coefficients_indices)
@@ -193,3 +202,169 @@ for group in range(n_classes):
 all_classes_top_weights = np.array(all_classes_top_weights)
 all_classes_top_coefficients_indices = np.array(all_classes_top_coefficients_indices)
 all_classes_top_weight_labels = np.array(all_classes_top_weight_labels)
+
+if correction == 'max_t':
+    all_classes_sorted_null_maximum_dist = []
+    all_classes_sorted_null_minimum_dist = []
+    all_classes_p_value_positive_weights = []
+    all_classes_p_value_negative_weights = []
+    all_classes_p_negative_features_significant = []
+    all_classes_p_positive_features_significant = []
+    all_classes_significant_positive_features_indices = []
+    all_classes_significant_negative_features_indices = []
+    all_classes_significant_positive_features_labels = []
+    all_classes_significant_negative_features_labels = []
+    all_classes_p_all_significant_features = []
+    for group in range(n_classes):
+
+        # Corrected p values with the maximum statistic for each classes
+        sorted_null_maximum_dist, sorted_null_minimum_dist, p_value_positive_weights, p_value_negative_weights = \
+            features_weights_max_t_correction(null_distribution_features_weights=null_distribution[:, group, :],
+                                              normalized_mean_weight=normalized_mean_weight[group, ...])
+        all_classes_sorted_null_maximum_dist.append(sorted_null_maximum_dist)
+        all_classes_sorted_null_minimum_dist.append(sorted_null_minimum_dist)
+        all_classes_p_value_positive_weights.append(p_value_positive_weights)
+        all_classes_p_value_negative_weights.append(p_value_negative_weights)
+
+        # Rebuild vectorized p values array
+        p_max_values_array = array_rebuilder(vectorized_array=p_value_positive_weights,
+                                             array_type='numeric',
+                                             diagonal=np.ones(n_nodes))
+
+        p_min_values_array = array_rebuilder(vectorized_array=p_value_negative_weights,
+                                             array_type='numeric',
+                                             diagonal=np.ones(n_nodes))
+
+        # Find p-values under the alpha threshold
+        p_negative_features_significant = np.array(p_min_values_array < alpha, dtype=int)
+        p_positive_features_significant = np.array(p_max_values_array < alpha, dtype=int)
+
+        p_all_significant_features = p_positive_features_significant + p_negative_features_significant
+
+        all_classes_p_all_significant_features.append(p_all_significant_features)
+        all_classes_p_negative_features_significant.append(p_negative_features_significant)
+        all_classes_p_positive_features_significant.append(p_positive_features_significant)
+
+        significant_positive_features_indices, significant_negative_features_indices, \
+        significant_positive_features_labels, significant_negative_features_labels = find_significant_features_indices(
+            p_positive_features_significant=p_positive_features_significant,
+            p_negative_features_significant=p_negative_features_significant,
+            features_labels=labels_regions)
+
+        all_classes_significant_positive_features_indices.append(significant_positive_features_indices)
+        all_classes_significant_negative_features_indices.append(significant_negative_features_indices)
+        all_classes_significant_positive_features_labels.append(significant_positive_features_labels)
+        all_classes_significant_negative_features_labels.append(significant_negative_features_labels)
+
+    # Convert all output to array for convenience
+    all_classes_sorted_null_maximum_dist = np.array(all_classes_sorted_null_maximum_dist)
+    all_classes_sorted_null_minimum_dist = np.array(all_classes_sorted_null_minimum_dist)
+    all_classes_p_value_positive_weights = np.array(all_classes_p_value_positive_weights)
+    all_classes_p_value_negative_weights = np.array(all_classes_p_value_negative_weights)
+    all_classes_p_negative_features_significant = np.array(all_classes_p_negative_features_significant)
+    all_classes_p_positive_features_significant = np.array(all_classes_p_positive_features_significant)
+    all_classes_significant_positive_features_indices = np.array(all_classes_significant_positive_features_indices)
+    all_classes_significant_negative_features_indices = np.array(all_classes_significant_negative_features_indices)
+    all_classes_significant_positive_features_labels = np.array(all_classes_significant_positive_features_labels)
+    all_classes_significant_negative_features_labels = np.array(all_classes_significant_negative_features_labels)
+    all_classes_p_all_significant_features = np.array(all_classes_p_all_significant_features)
+
+    with PdfPages(os.path.join(save_figures, 'one_against_all_controls_impaired_non_impaired.pdf')) as pdf:
+        for group in range(n_classes):
+
+            # Plot the estimated null distribution
+            plt.figure(constrained_layout=True)
+            plt.hist(all_classes_sorted_null_maximum_dist[group, ...], 'auto', histtype='bar', alpha=0.5,
+                     edgecolor='black')
+            # The five 5% extreme values among maximum distribution
+            p95 = np.percentile(all_classes_sorted_null_maximum_dist[group, ...], q=95)
+            plt.axvline(x=p95, color='black')
+            plt.title('Null distribution of maximum normalized weight mean for {}'.format(class_names[group]))
+            pdf.savefig()
+
+            plt.figure()
+            plt.hist(all_classes_sorted_null_minimum_dist[group, ...], 'auto', histtype='bar',
+                     alpha=0.5, edgecolor='black')
+            # The five 5% extreme values among minimum distribution
+            p5 = np.percentile(all_classes_sorted_null_minimum_dist[group, ...], q=5)
+            plt.axvline(x=p5, color='black')
+            plt.title('Null distribution of minimum normalized weight mean for {}'.format(class_names[group]))
+            pdf.savefig()
+
+            plt.figure()
+            plot_connectome(adjacency_matrix=normalized_mean_weight_array[group, ...],
+                            node_coords=atlas_nodes, colorbar=True,
+                            title='Weights connectome for {}'.format(class_names[group]),
+                            node_size=node_size,
+                            node_color=labels_colors)
+            pdf.savefig()
+
+            # plot the top weight in a histogram fashion
+            fig = plt.figure(figsize=(15, 10), constrained_layout=True)
+
+            weight_colors = ['blue' if weight < 0 else 'red' for weight in all_classes_top_weights[group, ...]]
+            plt.bar(np.arange(len(all_classes_top_weights[group, ...])), list(all_classes_top_weights[group, ...]),
+                    color=weight_colors,
+                    edgecolor='black',
+                    alpha=0.5)
+            plt.xticks(np.arange(0, len(all_classes_top_weights[group, ...])),
+                       all_classes_top_weight_labels[group, ...],
+                       rotation=60,
+                       ha='right')
+            for label in range(len(plt.gca().get_xticklabels())):
+                plt.gca().get_xticklabels()[label].set_color(weight_colors[label])
+            plt.xlabel('Features names')
+            plt.ylabel('Features weights')
+            plt.title('Top {} features ranking of normalized mean weight for {}'.format(top_features_number,
+                                                                                        class_names[group]))
+            pdf.savefig()
+
+            plt.figure()
+            plot_connectome(adjacency_matrix=all_classes_normalized_mean_weight_array_top_features[group, ...],
+                            node_coords=atlas_nodes,
+                            colorbar=True,
+                            title='Top {} features weight for {}'.format(top_features_number, class_names[group]),
+                            node_size=node_size,
+                            node_color=labels_colors)
+            pdf.savefig()
+
+            if np.where(all_classes_p_positive_features_significant[group, ...] == 1)[0].size != 0:
+                # Plot on glass brain the significant positive features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=all_classes_p_positive_features_significant[group, ...],
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant positive weight for {}'.format(class_names[group]),
+                                edge_cmap='Reds',
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                # Matrix view of significant positive and negative weight
+                plt.figure()
+                plot_matrix(matrix=all_classes_p_positive_features_significant[group, ...],
+                            labels_colors='auto', mpart='all',
+                            colormap='Blues', linecolor='black',
+                            title='Significant negative weightfor {}'.format(class_names[group]),
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
+
+            if np.where(all_classes_p_negative_features_significant[group, ...] == 1)[0].size != 0:
+                # Plot on glass brain the significant negative features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=all_classes_p_negative_features_significant[group, ...],
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant negative weight for {}'.format(class_names[group]),
+                                edge_cmap='Blues',
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                plt.figure()
+                plot_matrix(matrix=all_classes_p_negative_features_significant[group, ...],
+                            labels_colors='auto', mpart='all',
+                            colormap='Reds', linecolor='black',
+                            title='Significant positive weight for {}'.format(class_names[group]),
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
+
+                plt.close("all")
