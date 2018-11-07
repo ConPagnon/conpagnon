@@ -25,6 +25,7 @@ from joblib import Parallel, delayed
 import time
 from scipy.stats import norm
 from statsmodels.stats.multitest import multipletests
+from sklearn.multiclass import OneVsRestClassifier
 
 
 def timer(start, end):
@@ -207,6 +208,159 @@ def permutation_bootstrap_svc(features, class_labels_perm,
         # Generate a bootstrap array indices for the current permutations
         # Perform the classification of each bootstrap sample, but with the labels shuffled
         bootstrap_weight_perm = bootstrap_svc(features=features,
+                                              class_labels=class_labels_perm[n, ...],
+                                              bootstrap_array_indices=bootstrap_array_perm[n, ...],
+                                              verbose=verbose_bootstrap,
+                                              backend=backend,
+                                              n_cpus_bootstrap=n_cpus_bootstrap)
+        # Compute the normalized mean of weight for the current permutation
+        normalized_mean_weight_perm = bootstrap_weight_perm.mean(axis=0) / bootstrap_weight_perm.std(axis=0)
+        # Save it in the null distribution array
+        null_distribution[n, ...] = normalized_mean_weight_perm
+    tac_permutations = time.time() - tic_permutations
+    print('Elapsed time for {} permutations: {} min'.format(n_permutations, tac_permutations/60))
+
+    return null_distribution
+
+
+def one_against_all_classification(features, class_labels, boot_indices):
+    """Perform multi-class classification problem on a bootstrapped
+    sample with a one versus all strategy.
+
+    Parameters
+    ----------
+    features: numpy.ndarray, shape (n_samples, n_features)
+        The connectivity matrices in a vectorized form, that is
+        each row is a subjects and each column is a pair of regions. Only
+        the lower part of connectivity matrices should be given.
+    class_labels: numpy.ndarray, shape (n_samples, )
+        The class labels of each subjects, permuted one time.
+    boot_indices: numpy.ndarray, shape (n_samples, )
+        The array containing the indices of bootstrapped
+        subjects.
+
+    Returns
+    -------
+    output: nunmpy.ndarray, shape (n_features, )
+        The weight of the linear SVM estimated on the boostrap sample.
+    """
+    svc = LinearSVC()
+    one_vs_all = OneVsRestClassifier(estimator=svc)
+
+    bootstrap_matrices = features[boot_indices, ...]
+    bootstrap_class_label = class_labels[boot_indices]
+    # Fit SVC on bootstrap sample using a one class vs all classifier
+    one_vs_all.fit(bootstrap_matrices, bootstrap_class_label)
+    # Weight of features for the bootstrap sample for each classes
+    bootstrap_coefficients = one_vs_all.coef_
+
+    return bootstrap_coefficients
+
+
+def one_against_all_bootstrap(features, class_labels,
+                              bootstrap_array_indices,
+                              n_cpus_bootstrap=1,
+                              verbose=0,
+                              backend='multiprocessing'):
+    """Perform classification between two binary class on
+    bootstrapped samples.
+
+    Parameters
+    ----------
+    features: numpy.ndarray, shape (n_samples, n_features)
+        The connectivity matrices in a vectorized form, that is
+        each row is a subjects and each column is a pair of regions. Only
+        the lower part of connectivity matrices should be given.
+    class_labels: numpy.ndarray, shape (n_sample, )
+        The class labels of each subjects.
+    bootstrap_array_indices: numpy.ndarray, shape (n_bootstrap, n_features)
+        A array containing the bootstrapped indices. Each row
+        contain the indices to generate a bootstrapped sample.
+    n_cpus_bootstrap: int, optional
+        The number CPU to be used concurrently during computation on
+        bootstrap sample.  Default is one, like a classical
+        for loop over bootstrap sample.
+    backend: str, optional
+        The method used to execute concurrent task. This argument
+        is passed to the Parallel function in the joblib package.
+        Default is multiprocessing.
+    verbose: int, optional
+        The verbosity level during parallel computation. This
+        argument is passed to Parallel function in the joblib package.
+
+    Returns
+    -------
+    output: numpy.ndarray, shape (n_bootstrap, n_features)
+        The array of estimated features weights, for each
+        bootstrapped sample.
+    """
+    bootstrap_number = bootstrap_array_indices.shape[0]
+    results_bootstrap = Parallel(
+        n_jobs=n_cpus_bootstrap, verbose=verbose,
+        backend=backend)(delayed(one_against_all_classification)(
+                            features=features,
+                            class_labels=class_labels,
+                            boot_indices=bootstrap_array_indices[b, ...])
+                         for b in range(bootstrap_number))
+
+    return np.array(results_bootstrap)
+
+
+def one_against_all_permutation_bootstrap(features, class_labels_perm,
+                                          bootstrap_array_perm,
+                                          n_classes,
+                                          n_permutations=1000,
+                                          n_cpus_bootstrap=1,
+                                          backend='multiprocessing',
+                                          verbose_bootstrap=0,
+                                          verbose_permutation=0):
+    """Perform classification on two binary class for each sample generated
+    by bootstrap (with replacement) and permuted class labels vector.
+
+    Parameters
+    ----------
+    features: numpy.ndarray, shape (n_samples, n_features)
+        The connectivity matrices in a vectorized form, that is
+        each row is a subjects and each column is a pair of regions. Only
+        the lower part of connectivity matrices should be given.
+    class_labels_perm: numpy.ndarray, shape (n_permutations, n_samples)
+        The class labels array: each row contain the subjects labels
+        permuted one time.
+    n_permutations: int, optional
+        The number of permutations. Default is 1000.
+    bootstrap_array_perm:,numpy.ndarray, shape (n_permutations, n_bootstrap, n_samples)
+        A array which contain a number of bootstrap array indices for each permutations.
+    n_cpus_bootstrap: int, optional
+        The number CPU to be used concurrently during computation
+        on bootstrap sample. Default is one, like a classical
+        for loop over bootstrap sample.
+    backend: str, optional
+        The method used to execute concurrent task. This argument
+        is passed to the Parallel function in the joblib package.
+        Default is multiprocessing.
+    verbose_bootstrap: int, optional
+        The verbosity level during parallel computation. This
+        argument is passed to Parallel function in the joblib package.
+    verbose_permutation: int, optional
+        If equal to 1, print the progression of the permutations testing.
+        Default is 1.
+
+    Returns
+    -------
+    output: numpy.ndarray, shape (n_features, )
+        The normalized features weights mean, estimated by classification
+        with a linear SVM, over bootstrap sample
+    """
+
+    null_distribution = np.zeros((n_permutations, n_classes, features.shape[1]))
+
+    tic_permutations = time.time()
+    for n in range(n_permutations):
+        if verbose_permutation == 1:
+            print('Performing permutation number {} out of {}'.format(n, n_permutations))
+        # Generate a bootstrap array indices for the current permutations
+        # Perform the classification of each bootstrap sample, but with the labels shuffled
+        bootstrap_weight_perm = one_against_all_bootstrap(features=features,
                                               class_labels=class_labels_perm[n, ...],
                                               bootstrap_array_indices=bootstrap_array_perm[n, ...],
                                               verbose=verbose_bootstrap,
@@ -526,3 +680,8 @@ def find_significant_features_indices(p_positive_features_significant,
 
     return significant_positive_features_indices, significant_negative_features_indices, \
            significant_positive_features_labels, significant_negative_features_labels
+
+
+
+
+
