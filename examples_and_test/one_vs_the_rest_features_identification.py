@@ -342,7 +342,7 @@ if correction == 'max_t':
                 # Matrix view of significant positive and negative weight
                 plt.figure()
                 plot_matrix(matrix=all_classes_p_positive_features_significant[group, ...],
-                            labels_colors='auto', mpart='all',
+                            labels_colors=labels_colors, mpart='all',
                             colormap='Blues', linecolor='black',
                             title='Significant negative weightfor {}'.format(class_names[group]),
                             vertical_labels=labels_regions, horizontal_labels=labels_regions)
@@ -361,7 +361,7 @@ if correction == 'max_t':
 
                 plt.figure()
                 plot_matrix(matrix=all_classes_p_negative_features_significant[group, ...],
-                            labels_colors='auto', mpart='all',
+                            labels_colors=labels_colors, mpart='all',
                             colormap='Reds', linecolor='black',
                             title='Significant positive weight for {}'.format(class_names[group]),
                             vertical_labels=labels_regions, horizontal_labels=labels_regions)
