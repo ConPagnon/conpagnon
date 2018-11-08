@@ -15,7 +15,7 @@ from utils.folders_and_files_management import save_object
 from matplotlib.backends.backend_pdf import PdfPages
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import one_against_all_bootstrap, one_against_all_permutation_bootstrap
-
+# TODO: Add function to wrap the generation of a report, correction, and classifier fitting 
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
@@ -127,7 +127,7 @@ print('One vs All classification accuracy: {} % +- {} %'.format(mean_score*100,
 
 n_subjects = vectorized_connectivity_matrices.shape[0]
 bootstrap_number = 500
-n_permutations = 10000
+n_permutations = 1000
 n_classes = len(np.unique(class_labels))
 # Indices to bootstrap
 indices = np.arange(n_subjects)
@@ -144,7 +144,7 @@ bootstrap_array_perm = np.random.choice(a=indices,
                                               n_subjects),
                                         replace=True)
 # Correction method
-correction = 'max_t'
+correction = 'fdr_bh'
 n_physical = psutil.cpu_count(logical=False)
 alpha = .05
 
@@ -344,7 +344,7 @@ if correction == 'max_t':
                 plot_matrix(matrix=all_classes_p_positive_features_significant[group, ...],
                             labels_colors=labels_colors, mpart='all',
                             colormap='Blues', linecolor='black',
-                            title='Significant negative weightfor {}'.format(class_names[group]),
+                            title='Significant negative weight for {}'.format(class_names[group]),
                             vertical_labels=labels_regions, horizontal_labels=labels_regions)
                 pdf.savefig()
 
@@ -368,3 +368,153 @@ if correction == 'max_t':
                 pdf.savefig()
 
                 plt.close("all")
+else:
+    all_classes_p_values_corrected = []
+    all_classes_p_values_corrected_array = []
+    all_classes_p_negative_features_significant = []
+    all_classes_p_positive_features_significant = []
+    all_classes_significant_positive_features_indices = []
+    all_classes_significant_negative_features_indices = []
+    all_classes_significant_positive_features_labels = []
+    all_classes_significant_negative_features_labels = []
+    all_classes_p_all_significant_features = []
+
+    # Perform another type of correction like FDR, ....
+    for group in range(n_classes):
+
+        p_values_corrected = features_weights_parametric_correction(
+            null_distribution_features_weights=null_distribution[:, group, :],
+            normalized_mean_weight=normalized_mean_weight[group, ...],
+            method=correction)
+
+        p_values_corrected_array = array_rebuilder(vectorized_array=p_values_corrected,
+                                                   array_type='numeric',
+                                                   diagonal=np.ones(n_nodes))
+
+        # Find p values under alpha threshold for negative and positive weight features
+        p_negative_features_significant = np.array(
+            (p_values_corrected_array < alpha) & (normalized_mean_weight_array[group, ...] < 0),
+            dtype=int)
+        p_positive_features_significant = np.array(
+            (p_values_corrected_array < alpha) & (normalized_mean_weight_array[group, ...] > 0),
+            dtype=int)
+
+        significant_positive_features_indices, significant_negative_features_indices, \
+        significant_positive_features_labels, significant_negative_features_labels = find_significant_features_indices(
+            p_positive_features_significant=p_positive_features_significant,
+            p_negative_features_significant=p_negative_features_significant,
+            features_labels=labels_regions)
+
+        # Mask for all significant connection, for both,
+        # positive and negative weight
+        p_all_significant_features = p_positive_features_significant + p_negative_features_significant
+
+        all_classes_p_values_corrected.append(p_values_corrected)
+        all_classes_p_values_corrected_array.append(p_values_corrected_array)
+        all_classes_p_positive_features_significant.append(p_positive_features_significant)
+        all_classes_p_negative_features_significant.append(p_negative_features_significant)
+        all_classes_significant_positive_features_indices.append(significant_positive_features_indices)
+        all_classes_significant_negative_features_indices.append(significant_negative_features_indices)
+        all_classes_significant_positive_features_labels.append(significant_positive_features_labels)
+        all_classes_significant_negative_features_labels.append(significant_negative_features_labels)
+        all_classes_p_all_significant_features.append(p_all_significant_features)
+
+    all_classes_p_values_corrected = np.array(all_classes_p_values_corrected)
+    all_classes_p_values_corrected_array = np.array(all_classes_p_values_corrected_array)
+    all_classes_p_positive_features_significant = np.array(all_classes_p_positive_features_significant)
+    all_classes_p_negative_features_significant = np.array(all_classes_p_negative_features_significant)
+    all_classes_significant_positive_features_indices = np.array(all_classes_significant_positive_features_indices)
+    all_classes_significant_negative_features_indices = np.array(all_classes_significant_negative_features_indices)
+    all_classes_significant_positive_features_labels = np.array(all_classes_significant_positive_features_labels)
+    all_classes_significant_negative_features_labels = np.array(all_classes_significant_negative_features_labels)
+    all_classes_p_all_significant_features = np.array(all_classes_p_all_significant_features)
+
+    # plot the top weight in a histogram fashion
+    with PdfPages(os.path.join(save_figures, correction + '_one_against_all.pdf')) as pdf:
+        for group in range(n_classes):
+
+            plt.figure()
+            plot_connectome(adjacency_matrix=normalized_mean_weight_array[group, ...],
+                            node_coords=atlas_nodes,
+                            colorbar=True,
+                            title='Features weight for {}'.format(class_names[group]),
+                            node_size=node_size,
+                            node_color=labels_colors)
+            pdf.savefig()
+
+            fig = plt.figure(figsize=(15, 10), constrained_layout=True)
+            weight_colors = ['blue' if weight < 0 else 'red' for weight in all_classes_top_weights[group, ...]]
+            plt.bar(np.arange(len(all_classes_top_weights[group, ...])), list(all_classes_top_weights[group, ...]),
+                    color=weight_colors,
+                    edgecolor='black',
+                    alpha=0.5)
+            plt.xticks(np.arange(0, len(all_classes_top_weights[group, ...])),
+                       all_classes_top_weight_labels[group, ...],
+                       rotation=60,
+                       ha='right')
+            for label in range(len(plt.gca().get_xticklabels())):
+                plt.gca().get_xticklabels()[label].set_color(weight_colors[label])
+            plt.xlabel('Features names')
+            plt.ylabel('Features weights')
+            plt.title('Top {} features ranking of normalized mean weight for {}'.format(top_features_number,
+                                                                                        class_names[group]))
+            pdf.savefig()
+
+            plt.figure()
+            plot_connectome(adjacency_matrix=all_classes_normalized_mean_weight_array_top_features[group, ...],
+                            node_coords=atlas_nodes, colorbar=True,
+                            title='Top {} features weight for {}'.format(top_features_number,
+                                                                         class_names[group]),
+                            node_size=node_size,
+                            node_color=labels_colors)
+            pdf.savefig()
+            if np.where(all_classes_p_positive_features_significant[group, ...] == 1)[0].size != 0:
+
+                # Plot on glass brain the significant positive features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=all_classes_p_positive_features_significant[group, ...],
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant positive weight after {} correction for {}'.format(
+                                    correction,
+                                    class_names[group]),
+                                edge_cmap='Reds',
+                                node_size=node_size,
+                                node_color=labels_colors)
+
+                pdf.savefig()
+
+                plt.figure()
+                plot_matrix(matrix=all_classes_p_positive_features_significant[group, ...],
+                            labels_colors=labels_colors, mpart='all',
+                            colormap='Reds', linecolor='black',
+                            title='Significant positive weight after {} correction for {}'.format(correction,
+                                                                                                  class_names[group]),
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
+            if np.where(all_classes_p_negative_features_significant[group, ...] == 1)[0].size != 0:
+                # Plot on glass brain the significant negative features weight
+                plt.figure()
+                plot_connectome(adjacency_matrix=all_classes_p_negative_features_significant[group, ...],
+                                node_coords=atlas_nodes, colorbar=True,
+                                title='Significant negative weight after {} correction for {}'.format(correction,
+                                                                                                      class_names[group]),
+                                edge_cmap='Blues',
+                                node_size=node_size,
+                                node_color=labels_colors)
+                pdf.savefig()
+
+                # Matrix view of significant positive and negative weight
+                plt.figure()
+                plot_matrix(matrix=all_classes_p_negative_features_significant[group, ...],
+                            labels_colors=labels_colors, mpart='all',
+                            colormap='Blues', linecolor='black',
+                            title='Significant negative weight after {} correction for {}'.format(
+                                correction,
+                                class_names[group]),
+                            vertical_labels=labels_regions, horizontal_labels=labels_regions)
+                pdf.savefig()
+
+                plt.close("all")
+
+
+
