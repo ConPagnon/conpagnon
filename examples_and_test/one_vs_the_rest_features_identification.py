@@ -15,7 +15,7 @@ from utils.folders_and_files_management import save_object
 from matplotlib.backends.backend_pdf import PdfPages
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import one_against_all_bootstrap, one_against_all_permutation_bootstrap
-# TODO: Add function to wrap the generation of a report, correction, and classifier fitting 
+# TODO: Add function to wrap the generation of a report, correction, and classifier fitting
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
