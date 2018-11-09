@@ -20,7 +20,11 @@ lesions_root_directory = "/media/db242421/db242421_data/AVCnn_2016_DARTEL/AVCnn_
 controls_root_directory = "/media/db242421/db242421_data/AVCnn_2016_DARTEL/AVCnn_data/control"
 controls_list_txt = "/media/db242421/db242421_data/ConPagnon_data/text_data/controls.txt"
 subjects_list_txt = "/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients.txt"
+impaired_language_list_txt = "/media/db242421/db242421_data/ConPagnon_data/text_data/acm_impaired.txt"
+non_impaired_language_list_txt = "/media/db242421/db242421_data/ConPagnon_data/text_data/acm_non_impaired.txt"
 subjects_list = pd.read_csv(subjects_list_txt, header=None)[0]
+impaired_list = pd.read_csv(impaired_language_list_txt, header=None)[0]
+non_impaired_list = pd.read_csv(non_impaired_language_list_txt, header=None)[0]
 controls_list = pd.read_csv(controls_list_txt, header=None)[0]
 saving_directory = "/media/db242421/db242421_data/ConPagnon_reports/lesion_behavior_mapping"
 
@@ -69,11 +73,11 @@ nb.save(img=mean_controls_nifti,
         filename=os.path.join(saving_directory, "mean_controls.nii"))
 
 # Read and load lesion image for each subject,
-for subject in subjects_list:
+for subject in impaired_list:
     # path to the subject image
     subject_lesion_path = os.path.join(lesions_root_directory, subject, 'lesion')
     # Get lesion filename
-    lesion_file = glob.glob(os.path.join(subject_lesion_path, 'w*.nii'))[0]
+    lesion_file = glob.glob(os.path.join(subject_lesion_path, 'w*.nii.gz'))[0]
     # Load the normalized lesion image
     subject_lesion = load_img(img=lesion_file)
     # get lesion images affine
@@ -96,7 +100,7 @@ lesion_overlap_array = np.sum(all_lesion_array, axis=0)
 lesion_overlap_nifti = nb.Nifti1Image(dataobj=lesion_overlap_array,
                                       affine=target_affine)
 nb.save(img=lesion_overlap_nifti,
-        filename=os.path.join(saving_directory, "overlap_acm.nii"))
+        filename=os.path.join(saving_directory, "fsl_overlap_acm_impaired.nii"))
 
 # Save flatten lesion map
 save_object(object_to_save=lesions_maps,
