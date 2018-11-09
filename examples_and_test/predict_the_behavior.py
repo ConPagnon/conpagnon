@@ -77,12 +77,14 @@ class_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]
 # Let perform some basic classification
 from sklearn.model_selection import cross_val_score, StratifiedShuffleSplit, LeaveOneOut, GridSearchCV
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
 
 
 mean_scores = []
 svc = LinearSVC()
 sss = StratifiedShuffleSplit(n_splits=10000)
 loo = LeaveOneOut()
+lr = LogisticRegression()
 # Final mean accuracy scores will be stored in a dictionary
 mean_score_dict = {}
 groups_classification = ['controls', 'non_impaired_language']
@@ -95,7 +97,7 @@ features = np.array([network_connectivity_matrices[group][subject][kind]
 features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups_classification[0]].keys())),
                              2*np.ones(len(subjects_connectivity_matrices[groups_classification[1]].keys()))))
 
-search_C = GridSearchCV(estimator=svc,param_grid={'C': np.linspace(start=0.001, stop=1e3, num=100)},
+search_C = GridSearchCV(estimator=lr,param_grid={'C': np.linspace(start=0.001, stop=1e3, num=100)},
              scoring='accuracy', cv=sss, n_jobs=16, verbose=1)
 if __name__ == '__main__':
     search_C.fit(X=features, y=features_labels)
