@@ -37,15 +37,16 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/dictionary'
-connectivity_dictionary_name = 'z_fisher_transform_subjects_connectivity_matrices.pkl'
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/' \
+              'classification/non_impaired_language_controls/Network classification'
+connectivity_dictionary_name = 'homotopic_networks_dictionary.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder,
                                                           connectivity_dictionary_name))
 subjects_connectivity_matrices['patients'] = {**subjects_connectivity_matrices['non_impaired_language'],
                                               **subjects_connectivity_matrices['impaired_language']}
 
 #class_names = list(subjects_connectivity_matrices.keys())
-class_names = ['impaired_language', 'non_impaired_language']
+class_names = ['non_impaired_language', 'controls']
 metric = 'tangent'
 
 # Vectorize the connectivity for classification
