@@ -77,7 +77,7 @@ for subject in impaired_list:
     # path to the subject image
     subject_lesion_path = os.path.join(lesions_root_directory, subject, 'lesion')
     # Get lesion filename
-    lesion_file = glob.glob(os.path.join(subject_lesion_path, 'w*.nii.gz'))[0]
+    lesion_file = glob.glob(os.path.join(subject_lesion_path, 'w*.nii'))[0]
     # Load the normalized lesion image
     subject_lesion = load_img(img=lesion_file)
     # get lesion images affine
@@ -100,7 +100,7 @@ lesion_overlap_array = np.sum(all_lesion_array, axis=0)
 lesion_overlap_nifti = nb.Nifti1Image(dataobj=lesion_overlap_array,
                                       affine=target_affine)
 nb.save(img=lesion_overlap_nifti,
-        filename=os.path.join(saving_directory, "fsl_overlap_acm_impaired.nii"))
+        filename=os.path.join(saving_directory, "acm_impaired_v2.nii"))
 
 # Save flatten lesion map
 save_object(object_to_save=lesions_maps,
