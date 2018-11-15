@@ -13,6 +13,9 @@ import numpy as np
 from sklearn.model_selection import cross_val_score, StratifiedShuffleSplit, LeaveOneOut, GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import LogisticRegression
+from nilearn.plotting import plot_connectome
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -25,8 +28,9 @@ importlib.reload(data_architecture)
 importlib.reload(dictionary_operations)
 
 # Some path
-root_directory = "/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/network_classification"
-save_in = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/network_classification'
+root_directory = "/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls"
+save_in = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/' \
+          'classification/non_impaired_language_controls/Network classification'
 kinds = ['correlation', 'partial correlation', 'tangent']
 network_name = ['DMN', 'Auditory', 'Executive',
                          'Language', 'Basal_Ganglia', 'MTL',
@@ -35,6 +39,10 @@ network_name = ['DMN', 'Auditory', 'Executive',
 subjects_connectivity_matrices = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(root_directory,
                                      "dictionary/z_fisher_transform_subjects_connectivity_matrices.pkl")
+)
+mean_subjects_connectivity_matrices = folders_and_files_management.load_object(
+    full_path_to_object=os.path.join(root_directory,
+                                     "dictionary/z_fisher_groups_mean_connectivity_matrices.pkl")
 )
 groups = ['controls', 'non_impaired_language']
 # Load the behavior data
@@ -71,6 +79,7 @@ intra_network_connectivity_dict, network_dict, network_labels_list, network_labe
         network_column_name='network',
         color_of_network_column='Color')
 homotopic_intra_network_connectivity = dict.fromkeys(network_name)
+
 for network in network_name:
     # Pick the 4D index of the roi in the network
     network_roi_ind = network_dict[network]['dataframe']['atlas4D index']
@@ -81,70 +90,66 @@ for network in network_name:
     [subjects_connectivity_matrices[group][subject]['tangent'][network_homotopic_couple_ind[:, 0],
                                                                network_homotopic_couple_ind[:, 1]]
         for group in groups for subject in list(subjects_connectivity_matrices[group].keys())])
-
+    homotopic_intra_network_connectivity[network + '_indices'] = network_homotopic_couple_ind
 features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]].keys())),
                              2*np.ones(len(subjects_connectivity_matrices[groups[1]].keys()))))
 
-mean_scores = []
 svc = LinearSVC()
 sss = StratifiedShuffleSplit(n_splits=10000)
 loo = LeaveOneOut()
 lr = LogisticRegression()
 # Final mean accuracy scores will be stored in a dictionary
 save_network_parameters = dict.fromkeys(network_name)
-for network in network_name:
-    svc = LinearSVC()
-    sss = StratifiedShuffleSplit(n_splits=10000)
+# for network in network_name:
+# svc = LinearSVC()
+# sss = StratifiedShuffleSplit(n_splits=10000)
 
-    features = homotopic_intra_network_connectivity[network]
-    search_C = GridSearchCV(estimator=svc, param_grid={'C': np.linspace(start=0.00001, stop=1, num=100)},
-                            scoring='accuracy', cv=sss, n_jobs=16, verbose=1)
+features = homotopic_connectivity
+search_C = GridSearchCV(estimator=svc, param_grid={'C': np.linspace(start=0.05, stop=1, num=100)},
+                        scoring='accuracy', cv=sss, n_jobs=20, verbose=1)
 
-    if __name__ == '__main__':
-        search_C.fit(X=features, y=features_labels)
+if __name__ == '__main__':
+    search_C.fit(X=features, y=features_labels)
 
-    print("Classification between {} and {} with a L2 linear SVM achieved the best score of {} % accuracy "
-          "with C={}".format(groups[0], groups[1],
-                             search_C.best_score_*100, search_C.best_params_['C']))
+print("Classification between {} and {} with a L2 linear SVM achieved the best score of {} % accuracy "
+      "with C={}".format(groups[0], groups[1],
+                         search_C.best_score_*100, search_C.best_params_['C']))
 
-    C = search_C.best_params_['C']
-    cv_scores = cross_val_score(estimator=LinearSVC(C=C), X=features,
-                                y=features_labels, cv=sss,
-                                scoring='accuracy', n_jobs=16,
-                                verbose=1)
-    print('mean accuracy {} % +- {} %'.format(cv_scores.mean()*100, cv_scores.std()*100))
-    save_network_parameters[network] = {'n_rois': features.shape[1],
-                                        'Best C': C,
-                                        'Accuracy': cv_scores.mean()*100,
-                                        'Std': cv_scores.std()*100}
+C = search_C.best_params_['C']
+cv_scores = cross_val_score(estimator=LinearSVC(C=C), X=features,
+                            y=features_labels, cv=sss,
+                            scoring='accuracy', n_jobs=16,
+                            verbose=1)
+print('mean accuracy {} % +- {} %'.format(cv_scores.mean()*100, cv_scores.std()*100))
+all_homotopic_best_parameter = {'C': C}
+#save_network_parameters[network] = {'n_rois': features.shape[1],
+#                                    'Best C': C,
+#                                    'Accuracy': cv_scores.mean()*100,
+#                                    'Std': cv_scores.std()*100}
 
 folders_and_files_management.save_object(
-    object_to_save=save_network_parameters,
-    saving_directory=os.path.join(save_in,
-                                  'non_impaired_language_controls/Network classification'),
-    filename='best_params_and_accuracy_networks_intra_homotopic_until_1.pkl')
+    object_to_save=all_homotopic_best_parameter,
+    saving_directory=save_in,
+    filename='best_params_and_accuracy_all_homotopic.pkl')
 
 folders_and_files_management.save_object(
     object_to_save=homotopic_intra_network_connectivity,
-    saving_directory=os.path.join(save_in,
-                                  'non_impaired_language_controls/Network classification'),
+    saving_directory=save_in,
     filename='homotopic_networks_dictionary.pkl'
 )
 
 folders_and_files_management.save_object(
     object_to_save=features_labels,
-    saving_directory=os.path.join(save_in,
-                                  'non_impaired_language_controls/Network classification'),
+    saving_directory=save_in,
     filename='homotopic_networks_features_labels.pkl'
 )
 
 
 # Identify important brain connection in each network
 # Atlas set up
-atlas_folder = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/network_classification/atlas_AVCnn'
+atlas_folder = '/media/db242421/db242421_data/atlas_AVCnn'
 atlas_name = 'atlas4D_2.nii'
-labels_text_file = '/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/network_classification/' \
-                   'atlas_AVCnn/atlas4D_2_labels.csv'
+labels_text_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas4D_2_labels.csv'
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
           'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
           'lightpink']
@@ -164,7 +169,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 best_parameters = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(
         save_in,
-        'best_params_and_accuracy_networks_intra_homotopic.pkl')
+        'best_params_and_accuracy_all_homotopic.pkl')
 )
 from nilearn.connectome import vec_to_sym_matrix
 from machine_learning.features_indentification import compute_weight_distribution, \
@@ -177,55 +182,121 @@ network_name = ['Auditory', 'Basal_Ganglia', 'DMN',
                 'Sensorimotor', 'Salience', 'Visuospatial']
 network_classification_results = dict.fromkeys(network_name)
 correction = 'max_t'
-for network in network_name:
-    print('Identify important connection for the {} network'.format(network))
-    # Compute mean network matrices
-    first_class_mean_matrix = vec_to_sym_matrix(
-        vec=np.array([intra_network_connectivity_dict[groups[0]][s][kind][network]['network array']
-                      for s in list(intra_network_connectivity_dict[groups[0]].keys())]),
-        diagonal= np.zeros((len(list(intra_network_connectivity_dict[groups[0]].keys())),
-                            network_dict[network]['number of rois']))).mean(axis=0)
-    second_class_mean_matrix = vec_to_sym_matrix(
-        vec=np.array([intra_network_connectivity_dict[groups[1]][s][kind][network]['network array']
-                      for s in list(intra_network_connectivity_dict[groups[1]].keys())]),
-        diagonal= np.zeros((len(list(intra_network_connectivity_dict[groups[1]].keys())),
-                            network_dict[network]['number of rois']))).mean(axis=0)
+#for network in network_name:
+#print('Identify important connection for the {} network'.format(network))
 
-    vectorized_connectivity_matrices = homotopic_intra_network_connectivity[network]
-    class_labels = features_labels
 
-    network_classification_weight, network_weight_distribution = compute_weight_distribution(
-        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-        bootstrap_number=500,
-        n_permutations=10000,
-        class_labels=class_labels,
-        C=best_parameters[network]['Best C'],
-        n_cpus_bootstrap=16,
-        verbose_permutations=0,
-        verbose_bootstrap=0
-    )
+vectorized_connectivity_matrices = homotopic_connectivity
+class_labels = features_labels
 
-    #  network_p_values_corrected = features_weights_parametric_correction(
-    #     null_distribution_features_weights=network_weight_distribution,
-    #    normalized_mean_weight=network_classification_weight,
-    #    method=correction,
-    #    alpha=.05
-    # )
-    sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
-        features_weights_max_t_correction(null_distribution_features_weights=network_weight_distribution,
-                                          normalized_mean_weight=network_classification_weight)
-    # network_classification_results[network] = {'network_features_weight': network_classification_weight,
-    #                                           'network_weight_distribution': network_weight_distribution,
-    #                                           'p_values_corrected': network_p_values_corrected}
-    network_classification_results[network] = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
-                                               'sorted_null_minimum_dist': sorted_null_minimum_dist,
-                                               'p_values_max': p_values_max,
-                                               'p_values_min': p_values_min}
+classification_weight, weight_distribution = compute_weight_distribution(
+    vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+    bootstrap_number=500,
+    n_permutations=10000,
+    class_labels=class_labels,
+    C=best_parameters['C'],
+    n_cpus_bootstrap=20,
+    verbose_permutations=1,
+    verbose_bootstrap=0
+)
+
+# p_values_corrected = features_weights_parametric_correction(
+#   null_distribution_features_weights=weight_distribution,
+#   normalized_mean_weight=classification_weight,
+#   method=correction,
+#   alpha=.05
+ # )
+sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
+    features_weights_max_t_correction(null_distribution_features_weights=weight_distribution,
+                                      normalized_mean_weight=classification_weight)
+# network_classification_results[network] = {'network_features_weight': network_classification_weight,
+#                                           'network_weight_distribution': network_weight_distribution,
+#                                           'p_values_corrected': network_p_values_corrected}
+classification_results = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
+                          'sorted_null_minimum_dist': sorted_null_minimum_dist,
+                          'p_values_max': p_values_max,
+                          'p_values_min': p_values_min}
+#classification_results = {'features_weight': classification_weight,
+#                          'weight_distribution': weight_distribution,
+#                          'p_values_corrected': p_values_corrected}
 
 folders_and_files_management.save_object(
-    object_to_save=network_classification_results,
+    object_to_save=classification_results,
     saving_directory=save_in,
-    filename=correction + '_intra_homotopic_connection_identification.pkl'
+    filename=correction + '_all_homotopic_connection_identification.pkl'
 )
 
 # Plot results for intra network homotopic connection for each network
+homotopic_results_fdr = folders_and_files_management.load_object(
+    full_path_to_object=os.path.join(save_in, 'fdr_bh_intra_homotopic_connection_identification.pkl')
+)
+with PdfPages(os.path.join(save_in, 'fdr_corrected_intra_network_homotopic_classification.pdf')) as pdf:
+
+    for network in list(homotopic_results_fdr.keys()):
+        # Search p significant
+        network_p = homotopic_results_fdr[network]['p_values_corrected']
+        significant_p = np.where(network_p < 0.05)[0]
+        if network_p[significant_p]:
+            # Retrieve indices for the significant connection
+            network_connection_indices = \
+                homotopic_intra_network_connectivity[network + '_indices'][significant_p, :]
+            # Retrieve roi coordinates for the current network
+            network_rois_coordinates = network_dict[network]['dataframe'][['x', 'y', 'z']]
+            # Retrieve roi colors for the current network
+            network_colors = labels_colors[network_rois_coordinates.index]
+            # Take the mean connectivity difference between the two group for the
+            # significant connection
+            first_group_mean_matrix = mean_subjects_connectivity_matrices[groups[0]][kind]
+            second_group_mean_matrix = mean_subjects_connectivity_matrices[groups[1]][kind]
+            mean_difference = second_group_mean_matrix - first_group_mean_matrix
+            network_mean_difference_matrix_tmp = mean_difference[network_rois_coordinates.index, :]
+            network_mean_difference_matrix =  network_mean_difference_matrix_tmp[:, network_rois_coordinates.index]
+            network_adjacency_matrix = np.zeros((network_rois_coordinates.shape[0],
+                                                 network_rois_coordinates.shape[0]))
+            # Fill network adjacency matrix
+            for i in range(network_connection_indices.shape[0]):
+                print(i)
+                i_position = np.where(network_connection_indices[i][0] == network_rois_coordinates.index)[0][0]
+                j_position = np.where(network_connection_indices[i][1] == network_rois_coordinates.index)[0][0]
+                for j in range(network_connection_indices.shape[1]):
+                    network_adjacency_matrix[i_position, j_position] = network_mean_difference_matrix[i_position,
+                                                                                                      j_position]
+            network_adjacency_matrix = network_adjacency_matrix + network_adjacency_matrix.T
+            # Plot connectome
+            plt.figure()
+            plot_connectome(adjacency_matrix=network_adjacency_matrix,
+                            node_coords=network_rois_coordinates,
+                            node_color=network_colors,
+                            node_size=20,
+                            title='{} ({} - {})'.format(network,
+                                                        groups[1], groups[0]),
+                            colorbar=True)
+            pdf.savefig()
+            plt.show()
+
+# plot results for the identification of connection for ALL homotopic
+# connection
+all_homotopic_adjacency_matrix = np.zeros((n_nodes, n_nodes))
+significant_labels_indices = homotopic_roi_indices[np.where(p_values_corrected < 0.05)[0]]
+significant_labels = [(labels_regions[significant_labels_indices[i][0]],
+                       labels_regions[significant_labels_indices[i][1]])
+                      for i in range(significant_labels_indices.shape[0])]
+for i in range(significant_labels_indices.shape[0]):
+    all_homotopic_adjacency_matrix[significant_labels_indices[i][0],
+                                   significant_labels_indices[i][1]] = \
+        mean_subjects_connectivity_matrices[groups[1]]['tangent'][
+            significant_labels_indices[i][0], significant_labels_indices[i][1]] - \
+        mean_subjects_connectivity_matrices[groups[0]]['tangent'][
+            significant_labels_indices[i][0], significant_labels_indices[i][1]]
+all_homotopic_adjacency_matrix += all_homotopic_adjacency_matrix.T
+with PdfPages(os.path.join(save_in, correction + '_all_homotopic_identification.pdf')) as pdf:
+    plt.figure()
+    plot_connectome(adjacency_matrix=all_homotopic_adjacency_matrix,
+                    node_coords=atlas_nodes,
+                    node_color=labels_colors,
+                    node_size=20,
+                    title='Surviving homotopic connection ({} - {})'.format(groups[1],
+                                                                            groups[0]))
+    pdf.savefig()
+    plt.show()
+
