@@ -32,19 +32,23 @@ root_directory = "/media/db242421/db242421_data/ConPagnon_data/language_study_AN
 save_in = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/' \
           'classification/non_impaired_language_controls/Network classification'
 kinds = ['correlation', 'partial correlation', 'tangent']
-network_name = ['DMN', 'Auditory', 'Executive',
-                         'Language', 'Basal_Ganglia', 'MTL',
-                         'Salience', 'Sensorimotor', 'Visuospatial',
-                         'Primary_Visual', 'Precuneus', 'Secondary_Visual']
+network_name = ['DMN', 'Executive',
+                 'Language', 'MTL',
+                 'Salience', 'Sensorimotor', 'Visuospatial',
+                 'Primary_Visual', 'Secondary_Visual']
 subjects_connectivity_matrices = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(root_directory,
                                      "dictionary/z_fisher_transform_subjects_connectivity_matrices.pkl")
 )
+groups = ['controls', 'non_impaired_language']
+features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]].keys())),
+                             2*np.ones(len(subjects_connectivity_matrices[groups[1]].keys()))))
+
 mean_subjects_connectivity_matrices = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(root_directory,
                                      "dictionary/z_fisher_groups_mean_connectivity_matrices.pkl")
 )
-groups = ['controls', 'non_impaired_language']
+
 # Load the behavior data
 behavior_data = pd.read_csv(os.path.join(root_directory, 'behavioral_data.csv'))
 behavior_data = data_management.shift_index_column(panda_dataframe=behavior_data,
@@ -52,6 +56,7 @@ behavior_data = data_management.shift_index_column(panda_dataframe=behavior_data
 # Load the atlas data
 atlas_excel_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas_version2.xlsx'
 sheetname = 'complete_atlas'
+
 
 atlas_information = pd.read_excel(atlas_excel_file, sheetname=sheetname)
 # Choose the connectivity measure for the analysis
@@ -91,52 +96,48 @@ for network in network_name:
                                                                network_homotopic_couple_ind[:, 1]]
         for group in groups for subject in list(subjects_connectivity_matrices[group].keys())])
     homotopic_intra_network_connectivity[network + '_indices'] = network_homotopic_couple_ind
-features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]].keys())),
-                             2*np.ones(len(subjects_connectivity_matrices[groups[1]].keys()))))
 
-svc = LinearSVC()
-sss = StratifiedShuffleSplit(n_splits=10000)
-loo = LeaveOneOut()
-lr = LogisticRegression()
-# Final mean accuracy scores will be stored in a dictionary
-save_network_parameters = dict.fromkeys(network_name)
-# for network in network_name:
 # svc = LinearSVC()
 # sss = StratifiedShuffleSplit(n_splits=10000)
+# Final mean accuracy scores will be stored in a dictionary
+save_network_parameters = dict.fromkeys(network_name)
+for network in network_name:
+    svc = LinearSVC()
+    sss = StratifiedShuffleSplit(n_splits=10000)
 
-features = homotopic_connectivity
-search_C = GridSearchCV(estimator=svc, param_grid={'C': np.linspace(start=0.05, stop=1, num=100)},
-                        scoring='accuracy', cv=sss, n_jobs=20, verbose=1)
+    features = np.array([intra_network_connectivity_dict[group][s][kind][network]['network array']
+                         for group in groups for s in list(intra_network_connectivity_dict[group].keys())])
+    search_C = GridSearchCV(estimator=svc, param_grid={'C': np.linspace(start=0.05, stop=100, num=1000)},
+                            scoring='accuracy', cv=sss, n_jobs=20, verbose=1)
 
-if __name__ == '__main__':
-    search_C.fit(X=features, y=features_labels)
+    if __name__ == '__main__':
+        search_C.fit(X=features, y=features_labels)
 
-print("Classification between {} and {} with a L2 linear SVM achieved the best score of {} % accuracy "
-      "with C={}".format(groups[0], groups[1],
-                         search_C.best_score_*100, search_C.best_params_['C']))
+    print("Classification between {} and {} with a L2 linear SVM achieved the best score of {} % accuracy "
+          "with C={}".format(groups[0], groups[1],
+                             search_C.best_score_*100, search_C.best_params_['C']))
 
-C = search_C.best_params_['C']
-cv_scores = cross_val_score(estimator=LinearSVC(C=C), X=features,
-                            y=features_labels, cv=sss,
-                            scoring='accuracy', n_jobs=16,
-                            verbose=1)
-print('mean accuracy {} % +- {} %'.format(cv_scores.mean()*100, cv_scores.std()*100))
-all_homotopic_best_parameter = {'C': C}
-#save_network_parameters[network] = {'n_rois': features.shape[1],
-#                                    'Best C': C,
-#                                    'Accuracy': cv_scores.mean()*100,
-#                                    'Std': cv_scores.std()*100}
+    C = search_C.best_params_['C']
+    cv_scores = cross_val_score(estimator=LinearSVC(C=C), X=features,
+                                y=features_labels, cv=sss,
+                                scoring='accuracy', n_jobs=16,
+                                verbose=1)
+    print('mean accuracy {} % +- {} %'.format(cv_scores.mean()*100, cv_scores.std()*100))
+    save_network_parameters[network] = {'n_rois': features.shape[1],
+                                        'Best C': C,
+                                        'Accuracy': cv_scores.mean()*100,
+                                        'Std': cv_scores.std()*100}
 
 folders_and_files_management.save_object(
-    object_to_save=all_homotopic_best_parameter,
+    object_to_save=save_network_parameters,
     saving_directory=save_in,
-    filename='best_params_and_accuracy_all_homotopic.pkl')
+    filename='best_params_and_accuracy_intra_network.pkl')
 
-folders_and_files_management.save_object(
-    object_to_save=homotopic_intra_network_connectivity,
-    saving_directory=save_in,
-    filename='homotopic_networks_dictionary.pkl'
-)
+# folders_and_files_management.save_object(
+#    object_to_save=homotopic_intra_network_connectivity,
+#    saving_directory=save_in,
+#    filename='homotopic_networks_dictionary.pkl'
+# )
 
 folders_and_files_management.save_object(
     object_to_save=features_labels,
@@ -175,50 +176,50 @@ from nilearn.connectome import vec_to_sym_matrix
 from machine_learning.features_indentification import compute_weight_distribution, \
     features_weights_parametric_correction, features_weights_max_t_correction
 connectivity_matrices = homotopic_intra_network_connectivity
-network_name = ['Auditory', 'Basal_Ganglia', 'DMN',
-                'Executive', 'Language', 'Precuneus',
+network_name = ['DMN',
+                'Executive', 'Language',
                 'MTL', 'Primary_Visual',
                 'Secondary_Visual',
                 'Sensorimotor', 'Salience', 'Visuospatial']
 network_classification_results = dict.fromkeys(network_name)
-correction = 'max_t'
-#for network in network_name:
-#print('Identify important connection for the {} network'.format(network))
+correction = 'fdr_bh'
+for network in network_name:
+    print('Identify important connection for the {} network'.format(network))
 
 
-vectorized_connectivity_matrices = homotopic_connectivity
-class_labels = features_labels
+    vectorized_connectivity_matrices = homotopic_connectivity
+    class_labels = features_labels
 
-classification_weight, weight_distribution = compute_weight_distribution(
-    vectorized_connectivity_matrices=vectorized_connectivity_matrices,
-    bootstrap_number=500,
-    n_permutations=10000,
-    class_labels=class_labels,
-    C=best_parameters['C'],
-    n_cpus_bootstrap=20,
-    verbose_permutations=1,
-    verbose_bootstrap=0
-)
+    classification_weight, weight_distribution = compute_weight_distribution(
+        vectorized_connectivity_matrices=vectorized_connectivity_matrices,
+        bootstrap_number=500,
+        n_permutations=1000,
+        class_labels=class_labels,
+        C=best_parameters['C'],
+        n_cpus_bootstrap=20,
+        verbose_permutations=1,
+        verbose_bootstrap=0
+    )
 
-# p_values_corrected = features_weights_parametric_correction(
-#   null_distribution_features_weights=weight_distribution,
-#   normalized_mean_weight=classification_weight,
-#   method=correction,
-#   alpha=.05
- # )
-sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
-    features_weights_max_t_correction(null_distribution_features_weights=weight_distribution,
-                                      normalized_mean_weight=classification_weight)
-# network_classification_results[network] = {'network_features_weight': network_classification_weight,
-#                                           'network_weight_distribution': network_weight_distribution,
-#                                           'p_values_corrected': network_p_values_corrected}
-classification_results = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
-                          'sorted_null_minimum_dist': sorted_null_minimum_dist,
-                          'p_values_max': p_values_max,
-                          'p_values_min': p_values_min}
-#classification_results = {'features_weight': classification_weight,
-#                          'weight_distribution': weight_distribution,
-#                          'p_values_corrected': p_values_corrected}
+    # p_values_corrected = features_weights_parametric_correction(
+    #   null_distribution_features_weights=weight_distribution,
+    #   normalized_mean_weight=classification_weight,
+    #   method=correction,
+    #   alpha=.05
+     # )
+    sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
+        features_weights_max_t_correction(null_distribution_features_weights=weight_distribution,
+                                          normalized_mean_weight=classification_weight)
+    # network_classification_results[network] = {'network_features_weight': network_classification_weight,
+    #                                           'network_weight_distribution': network_weight_distribution,
+    #                                           'p_values_corrected': network_p_values_corrected}
+    classification_results = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
+                              'sorted_null_minimum_dist': sorted_null_minimum_dist,
+                              'p_values_max': p_values_max,
+                              'p_values_min': p_values_min}
+    #classification_results = {'features_weight': classification_weight,
+    #                          'weight_distribution': weight_distribution,
+    #                          'p_values_corrected': p_values_corrected}
 
 folders_and_files_management.save_object(
     object_to_save=classification_results,
@@ -277,10 +278,12 @@ with PdfPages(os.path.join(save_in, 'fdr_corrected_intra_network_homotopic_class
 # plot results for the identification of connection for ALL homotopic
 # connection
 all_homotopic_adjacency_matrix = np.zeros((n_nodes, n_nodes))
-significant_labels_indices = homotopic_roi_indices[np.where(p_values_corrected < 0.05)[0]]
-significant_labels = [(labels_regions[significant_labels_indices[i][0]],
-                       labels_regions[significant_labels_indices[i][1]])
-                      for i in range(significant_labels_indices.shape[0])]
+significant_p_values_indices = np.hstack((np.where(classification_results['p_values_min'] < 0.05)[0],
+                                          np.where(classification_results['p_values_max'] < 0.05)[0]))
+
+# Build Homotopic adjacency matrix
+
+significant_labels_indices = homotopic_roi_indices[significant_p_values_indices ]
 for i in range(significant_labels_indices.shape[0]):
     all_homotopic_adjacency_matrix[significant_labels_indices[i][0],
                                    significant_labels_indices[i][1]] = \
@@ -300,3 +303,12 @@ with PdfPages(os.path.join(save_in, correction + '_all_homotopic_identification.
     pdf.savefig()
     plt.show()
 
+
+significant_labels =[(labels_regions[significant_labels_indices[i][0]],
+                      labels_regions[significant_labels_indices[i][1]])
+                     for i in range(significant_labels_indices.shape[0])]
+folders_and_files_management.save_object(
+    object_to_save=significant_labels,
+    saving_directory=save_in,
+    filename=correction + '_all_homotopic_features_labels.pkl'
+)
