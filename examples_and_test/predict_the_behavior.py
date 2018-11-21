@@ -16,6 +16,7 @@ from sklearn.linear_model import LogisticRegression
 from nilearn.plotting import plot_connectome
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+from data_handling.dictionary_operations import groupby_factor_connectivity_matrices
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -36,11 +37,23 @@ network_name = ['DMN', 'Executive',
                  'Language', 'MTL',
                  'Salience', 'Sensorimotor', 'Visuospatial',
                  'Primary_Visual', 'Secondary_Visual']
+
+# Load the behavior data
+behavior_data = pd.read_csv(os.path.join(root_directory, 'behavioral_data.csv'))
+behavior_data = data_management.shift_index_column(panda_dataframe=behavior_data,
+                                                   columns_to_index=['subjects'])
+
 subjects_connectivity_matrices = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(root_directory,
                                      "dictionary/z_fisher_transform_subjects_connectivity_matrices.pkl")
 )
-groups = ['controls', 'non_impaired_language']
+t,p,k = groupby_factor_connectivity_matrices(population_data_file=os.path.join(root_directory, 'behavioral_data.xlsx'),
+                                         sheetname='Middle Cerebral Artery+controls',
+                                         subjects_connectivity_matrices_dictionnary=subjects_connectivity_matrices,
+                                         groupes=['non_impaired_language'],
+                                         factors=['langage_clinique', 'Lesion'])
+subjects_connectivity_matrices['LG_non_impaired_language'] = t[('N', 'G')]
+groups = ['controls', 'LG_non_impaired_language']
 features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]].keys())),
                              2*np.ones(len(subjects_connectivity_matrices[groups[1]].keys()))))
 
@@ -49,10 +62,7 @@ mean_subjects_connectivity_matrices = folders_and_files_management.load_object(
                                      "dictionary/z_fisher_groups_mean_connectivity_matrices.pkl")
 )
 
-# Load the behavior data
-behavior_data = pd.read_csv(os.path.join(root_directory, 'behavioral_data.csv'))
-behavior_data = data_management.shift_index_column(panda_dataframe=behavior_data,
-                                                   columns_to_index=['subjects'])
+
 # Load the atlas data
 atlas_excel_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas_version2.xlsx'
 sheetname = 'complete_atlas'
@@ -170,24 +180,24 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 best_parameters = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(
         save_in,
-        'best_params_and_accuracy_all_homotopic.pkl')
+        'best_params_and_accuracy_intra_network.pkl')
 )
 from nilearn.connectome import vec_to_sym_matrix
 from machine_learning.features_indentification import compute_weight_distribution, \
     features_weights_parametric_correction, features_weights_max_t_correction
-connectivity_matrices = homotopic_intra_network_connectivity
 network_name = ['DMN',
                 'Executive', 'Language',
                 'MTL', 'Primary_Visual',
                 'Secondary_Visual',
                 'Sensorimotor', 'Salience', 'Visuospatial']
-network_classification_results = dict.fromkeys(network_name)
+classification_results = dict.fromkeys(network_name)
 correction = 'fdr_bh'
 for network in network_name:
     print('Identify important connection for the {} network'.format(network))
 
-
-    vectorized_connectivity_matrices = homotopic_connectivity
+    vectorized_connectivity_matrices = \
+        np.array([intra_network_connectivity_dict[group][s][kind][network]['network array']
+                  for group in groups for s in list(intra_network_connectivity_dict[group].keys())])
     class_labels = features_labels
 
     classification_weight, weight_distribution = compute_weight_distribution(
@@ -195,36 +205,39 @@ for network in network_name:
         bootstrap_number=500,
         n_permutations=1000,
         class_labels=class_labels,
-        C=best_parameters['C'],
-        n_cpus_bootstrap=20,
+        C=best_parameters[network]['Best C'],
+        n_cpus_bootstrap=16,
         verbose_permutations=1,
         verbose_bootstrap=0
     )
 
-    # p_values_corrected = features_weights_parametric_correction(
-    #   null_distribution_features_weights=weight_distribution,
-    #   normalized_mean_weight=classification_weight,
-    #   method=correction,
-    #   alpha=.05
-     # )
-    sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
-        features_weights_max_t_correction(null_distribution_features_weights=weight_distribution,
-                                          normalized_mean_weight=classification_weight)
+    p_values_corrected = features_weights_parametric_correction(
+       null_distribution_features_weights=weight_distribution,
+       normalized_mean_weight=classification_weight,
+       method=correction,
+       alpha=.05
+      )
+    # sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
+    #   features_weights_max_t_correction(null_distribution_features_weights=weight_distribution,
+    #                                     normalized_mean_weight=classification_weight)
+
     # network_classification_results[network] = {'network_features_weight': network_classification_weight,
     #                                           'network_weight_distribution': network_weight_distribution,
     #                                           'p_values_corrected': network_p_values_corrected}
-    classification_results = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
-                              'sorted_null_minimum_dist': sorted_null_minimum_dist,
-                              'p_values_max': p_values_max,
-                              'p_values_min': p_values_min}
-    #classification_results = {'features_weight': classification_weight,
-    #                          'weight_distribution': weight_distribution,
-    #                          'p_values_corrected': p_values_corrected}
+   # classification_results = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
+    #                          'sorted_null_minimum_dist': sorted_null_minimum_dist,
+    #                          'p_values_max': p_values_max,
+    #                          'p_values_min': p_values_min}
+
+    classification_results[network] = {
+        'features_weight': classification_weight,
+        'weight_distribution': weight_distribution,
+        'p_values_corrected': p_values_corrected}
 
 folders_and_files_management.save_object(
     object_to_save=classification_results,
     saving_directory=save_in,
-    filename=correction + '_all_homotopic_connection_identification.pkl'
+    filename=correction + '_all_intra_network_connection_identification.pkl'
 )
 
 # Plot results for intra network homotopic connection for each network
@@ -312,3 +325,116 @@ folders_and_files_management.save_object(
     saving_directory=save_in,
     filename=correction + '_all_homotopic_features_labels.pkl'
 )
+from machine_learning.features_indentification import remove_reversed_duplicates
+# Plot classification for intra network connectivity
+intra_network_classification = folders_and_files_management.load_object(
+    full_path_to_object=os.path.join(save_in, 'intra_network/fdr_bh_all_intra_network_connection_identification.pkl')
+)
+
+with PdfPages(os.path.join(save_in, 'fdr_corrected_intra_network_classification.pdf')) as pdf:
+
+    for network in list(intra_network_classification.keys()):
+        # Search p significant
+        network_p = intra_network_classification[network]['p_values_corrected']
+        significant_p = np.where(network_p < 0.05)[0]
+        if network_p[significant_p].shape[0] != 0:
+            network_labels = list(network_dict[network]['dataframe']['anatomical label'])
+            network_n_rois = network_dict[network]['number of rois']
+            network_coord = network_dict[network]['dataframe'][['x', 'y', 'z']]
+            network_colors = labels_colors[network_dict[network]['dataframe']['atlas4D index']]
+            # Rebuild the network adjacency matrices:
+            network_p_array = array_rebuilder(network_p,
+                                              array_type='numeric',
+                                              diagonal=np.ones(network_n_rois))
+            network_p_indices = np.where(network_p_array < 0.05)
+            significant_labels_indices = np.array(list(
+                remove_reversed_duplicates(np.array(np.where(network_p_array < 0.05)).T)))
+            significant_labels = [(network_labels[significant_labels_indices[i][0]],
+                                   network_labels[significant_labels_indices[i][1]])
+                                  for i in range(significant_labels_indices.shape[0])]
+            intra_network_classification[network]['significant features labels'] = significant_labels
+            # Take mean difference in connectivity
+            network_mean_difference = \
+                np.array([array_rebuilder(
+                    intra_network_connectivity_dict[groups[1]][s][kind][network]['network array'],
+                    array_type='numeric',
+                    diagonal=intra_network_connectivity_dict[groups[1]][s][kind][network]['network diagonal array'])
+                    for s in list(intra_network_connectivity_dict[groups[1]].keys())]).mean(axis=0) - \
+                np.array([array_rebuilder(intra_network_connectivity_dict[groups[0]][s][kind][network]['network array'],
+                                          array_type='numeric',
+                                          diagonal=intra_network_connectivity_dict[groups[0]][s][kind][network][
+                                              'network diagonal array'])
+                          for s in list(intra_network_connectivity_dict[groups[0]].keys())]).mean(axis=0)
+            # Build network adjacency matrix
+            network_adjacency_matrix = np.zeros((network_n_rois, network_n_rois))
+            network_adjacency_matrix[network_p_indices[0], network_p_indices[1]] = \
+                network_mean_difference[network_p_indices[0], network_p_indices[1]]
+            # plot connectome
+            plt.figure()
+            plot_connectome(adjacency_matrix=network_adjacency_matrix,
+                            node_coords=network_coord,
+                            node_color=network_colors,
+                            node_size=20,
+                            title='{} ({} - {})'.format(network,
+                                                        groups[1], groups[0]),
+                            colorbar=True)
+            pdf.savefig()
+            plt.show()
+
+folders_and_files_management.save_object(
+    object_to_save=intra_network_classification,
+    saving_directory=save_in,
+    filename=correction + '_all_intra_network_connection_identification.pkl'
+)
+
+# Prediction of continuous language test with leave one out cross
+# validation
+from sklearn.svm import LinearSVR
+from sklearn.linear_model import Ridge, LinearRegression
+list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
+                  'empan', 'phono', 'elision_i',
+                  'invers', 'ajout', 'elision_f', 'morpho',
+                  'listea', 'listeb', 'topo',
+                  'voc1', 'voc2', 'voc1_ebauche', 'voc2_ebauche',
+                  'abstrait_diff', 'abstrait_pos', 'lex1', 'lex2']
+subjects_list = list(subjects_connectivity_matrices[groups[1]].keys())
+# Load features
+from nilearn.connectome import sym_matrix_to_vec
+from sklearn.model_selection import cross_val_predict
+subjects_features = sym_matrix_to_vec(np.array([subjects_connectivity_matrices[groups[1]][s]['correlation']
+                                                for s in subjects_list]),
+                                      discard_diagonal=True)
+subjects_data = behavior_data[behavior_data['langage_clinique'] == 'N'].reindex(subjects_list)
+
+# Search a good regularization parameters for each scores
+best_parameters_scores = dict.fromkeys(list_of_scores)
+from sklearn.metrics import explained_variance_score, make_scorer
+for score in list_of_scores:
+    subjects_scores = np.array(subjects_data[score])
+    # svr = LinearSVR()
+    ridge = Ridge()
+    loo = LeaveOneOut()
+    predicted = cross_val_predict(estimator=ridge, X=subjects_features, y=subjects_scores,
+                                  n_jobs=4)
+    best_parameters_scores[score] = {'score_true': subjects_scores,
+                                     'score_predicted': predicted,
+                                     'r_squared': explained_variance_score(y_true=subjects_scores,
+                                                                           y_pred=predicted)}
+
+
+from scipy.stats import ttest_ind
+lesion_size_impaired = behavior_data[behavior_data['langage_clinique'] == 'A']['lesion_normalized']
+lesion_size_non_impaired = behavior_data[behavior_data['langage_clinique'] == 'N']['lesion_normalized']
+t, p = ttest_ind(a=lesion_size_impaired, b=lesion_size_non_impaired)
+lr = LinearRegression(fit_intercept=True)
+lr.fit(X=behavior_data[behavior_data['Groupe'] == 'P']['lesion_normalized'].reshape(-1,1),
+       y=behavior_data[behavior_data['Groupe'] == 'P']['pc1_language'])
+from connectivity_statistics.parametric_tests import design_matrix_builder, ols_regression
+patients_dataframe = behavior_data[behavior_data['Groupe'] == 'P']
+
+
+y, X = design_matrix_builder(dataframe=patients_dataframe,
+                             formula='pc1_language_zscores~lesion_normalized',
+                              return_type='matrix')
+model  = ols_regression(y, X)
+model.summary()
