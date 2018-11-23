@@ -31,7 +31,7 @@ importlib.reload(dictionary_operations)
 # Some path
 root_directory = "/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls"
 save_in = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/' \
-          'classification/non_impaired_language_controls/Network classification'
+          'classification/left_lesioned_patients_controls/Network classification'
 kinds = ['correlation', 'partial correlation', 'tangent']
 network_name = ['DMN', 'Executive',
                  'Language', 'MTL',
@@ -47,21 +47,28 @@ subjects_connectivity_matrices = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(root_directory,
                                      "dictionary/z_fisher_transform_subjects_connectivity_matrices.pkl")
 )
-t,p,k = groupby_factor_connectivity_matrices(population_data_file=os.path.join(root_directory, 'behavioral_data.xlsx'),
-                                         sheetname='Middle Cerebral Artery+controls',
-                                         subjects_connectivity_matrices_dictionnary=subjects_connectivity_matrices,
-                                         groupes=['non_impaired_language'],
-                                         factors=['langage_clinique', 'Lesion'])
-subjects_connectivity_matrices['LG_non_impaired_language'] = t[('N', 'G')]
-groups = ['controls', 'LG_non_impaired_language']
+# Group by language profil and lesion side
+t, p, k = groupby_factor_connectivity_matrices(
+    population_data_file=os.path.join(root_directory, 'behavioral_data.xlsx'),
+    sheetname='Middle Cerebral Artery+controls',
+    subjects_connectivity_matrices_dictionnary=subjects_connectivity_matrices,
+    groupes=['non_impaired_language', 'impaired_language'],
+    factors=['Lesion'])
+# rename the new key
+subjects_connectivity_matrices['left_lesioned_patients'] = t[('G')]
+# Dump old key
+del subjects_connectivity_matrices['non_impaired_language']
+del subjects_connectivity_matrices['impaired_language']
+
+groups = ['controls', 'left_lesioned_patients']
+
+
 features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]].keys())),
                              2*np.ones(len(subjects_connectivity_matrices[groups[1]].keys()))))
 
-mean_subjects_connectivity_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(root_directory,
-                                     "dictionary/z_fisher_groups_mean_connectivity_matrices.pkl")
-)
-
+mean_subjects_connectivity_matrices = ccm.group_mean_connectivity(
+    subjects_connectivity_matrices=subjects_connectivity_matrices,
+    kinds=kinds)
 
 # Load the atlas data
 atlas_excel_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas_version2.xlsx'
@@ -80,7 +87,8 @@ homotopic_roi_indices = np.array([
 
 # Extract homotopic connectivity coefficient for each subject
 homotopic_connectivity = np.array(
-    [subjects_connectivity_matrices[group][subject]['tangent'][homotopic_roi_indices[:, 0], homotopic_roi_indices[:, 1]]
+    [subjects_connectivity_matrices[group][subject]['tangent'][homotopic_roi_indices[:, 0],
+                                                               homotopic_roi_indices[:, 1]]
         for group in groups for subject in list(subjects_connectivity_matrices[group].keys())])
 
 # Extract homotopic connectivity coefficient for each network
@@ -110,14 +118,17 @@ for network in network_name:
 # svc = LinearSVC()
 # sss = StratifiedShuffleSplit(n_splits=10000)
 # Final mean accuracy scores will be stored in a dictionary
-save_network_parameters = dict.fromkeys(network_name)
+save_parameters = dict.fromkeys(network_name)
+
 for network in network_name:
     svc = LinearSVC()
     sss = StratifiedShuffleSplit(n_splits=10000)
 
     features = np.array([intra_network_connectivity_dict[group][s][kind][network]['network array']
                          for group in groups for s in list(intra_network_connectivity_dict[group].keys())])
-    search_C = GridSearchCV(estimator=svc, param_grid={'C': np.linspace(start=0.05, stop=100, num=1000)},
+
+    # features = homotopic_connectivity
+    search_C = GridSearchCV(estimator=svc, param_grid={'C': np.linspace(start=1e-5, stop=10, num=100)},
                             scoring='accuracy', cv=sss, n_jobs=20, verbose=1)
 
     if __name__ == '__main__':
@@ -133,15 +144,15 @@ for network in network_name:
                                 scoring='accuracy', n_jobs=16,
                                 verbose=1)
     print('mean accuracy {} % +- {} %'.format(cv_scores.mean()*100, cv_scores.std()*100))
-    save_network_parameters[network] = {'n_rois': features.shape[1],
-                                        'Best C': C,
-                                        'Accuracy': cv_scores.mean()*100,
-                                        'Std': cv_scores.std()*100}
+    save_parameters[network] = {
+                        'Best C': C,
+                        'Accuracy': cv_scores.mean()*100,
+                        'Std': cv_scores.std()*100}
 
 folders_and_files_management.save_object(
-    object_to_save=save_network_parameters,
+    object_to_save=save_parameters,
     saving_directory=save_in,
-    filename='best_params_and_accuracy_intra_network.pkl')
+    filename='best_params_and_accuracy_all_intranetwork_connection.pkl')
 
 # folders_and_files_management.save_object(
 #    object_to_save=homotopic_intra_network_connectivity,
@@ -180,7 +191,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 best_parameters = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(
         save_in,
-        'best_params_and_accuracy_intra_network.pkl')
+        'best_params_and_accuracy_all_intranetwork_connection.pkl')
 )
 from nilearn.connectome import vec_to_sym_matrix
 from machine_learning.features_indentification import compute_weight_distribution, \
@@ -190,14 +201,19 @@ network_name = ['DMN',
                 'MTL', 'Primary_Visual',
                 'Secondary_Visual',
                 'Sensorimotor', 'Salience', 'Visuospatial']
-classification_results = dict.fromkeys(network_name)
+#classification_results = dict.fromkeys(network_name)
 correction = 'fdr_bh'
+classification_results = dict.fromkeys(network_name)
 for network in network_name:
+
     print('Identify important connection for the {} network'.format(network))
 
     vectorized_connectivity_matrices = \
         np.array([intra_network_connectivity_dict[group][s][kind][network]['network array']
                   for group in groups for s in list(intra_network_connectivity_dict[group].keys())])
+
+# vectorized_connectivity_matrices = homotopic_connectivity
+
     class_labels = features_labels
 
     classification_weight, weight_distribution = compute_weight_distribution(
@@ -206,7 +222,7 @@ for network in network_name:
         n_permutations=1000,
         class_labels=class_labels,
         C=best_parameters[network]['Best C'],
-        n_cpus_bootstrap=16,
+        n_cpus_bootstrap=18,
         verbose_permutations=1,
         verbose_bootstrap=0
     )
@@ -216,28 +232,28 @@ for network in network_name:
        normalized_mean_weight=classification_weight,
        method=correction,
        alpha=.05
-      )
+  )
     # sorted_null_maximum_dist, sorted_null_minimum_dist, p_values_max, p_values_min = \
     #   features_weights_max_t_correction(null_distribution_features_weights=weight_distribution,
     #                                     normalized_mean_weight=classification_weight)
 
-    # network_classification_results[network] = {'network_features_weight': network_classification_weight,
-    #                                           'network_weight_distribution': network_weight_distribution,
-    #                                           'p_values_corrected': network_p_values_corrected}
+    classification_results[network] = {'network_features_weight': classification_weight,
+                                               'network_weight_distribution': weight_distribution,
+                                               'p_values_corrected': p_values_corrected}
    # classification_results = {'sorted_null_maximum_dist': sorted_null_maximum_dist,
     #                          'sorted_null_minimum_dist': sorted_null_minimum_dist,
     #                          'p_values_max': p_values_max,
     #                          'p_values_min': p_values_min}
 
-    classification_results[network] = {
-        'features_weight': classification_weight,
-        'weight_distribution': weight_distribution,
-        'p_values_corrected': p_values_corrected}
+#classification_results = {
+#    'features_weight': classification_weight,
+#    'weight_distribution': weight_distribution,
+#    'p_values_corrected': p_values_corrected}
 
 folders_and_files_management.save_object(
     object_to_save=classification_results,
     saving_directory=save_in,
-    filename=correction + '_all_intra_network_connection_identification.pkl'
+    filename=correction + '_all_homotopic_connection_identification.pkl'
 )
 
 # Plot results for intra network homotopic connection for each network
@@ -291,9 +307,9 @@ with PdfPages(os.path.join(save_in, 'fdr_corrected_intra_network_homotopic_class
 # plot results for the identification of connection for ALL homotopic
 # connection
 all_homotopic_adjacency_matrix = np.zeros((n_nodes, n_nodes))
-significant_p_values_indices = np.hstack((np.where(classification_results['p_values_min'] < 0.05)[0],
-                                          np.where(classification_results['p_values_max'] < 0.05)[0]))
-
+#significant_p_values_indices = np.hstack((np.where(classification_results['p_values_min'] < 0.05)[0],
+#                                          np.where(classification_results['p_values_max'] < 0.05)[0]))
+significant_p_values_indices = np.where(classification_results['p_values_corrected'] < 0.05)[0]
 # Build Homotopic adjacency matrix
 
 significant_labels_indices = homotopic_roi_indices[significant_p_values_indices ]
@@ -323,7 +339,7 @@ significant_labels =[(labels_regions[significant_labels_indices[i][0]],
 folders_and_files_management.save_object(
     object_to_save=significant_labels,
     saving_directory=save_in,
-    filename=correction + '_all_homotopic_features_labels.pkl'
+    filename=correction + '_all_homotopic_significant_features_labels.pkl'
 )
 from machine_learning.features_indentification import remove_reversed_duplicates
 # Plot classification for intra network connectivity
@@ -401,28 +417,66 @@ subjects_list = list(subjects_connectivity_matrices[groups[1]].keys())
 # Load features
 from nilearn.connectome import sym_matrix_to_vec
 from sklearn.model_selection import cross_val_predict
-subjects_features = sym_matrix_to_vec(np.array([subjects_connectivity_matrices[groups[1]][s]['correlation']
+
+# Build subjects array
+
+# For intra-network, based on intra network classification
+subjects_features_all_networks = dict.fromkeys(network_name)
+for network in network_name:
+    network_p = intra_network_classification[network]['p_values_corrected']
+    significant_p = np.where(network_p < 0.05)[0]
+    if network_p[significant_p].shape[0] != 0:
+        vectorized_connectivity_matrices = \
+            np.array([intra_network_connectivity_dict[groups[1]][s][kind][network]['network array']
+                      for s in subjects_list])
+        # Build features array for the current network, based on surviving
+        # connection in the classification task
+        subjects_network_features = np.zeros((len(subjects_list), significant_p.shape[0]))
+        subjects_network_features[:, ...] = vectorized_connectivity_matrices[:, significant_p]
+        subjects_features_all_networks[network] = subjects_network_features
+    else:
+        del subjects_features_all_networks[network]
+
+
+subjects_features = sym_matrix_to_vec(np.array([subjects_connectivity_matrices[groups[1]][s][kind]
                                                 for s in subjects_list]),
                                       discard_diagonal=True)
-subjects_data = behavior_data[behavior_data['langage_clinique'] == 'N'].reindex(subjects_list)
+subjects_data = behavior_data[behavior_data['Lesion'] == 'G'].reindex(subjects_list)
 
 # Search a good regularization parameters for each scores
-best_parameters_scores = dict.fromkeys(list_of_scores)
-from sklearn.metrics import explained_variance_score, make_scorer
-for score in list_of_scores:
-    subjects_scores = np.array(subjects_data[score])
-    # svr = LinearSVR()
-    ridge = Ridge()
-    loo = LeaveOneOut()
-    predicted = cross_val_predict(estimator=ridge, X=subjects_features, y=subjects_scores,
-                                  n_jobs=4)
-    best_parameters_scores[score] = {'score_true': subjects_scores,
-                                     'score_predicted': predicted,
-                                     'r_squared': explained_variance_score(y_true=subjects_scores,
-                                                                           y_pred=predicted)}
+from statsmodels.api import add_constant, OLS
+from sklearn.metrics import explained_variance_score, make_scorer, r2_score
 
+results_prediction = dict.fromkeys(list(subjects_features_all_networks.keys()))
+for score in list_of_scores:
+    for network in list(subjects_features_all_networks.keys()):
+
+        subjects_scores = np.array(subjects_data[score])
+        svr = LinearSVR(C=0.1)
+        ridge = Ridge(alpha=0)
+        loo = LeaveOneOut()
+
+        predicted = cross_val_predict(estimator=ridge, X=subjects_features_all_networks[network],
+                                      y=subjects_scores,
+                                      n_jobs=4, cv=loo)
+
+        results_prediction[network] = {score:{'score_true': subjects_scores,
+                                        'score_predicted': predicted,
+                                        }}
+        # Perform linear regression
+        X = add_constant(subjects_scores)
+        reg = OLS(predicted, X)
+        results = reg.fit()
+        # Append Adjusted R squared between predicted and true values
+        results_prediction[network][score]['r_squared_prediction'] = results.rsquared_adj
+
+
+from sklearn.linear_model import LinearRegression
+test = LinearRegression().fit(X, subjects_scores)
+test.score(X, subjects_scores)
 
 from scipy.stats import ttest_ind
+
 lesion_size_impaired = behavior_data[behavior_data['langage_clinique'] == 'A']['lesion_normalized']
 lesion_size_non_impaired = behavior_data[behavior_data['langage_clinique'] == 'N']['lesion_normalized']
 t, p = ttest_ind(a=lesion_size_impaired, b=lesion_size_non_impaired)
