@@ -191,7 +191,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 best_parameters = folders_and_files_management.load_object(
     full_path_to_object=os.path.join(
         save_in,
-        'best_params_and_accuracy_all_intranetwork_connection.pkl')
+        'best_params_and_accuracy_all_intra_network_connection.pkl')
 )
 from nilearn.connectome import vec_to_sym_matrix
 from machine_learning.features_indentification import compute_weight_distribution, \
@@ -412,7 +412,8 @@ list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
                   'invers', 'ajout', 'elision_f', 'morpho',
                   'listea', 'listeb', 'topo',
                   'voc1', 'voc2', 'voc1_ebauche', 'voc2_ebauche',
-                  'abstrait_diff', 'abstrait_pos', 'lex1', 'lex2']
+                  'abstrait_diff', 'abstrait_pos', 'lex1', 'lex2',
+                  'pc1_language']
 subjects_list = list(subjects_connectivity_matrices[groups[1]].keys())
 # Load features
 from nilearn.connectome import sym_matrix_to_vec
@@ -445,40 +446,67 @@ subjects_data = behavior_data[behavior_data['Lesion'] == 'G'].reindex(subjects_l
 
 # Search a good regularization parameters for each scores
 from statsmodels.api import add_constant, OLS
-from sklearn.metrics import explained_variance_score, make_scorer, r2_score
-
+from sklearn.metrics import mean_squared_error, make_scorer
+from sklearn.preprocessing import StandardScaler
+from scipy.stats import pearsonr
 results_prediction = dict.fromkeys(list(subjects_features_all_networks.keys()))
-for score in list_of_scores:
-    for network in list(subjects_features_all_networks.keys()):
+for network in list(subjects_features_all_networks.keys()):
+    results_prediction[network] = dict.fromkeys(list_of_scores)
+    for score in list_of_scores:
 
-        subjects_scores = np.array(subjects_data[score])
-        svr = LinearSVR(C=0.1)
-        ridge = Ridge(alpha=0)
+        sc = StandardScaler()
+        subjects_scores = sc.fit_transform(np.array(subjects_data[score]).reshape(-1, 1))
+        # subjects_scores = np.array(subjects_data[score])
+        svr = LinearSVR()
+        ridge = Ridge()
         loo = LeaveOneOut()
+        squared_error = GridSearchCV(estimator=LinearSVR(),
+                                     param_grid={'C': np.linspace(start=1e-6,
+                                                                  stop=1e6,
+                                                                  num=5000)},
+                                     scoring=make_scorer(mean_squared_error,
+                                                         greater_is_better=False),
+                                     n_jobs=12,
+                                     verbose=1,
+                                     cv=LeaveOneOut())
+        squared_error.fit(X=subjects_features_all_networks[network], y=subjects_scores.ravel())
 
-        predicted = cross_val_predict(estimator=ridge, X=subjects_features_all_networks[network],
-                                      y=subjects_scores,
-                                      n_jobs=4, cv=loo)
-
-        results_prediction[network] = {score:{'score_true': subjects_scores,
-                                        'score_predicted': predicted,
-                                        }}
+        predicted = cross_val_predict(estimator=LinearSVR(C=squared_error.best_params_['C']),
+                                      X=subjects_features_all_networks[network],
+                                      y=subjects_scores.ravel(),
+                                      n_jobs=4,
+                                      cv=LeaveOneOut())
+        # TODO: erase score keys in the sub-dictionary !! Useless
+        results_prediction[network][score] = {score:
+                                           {'score_true': subjects_scores,
+                                            'score_predicted': predicted,
+                                            'r2': pearsonr(x=subjects_scores.ravel(),
+                                                           y=predicted)[0]**2,
+                                            'best_parameters': squared_error.best_params_}}
         # Perform linear regression
         X = add_constant(subjects_scores)
         reg = OLS(predicted, X)
         results = reg.fit()
         # Append Adjusted R squared between predicted and true values
-        results_prediction[network][score]['r_squared_prediction'] = results.rsquared_adj
+        results_prediction[network][score]['r_squared'] = results.rsquared
 
+folders_and_files_management.save_object(object_to_save=results_prediction,
+                                         saving_directory=os.path.join(root_directory, 'score_prediction'),
+                                         filename='LinearSVR_score_prediction_networks.pkl')
+# Find best network predictors
+all_r2 = dict.fromkeys(network_name)
 
-from sklearn.linear_model import LinearRegression
-test = LinearRegression().fit(X, subjects_scores)
-test.score(X, subjects_scores)
 
 from scipy.stats import ttest_ind
 
-lesion_size_impaired = behavior_data[behavior_data['langage_clinique'] == 'A']['lesion_normalized']
-lesion_size_non_impaired = behavior_data[behavior_data['langage_clinique'] == 'N']['lesion_normalized']
+lesion_size_impaired = \
+    np.array(behavior_data[(behavior_data['Groupe'] == 'C') & (behavior_data['EHI'] != 'manquant') &
+                           (behavior_data['main_dominante'] == 'L')]['EHI'].dropna(),
+             dtype=np.float64)
+lesion_size_non_impaired = \
+    np.array(behavior_data[(behavior_data['Groupe'] == 'P') & (behavior_data['EHI'] != 'manquant') &
+                           (behavior_data['main_dominante'] == 'L')]['EHI'].dropna(),
+             dtype=np.float64)
 t, p = ttest_ind(a=lesion_size_impaired, b=lesion_size_non_impaired)
 lr = LinearRegression(fit_intercept=True)
 lr.fit(X=behavior_data[behavior_data['Groupe'] == 'P']['lesion_normalized'].reshape(-1,1),

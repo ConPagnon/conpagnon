@@ -61,7 +61,9 @@ for group in groups:
                                           'correlation_connectivity_scores',  group + '_all_connectivity_T.csv'))
     all_models_data.to_csv(os.path.join(root_data_directory,
                                         'correlation_connectivity_scores', group + '_all_connectivity.csv'))
-
+for group in groups:
+    all_models_data = pd.read_csv(os.path.join(root_data_directory,
+                                        'correlation_connectivity_scores', group + '_all_connectivity.csv'))
     # Some statistic test
     alpha = 0.05
 
@@ -75,9 +77,9 @@ for group in groups:
     P_mat = t.sf(np.abs(T_mat), df) * 2
 
     from statsmodels.formula.api import ols
-    test = ols(formula='intra_homotopic_DMN_connectivity~intra_homotopic_Executive_connectivity',
+    test = ols(formula='homotopic_DMN_connectivity~homotopic_Executive_connectivity',
                data=all_models_data).fit()
-   # test.summary()
+    # test.summary()
     # Vectorize the P matrix
 
     P_mat_vec = sym_matrix_to_vec(P_mat, discard_diagonal=True)
