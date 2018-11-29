@@ -58,7 +58,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
     normalize_colors=True)
 
 # Groups name to include in the study
-groupes = ['impaired_language', 'non_impaired_language', 'controls']
+groupes = ['PAL', 'PNL', 'TDC']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -87,7 +87,8 @@ individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls'
+output_csv_directory_path = \
+    '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures'
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path, erase_previous=True)
 
 # Figure directory which can be useful for illustrating
@@ -194,8 +195,8 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'overall_connect
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
                 title='Overall functional connectivity distribution  for {}'.format(kind),
                 xtitle='Functional connectivity coefficient', ytitle='proportion of edges',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='no', ms=0.5)
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='no', ms=0.5, line_width=1)
         pdf.savefig()
         plt.show()
 # Extract homotopic connectivity coefficients on connectivity matrices
@@ -265,15 +266,15 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
-                title='Whole brain mean homotopic connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                title='Whole brain mean homotopic connectivity distribution for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{}  distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
-
+        plt.close()
 
 # Left roi first, and right roi in second
 new_roi_order = np.concatenate((left_regions_indices, right_regions_indices), axis=0)
@@ -321,12 +322,12 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
-                title='Whole brain mean connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                title='Whole brain mean connectivity distribution for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
 
@@ -405,13 +406,12 @@ for kind in kinds:
                     raw_data_colors=hist_color[groupes.index(groupe)],
                     fitted_distribution_color=fit_color[groupes.index(groupe)],
                     title='',
-                    xtitle='Functional connectivity', ytitle='Density (a.u)',
-                    legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                    legend_data=groupe, display_fit='yes', ms=6)
+                    xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                    legend_fitted='{} distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
                 plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                            linewidth=4)
-                plt.title('Mean intra connectivity distribution  for {} and network {}'.format(kind,
-                                                                                               network))
+                            linewidth=2)
+                plt.title('Connectivity distribution for the {} network'.format(network))
 
             pdf.savefig()
             plt.show()
@@ -489,12 +489,12 @@ for kind in kinds:
                     raw_data_colors=hist_color[groupes.index(groupe)],
                     fitted_distribution_color=fit_color[groupes.index(groupe)],
                     title='',
-                    xtitle='Functional connectivity', ytitle='Density (a.u)',
-                    legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                    legend_data=groupe, display_fit='yes', ms=6)
+                    xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                    legend_fitted='{} distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
                 plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                            linewidth=4)
-                plt.title('Mean homotopic distribution  for {} and network {}'.format(kind, network))
+                            linewidth=2)
+                plt.title('Mean homotopic connectivity for the {} network'.format(network))
 
             pdf.savefig()
             plt.show()
@@ -545,7 +545,7 @@ group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
         population_data_file=cohort_excel_file_path,
         sheetname='cohort_functional_data',
         subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
-        groupes=['impaired_language', 'non_impaired_language'], factors=['Lesion', 'langage_clinique'],
+        groupes=['PAL', 'PNL'], factors=['Lesion', 'langage_clinique'],
         drop_subjects_list=None)
 
 # Create ipsilesional and contralesional dictionary
@@ -592,7 +592,7 @@ percent_left_lesioned = n_left_tot/n_total_patients
 percent_right_lesioned = n_right_tot/n_total_patients
 
 # total number of controls
-n_controls = len(Z_subjects_connectivity_matrices['controls'].keys())
+n_controls = len(Z_subjects_connectivity_matrices['TDC'].keys())
 # Number of left and right impaired hemisphere to pick randomly in the controls group
 n_left_hemisphere = ceil(percent_left_lesioned*n_controls)
 n_right_hemisphere = n_controls - n_left_hemisphere
@@ -601,18 +601,18 @@ n_right_hemisphere = n_controls - n_left_hemisphere
 n_left_ipsilesional_controls, n_left_ipsi_controls_ids = \
     dictionary_operations.random_draw_of_connectivity_matrices(
         subjects_connectivity_dictionary=Z_subjects_connectivity_matrices,
-        groupe='controls', n_matrices=int(n_left_hemisphere),
+        groupe='TDC', n_matrices=int(n_left_hemisphere),
         extract_kwargs={'kinds': kinds, 'regions_index': left_regions_indices,
                         'discard_diagonal': False,
                         'vectorize': False})
 # Now, pick the right hemisphere in the left-out pool of subjects
 leftout_controls_id = \
-    list(set(Z_subjects_connectivity_matrices['controls'].keys())-set(n_left_ipsi_controls_ids))
+    list(set(Z_subjects_connectivity_matrices['TDC'].keys())-set(n_left_ipsi_controls_ids))
 
 n_right_ipsilesional_controls, n_right_ipsi_controls_ids = \
     dictionary_operations.random_draw_of_connectivity_matrices(
         subjects_connectivity_dictionary=Z_subjects_connectivity_matrices,
-        groupe='controls', n_matrices=int(n_right_hemisphere),
+        groupe='TDC', n_matrices=int(n_right_hemisphere),
         extract_kwargs={'kinds': kinds, 'regions_index': right_regions_indices,
                         'discard_diagonal': False,
                         'vectorize': False},
@@ -620,9 +620,9 @@ n_right_ipsilesional_controls, n_right_ipsi_controls_ids = \
 
 # Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionary
 ipsilesional_controls_dictionary = dictionary_operations.merge_dictionary(
-    new_key='controls',
-    dict_list=[n_left_ipsilesional_controls['controls'],
-               n_right_ipsilesional_controls['controls']])
+    new_key='TDC',
+    dict_list=[n_left_ipsilesional_controls['TDC'],
+               n_right_ipsilesional_controls['TDC']])
 
 # In the same, we have to generate, a "contralesional" dictionary for the
 # controls group
@@ -631,7 +631,7 @@ ipsilesional_controls_dictionary = dictionary_operations.merge_dictionary(
 n_left_contralesional_controls, n_left_contra_controls_ids = \
     dictionary_operations.random_draw_of_connectivity_matrices(
         subjects_connectivity_dictionary=Z_subjects_connectivity_matrices,
-        groupe='controls', n_matrices=int(n_left_hemisphere),
+        groupe='TDC', n_matrices=int(n_left_hemisphere),
         extract_kwargs={'kinds': kinds, 'regions_index': right_regions_indices,
                         'discard_diagonal': False,
                         'vectorize': False})
@@ -639,21 +639,21 @@ n_left_contralesional_controls, n_left_contra_controls_ids = \
 # In the left-out pool of subjects, we fetch the LEFT side rois, for the
 # contralesional side of right lesion.
 leftout_controls_id = \
-    list(set(Z_subjects_connectivity_matrices['controls'].keys())-set(n_left_contra_controls_ids))
+    list(set(Z_subjects_connectivity_matrices['TDC'].keys())-set(n_left_contra_controls_ids))
 
 n_right_contralesional_controls, n_right_contra_controls_ids = \
     dictionary_operations.random_draw_of_connectivity_matrices(
         subjects_connectivity_dictionary=Z_subjects_connectivity_matrices,
-        groupe='controls', n_matrices=int(n_right_hemisphere),
+        groupe='TDC', n_matrices=int(n_right_hemisphere),
         extract_kwargs={'kinds': kinds, 'regions_index': left_regions_indices,
                         'discard_diagonal': False,
                         'vectorize': False}, subjects_id_list=leftout_controls_id)
 
 # Merge the right and left ipsilesional to have the 'ipsilesional' controls dictionary
 contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
-    new_key='controls',
-    dict_list=[n_left_contralesional_controls['controls'],
-               n_right_contralesional_controls['controls']])
+    new_key='TDC',
+    dict_list=[n_left_contralesional_controls['TDC'],
+               n_right_contralesional_controls['TDC']])
 
 # Finally, we have to merge ipsilesional/contralesional dictionaries of the different group
 # Merge the dictionary to build the overall contra and ipsi-lesional
@@ -661,13 +661,13 @@ contralesional_controls_dictionary = dictionary_operations.merge_dictionary(
 
 # First, the two group of patients
 ipsilesional_patients_connectivity_matrices = {
-    'impaired_language': {**ipsi_dict[('G', 'A')], **ipsi_dict[('D', 'A')]},
-    'non_impaired_language': {**ipsi_dict[('G', 'N')], **ipsi_dict[('D', 'N')]}
+    'PAL': {**ipsi_dict[('G', 'A')], **ipsi_dict[('D', 'A')]},
+    'PNL': {**ipsi_dict[('G', 'N')], **ipsi_dict[('D', 'N')]}
     }
 
 contralesional_patients_connectivity_matrices = {
-     'non_impaired_language': {**contra_dict[('G', 'N')], **contra_dict[('D', 'N')]},
-     'impaired_language': {**contra_dict[('G', 'A')], **contra_dict[('D', 'A')]}
+     'PNL': {**contra_dict[('G', 'N')], **contra_dict[('D', 'N')]},
+     'PAL': {**contra_dict[('G', 'A')], **contra_dict[('D', 'A')]}
    }
 
 # Merged overall patients and controls dictionaries
@@ -729,11 +729,11 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
                 title='Ipsilesional mean connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
         
@@ -774,12 +774,12 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
-                title='Contralesional mean connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                title='Contralesional mean connectivity distribution for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
 
@@ -840,13 +840,12 @@ for kind in kinds:
                         raw_data_colors=hist_color[groupes.index(groupe)],
                         fitted_distribution_color=fit_color[groupes.index(groupe)],
                         title='',
-                        xtitle='Functional connectivity', ytitle='Density (a.u)',
-                        legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                        legend_data=groupe, display_fit='yes', ms=6)
+                        xtitle='Functional connectivity', ytitle='Proportions of subjects',
+                        legend_fitted='{} distribution'.format(groupe),
+                        legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
                     plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                                linewidth=4)
-                    plt.title('Mean ipsi intra connectivity distribution  for {} and network {}'.format(kind,
-                                                                                                        network))
+                                linewidth=2)
+                    plt.title('Mean ipsilesional connectivity distribution for the {} network'.format(network))
 
                 pdf.savefig()
                 plt.show()
@@ -908,13 +907,12 @@ for kind in kinds:
                         raw_data_colors=hist_color[groupes.index(groupe)],
                         fitted_distribution_color=fit_color[groupes.index(groupe)],
                         title='',
-                        xtitle='Functional connectivity', ytitle='Density (a.u)',
-                        legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                        legend_data=groupe, display_fit='yes', ms=6)
+                        xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                        legend_fitted='{} distribution'.format(groupe),
+                        legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
                     plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                                linewidth=4)
-                    plt.title('Mean contra intra connectivity distribution  for {} and network {}'.format(kind,
-                                                                                                        network))
+                                linewidth=2)
+                    plt.title('Mean contralesional connectivity distribution for the {} network'.format(network))
 
                 pdf.savefig()
                 plt.show()
