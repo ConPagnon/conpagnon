@@ -88,7 +88,7 @@ individual_confounds_directory = \
 
 # output csv directory
 output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM'
-score = 'wisc_cube_zscores'
+score = 'pc2_language_zscores'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path_score,
                                                         erase_previous=True)
@@ -198,7 +198,7 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'overall_connect
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
                 title='Overall functional connectivity distribution  for {}'.format(kind),
                 xtitle='Functional connectivity coefficient', ytitle='proportion of edges',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                legend_fitted='{} distribution'.format(groupe),
                 legend_data=groupe, display_fit='no', ms=0.5)
         pdf.savefig()
         plt.show()
@@ -269,12 +269,12 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
-                title='Whole brain mean homotopic connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                title='Mean homotopic connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
 
@@ -326,11 +326,11 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
                 title='Whole brain mean connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
 
@@ -397,13 +397,12 @@ for kind in kinds:
                     raw_data_colors=hist_color[groupes.index(groupe)],
                     fitted_distribution_color=fit_color[groupes.index(groupe)],
                     title='',
-                    xtitle='Functional connectivity', ytitle='Density (a.u)',
-                    legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                    legend_data=groupe, display_fit='yes', ms=6)
+                    xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                    legend_fitted='{} distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
                 plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                            linewidth=4)
-                plt.title('Mean intra connectivity distribution  for {} and network {}'.format(kind,
-                                                                                               network))
+                            linewidth=2)
+                plt.title('Mean connectivity for the {} network'.format(network))
 
             pdf.savefig()
             plt.show()
@@ -481,12 +480,12 @@ for kind in kinds:
                     raw_data_colors=hist_color[groupes.index(groupe)],
                     fitted_distribution_color=fit_color[groupes.index(groupe)],
                     title='',
-                    xtitle='Functional connectivity', ytitle='Density (a.u)',
-                    legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                    legend_data=groupe, display_fit='yes', ms=6)
+                    xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                    legend_fitted='{} distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
                 plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                            linewidth=4)
-                plt.title('Mean homotopic distribution  for {} and network {}'.format(kind, network))
+                            linewidth=2)
+                plt.title('Mean homotopic connectivity the {} network'.format(kind, network))
 
             pdf.savefig()
             plt.show()
@@ -652,9 +651,9 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
-                title='Ipsilesional mean connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                title='Ipsilesional mean connectivity'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
                 legend_data=groupe, display_fit='yes', ms=3.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
                         linewidth=4)
@@ -698,12 +697,12 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groupes.index(groupe)],
                 fitted_distribution_color=fit_color[groupes.index(groupe)],
-                title='Contralesional mean connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
-                legend_data=groupe, display_fit='yes', ms=3.5)
+                title='Mean contralesional connectivity '.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
             plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
-                        linewidth=4)
+                        linewidth=2)
         pdf.savefig()
         plt.show()
 
@@ -764,13 +763,12 @@ for kind in kinds:
                         raw_data_colors=hist_color[groupes.index(groupe)],
                         fitted_distribution_color=fit_color[groupes.index(groupe)],
                         title='',
-                        xtitle='Functional connectivity', ytitle='Density (a.u)',
-                        legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                        xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                        legend_fitted='{} distribution'.format(groupe),
                         legend_data=groupe, display_fit='yes', ms=6)
                     plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
                                 linewidth=4)
-                    plt.title('Mean ipsi intra connectivity distribution  for {} and network {}'.format(kind,
-                                                                                                        network))
+                    plt.title('Mean ipsi intra connectivity for the {} network'.format(network))
 
                 pdf.savefig()
                 plt.show()
@@ -831,13 +829,12 @@ for kind in kinds:
                         raw_data_colors=hist_color[groupes.index(groupe)],
                         fitted_distribution_color=fit_color[groupes.index(groupe)],
                         title='',
-                        xtitle='Functional connectivity', ytitle='Density (a.u)',
-                        legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                        xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                        legend_fitted='{} distribution'.format(groupe),
                         legend_data=groupe, display_fit='yes', ms=6)
                     plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
                                 linewidth=4)
-                    plt.title('Mean contra intra connectivity distribution  for {} and network {}'.format(kind,
-                                                                                                          network))
+                    plt.title('Mean contra intra connectivity for the {} network'.format(network))
 
                 pdf.savefig()
                 plt.show()
@@ -996,10 +993,10 @@ correction_method = ['fdr_bh', 'bonferroni']
 models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
-variables_model = ['wisc_cube_zscores', 'Sexe', 'lesion_normalized']
+variables_model = ['pc2_language_zscores', 'Sexe', 'lesion_normalized']
 
 # formulation of the model
-model_formula = 'wisc_cube_zscores +  Sexe + lesion_normalized'
+model_formula = 'pc2_language_zscores +  Sexe + lesion_normalized'
 
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
