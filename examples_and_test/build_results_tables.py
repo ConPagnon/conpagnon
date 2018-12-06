@@ -31,22 +31,21 @@ Author: Dhaif BEKHA (dhaif.bekha@cea.fr)
 
 # Results directory
 root_analysis_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/' \
-                          'pc1_language_zscores/regression_analysis'
+                          'pc2_language_zscores/regression_analysis'
 results_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/' \
-                    'pc1_language_zscores/regression_analysis/tangent'
-summary_results_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/pc1_language_zscores/' \
+                    'pc2_language_zscores/regression_analysis/tangent'
+summary_results_directory = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM/pc2_language_zscores/' \
                             'regression_analysis/tangent/summary'
 # models to read
-network_models = ['intra_homotopic']
+network_models = ['intra']
 whole_brain_models = ['mean_connectivity', 'mean_homotopic', 'mean_contralesional',
                       'mean_ipsilesional']
 
 # Variable to read
-variable_to_read = ['pc1_language_zscores', 'Sexe[T.M]', 'lesion_normalized']
+variable_to_read = ['pc2_language_zscores', 'Sexe[T.M]', 'lesion_normalized']
 
 network_name = ['DMN', 'Executive', 'Language', 'MTL', 'Primary_Visual',
-                'Salience', 'Secondary_Visual', 'Sensorimotor', 'Visuospatial',
-                'Basal_Ganglia', 'Precuneus', 'Auditory']
+                'Salience', 'Secondary_Visual', 'Sensorimotor', 'Visuospatial']
 
 kinds = ['correlation', 'partial correlation', 'tangent']
 correction_methods = ['fdr_bh', 'bonferroni']
