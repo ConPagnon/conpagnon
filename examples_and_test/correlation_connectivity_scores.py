@@ -29,15 +29,15 @@ importlib.reload(dictionary_operations)
 
 # Build a giant dataset: all connectitivity type in columns, and subjects id in lines
 
-root_data_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls'
+root_data_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures'
 
 
 models = ['contra_intra', 'ipsi_intra', 'intra_homotopic']
 networks = ['DMN', 'Executive', 'Language',  'MTL',
-           'Salience', 'Sensorimotor', 'Visuospatial',
-           'Primary_Visual', 'Secondary_Visual']
+            'Salience', 'Sensorimotor', 'Visuospatial',
+            'Primary_Visual', 'Secondary_Visual']
 
-groups = ['impaired_language', 'non_impaired_language', 'controls']
+groups = ['PAL', 'PNL', 'TDC']
 kind = 'tangent'
 for group in groups:
     data_to_merge = []
@@ -61,6 +61,17 @@ for group in groups:
                                           'correlation_connectivity_scores',  group + '_all_connectivity_T.csv'))
     all_models_data.to_csv(os.path.join(root_data_directory,
                                         'correlation_connectivity_scores', group + '_all_connectivity.csv'))
+    labels = list(all_models_data_T.index)
+    sorted_labels = sorted(labels)
+    new_sorted_labels = sorted_labels[9:18] + sorted_labels[18:27] + sorted_labels[0:9]
+
+    all_models_data_T_reindex = all_models_data_T.reindex(new_sorted_labels)
+    all_models_data_T_reindex.to_csv(os.path.join(root_data_directory,
+                                          'correlation_connectivity_scores', group + '_all_connectivity_T_sorted.csv'))
+
+    all_models_data_T_reindex_T = all_models_data_T_reindex.T
+    all_models_data_T_reindex_T.to_csv(os.path.join(root_data_directory,
+                                          'correlation_connectivity_scores', group + '_all_connectivity_sorted.csv'))
 for group in groups:
     all_models_data = pd.read_csv(os.path.join(root_data_directory,
                                         'correlation_connectivity_scores', group + '_all_connectivity.csv'))
