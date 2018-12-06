@@ -477,7 +477,7 @@ for network in list(subjects_features_all_networks.keys()):
                                       n_jobs=4,
                                       cv=LeaveOneOut())
         # TODO: erase score keys in the sub-dictionary !! Useless
-        results_prediction[network][score] = {score:
+        results_prediction[network][score] = {
                                            {'score_true': subjects_scores,
                                             'score_predicted': predicted,
                                             'r2': pearsonr(x=subjects_scores.ravel(),
@@ -495,28 +495,3 @@ folders_and_files_management.save_object(object_to_save=results_prediction,
                                          filename='LinearSVR_score_prediction_networks.pkl')
 # Find best network predictors
 all_r2 = dict.fromkeys(network_name)
-
-
-from scipy.stats import ttest_ind
-
-lesion_size_impaired = \
-    np.array(behavior_data[(behavior_data['Groupe'] == 'C') & (behavior_data['EHI'] != 'manquant') &
-                           (behavior_data['main_dominante'] == 'L')]['EHI'].dropna(),
-             dtype=np.float64)
-lesion_size_non_impaired = \
-    np.array(behavior_data[(behavior_data['Groupe'] == 'P') & (behavior_data['EHI'] != 'manquant') &
-                           (behavior_data['main_dominante'] == 'L')]['EHI'].dropna(),
-             dtype=np.float64)
-t, p = ttest_ind(a=lesion_size_impaired, b=lesion_size_non_impaired)
-lr = LinearRegression(fit_intercept=True)
-lr.fit(X=behavior_data[behavior_data['Groupe'] == 'P']['lesion_normalized'].reshape(-1,1),
-       y=behavior_data[behavior_data['Groupe'] == 'P']['pc1_language'])
-from connectivity_statistics.parametric_tests import design_matrix_builder, ols_regression
-patients_dataframe = behavior_data[behavior_data['Groupe'] == 'P']
-
-
-y, X = design_matrix_builder(dataframe=patients_dataframe,
-                             formula='pc1_language_zscores~lesion_normalized',
-                              return_type='matrix')
-model  = ols_regression(y, X)
-model.summary()
