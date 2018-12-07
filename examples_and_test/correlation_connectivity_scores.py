@@ -73,8 +73,12 @@ for group in groups:
     all_models_data_T_reindex_T.to_csv(os.path.join(root_data_directory,
                                           'correlation_connectivity_scores', group + '_all_connectivity_sorted.csv'))
 for group in groups:
-    all_models_data = pd.read_csv(os.path.join(root_data_directory,
-                                        'correlation_connectivity_scores', group + '_all_connectivity.csv'))
+    #all_models_data = pd.read_csv(os.path.join(root_data_directory,
+    #                                    'correlation_connectivity_scores', group + '_all_connectivity.csv'))
+
+    all_models_data = pd.read_excel(os.path.join(root_data_directory, 'correlation_connectivity_scores',
+                                                 'AVCnn_composite_connectivity_scores.xlsx'),
+                                    sheet_name='controls_composite_scores')
     # Some statistic test
     alpha = 0.05
 
@@ -88,7 +92,7 @@ for group in groups:
     P_mat = t.sf(np.abs(T_mat), df) * 2
 
     from statsmodels.formula.api import ols
-    test = ols(formula='homotopic_DMN_connectivity~homotopic_Executive_connectivity',
+    test = ols(formula='homotopic_DMN~homotopic_Executive',
                data=all_models_data).fit()
     # test.summary()
     # Vectorize the P matrix
@@ -103,11 +107,16 @@ for group in groups:
                X=P_mat_corrected,
                delimiter=',', header="")
 
-    labels_color = ['goldenrod', 'indianred', 'sienna', 'lightpink',
+    labels_color = ['orange', 'olive', 'navy', 'goldenrod', 'indianred', 'sienna', 'lightpink',
                     'turquoise', 'black', 'darkslategray',
                     'orchid', 'limegreen']
+    nine_labels_color = ['goldenrod', 'indianred', 'sienna', 'lightpink',
+                         'turquoise', 'black', 'darkslategray',
+                         'orchid', 'limegreen']
     labels_color = [webcolors.name_to_rgb(i) for i in labels_color]
+    nine_labels_color = [webcolors.name_to_rgb(i) for i in nine_labels_color]
 
+    all_labels_colors = (1/255)*np.array(labels_color + nine_labels_color + nine_labels_color)
     # Re-index the matrices, sorted the rows and columns by connectivity type
     sorted_labels = sorted(labels)
     # new_sorted_labels = sorted_labels[9:18] + sorted_labels[18:27] + sorted_labels[27:36] + sorted_labels[0:9]
@@ -128,30 +137,30 @@ for group in groups:
     with PdfPages(os.path.join(root_data_directory,
                                'correlation_connectivity_scores',  group + '_fdr_bh_corrected.pdf')) as pdf:
 
-        plot_matrix(matrix=R_mat_reindex, mpart='lower',
-                    vmin=-1, vmax=1, horizontal_labels=new_sorted_labels,
-                    vertical_labels=new_sorted_labels, linecolor='black',
+        plot_matrix(matrix=R_mat, mpart='lower',
+                    vmin=-1, vmax=1, horizontal_labels=labels,
+                    vertical_labels=labels, linecolor='black',
                     title='Correlation between connectivity scores in {}'.format(group),
-                    labels_colors=sorted_labels_colors)
+                    labels_colors=all_labels_colors)
         pdf.savefig()
         plt.show()
 
-        plot_matrix(matrix=P_mat_corrected_reindex, mpart='lower',
-                    colormap='hot', vmin=0, vmax=alpha, horizontal_labels=new_sorted_labels,
-                    vertical_labels=new_sorted_labels, linecolor='black',
+        plot_matrix(matrix=P_mat_corrected, mpart='lower',
+                    colormap='hot', vmin=0, vmax=alpha, horizontal_labels=labels,
+                    vertical_labels=labels, linecolor='black',
                     title='Significant P values, alpha = {}'.format(alpha),
-                    labels_colors=sorted_labels_colors)
+                    labels_colors=all_labels_colors)
         pdf.savefig()
         plt.show()
 
         # Corresponding correlation matrix
-        mask = P_mat_corrected_reindex < alpha
-        R_mat_masked = np.multiply(mask, R_mat_reindex)
+        mask = P_mat_corrected < alpha
+        R_mat_masked = np.multiply(mask, R_mat)
 
         plot_matrix(matrix=R_mat_masked, mpart='lower',
-                    vmin=-1, vmax=1, horizontal_labels=new_sorted_labels,
-                    vertical_labels=new_sorted_labels, linecolor='black',
+                    vmin=-1, vmax=1, horizontal_labels=labels,
+                    vertical_labels=labels, linecolor='black',
                     title='Significant correlation',
-                    labels_colors=sorted_labels_colors)
+                    labels_colors=all_labels_colors)
         pdf.savefig()
         plt.show()
