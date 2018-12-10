@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 
 # Set data path
-subjects_list = '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients.txt'
+subjects_list = '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients_all.txt'
 image_data_directory = '/media/db242421/db242421_data/identify_lesion_driven_artifact/preprocessed_patients'
 fmri_image_directory = 'fmri'
 lesion_image_directory = 'lesion'
