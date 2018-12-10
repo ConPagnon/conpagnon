@@ -49,6 +49,7 @@ for subject in subjects:
         image_data_directory, subject,
         fmri_image_directory,
         fmri_image_filter))[0]
+    subject_directory, fmri_filename = os.path.split(subject_fmri_path)
     # Load the subject lesion image, affine, and array
     subject_lesion_path = glob.glob(os.path.join(
         image_data_directory, subject, lesion_image_directory,
@@ -125,13 +126,17 @@ for subject in subjects:
     # Find the independent components presenting more than
     # 5% of overlap with the lesion image
     lesioned_components,  = np.where(jaccard > 0.05)
+    # Save indices of lesioned components
+    np.savetxt(fname=os.path.join(subject_directory, 'lesioned_map_indices.csv'),
+               X=lesioned_components,
+               delimiter=',')
 
     print('{} lesion driven artifact identified \n'.format(lesioned_components.size))
     # If they are some lesioned component we regress them
     # with FSL:
     if lesioned_components.size != 0:
         print('Regression of lesion artifact...')
-        subject_directory, fmri_filename = os.path.split(subject_fmri_path)
+
         lesion_filtered_subject_fmri = 'm' + fmri_filename
         fsl_reg_filt_command = 'fsl_regfilt -i {} -o {} -d {}/melodic_output/melodic_mix -f {}'.format(
             subject_fmri_path,
