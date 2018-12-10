@@ -89,7 +89,7 @@ for subject in subjects:
     with PdfPages(os.path.join(image_data_directory, subject, 'plot', 'ic_maps.pdf')) as pdf:
         for ICA_map in iterator_ic_map:
             t = np.percentile(a=all_independent_components_data[..., iterator_ic_map.index(ICA_map)],
-                          q=97.5)
+                              q=97.5)
             plt.figure(num=iterator_ic_map.index(ICA_map))
             display = plot_stat_map(
                 stat_map_img=ICA_map,
