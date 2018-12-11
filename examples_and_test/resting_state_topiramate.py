@@ -64,7 +64,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
     normalize_colors=True)
 
 # Groups name to include in the study
-groups = ['controls_topiramate', 'wotopi', 'topi']
+groups = ['topi', 'wotopi', 'controls_topiramate']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -74,7 +74,7 @@ folders_and_files_management.check_directories_existence(
     directories_list=groups)
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/topi_wotopi'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/topi_wotopi_all'
 output_csv_directory = data_management.create_directory(
     directory=output_csv_directory_path,
     erase_previous=True)
@@ -83,7 +83,7 @@ output_csv_directory = data_management.create_directory(
 output_figure_directory_path = os.path.join(output_csv_directory, 'figures')
 output_figure_directory = data_management.create_directory(
     directory=output_figure_directory_path,
-    erase_previous=True)
+    erase_previous=False)
 
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
@@ -95,7 +95,7 @@ subjects_list = open(subjects_ID_data_path).read().split()
 
 # Metrics list of interest, connectivity matrices will be
 # computed according to this list
-kinds = ['tangent', 'partial correlation', 'correlation']
+kinds = ['tangent', 'correlation']
 
 organised_data = data_architecture.fetch_data(
     root_fmri_data_directory=root_fmri_data_directory,
@@ -185,74 +185,17 @@ folders_and_files_management.save_object(
 # Plot matrices
 for group in groups:
     subjects = list(subjects_connectivity_matrices[group].keys())
-    with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'tangent_' + group + '.pdf')) as pdf:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'correlation_' + group + '.pdf')) as pdf:
         for s in subjects:
             plt.figure()
-            display.plot_matrix(matrix=subjects_connectivity_matrices[group][s]['tangent'],
+            display.plot_matrix(matrix=subjects_connectivity_matrices[group][s]['correlation'],
                                 labels_colors=labels_colors,
                                 mpart='all',
                                 horizontal_labels=labels_regions,
                                 vertical_labels=labels_regions,
                                 title='{} connectivity'.format(s))
             pdf.savefig()
-            plt.show()
-
-# Classification
-subjects_connectivity_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join('/media/db242421/db242421_data/ConPagnon_data/topi_wotopi/'
-                                     'topiramate_connectivity_matrices.pkl')
-)
-kind = 'tangent'
-groups_to_classify = ['controls_topiramate', 'wotopi']
-features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups_to_classify[0]].keys())),
-                             2*np.ones(len(subjects_connectivity_matrices[groups_to_classify[1]].keys()))))
-features = np.array([sym_matrix_to_vec(subjects_connectivity_matrices[group][s][kind], discard_diagonal=True)
-                     for group in groups_to_classify
-                     for s in list(subjects_connectivity_matrices[group].keys())])
-
-if __name__ == '__main__':
-    # Find the best C parameters in linearSVC
-    sss = StratifiedShuffleSplit(n_splits=10000)
-    search_C = GridSearchCV(estimator=LinearSVC(),
-                            param_grid={'C': [10, 100, 1000]},
-                            cv=sss,
-                            n_jobs=10,
-                            verbose=1)
-    search_C.fit(X=features, y=features_labels)
-
-    print("Classification between {} and {} with a L2 linear SVM achieved the best score of {} % accuracy "
-          "with C={}".format(groups_to_classify[0], groups_to_classify[1],
-                             search_C.best_score_ * 100, search_C.best_params_['C']))
-
-    C = search_C.best_params_['C']
-    cv_scores = cross_val_score(estimator=LinearSVC(C=C), X=features,
-                                y=features_labels, cv=sss,
-                                scoring='accuracy', n_jobs=16,
-                                verbose=1)
-    print('mean accuracy {} % +- {} %'.format(cv_scores.mean() * 100, cv_scores.std() * 100))
-
-# not enough subjects in the patients groups to apply the algorithm
-# discriminative brain connections....
-n_permutations = 10000
-labels_permuted = np.array([np.random.permutation(features_labels)
-                            for n in range(n_permutations)])
-
-null_weight_distribution = np.zeros((n_permutations, features.shape[1]))
-
-true_svc = LinearSVC(C=0.001)
-true_svc.fit(X=features, y=features_labels)
-true_weights_distribution = true_svc.coef_[0, ...]
-for n in range(n_permutations):
-    print("Compute classification for permutation # {} out {}".format(n, n_permutations))
-    svc = LinearSVC(C=0.001)
-    svc.fit(X=features, y=labels_permuted[n, ...])
-    permuted_weights = svc.coef_[0, ...]
-    null_weight_distribution[n, ...] = permuted_weights
-
-p_values_corrected = features_weights_parametric_correction(
-    null_distribution_features_weights=null_weight_distribution,
-    normalized_mean_weight=true_weights_distribution)
-
+            #plt.show()
 
 # Extract homotopic connectivity coefficients on connectivity matrices
 # Homotopic roi couple position in the connectivity matrices.
@@ -261,15 +204,15 @@ homotopic_roi_indices = np.array([
     (21, 26), (22, 29), (23, 28), (24, 27), (30, 31), (32, 33), (35, 34), (36, 37), (38, 39), (44, 40),
     (41, 45), (42, 43), (46, 49), (47, 48), (50, 53), (53, 54), (54, 57), (55, 56), (58, 61), (59, 60),
     (62, 63), (64, 65), (66, 67), (68, 69), (70, 71)])
-
+# Indices of left and homotopic right regions indices
+left_regions_indices = homotopic_roi_indices[:, 0]
+right_regions_indices = homotopic_roi_indices[:, 1]
 # Atlas excel information file
 atlas_excel_file = '/media/db242421/db242421_data/atlas_AVCnn/atlas_version2.xlsx'
 sheetname = 'complete_atlas'
 
 atlas_information = pd.read_excel(atlas_excel_file, sheetname='complete_atlas')
-# Indices of left and homotopic right regions indices
-left_regions_indices = homotopic_roi_indices[:, 0]
-right_regions_indices = homotopic_roi_indices[:, 1]
+
 # number of regions in the left and right side, should be the same because
 # it's homotopic regions only we are interested in
 n_left_regions = len(left_regions_indices)
@@ -282,11 +225,10 @@ except ValueError:
 # Extract from the Z fisher subject connectivity dictionary the connectivity coefficients of interest
 homotopic_connectivity = ccm.subjects_mean_connectivity_(
     subjects_individual_matrices_dictionnary=subjects_connectivity_matrices,
-    connectivity_coefficient_position=homotopic_roi_indices, kinds=[kind],
+    connectivity_coefficient_position=homotopic_roi_indices, kinds=kinds,
     groupes=groups)
 
 # Compute mean and standard deviation assuming gaussian behavior
-kinds =[kind]
 homotopic_distribution_parameters = dict.fromkeys(groups)
 for groupe in groups:
     homotopic_distribution_parameters[groupe] = dict.fromkeys(kinds)
@@ -304,7 +246,7 @@ for groupe in groups:
             'homotopic distribution mean': mean_homotopic_estimation,
             'homotopic distribution standard deviation': std_homotopic_estimation}
 
-output_figure_directory = '/media/db242421/db242421_data/ConPagnon_data/topi_wotopi/figures'
+
 fitted_dist_color1, fitted_dist_color2, fitted_dist_color3 = 'blue', 'red', 'green'
 raw_data_color1, raw_data_color2, raw_data_color3 = 'blue', 'red', 'green'
 hist_color = ['blue', 'red', 'green']
@@ -326,12 +268,216 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                 estimate_std=group_std,
                 raw_data_colors=hist_color[groups.index(groupe)],
                 fitted_distribution_color=fit_color[groups.index(groupe)],
-                title='Whole brain mean homotopic connectivity distribution  for {}'.format(kind),
-                xtitle='Functional connectivity coefficient', ytitle='Density (a.u)',
-                legend_fitted='{} gaussian fitted distribution'.format(groupe),
+                title='Mean homotopic connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
                 legend_data=groupe, display_fit='yes', ms=3.5)
             plt.axvline(x=group_mean, color=fit_color[groups.index(groupe)],
                         linewidth=4)
         pdf.savefig()
         plt.show()
 
+
+# T-test on mean homotopic connectivity
+from scipy.stats import ttest_rel, ttest_ind
+t, p = ttest_ind(
+    a=homotopic_distribution_parameters['topi_paired']['tangent']['subjects mean homotopic connectivity'],
+    b=homotopic_distribution_parameters['controls_topiramate']['tangent']['subjects mean homotopic connectivity'],
+    equal_var=True)
+
+t_p, p_p = ttest_rel(
+    a=homotopic_distribution_parameters['topi_paired']['tangent']['subjects mean homotopic connectivity'],
+    b=homotopic_distribution_parameters['wotopi_paired']['tangent']['subjects mean homotopic connectivity'])
+
+
+# Connectivity intra-network
+groupes = groups
+
+# Connectivity intra-network
+intra_network_connectivity_dict, network_dict, network_labels_list, network_label_colors = \
+    ccm.intra_network_functional_connectivity(
+        subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        groupes=groupes, kinds=kinds,
+        atlas_file=atlas_excel_file,
+        sheetname=sheetname,
+        roi_indices_column_name='atlas4D index',
+        network_column_name='network',
+        color_of_network_column='Color')
+
+# Estimation of mean intra network connectivity mean and std
+intra_network_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    intra_network_distribution_parameters[network] = dict.fromkeys(groupes)
+    for groupe in groupes:
+        intra_network_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+        for kind in kinds:
+            # Stack the mean homotopic connectivity of each subject for the current group
+            subjects_mean_intra_network_connectivity = np.array(
+                [intra_network_connectivity_dict[groupe][subject][kind][network]['network connectivity strength']
+                 for subject in intra_network_connectivity_dict[groupe].keys()])
+            # Estimate the mean and std assuming a Gaussian behavior
+            subjects_mean_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
+                parametric_tests.functional_connectivity_distribution_estimation(
+                    subjects_mean_intra_network_connectivity)
+            # Fill a dictionary saving the results for each groups and kind
+            intra_network_distribution_parameters[network][groupe][kind] = {
+                'subjects mean intra connectivity': subjects_mean_intra_network_connectivity_,
+                'intra distribution mean': mean_intra_estimation,
+                'intra distribution standard deviation': std_intra_estimation}
+
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_intra_network_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            plt.figure(constrained_layout=True)
+            for groupe in groupes:
+                group_connectivity = intra_network_distribution_parameters[network][groupe][kind][
+                    'subjects mean intra connectivity']
+                group_mean = intra_network_distribution_parameters[network][groupe][kind][
+                    'intra distribution mean']
+                group_std = intra_network_distribution_parameters[network][groupe][kind][
+                    'intra distribution standard deviation']
+                display.display_gaussian_connectivity_fit(
+                    vectorized_connectivity=group_connectivity,
+                    estimate_mean=group_mean,
+                    estimate_std=group_std,
+                    raw_data_colors=hist_color[groupes.index(groupe)],
+                    fitted_distribution_color=fit_color[groupes.index(groupe)],
+                    title='',
+                    xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                    legend_fitted='{} distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
+                plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                            linewidth=2)
+                plt.title('Connectivity distribution for the {} network'.format(network))
+
+            pdf.savefig()
+            plt.show()
+
+
+# We can compute the homotopic connectivity for each network, i.e a intra-network homotopic connectivity
+homotopic_intra_network_connectivity_d = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    # Pick the 4D index of the roi in the network
+    network_roi_ind = network_dict[network]['dataframe']['atlas4D index']
+    # Extract connectivity coefficient couple corresponding to homotopic regions in the network
+    network_homotopic_couple_ind = np.array([couple for couple in homotopic_roi_indices if (couple[0] or couple[1])
+                                             in network_roi_ind])
+    # Compute homotopic connectivity dictionary for the current network
+    network_homotopic_d = ccm.subjects_mean_connectivity_(
+        subjects_individual_matrices_dictionnary=Z_subjects_connectivity_matrices,
+        connectivity_coefficient_position=network_homotopic_couple_ind,
+        kinds=kinds, groupes=groupes)
+    homotopic_intra_network_connectivity_d[network] = network_homotopic_d
+
+# Create a homotopic intra-network dictionary with the same structure as the overall intra network dictionary
+homotopic_intranetwork_d = dict.fromkeys(groupes)
+for groupe in groupes:
+    homotopic_intranetwork_d[groupe] = dict.fromkeys(Z_subjects_connectivity_matrices[groupe].keys())
+    for subject in Z_subjects_connectivity_matrices[groupe].keys():
+        homotopic_intranetwork_d[groupe][subject] = dict.fromkeys(kinds)
+        for kind in kinds:
+            homotopic_intranetwork_d[groupe][subject][kind] = \
+                dict.fromkeys(list(homotopic_intra_network_connectivity_d.keys()))
+            for network in list(homotopic_intra_network_connectivity_d.keys()):
+                homotopic_intranetwork_d[groupe][subject][kind][network] =\
+                    {'network connectivity strength':
+                     homotopic_intra_network_connectivity_d[network][groupe][subject][kind]['mean connectivity']}
+
+# estimate mean and std for each network, for the display of the intra-network homotopic connectivity
+network_homotopic_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    network_homotopic_distribution_parameters[network] = dict.fromkeys(groupes)
+    for groupe in groupes:
+        network_homotopic_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+        for kind in kinds:
+            # Stack the mean homotopic connectivity of each subject for the current group
+            subjects_mean_homotopic_connectivity = np.array(
+                [homotopic_intra_network_connectivity_d[network][groupe][subject][kind]['mean connectivity']
+                 for subject in homotopic_intra_network_connectivity_d[network][groupe].keys()])
+            # Estimate the mean and std assuming a Gaussian behavior
+            subjects_mean_homotopic_connectivity_, mean_homotopic_estimation, std_homotopic_estimation = \
+                parametric_tests.functional_connectivity_distribution_estimation(
+                    subjects_mean_homotopic_connectivity)
+            # Fill a dictionary saving the results for each groups and kind
+            network_homotopic_distribution_parameters[network][groupe][kind] = {
+                'subjects mean homotopic connectivity': subjects_mean_homotopic_connectivity_,
+                'homotopic distribution mean': mean_homotopic_estimation,
+                'homotopic distribution standard deviation': std_homotopic_estimation}
+
+# Display for each network the mean homotopic distribution for all group
+# Gaussian fit of homotopic connectivity
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_intra_network_homotopic_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            plt.figure(constrained_layout=True)
+            for groupe in groupes:
+                group_connectivity = network_homotopic_distribution_parameters[network][groupe][kind][
+                    'subjects mean homotopic connectivity']
+                group_mean = network_homotopic_distribution_parameters[network][groupe][kind][
+                    'homotopic distribution mean']
+                group_std = network_homotopic_distribution_parameters[network][groupe][kind][
+                    'homotopic distribution standard deviation']
+                display.display_gaussian_connectivity_fit(
+                    vectorized_connectivity=group_connectivity,
+                    estimate_mean=group_mean,
+                    estimate_std=group_std,
+                    raw_data_colors=hist_color[groupes.index(groupe)],
+                    fitted_distribution_color=fit_color[groupes.index(groupe)],
+                    title='',
+                    xtitle='Functional connectivity', ytitle='Proportion of subjects',
+                    legend_fitted='{} distribution'.format(groupe),
+                    legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
+                plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                            linewidth=2)
+                plt.title('Mean homotopic connectivity for the {} network'.format(network))
+
+            pdf.savefig()
+            plt.show()
+
+# T-test
+intra_network_t_test = parametric_tests.intra_network_two_samples_t_test(
+    intra_network_connectivity_dictionary=intra_network_connectivity_dict,
+    groupes=['wotopi_paired', 'topi_paired'],
+    kinds=kinds,
+    contrast=[1.0, -1.0],
+    network_labels_list=network_labels_list,
+    paired=True)
+
+intra_network_homotopic_t_test = parametric_tests.intra_network_two_samples_t_test(
+    intra_network_connectivity_dictionary=homotopic_intranetwork_d,
+    groupes=['wotopi_paired', 'controls_topiramate'],
+    kinds=kinds,
+    contrast=[1.0, -1.0],
+    network_labels_list=network_labels_list, paired=False)
+
+
+
+# test
+subjects_connectivity_matrices = intra_network_connectivity_dict
+kind = 'tangent'
+groups_to_classify = ['wotopi_paired', 'controls_topiramate']
+features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups_to_classify[0]].keys())),
+                             2*np.ones(len(subjects_connectivity_matrices[groups_to_classify[1]].keys()))))
+features = np.array([subjects_connectivity_matrices[group][s][kind]['Language']['network array']
+                     for group in groups_to_classify
+                     for s in list(subjects_connectivity_matrices[group].keys())])
+
+features_group1 = features[np.where(features_labels == 1)[0], :]
+features_group2 = features[np.where(features_labels == 2)[0], :]
+
+t, p = ttest_ind(a=features_group1, b=features_group2, axis=0,
+                 equal_var=True)
+from nilearn.connectome import vec_to_sym_matrix
+from nilearn.plotting import plot_connectome
+uncorrected_p_matrix = vec_to_sym_matrix(vec=p, diagonal=np.ones(10))
+
+plot_connectome(adjacency_matrix=uncorrected_p_matrix,
+                node_coords=atlas_nodes[2:12],
+                node_color=labels_colors[2:12],
+                edge_vmin=0,
+                edge_vmax=0.05,edge_cmap='hot')
+plt.show()
