@@ -1,7 +1,7 @@
 import importlib
 from utils import pre_preprocessing, array_operation, folders_and_files_management
 from utils.array_operation import vectorizer
-from scipy.stats import mstats, norm, ttest_ind, pearsonr
+from scipy.stats import mstats, norm, ttest_ind, pearsonr, ttest_rel
 from nilearn.connectome import sym_matrix_to_vec, vec_to_sym_matrix
 import numpy as np
 from statsmodels.sandbox.stats.multicomp import multipletests
@@ -661,7 +661,7 @@ def distribution_estimation_mean_subjects_connectivity(mean_matrix_for_each_subj
 def intra_network_two_samples_t_test(intra_network_connectivity_dictionary, groupes, kinds,
                                      contrast, network_labels_list, alpha=.05,
                                      p_value_correction_method='fdr_bh', assume_equal_var=True,
-                                     nan_policy='omit'):
+                                     nan_policy='omit', paired=False):
     """Test the difference of intra network connectivity between the groups under the study.
 
     Parameters
@@ -715,17 +715,27 @@ def intra_network_two_samples_t_test(intra_network_connectivity_dictionary, grou
                           for subject in intra_network_connectivity_dictionary[groupes[1]].keys()])
             # Perform two sample t-test according to contrast vector
             if contrast == [1.0, -1.0]:
-                network_t_statistic, network_p_values_uncorrected = ttest_ind(x, y,
-                                                                              nan_policy=nan_policy,
-                                                                              equal_var=assume_equal_var)
+                if paired is False:
+                    network_t_statistic, network_p_values_uncorrected = ttest_ind(x, y,
+                                                                                  nan_policy=nan_policy,
+                                                                                  equal_var=assume_equal_var)
+                else:
+                    network_t_statistic, network_p_values_uncorrected = ttest_rel(x, y,
+                                                                                  nan_policy=nan_policy,
+                                                                                  )
             elif contrast == [-1.0, 1.0]:
-                network_t_statistic, network_p_values_uncorrected = ttest_ind(y, x,
-                                                                              nan_policy=nan_policy,
-                                                                              equal_var=assume_equal_var)
+                if paired is False:
+                    network_t_statistic, network_p_values_uncorrected = ttest_ind(y, x,
+                                                                                  nan_policy=nan_policy,
+                                                                                  equal_var=assume_equal_var)
+                else:
+                    network_t_statistic, network_p_values_uncorrected = ttest_rel(y, x,
+                                                                                  nan_policy=nan_policy,
+                                                                                  )
             else:
                 raise ValueError('Unrecognized contrast !')
 
-            # Fill the dictionnary to save the result
+            # Fill the dictionary to save the result
             intra_network_strength_t_test[kind][network] = {'t statistic': network_t_statistic,
                                                             'uncorrected p values': network_p_values_uncorrected,
                                                             groupes[0]: x,
