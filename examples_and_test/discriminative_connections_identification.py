@@ -25,14 +25,15 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
     normalize_colors=True)
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls/dictionary'
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures/dictionary'
 connectivity_dictionary_name = 'z_fisher_transform_subjects_connectivity_matrices.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder,
                                                           connectivity_dictionary_name))
-subjects_connectivity_matrices['patients'] = {**subjects_connectivity_matrices['non_impaired_language'],
-                                              **subjects_connectivity_matrices['impaired_language']}
-
-class_names = ['non_impaired_language', 'controls']
+subjects_connectivity_matrices['patients'] = {**subjects_connectivity_matrices['PAL'],
+                                              **subjects_connectivity_matrices['PNL']}
+del subjects_connectivity_matrices['PAL']
+del subjects_connectivity_matrices['PNL']
+class_names = ['patients', 'TDC']
 metric = 'tangent'
 
 # Vectorize the connectivity for classification
@@ -52,7 +53,7 @@ first_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[0
 second_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[1]][s][metric] for s in
                                      subjects_connectivity_matrices[class_names[1]].keys()]).mean(axis=0)
 
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls' \
+save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures' \
                  '/discriminative_connection_identification'
 
 # Labels vectors
@@ -65,15 +66,15 @@ classifier_weights, weight_null_distribution, p_values_corrected = \
         class_labels=class_labels,
         class_names=class_names,
         save_directory=save_directory,
-        n_permutations=10,
-        bootstrap_number=100,
+        n_permutations=1000,
+        bootstrap_number=500,
         features_labels=labels_regions,
         features_colors=labels_colors,
         n_nodes=n_nodes,
         atlas_nodes=atlas_nodes,
         first_class_mean_matrix=first_class_mean_matrix,
         second_class_mean_matrix=second_class_mean_matrix,
-        n_cpus_bootstrap=10,
+        n_cpus_bootstrap=16,
         write_report=True,
         correction='fdr_bh',
-        C=10)
+        C=1)
