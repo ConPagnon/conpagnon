@@ -4,6 +4,7 @@ import numpy as np
 from data_handling import atlas
 from nilearn.connectome import sym_matrix_to_vec
 from machine_learning.features_indentification import discriminative_brain_connection_identification
+from data_handling.dictionary_operations import groupby_factor_connectivity_matrices
 
 # Atlas set up
 atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
@@ -25,17 +26,15 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
     normalize_colors=True)
 
 # Load connectivity matrices
-data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures/dictionary'
-connectivity_dictionary_name = 'z_fisher_transform_subjects_connectivity_matrices.pkl'
+data_folder = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures/' \
+              'discriminative_connection_identification/Lesion_flip_TDC'
+connectivity_dictionary_name = 'connectivity_matrices_Lesion_flip_MCA_TDC.pkl'
 subjects_connectivity_matrices = load_object(os.path.join(data_folder,
                                                           connectivity_dictionary_name))
-subjects_connectivity_matrices['patients'] = {**subjects_connectivity_matrices['PAL'],
-                                              **subjects_connectivity_matrices['PNL']}
-del subjects_connectivity_matrices['PAL']
-del subjects_connectivity_matrices['PNL']
-class_names = ['patients', 'TDC']
-metric = 'tangent'
 
+
+class_names = ['Lesion_flip_MCA', 'TDC']
+metric = 'tangent'
 # Vectorize the connectivity for classification
 vectorized_connectivity_matrices = sym_matrix_to_vec(
     np.array([subjects_connectivity_matrices[class_name][s][metric] for class_name
@@ -53,8 +52,8 @@ first_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[0
 second_class_mean_matrix = np.array([subjects_connectivity_matrices[class_names[1]][s][metric] for s in
                                      subjects_connectivity_matrices[class_names[1]].keys()]).mean(axis=0)
 
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures' \
-                 '/discriminative_connection_identification'
+save_directory = '/media/db242421/db242421_data/ConPagnon_data/language_study_ANOVA_ACM_controls_new_figures/' \
+                 'discriminative_connection_identification/Lesion_flip_TDC'
 
 # Labels vectors
 class_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[class_names[0]].keys())),
@@ -74,7 +73,7 @@ classifier_weights, weight_null_distribution, p_values_corrected = \
         atlas_nodes=atlas_nodes,
         first_class_mean_matrix=first_class_mean_matrix,
         second_class_mean_matrix=second_class_mean_matrix,
-        n_cpus_bootstrap=16,
+        n_cpus_bootstrap=20,
         write_report=True,
         correction='fdr_bh',
         C=1)
