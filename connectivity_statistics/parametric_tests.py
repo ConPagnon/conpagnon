@@ -854,7 +854,8 @@ def inter_network_two_sample_t_test(subjects_inter_network_connectivity_matrices
 
 def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contrast,
                        assume_equal_var=True,
-                       nan_policy='omit'):
+                       nan_policy='omit',
+                       paired=False):
     """Perform a simple two sample t test.
 
     Parameters
@@ -890,11 +891,19 @@ def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contras
         x = connectivity_dictionnary_[groupes[0]][kind][field]
         y = connectivity_dictionnary_[groupes[1]][kind][field]
         if contrast == [1.0, -1.0]:
-            t_statistic, p_values_uncorrected = ttest_ind(x, y, equal_var=assume_equal_var,
-                                                          nan_policy=nan_policy)
+            if paired is False:
+
+                t_statistic, p_values_uncorrected = ttest_ind(x, y, equal_var=assume_equal_var,
+                                                              nan_policy=nan_policy)
+            else:
+                t_statistic, p_values_uncorrected = ttest_rel(x, y, nan_policy=nan_policy)
         elif contrast == [-1.0, 1.0]:
-            t_statistic, p_values_uncorrected = ttest_ind(y, x, equal_var=assume_equal_var,
-                                                          nan_policy=nan_policy)
+            if paired is False:
+
+                t_statistic, p_values_uncorrected = ttest_ind(y, x, equal_var=assume_equal_var,
+                                                              nan_policy=nan_policy)
+            else:
+                t_statistic, p_values_uncorrected = ttest_rel(y, x, nan_policy=nan_policy)
         else:
             raise ValueError('Unrecognized contrast !')
         t_test_result[kind] = {'t_statistic': t_statistic,
