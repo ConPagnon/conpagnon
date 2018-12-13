@@ -7,11 +7,13 @@ import matplotlib.pyplot as plt
 from plotting.display import plot_matrix
 import os
 from data_handling import atlas
-saving_data_dir = '/media/db242421/db242421_data/Presentation/Royaumont/'
+saving_data_dir = '/media/db242421/db242421_data/ConPagnon_data/' \
+                  'language_study_ANOVA_ACM_controls_new_figures/' \
+                  'discriminative_connection_identification/Lesion_flip_TDC'
 
 # Load the time series dictionary
 times_series = load_object(os.path.join(saving_data_dir,
-                                        'times_series_individual_atlases_patients_controls.pkl'))
+                                        'times_series_individual_atlases_Lesion_flip_MCA_TDC.pkl'))
 
 groups = list(times_series.keys())
 # For some reason, you may want to discard some subjects (optional), comment with #
