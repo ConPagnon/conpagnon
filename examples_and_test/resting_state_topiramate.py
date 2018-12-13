@@ -64,7 +64,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
     normalize_colors=True)
 
 # Groups name to include in the study
-groups = ['topi', 'wotopi', 'controls_topiramate']
+groups = ['wotopi_all', 'controls_topiramate']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -74,7 +74,7 @@ folders_and_files_management.check_directories_existence(
     directories_list=groups)
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/topi_wotopi_all'
+output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/wotopi_all_controls'
 output_csv_directory = data_management.create_directory(
     directory=output_csv_directory_path,
     erase_previous=True)
@@ -88,7 +88,7 @@ output_figure_directory = data_management.create_directory(
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/topi_wotopi_patients_id.txt'
+    '/media/db242421/db242421_data/ConPagnon_data/text_data/wotopi_all_controls_all.txt'
 
 # Clean the behavioral data by keeping only the subjects in the study
 subjects_list = open(subjects_ID_data_path).read().split()
@@ -181,21 +181,23 @@ folders_and_files_management.save_object(
     saving_directory=output_csv_directory,
     filename='topiramate_connectivity_matrices.pkl'
 )
-
+subjects_connectivity_matrices = Z_subjects_connectivity_matrices
 # Plot matrices
-for group in groups:
-    subjects = list(subjects_connectivity_matrices[group].keys())
-    with backend_pdf.PdfPages(os.path.join(output_figure_directory, 'correlation_' + group + '.pdf')) as pdf:
-        for s in subjects:
-            plt.figure()
-            display.plot_matrix(matrix=subjects_connectivity_matrices[group][s]['correlation'],
-                                labels_colors=labels_colors,
-                                mpart='all',
-                                horizontal_labels=labels_regions,
-                                vertical_labels=labels_regions,
-                                title='{} connectivity'.format(s))
-            pdf.savefig()
-            #plt.show()
+for kind in kinds:
+
+    for group in groups:
+        subjects = list(subjects_connectivity_matrices[group].keys())
+        with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind + '_' + group + '.pdf')) as pdf:
+            for s in subjects:
+                plt.figure()
+                display.plot_matrix(matrix=subjects_connectivity_matrices[group][s][kind],
+                                    labels_colors=labels_colors,
+                                    mpart='all',
+                                    horizontal_labels=labels_regions,
+                                    vertical_labels=labels_regions,
+                                    title='{} connectivity'.format(s))
+                pdf.savefig()
+                #plt.show()
 
 # Extract homotopic connectivity coefficients on connectivity matrices
 # Homotopic roi couple position in the connectivity matrices.
@@ -276,19 +278,6 @@ with backend_pdf.PdfPages(os.path.join(output_figure_directory,
                         linewidth=4)
         pdf.savefig()
         plt.show()
-
-
-# T-test on mean homotopic connectivity
-from scipy.stats import ttest_rel, ttest_ind
-t, p = ttest_ind(
-    a=homotopic_distribution_parameters['topi_paired']['tangent']['subjects mean homotopic connectivity'],
-    b=homotopic_distribution_parameters['controls_topiramate']['tangent']['subjects mean homotopic connectivity'],
-    equal_var=True)
-
-t_p, p_p = ttest_rel(
-    a=homotopic_distribution_parameters['topi_paired']['tangent']['subjects mean homotopic connectivity'],
-    b=homotopic_distribution_parameters['wotopi_paired']['tangent']['subjects mean homotopic connectivity'])
-
 
 # Connectivity intra-network
 groupes = groups
@@ -438,46 +427,297 @@ for kind in kinds:
             pdf.savefig()
             plt.show()
 
+
+# Fetch left and right connectivity
+left_connectivity_matrices = ccm.extract_sub_connectivity_matrices(
+    subjects_connectivity_matrices=subjects_connectivity_matrices,
+    kinds=kinds, regions_index=left_regions_indices,
+    vectorize=False, discard_diagonal=False)
+right_connectivity_matrices = ccm.extract_sub_connectivity_matrices(
+    subjects_connectivity_matrices=subjects_connectivity_matrices,
+    kinds=kinds, regions_index=right_regions_indices,
+    vectorize=False, discard_diagonal=False)
+
+
+left_connectivity = ccm.mean_of_flatten_connectivity_matrices(
+    subjects_individual_matrices_dictionary=left_connectivity_matrices,
+    groupes=groups,
+    kinds=kinds
+)
+
+right_connectivity = ccm.mean_of_flatten_connectivity_matrices(
+    subjects_individual_matrices_dictionary=right_connectivity_matrices,
+    groupes=groups,
+    kinds=kinds
+)
+# Estimate mean and standard deviation of mean ipsilesional connectivity
+left_connectivity_parameters = dict.fromkeys(groupes)
+for groupe in groupes:
+    left_connectivity_parameters[groupe] = dict.fromkeys(kinds)
+    for kind in kinds:
+        # Stack the mean homotopic connectivity of each subject for the current group
+        subjects_mean_left_connectivity = np.array(
+            [left_connectivity[groupe][subject][kind]['mean connectivity']
+             for subject in left_connectivity[groupe].keys()])
+        # Estimate the mean and std assuming a Gaussian behavior
+        subjects_mean_left_connectivity_, mean_estimation, std_estimation = \
+            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_left_connectivity)
+        # Fill a dictionary saving the results for each groups and kind
+        left_connectivity_parameters[groupe][kind] = {
+            'subjects mean left connectivity': subjects_mean_left_connectivity_,
+            'left distribution mean': mean_estimation,
+            'left distribution standard deviation': std_estimation}
+
+# Plot the distribution of mean left connectivity assuming gaussian
+# behavior
+with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                       'left_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
+        plt.figure()
+        for groupe in groupes:
+            group_connectivity = left_connectivity_parameters[groupe][kind][
+                'subjects mean left connectivity']
+            group_mean = left_connectivity_parameters[groupe][kind][
+                'left distribution mean']
+            group_std = left_connectivity_parameters[groupe][kind][
+                'left distribution standard deviation']
+            display.display_gaussian_connectivity_fit(
+                vectorized_connectivity=group_connectivity,
+                estimate_mean=group_mean,
+                estimate_std=group_std,
+                raw_data_colors=hist_color[groupes.index(groupe)],
+                fitted_distribution_color=fit_color[groupes.index(groupe)],
+                title='Left mean connectivity distribution  for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
+            plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                        linewidth=2)
+        pdf.savefig()
+        plt.show()
+
+# Estimate mean and standard deviation of mean contralesional connectivity
+right_connectivity_parameters = dict.fromkeys(groupes)
+for groupe in groupes:
+    right_connectivity_parameters[groupe] = dict.fromkeys(kinds)
+    for kind in kinds:
+        # Stack the mean homotopic connectivity of each subject for the current group
+        subjects_mean_contra_connectivity = np.array(
+            [right_connectivity[groupe][subject][kind]['mean connectivity']
+             for subject in right_connectivity[groupe].keys()])
+        # Estimate the mean and std assuming a Gaussian behavior
+        subjects_mean_contra_connectivity_, mean_estimation, std_estimation = \
+            parametric_tests.functional_connectivity_distribution_estimation(subjects_mean_contra_connectivity)
+        # Fill a dictionary saving the results for each groups and kind
+        right_connectivity_parameters[groupe][kind] = {
+            'subjects mean right connectivity': subjects_mean_contra_connectivity_,
+            'right distribution mean': mean_estimation,
+            'right distribution standard deviation': std_estimation}
+
+# Plot the distribution of mean ipsilesional connectivity assuming gaussian
+# behavior
+with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                       'right_mean_connectivity_distribution.pdf')) as pdf:
+    for kind in kinds:
+        plt.figure()
+        for groupe in groupes:
+            group_connectivity = right_connectivity_parameters[groupe][kind][
+                'subjects mean right connectivity']
+            group_mean = right_connectivity_parameters[groupe][kind][
+                'right distribution mean']
+            group_std = right_connectivity_parameters[groupe][kind][
+                'right distribution standard deviation']
+            display.display_gaussian_connectivity_fit(
+                vectorized_connectivity=group_connectivity,
+                estimate_mean=group_mean,
+                estimate_std=group_std,
+                raw_data_colors=hist_color[groupes.index(groupe)],
+                fitted_distribution_color=fit_color[groupes.index(groupe)],
+                title='Right mean connectivity distribution for {}'.format(kind),
+                xtitle='Functional connectivity coefficient', ytitle='Proportion of subjects',
+                legend_fitted='{} distribution'.format(groupe),
+                legend_data=groupe, display_fit='yes', ms=3.5, line_width=2)
+            plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                        linewidth=2)
+        pdf.savefig()
+        plt.show()
+
+# Compute the intra-network connectivity for the left hemisphere in
+# groups
+left_intra_network_connectivity_dict, \
+    left_network_dict, left_network_labels_list, left_network_label_colors = \
+    ccm.intra_network_functional_connectivity(
+        subjects_individual_matrices_dictionnary=left_connectivity_matrices,
+        groupes=groupes, kinds=kinds,
+        atlas_file=atlas_excel_file,
+        sheetname='Hemisphere_regions',
+        roi_indices_column_name='index',
+        network_column_name='network',
+        color_of_network_column='Color')
+
+# Estimate mean and standard deviation of left intra network parameters
+left_intra_network_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+        left_intra_network_distribution_parameters[network] = dict.fromkeys(groupes)
+        for groupe in groupes:
+            left_intra_network_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+            for kind in kinds:
+                # Stack the mean homotopic connectivity of each subject for the current group
+                subjects_mean_left_intra_network_connectivity = np.array(
+                    [left_intra_network_connectivity_dict[groupe][subject][kind][network][
+                         'network connectivity strength']
+                     for subject in left_intra_network_connectivity_dict[groupe].keys()])
+                # Estimate the mean and std assuming a Gaussian behavior
+                subjects_mean_left_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
+                    parametric_tests.functional_connectivity_distribution_estimation(
+                        subjects_mean_left_intra_network_connectivity)
+                # Fill a dictionary saving the results for each groups and kind
+                left_intra_network_distribution_parameters[network][groupe][kind] = {
+                    'subjects mean left intra connectivity': subjects_mean_left_intra_network_connectivity_,
+                    'left intra distribution mean': mean_intra_estimation,
+                    'left intra distribution standard deviation': std_intra_estimation}
+
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_left_intra_network_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+                plt.figure(constrained_layout=True)
+                for groupe in groupes:
+                    group_connectivity = left_intra_network_distribution_parameters[network][groupe][kind][
+                        'subjects mean left intra connectivity']
+                    group_mean = left_intra_network_distribution_parameters[network][groupe][kind][
+                        'left intra distribution mean']
+                    group_std =  left_intra_network_distribution_parameters[network][groupe][kind][
+                        'left intra distribution standard deviation']
+                    display.display_gaussian_connectivity_fit(
+                        vectorized_connectivity=group_connectivity,
+                        estimate_mean=group_mean,
+                        estimate_std=group_std,
+                        raw_data_colors=hist_color[groupes.index(groupe)],
+                        fitted_distribution_color=fit_color[groupes.index(groupe)],
+                        title='',
+                        xtitle='Functional connectivity', ytitle='Proportions of subjects',
+                        legend_fitted='{} distribution'.format(groupe),
+                        legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
+                    plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                                linewidth=2)
+                    plt.title('Mean left connectivity distribution for the {} network'.format(network))
+
+                pdf.savefig()
+                plt.show()
+
+
+# Compute the intra-network connectivity for the right hemisphere in
+# groups
+right_intra_network_connectivity_dict, \
+    right_network_dict, right_network_labels_list, right_network_label_colors = \
+    ccm.intra_network_functional_connectivity(
+        subjects_individual_matrices_dictionnary=right_connectivity_matrices,
+        groupes=groupes, kinds=kinds,
+        atlas_file=atlas_excel_file,
+        sheetname='Hemisphere_regions',
+        roi_indices_column_name='index',
+        network_column_name='network',
+        color_of_network_column='Color')
+
+# Estimate mean and standard deviation of right intra network parameters
+right_intra_network_distribution_parameters = dict.fromkeys(network_labels_list)
+for network in network_labels_list:
+    if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+        right_intra_network_distribution_parameters[network] = dict.fromkeys(groupes)
+        for groupe in groupes:
+            right_intra_network_distribution_parameters[network][groupe] = dict.fromkeys(kinds)
+            for kind in kinds:
+                # Stack the mean homotopic connectivity of each subject for the current group
+                subjects_mean_right_intra_network_connectivity = np.array(
+                    [right_intra_network_connectivity_dict[groupe][subject][kind][network][
+                         'network connectivity strength']
+                     for subject in right_intra_network_connectivity_dict[groupe].keys()])
+                # Estimate the mean and std assuming a Gaussian behavior
+                subjects_mean_right_intra_network_connectivity_, mean_intra_estimation, std_intra_estimation = \
+                    parametric_tests.functional_connectivity_distribution_estimation(
+                        subjects_mean_right_intra_network_connectivity)
+                # Fill a dictionary saving the results for each groups and kind
+                right_intra_network_distribution_parameters[network][groupe][kind] = {
+                    'subjects mean right intra connectivity': subjects_mean_right_intra_network_connectivity_,
+                    'right intra distribution mean': mean_intra_estimation,
+                    'right intra distribution standard deviation': std_intra_estimation}
+
+for kind in kinds:
+    with backend_pdf.PdfPages(os.path.join(output_figure_directory,
+                                           kind + '_right_intra_network_connectivity_distribution.pdf')) as pdf:
+
+        for network in network_labels_list:
+            if network not in ['Basal_Ganglia', 'Precuneus', 'Auditory']:
+                plt.figure(constrained_layout=True)
+                for groupe in groupes:
+                    group_connectivity = right_intra_network_distribution_parameters[network][groupe][kind][
+                        'subjects mean right intra connectivity']
+                    group_mean = right_intra_network_distribution_parameters[network][groupe][kind][
+                        'right intra distribution mean']
+                    group_std =  right_intra_network_distribution_parameters[network][groupe][kind][
+                        'right intra distribution standard deviation']
+                    display.display_gaussian_connectivity_fit(
+                        vectorized_connectivity=group_connectivity,
+                        estimate_mean=group_mean,
+                        estimate_std=group_std,
+                        raw_data_colors=hist_color[groupes.index(groupe)],
+                        fitted_distribution_color=fit_color[groupes.index(groupe)],
+                        title='',
+                        xtitle='Functional connectivity', ytitle='Proportions of subjects',
+                        legend_fitted='{} distribution'.format(groupe),
+                        legend_data=groupe, display_fit='yes', ms=3.5, line_width=2.5)
+                    plt.axvline(x=group_mean, color=fit_color[groupes.index(groupe)],
+                                linewidth=2)
+                    plt.title('Mean right connectivity distribution for the {} network'.format(network))
+
+                pdf.savefig()
+                plt.show()
+
+parametric_tests.two_sample_t_test_(connectivity_dictionnary_=right_connectivity_parameters,
+                                    groupes=groups,
+                                    kinds=kinds,
+                                    field='subjects mean right connectivity',
+                                    contrast=[1.0, -1.0],
+                                    paired=False)
 # T-test
 intra_network_t_test = parametric_tests.intra_network_two_samples_t_test(
-    intra_network_connectivity_dictionary=intra_network_connectivity_dict,
-    groupes=['wotopi_paired', 'topi_paired'],
+    intra_network_connectivity_dictionary=homotopic_intranetwork_d,
+    groupes=['wotopi_all', 'controls_topiramate'],
     kinds=kinds,
     contrast=[1.0, -1.0],
     network_labels_list=network_labels_list,
-    paired=True)
+    paired=False)
 
 intra_network_homotopic_t_test = parametric_tests.intra_network_two_samples_t_test(
-    intra_network_connectivity_dictionary=homotopic_intranetwork_d,
-    groupes=['wotopi_paired', 'controls_topiramate'],
+    intra_network_connectivity_dictionary=right_intra_network_connectivity_dict,
+    groupes=['wotopi_all', 'controls_topiramate'],
     kinds=kinds,
     contrast=[1.0, -1.0],
-    network_labels_list=network_labels_list, paired=False)
+    network_labels_list=right_network_labels_list,
+    paired=False)
 
+# Classification
+subjects_connectivity_matrices = folders_and_files_management.load_object(
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/topi_wotopi_paired/topiramate_connectivity_matrices.pkl'
+)
+groups = list(subjects_connectivity_matrices.keys())
+features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups[0]].keys())),
+                             2*np.ones(len(subjects_connectivity_matrices[groups[1]].keys()))))
+features = sym_matrix_to_vec(symmetric=np.array([subjects_connectivity_matrices[group][s]['tangent']
+                                                for group in groups
+                                                for s in list(subjects_connectivity_matrices[group].keys())]),
+                             discard_diagonal=True)
 
+from sklearn.svm import LinearSVC
+from sklearn.model_selection import StratifiedShuffleSplit
 
-# test
-subjects_connectivity_matrices = intra_network_connectivity_dict
-kind = 'tangent'
-groups_to_classify = ['wotopi_paired', 'controls_topiramate']
-features_labels = np.hstack((1*np.ones(len(subjects_connectivity_matrices[groups_to_classify[0]].keys())),
-                             2*np.ones(len(subjects_connectivity_matrices[groups_to_classify[1]].keys()))))
-features = np.array([subjects_connectivity_matrices[group][s][kind]['Language']['network array']
-                     for group in groups_to_classify
-                     for s in list(subjects_connectivity_matrices[group].keys())])
-
-features_group1 = features[np.where(features_labels == 1)[0], :]
-features_group2 = features[np.where(features_labels == 2)[0], :]
-
-t, p = ttest_ind(a=features_group1, b=features_group2, axis=0,
-                 equal_var=True)
-from nilearn.connectome import vec_to_sym_matrix
-from nilearn.plotting import plot_connectome
-uncorrected_p_matrix = vec_to_sym_matrix(vec=p, diagonal=np.ones(10))
-
-plot_connectome(adjacency_matrix=uncorrected_p_matrix,
-                node_coords=atlas_nodes[2:12],
-                node_color=labels_colors[2:12],
-                edge_vmin=0,
-                edge_vmax=0.05,edge_cmap='hot')
-plt.show()
+scores = cross_val_score(estimator=LinearSVC(), X=features, y=features_labels,
+                         cv=StratifiedShuffleSplit(n_splits=10000), n_jobs=10)
+scores = np.array(scores)
+mean_accuracy = scores.mean()
+std_accuracy = scores.std()
+print('Mean accuracy of {} % +- {} %'.format(mean_accuracy*100, std_accuracy*100))

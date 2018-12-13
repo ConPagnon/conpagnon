@@ -12,7 +12,7 @@ Example code: time series extraction with individual atlases
 """
 
 # Groups name to include in the study
-groups = [ 'patients', 'controls']
+groups = [ 'Lesion_flip_MCA', 'TDC']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
@@ -25,18 +25,18 @@ folders_and_files_management.check_directories_existence(
 # text labels files.
 individual_atlas_file_extension = '*.nii'
 individual_atlas_labels_extension = '*.csv'
-
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/subjects_ID.txt'
+    '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients_and_controls.txt'
+
 
 # Full to the following directories: individual atlases images,
 # individual text labels files, and individual confounds directories.
 individual_atlases_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_V2'
+    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_flip_V2'
 individual_atlases_labels_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_labels_V2'
+    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_labels_flip_V2'
 individual_confounds_directory = \
     '/media/db242421/db242421_data/ConPagnon_data/regressors'
 
@@ -72,8 +72,10 @@ total_extraction_ts = (end - start)/60.
 
 # Save the subjects time series dictionary
 save_object(object_to_save=times_series_individual_atlases,
-            saving_directory='/media/db242421/db242421_data/Presentation/Royaumont',
-            filename='times_series_individual_atlases_patients_controls.pkl')
+            saving_directory='/media/db242421/db242421_data/ConPagnon_data/'
+                             'language_study_ANOVA_ACM_controls_new_figures/'
+                             'discriminative_connection_identification/Lesion_flip_TDC',
+            filename='times_series_individual_atlases_Lesion_flip_MCA_TDC.pkl')
 
 
 # Illustration: time series plot
