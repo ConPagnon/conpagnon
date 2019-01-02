@@ -91,7 +91,8 @@ times_series = ccm.time_series_extraction(
 from utils.folders_and_files_management import load_object
 from scipy.stats import ttest_1samp
 times_series = load_object(
-    full_path_to_object='/home/db242421/Documents/times_series_individual_atlases.pkl'
+    full_path_to_object='C:\\Users\\work\\Documents'
+                        '\\times_series_individual_atlases.pkl'
 )
 
 times_series['patients_r'] = {**times_series['impaired_language'],
@@ -118,34 +119,33 @@ m = 2
 # by leave one out
 one_patients_time_series = patients_time_series[0, ...]
 null_distribution = []
-bootstrap_controls = np.random.choice(a=np.arange(start=0, stop=len(controls), step=1),
-                                      size=(m,len(controls)), replace=True)
-for bootstrap in range(m):
-    for train, test in loo.split(bootstrap_controls[bootstrap, ...]):
-        # Compute mean matrices, and connectivity matrices
-        # in the tangent on the subset of controls without
-        # the leftout subject.
-        connectivity_measure = ConnectivityMeasure(kind='tangent',
-                                                   vectorize=True,
-                                                   discard_diagonal=True)
-        controls_subset_matrices = \
-            connectivity_measure.fit_transform(X=controls_time_series[train, ...])
-        controls_subset_mean = connectivity_measure.mean_
-        # Project at the previously computed mean
-        # the leftout controls
-        leftout_control = \
-            connectivity_measure.transform(
-                X=controls_time_series[test, ...])[0]
+#bootstrap_controls = np.random.choice(a=np.arange(start=0, stop=len(controls), step=1),
+#                                      size=(m,len(controls)), replace=True)
 
-        # One sample t test, between the tangent matrix of the left out control, and the
-        # subset tangent matrices of the rest of the control
-        t, p = \
-            ttest_1samp(a=leftout_control,
-                        popmean=np.mean(controls_subset_matrices, axis=0))
+for train, test in loo.split(controls):
+    # Compute mean matrices, and connectivity matrices
+    # in the tangent on the subset of controls without
+    # the leftout subject.
+    connectivity_measure = ConnectivityMeasure(kind='tangent',
+                                               vectorize=True,
+                                               discard_diagonal=True)
+    controls_subset_matrices = \
+        connectivity_measure.fit_transform(X=controls_time_series[train, ...])
+    controls_subset_mean = connectivity_measure.mean_
+    # Project at the previously computed mean
+    # the leftout controls
+    leftout_control = \
+        connectivity_measure.transform(
+            X=controls_time_series[test, ...])[0]
 
-        # Store the results of the test, as null distribution
-        null_distribution.append(p)
+    # One sample t test, between the tangent matrix of the left out control, and the
+    # subset tangent matrices of the rest of the control
+    t, p = \
+        ttest_1samp(a=controls_subset_matrices, popmean=leftout_control,
+                    axis=0)
 
+    # Store the results of the test, as null distribution
+    null_distribution.append(p)
 
 null_distribution_array = np.array(null_distribution)
 
@@ -159,5 +159,18 @@ patient_tangent = connectivity_measure_all.transform(X=[one_patients_time_series
 
 # Compute a one sample t-test between the patient and the controls
 # group
-t_patient, p_patient = ttest_1samp(a=patient_tangent,
-                                   popmean=np.mean(a=all_controls_matrices, axis=0))
+t_patient, p_patient = ttest_1samp(a=all_controls_matrices,
+                                   popmean=patient_tangent,
+                                   axis=0)
+from scipy.stats import t
+A=2*t.sf(np.abs(t_patient), patient_tangent.shape[0]-1)
+# Use correction to account for multiple comparison
+from statsmodels.stats.multitest import multipletests
+p_corrected = multipletests(pvals=p_patient,
+                            alpha=0.05,
+                            method='bonferroni')[1]
+
+import matplotlib.pyplot as plt
+plt.figure()
+plt.hist(x=null_distribution_array[:, 1], bins='auto', density=False)
+plt.show()
