@@ -17,10 +17,12 @@ import os
 from joblib import Parallel, delayed
 
 # Atlas set up
-atlas_folder = '/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/atlas/AVCnn'
-atlas_name = 'atlas4D_2.nii'
+#atlas_folder = '/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/atlas/AVCnn'
+#atlas_name = 'atlas4D_2.nii'
+atlas_folder = '/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/atlas/Atlas_custom_AB/'
+atlas_name = '4D_AAL_STM.nii'
 labels_text_file = '/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/' \
-                   'atlas/AVCnn/atlas4D_2_labels.csv'
+                   'atlas/Atlas_custom_AB/labels_AAL_STM.csv'
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
           'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
           'lightpink']
@@ -39,13 +41,15 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 # Load raw and Z-fisher transform matrix
 subjects_connectivity_matrices = load_object(
     full_path_to_object='/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/Compagnon/'
-                        'subjects_connectivity_matrices_meanatlas.pkl')
+                        'subjects_connectivity_matrices_AAL.pkl')
 Z_subjects_connectivity_matrices = load_object(
     full_path_to_object='/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/Compagnon/'
-                        'Z_subjects_connectivity_matrices_meanatlas.pkl')
+                        'Z_subjects_connectivity_matrices_AAL.pkl')
 # Load behavioral data file
 regression_data_file = data_management.read_excel_file(
     excel_file_path='/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/memomix-notesbrutes-PCA.xlsx',
+    #excel_file_path='/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/memomix-NS-PCA.xlsx',
+
     sheetname='regression_data')
 
 # Type of subjects connectivity matrices
@@ -59,12 +63,12 @@ patients_connectivity_matrices = np.array([subjects_matrices['controls'][s][kind
                                            s in patients_subjects_ids])
 
 # Behavioral score
-behavioral_scores = regression_data_file['Age'].loc[patients_subjects_ids]
+behavioral_scores = regression_data_file['PC1'].loc[patients_subjects_ids]
 # Vectorized connectivity matrices of shape (n_samples, n_features)
 vectorized_connectivity_matrices = sym_matrix_to_vec(patients_connectivity_matrices, discard_diagonal=True)
 
 # Build confounding variable
-confounding_variables = ['PC1', 'PC2']
+confounding_variables = ['Age']
 confounding_variables_data = regression_data_file[confounding_variables].loc[patients_subjects_ids]
 # Encode the confounding variable in an array
 confounding_variables_matrix = dmatrix(formula_like='+'.join(confounding_variables), data=confounding_variables_data,
@@ -89,7 +93,7 @@ saving_directory = '/neurospin/grip/protocols/MRI/Gradient_hippocampe_AB_2017/CP
 
 
 # Study the impact of threshold: choose the best threshold
-threshold = np.arange(0.01, 0.05, 0.01)
+threshold = np.arange(0.01, 0.05, 0.001)
 r_pos_ = []
 r_neg_ = []
 threshold_result = Parallel(n_jobs=n_core_physical, verbose=1)(delayed(predict_behavior)(
@@ -137,10 +141,10 @@ print('Maximum correlation between predicted and true scores for edges with '
 
 
 # Build an array containing the requested number of score permutations, shape (n_permutations, n_subjects)
-n_permutations = 5
+n_permutations = 100
 behavioral_scores_permutation_matrix = np.array([np.random.permutation(behavioral_scores)
                                                  for n in range(n_permutations)])
-significance_selection_threshold = [0.01]
+significance_selection_threshold = [threshold_positive_features, threshold_negative_features]
 
 
 if __name__ == '__main__':
