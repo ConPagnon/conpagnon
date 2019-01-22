@@ -23,7 +23,7 @@ from scipy.stats import ttest_1samp
 from nilearn import plotting
 from grakel import GraphKernel, datasets, Graph
 from sklearn.model_selection import LeaveOneOut, cross_val_score, StratifiedShuffleSplit, GridSearchCV
-from sklearn.feature_selection import SelectKBest, f_regression, mutual_info_regression
+from sklearn.feature_selection import SelectKBest, f_regression, SelectFpr, mutual_info_regression
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler, MaxAbsScaler
 from machine_learning.CPM_method import predictors_selection_correlation
@@ -37,6 +37,10 @@ from statsmodels.api import OLS, add_constant
 from sklearn import decomposition
 from plotting.display import plot_matrix
 import statsmodels.api as sm
+from sklearn.pipeline import make_pipeline, Pipeline
+from sklearn.model_selection import train_test_split, cross_val_predict
+from sklearn.datasets import samples_generator
+
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -420,6 +424,9 @@ accuracy = cross_val_score(estimator=LinearSVC(C=1), X=patients_tangent_matrices
 print('Accuracy: {} % +- {} %'.format(round(np.array(accuracy).mean(), 2)*100,
                                       round(np.array(accuracy).std(), 2)*100))
 
+atypical = patients_tangent_matrices[np.where(labels == 1)[0], ...]
+typical = patients_tangent_matrices[np.where(labels == 0)[0], ...]
+
 # Prediction of raw NEEL score based on functional connectivity
 list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
                   'empan', 'phono', 'elision_i',
@@ -452,79 +459,150 @@ patients_tangent_matrices_masked = \
      for p in range(len(patients))]
 
 # Select features with other method
-k = 20
+k = 5
 # Selection parameter, if alpha equal to 1, all features are selected
 alpha = 1
 r2_scores = dict.fromkeys(list_of_scores)
 # Optimisation of C parameter for each score
 c_grid = [0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 1, 10, 50, 100, 200, 300, 500, 1000, 5000, 10000, 100000, 1000000]
+# Optimisation of number of features selected by SelectKBest
+k_grid = [10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600,
+          1700, 1800, 1900, 2000, 2100, 2400, 2556]
+
 best_c = dict.fromkeys(list_of_scores)
-for score in range(len(list_of_scores)):
-    select_KBest = SelectKBest(score_func=f_regression, k=k)
-    patients_tangent_matrices_KBest = \
-        select_KBest.fit_transform(patients_tangent_matrices, all_scaled_scores[..., score])
+if __name__ == '__main__':
 
-    print('Search best C parameter for {} test'.format(list_of_scores[score]))
-    search_best_parameter = GridSearchCV(estimator=SVR(kernel='linear'), param_grid={'C': c_grid},
-                                         scoring='neg_mean_squared_error', cv=LeaveOneOut(), verbose=1,
-                                         n_jobs=16)
-    search_best_parameter.fit(X=patients_tangent_matrices_KBest, y=all_scaled_scores[..., score])
-
-    best_c[list_of_scores[score]] = {'C': search_best_parameter.best_params_['C'],
-                                     'best score': search_best_parameter.best_score_}
-
-    # score prediction
-    r2, score_pred, score_pred_weights, score_selected_features = \
-        predict_scores(connectivity_matrices=patients_tangent_matrices_KBest,
-                       raw_score=all_scores_array[:, score],
-                       c_grid=c_grid,
-                       scoring='neg_mean_squared_error',
-                       alpha=1,
-                       optimize_regularization=False,
-                       C=best_c[list_of_scores[score]]['C'],
-                       n_jobs=14)
-    r2_scores[list_of_scores[score]] = {'r2': r2,
-                                        'predicted scores': np.array(score_pred),
-                                        'true scores': all_scaled_scores[:, score],
-                                        'features weights': score_pred_weights,
-                                        'features weights brain space': select_KBest.inverse_transform(
-                                            np.squeeze(np.array(score_pred_weights))),
-                                        'selected features indices': score_selected_features,
-                                        'C': best_c[list_of_scores[score]]['C']}
-
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
-                          'prediction_scores_raw_matrices_20_best_features_f_regression_SVR_linear_connectome.pdf') \
-        as pdf:
     for score in range(len(list_of_scores)):
-        score_prediction_weights = r2_scores[list_of_scores[score]]['features weights brain space']
-        r2_score = r2_scores[list_of_scores[score]]['r2']
-        plt.figure()
-        plot_connectome(
-            adjacency_matrix=r2_score*vec_to_sym_matrix(np.mean(score_prediction_weights, axis=0), diagonal=np.zeros(n_nodes)),
-            node_coords=atlas_nodes, node_color=labels_colors,
-            title='score: {}, r2: {}'.format(list_of_scores[score], r2_scores[list_of_scores[score]]['r2'][0]))
-        pdf.savefig()
-        plt.show()
+        print('Computing selection of features and '
+              'prediction for {} test....'.format(list_of_scores[score]))
+        # Search on a grid, the best K, and the best C parameter minimizing the
+        # mean squared error
+        K_best = SelectKBest(f_regression)
+        pipeline = Pipeline([('K_best_features', K_best), ('svr', SVR(kernel='linear'))])
+        grid_search = GridSearchCV(pipeline, {'K_best_features__k': k_grid,
+                                              'svr__C': c_grid},
+                                   cv=LeaveOneOut(),
+                                   scoring='neg_mean_squared_error',
+                                   n_jobs=16,
+                                   verbose=1)
+        grid_search.fit(patients_tangent_matrices, all_scaled_scores[..., score])
 
+        # Reduce the dimensionality of connectivity matrices with the best
+        # K selection
+        best_K = grid_search.best_params_['K_best_features__k']
+        K_best_reducer = SelectKBest(f_regression, k=best_K)
+        patients_tangent_matrices_KBest = K_best_reducer.fit_transform(patients_tangent_matrices,
+                                                                       all_scaled_scores[..., score])
+        # Select the best C parameters from previous selection
+        best_C = grid_search.best_params_['svr__C']
+        best_c[list_of_scores[score]] = {'C': best_C}
 
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
-                          'prediction_scores_raw_matrices_20_best_features_f_regression_SVR_linear_.pdf') \
-        as pdf:
+        # score prediction
+        r2, score_pred, score_pred_weights, score_selected_features = \
+            predict_scores(connectivity_matrices=patients_tangent_matrices_KBest,
+                           raw_score=all_scores_array[:, score],
+                           c_grid=c_grid,
+                           scoring='neg_mean_squared_error',
+                           alpha=alpha,
+                           optimize_regularization=False,
+                           C=best_c[list_of_scores[score]]['C'],
+                           n_jobs=14)
+        r2_scores[list_of_scores[score]] = {'r2': r2,
+                                            'predicted scores': np.array(score_pred),
+                                            'true scores': all_scaled_scores[:, score],
+                                            'features weights': score_pred_weights,
+                                            'features weights brain space': K_best_reducer.inverse_transform(
+                                                np.squeeze(np.array(score_pred_weights))),
+                                            'selected features indices': score_selected_features,
+                                            'C': best_c[list_of_scores[score]]['C'],
+                                            'best K': best_K}
+
+        print('Prediction done for {} test'.format(list_of_scores[score]))
+
+    with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+                              'prediction_evaluation_pipeline_K_best_SVR/'
+                              'prediction_scores_raw_matrices_f_regression_SVR_linear_connectome.pdf') \
+            as pdf:
+        for score in range(len(list_of_scores)):
+            score_prediction_weights = r2_scores[list_of_scores[score]]['features weights brain space']
+            r2_score = r2_scores[list_of_scores[score]]['r2']
+            number_of_connections = r2_scores[list_of_scores[score]]['best K']
+            plt.figure()
+            plot_connectome(
+                adjacency_matrix=r2_score*vec_to_sym_matrix(np.mean(score_prediction_weights, axis=0),
+                                                            diagonal=np.zeros(n_nodes)),
+                node_coords=atlas_nodes, node_color=labels_colors,
+                title='score: {}, r2: {}, K: {}'.format(list_of_scores[score],
+                                                        r2_scores[list_of_scores[score]]['r2'][0],
+                                                        number_of_connections))
+            pdf.savefig()
+            plt.show()
+
+    with backend_pdf.PdfPages(('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+                               'prediction_evaluation_pipeline_K_best_SVR/'
+                               'prediction_scores_raw_matrices_regression_SVR_linear_.pdf')) \
+            as pdf:
+        for score in list_of_scores:
+
+            plt.figure()
+            plt.plot(np.array(r2_scores[score]['true scores']),
+                     np.array(r2_scores[score]['predicted scores']), 'o')
+            plt.title('score: {}, r2: {}'.format(score, r2_scores[score]['r2'][0]))
+            plt.xlabel('True scores')
+            plt.ylabel('Predicted scores')
+            pdf.savefig()
+            plt.show()
+    # Save the dictionary containing the results of the prediction
+    # for each score
+    folders_and_files_management.save_object(
+        r2_scores,
+        '/media/db242421/db242421_data/ConPagnon_data/tangent_space/',
+        'svr_linear_prediction_scores_raw_connectivity_matrices_f_regression_pipeline.pkl')
+
+    # TODO permuation testing !!!!!!
+    n_permutations = 10001
+    permutations = [np.random.choice(np.arange(0, len(patients), 1), replace=False, size=len(patients))
+                    for n in range(n_permutations)]
+    permutations[0] = np.arange(0, len(patients), 1)
+    r2_null_distribution = dict.fromkeys(list_of_scores)
     for score in list_of_scores:
+        print('Prediction for {} test'.format(score))
+        prediction_scores_permutation = Parallel(
+            n_jobs=14, verbose=1000,
+            backend='multiprocessing',
+            temp_folder='/media/db242421/db242421_data/ConPagnon_data/tangent_space/joblib_dir')(delayed(predict_scores)(
+                connectivity_matrices=patients_tangent_matrices_KBest,
+                raw_score=behavioral_scores.loc[patients][score][b],
+                scoring='neg_mean_squared_error',
+                c_grid=c_grid,
+                scale_predictors=False,
+                alpha=1,
+                n_jobs=20) for b in permutations)
 
+        r2_null = np.array([prediction_scores_permutation[n][0] for n in range(n_permutations)])[1:, 0]
+        true_r2 = prediction_scores_permutation[0][0]
+        true_score_weight = prediction_scores_permutation[0][2]
+        true_score_selected_weight_indices = prediction_scores_permutation[0][3]
+        common_features = set.intersection(*map(set, true_score_selected_weight_indices))
+        r2_null_distribution[score] = {'r2_null': r2_null,
+                                       'p': np.sum(r2_null > true_r2) / n_permutations,
+                                       'r2': true_r2[0],
+                                       'true_score_weights': true_score_weight,
+                                       'true_score_selected_features_indices': true_score_selected_weight_indices,
+                                       'common_selected_features_indices': common_features}
+
+# Distribution plot for each score
+with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+                          'r2_null_dist_pca_svr_non_scaled_features.pdf') as pdf:
+
+    for score in list_of_scores:
         plt.figure()
-        plt.plot(np.array(r2_scores[score]['true scores']),
-                 np.array(r2_scores[score]['predicted scores']), 'o')
-        plt.title('score: {}, r2: {}'.format(score, r2_scores[score]['r2'][0]))
-        plt.xlabel('True scores')
-        plt.ylabel('Predicted scores')
+        plt.hist(r2_null_distribution[score]['r2_null'], bins='auto', edgecolor='black')
+        plt.axvline(x=r2_null_distribution[score]['r2'], color='black')
+        plt.title('R2 null distribution for {} test, p = {}'.format(score, r2_null_distribution[score]['p']))
         pdf.savefig()
         plt.show()
 
-folders_and_files_management.save_object(
-    r2_scores,
-    '/media/db242421/db242421_data/ConPagnon_data/tangent_space/',
-    'svr_linear_prediction_scores_raw_connectivity_matrices_20_best_features_f_regression.pkl')
 
 # Illustration , tangent matrices of patients
 with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
@@ -540,48 +618,21 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
         pdf.savefig()
         plt.show()
 
-
-n_permutations = 10001
-permutations = [np.random.choice(np.arange(0, len(patients), 1), replace=False, size=len(patients))
-                for n in range(n_permutations)]
-permutations[0] = np.arange(0, len(patients), 1)
-r2_null_distribution = dict.fromkeys(list_of_scores)
-for score in list_of_scores:
-    print('Prediction for {} test'.format(score))
-    prediction_scores_permutation = Parallel(
-        n_jobs=14, verbose=1000,
-        backend='multiprocessing',
-        temp_folder='/media/db242421/db242421_data/ConPagnon_data/tangent_space/joblib_dir')(delayed(predict_scores)(
-            connectivity_matrices=patients_tangent_matrices_KBest,
-            raw_score=behavioral_scores.loc[patients][score][b],
-            scoring='neg_mean_squared_error',
-            c_grid=c_grid,
-            scale_predictors=False,
-            alpha=1,
-            n_jobs=20) for b in permutations)
-
-    r2_null = np.array([prediction_scores_permutation[n][0] for n in range(n_permutations)])[1:, 0]
-    true_r2 = prediction_scores_permutation[0][0]
-    true_score_weight = prediction_scores_permutation[0][2]
-    true_score_selected_weight_indices = prediction_scores_permutation[0][3]
-    common_features = set.intersection(*map(set, true_score_selected_weight_indices))
-    r2_null_distribution[score] = {'r2_null': r2_null,
-                                   'p': np.sum(r2_null > true_r2) / n_permutations,
-                                   'r2': true_r2[0],
-                                   'true_score_weights': true_score_weight,
-                                   'true_score_selected_features_indices': true_score_selected_weight_indices,
-                                   'common_selected_features_indices': common_features}
-
-# Distribution plot for each score
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
-                          'r2_null_dist_pca_svr_non_scaled_features.pdf') as pdf:
-
-    for score in list_of_scores:
-        plt.figure()
-        plt.hist(r2_null_distribution[score]['r2_null'], bins='auto', edgecolor='black')
-        plt.axvline(x=r2_null_distribution[score]['r2'], color='black')
-        plt.title('R2 null distribution for {} test, p = {}'.format(score, r2_null_distribution[score]['p']))
-        pdf.savefig()
-        plt.show()
-
+# Illustration of prediction of scores
+r2_scores_results = folders_and_files_management.load_object(
+    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+                        'predictions_evaluation_f_regression/'
+                        'svr_linear_prediction_scores_raw_connectivity_matrices_200_best_features_f_regression.pkl'
+)
+for score in range(len(list_of_scores)):
+    score_prediction_weights = r2_scores_results[list_of_scores[score]]['features weights brain space']
+    r2_score = r2_scores_results[list_of_scores[score]]['r2']
+    node_contribution = 4
+    plt.figure()
+    plot_connectome(
+        adjacency_matrix=r2_score * vec_to_sym_matrix(np.mean(score_prediction_weights, axis=0),
+                                                      diagonal=np.zeros(n_nodes)),
+        node_coords=atlas_nodes, node_color=labels_colors,
+        title='score: {}, r2: {}'.format(list_of_scores[score], r2_scores_results[list_of_scores[score]]['r2'][0]))
+    plt.show()
 
