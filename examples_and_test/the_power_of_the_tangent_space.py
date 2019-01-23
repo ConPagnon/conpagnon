@@ -435,6 +435,7 @@ list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
                   'voc1', 'voc2', 'voc1_ebauche', 'voc2_ebauche',
                   'abstrait_diff', 'abstrait_pos', 'lex1', 'lex2',
                   'pc1_language', 'pc2_language']
+
 # Scaled the raw behavioral scores
 sc_score = StandardScaler()
 all_scores_array = np.array(behavioral_scores.loc[patients][list_of_scores])
@@ -444,7 +445,6 @@ all_scaled_scores = sc_score.fit_transform(all_scores_array)
 sc_features = StandardScaler()
 maxScaler = MaxAbsScaler()
 patients_tangent_matrices_sc = maxScaler.fit_transform(patients_tangent_matrices)
-
 
 # PCA on connectivity matrices
 pca = decomposition.PCA(n_components=0.95)
@@ -458,8 +458,6 @@ patients_tangent_matrices_masked = \
     [patients_tangent_matrices[p, np.where(np.abs(patients_tangent_matrices_sc[p, ...]) == 1)]
      for p in range(len(patients))]
 
-# Select features with other method
-k = 5
 # Selection parameter, if alpha equal to 1, all features are selected
 alpha = 1
 r2_scores = dict.fromkeys(list_of_scores)
@@ -468,7 +466,7 @@ c_grid = [0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 1, 10, 50, 100, 200, 300, 50
 # Optimisation of number of features selected by SelectKBest
 k_grid = [10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600,
           1700, 1800, 1900, 2000, 2100, 2400, 2556]
-
+# TODO: Try PCA features reduction
 best_c = dict.fromkeys(list_of_scores)
 if __name__ == '__main__':
 
@@ -478,12 +476,12 @@ if __name__ == '__main__':
         # Search on a grid, the best K, and the best C parameter minimizing the
         # mean squared error
         K_best = SelectKBest(f_regression)
-        pipeline = Pipeline([('K_best_features', K_best), ('svr', SVR(kernel='linear'))])
+        pipeline = Pipeline([('K_best_features__k', K_best), ('svr', SVR(kernel='linear'))])
         grid_search = GridSearchCV(pipeline, {'K_best_features__k': k_grid,
                                               'svr__C': c_grid},
                                    cv=LeaveOneOut(),
                                    scoring='neg_mean_squared_error',
-                                   n_jobs=16,
+                                   n_jobs=14,
                                    verbose=1)
         grid_search.fit(patients_tangent_matrices, all_scaled_scores[..., score])
 
@@ -518,28 +516,36 @@ if __name__ == '__main__':
                                             'best K': best_K}
 
         print('Prediction done for {} test'.format(list_of_scores[score]))
-
+    r2_scores = folders_and_files_management.load_object(
+        '/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+        'prediction_evaluation_pipeline_K_best_SVR/svr_linear_prediction_scores_raw_connectivity_matrices_f_regression_pipeline.pkl'
+    )
     with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
                               'prediction_evaluation_pipeline_K_best_SVR/'
-                              'prediction_scores_raw_matrices_f_regression_SVR_linear_connectome.pdf') \
+                              'prediction_scores_raw_matrices_f_regression_SVR_linear_connectome_v2.pdf') \
             as pdf:
         for score in range(len(list_of_scores)):
-            score_prediction_weights = r2_scores[list_of_scores[score]]['features weights brain space']
             r2_score = r2_scores[list_of_scores[score]]['r2']
+            score_prediction_weights = r2_score*vec_to_sym_matrix(
+                np.mean(r2_scores[list_of_scores[score]]['features weights brain space'], axis=0),
+                diagonal=np.zeros(n_nodes))
+
             number_of_connections = r2_scores[list_of_scores[score]]['best K']
+            node_size = (0.5*np.sum(np.abs(score_prediction_weights), axis=0))*100
             plt.figure()
             plot_connectome(
-                adjacency_matrix=r2_score*vec_to_sym_matrix(np.mean(score_prediction_weights, axis=0),
-                                                            diagonal=np.zeros(n_nodes)),
+                adjacency_matrix=score_prediction_weights,
                 node_coords=atlas_nodes, node_color=labels_colors,
                 title='score: {}, r2: {}, K: {}'.format(list_of_scores[score],
                                                         r2_scores[list_of_scores[score]]['r2'][0],
-                                                        number_of_connections))
+                                                        number_of_connections),
+                colorbar=True,
+                node_kwargs={'edgecolor': 'black', 'alpha': 1})
             pdf.savefig()
             plt.show()
 
     with backend_pdf.PdfPages(('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
-                               'prediction_evaluation_pipeline_K_best_SVR/'
+                               'prediction_evaluation_pipeline_SVR/'
                                'prediction_scores_raw_matrices_regression_SVR_linear_.pdf')) \
             as pdf:
         for score in list_of_scores:
@@ -557,7 +563,7 @@ if __name__ == '__main__':
     folders_and_files_management.save_object(
         r2_scores,
         '/media/db242421/db242421_data/ConPagnon_data/tangent_space/',
-        'svr_linear_prediction_scores_raw_connectivity_matrices_f_regression_pipeline.pkl')
+        'svr_linear_prediction_scores_raw_connectivity_matrices_PCA_pipeline.pkl')
 
     # TODO permuation testing !!!!!!
     n_permutations = 10001
@@ -633,6 +639,7 @@ for score in range(len(list_of_scores)):
         adjacency_matrix=r2_score * vec_to_sym_matrix(np.mean(score_prediction_weights, axis=0),
                                                       diagonal=np.zeros(n_nodes)),
         node_coords=atlas_nodes, node_color=labels_colors,
-        title='score: {}, r2: {}'.format(list_of_scores[score], r2_scores_results[list_of_scores[score]]['r2'][0]))
+        title='score: {}, r2: {}'.format(list_of_scores[score], r2_scores_results[list_of_scores[score]]['r2'][0]),
+        colorbar=True)
     plt.show()
 
