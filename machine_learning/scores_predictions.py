@@ -2,12 +2,13 @@
  Created by db242421 at 14/01/19
 
  """
-from sklearn.model_selection import LeaveOneOut, GridSearchCV
+from sklearn.model_selection import LeaveOneOut
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 import numpy as np
 from scipy.stats import pearsonr
 import scipy.special as special
+from sklearn.linear_model import Ridge
 
 
 def _betai(a, b, x):
@@ -30,11 +31,11 @@ def vcorrcoef(X, y):
     return r, prob
 
 
-def predict_scores(connectivity_matrices, raw_score, c_grid, scoring,
+def predict_scores(connectivity_matrices, raw_score,
                    alpha=0.01,
-                   n_jobs=10,
                    C=1,
-                   optimize_regularization=False):
+                   alpha_ridge=1,
+                   estimator='svr'):
 
     # Scale the scores
     sc = StandardScaler()
@@ -66,31 +67,30 @@ def predict_scores(connectivity_matrices, raw_score, c_grid, scoring,
         test_selected_features = test_matrices[..., significant_features]
         train_selected_features = train_matrices[..., significant_features]
 
-        if optimize_regularization is True:
-            # Search for the best regularization parameters
-            search_c_train_set = GridSearchCV(estimator=SVR(kernel='linear'),
-                                              param_grid={'C': c_grid},
-                                              cv=LeaveOneOut(),
-                                              scoring=scoring,
-                                              n_jobs=n_jobs,
-                                              verbose=0)
-            search_c_train_set.fit(X=train_selected_features, y=train_scores.ravel())
+        if estimator == 'svr':
 
-            best_c_parameter = search_c_train_set.best_params_['C']
-        else:
-            # Take the default in scikit-learn for C in SVR
-            best_c_parameter = C
+            # Initialize the estimator with the best regularization parameters
+            svr = SVR(kernel='linear', C=C)
+            # Fit the model on the whole training set
+            svr.fit(X=train_selected_features, y=train_scores.ravel())
+            # Predict the score of the left out subjects
+            score_pred.append(svr.predict(X=test_selected_features))
+            # Compute the weight of features of the estimator
+            score_pred_weights.append(svr.coef_)
+            # Append the indices of selected features
+            score_selected_features.append(significant_features)
+        elif estimator == 'ridge':
+            # Initialize the estimator with the best regularization parameters
+            ridge = Ridge(alpha=alpha_ridge)
+            # Fit the model on the whole training set
+            ridge.fit(X=train_selected_features, y=train_scores.ravel())
+            # Predict the score of the left out subjects
+            score_pred.append(ridge.predict(X=test_selected_features))
+            # Compute the weight of features of the estimator
+            score_pred_weights.append(ridge.coef_)
+            # Append the indices of selected features
+            score_selected_features.append(significant_features)
 
-        # Initialize the estimator with the best regularization parameters
-        svr = SVR(kernel='linear', C=best_c_parameter)
-        # Fit the model on the whole training set
-        svr.fit(X=train_selected_features, y=train_scores.ravel())
-        # Predict the score of the left out subjects
-        score_pred.append(svr.predict(X=test_selected_features))
-        # Compute the weight of features of the estimator
-        score_pred_weights.append(svr.coef_)
-        # Append the indices of selected features
-        score_selected_features.append(significant_features)
     # Compute R squared, as the squared correlation coefficient between predicted values, and
     # true scores values.
     r2 = pearsonr(np.array(score_pred), scores)[0] ** 2
