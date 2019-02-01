@@ -243,8 +243,8 @@ for subject in subjects:
     # displacement field
     collapse_transformation = 'antsApplyTransforms -d 3 -o [{}, 1] -t {} -t {} -r {}'.format(
         os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
-        os.path.join(dti_output, subject + '_b0_to_T1_' + 'Warp.nii.gz'),
-        os.path.join(dti_output, 'b0_to_T10GenericAffine.mat'),
+        os.path.join(dti_output, subject + '_b0_to_T1_' + '1Warp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_T1' + '_0GenericAffine.mat'),
         robex_t1_inverted_image
     )
 
@@ -252,8 +252,8 @@ for subject in subjects:
     collapse_transformation_output, collapse_transformation_error = collapse_transformation_process.communicate()
 
     # Apply the displacement field to the diffusion data
-    apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float'.format(
-        os.path.join(dti_output, 'b0_to_T1CollapsedWarp.nii.gz'),
+    apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float 1'.format(
+        os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
         os.path.join(motion_corrected_directory, 'warped_eddy_corrected_dti_' + subject + '.nii.gz'),
         robex_t1_inverted_image,
         os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
