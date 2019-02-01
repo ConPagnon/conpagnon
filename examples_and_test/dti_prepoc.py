@@ -230,8 +230,8 @@ for subject in subjects:
     robex_t1_inverted_image = os.path.join(t1_output, 'inverted_robex_t1_' + subject + '.nii.gz')
     bet_b0_dti = os.path.join(dti_output, 'bet_dti_b0_' + subject + '.nii.gz')
 
-    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 14'.format(
-        robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, 'b0_to_T1'))
+    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 16'.format(
+        robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'))
 
     ants_registration_process = Popen(ants_registration.split(), stdout=PIPE)
     ants_registration_output, ants_registration_error = ants_registration_process.communicate()
@@ -242,10 +242,23 @@ for subject in subjects:
     # Collapse the deformation field and the affine transform into one single
     # displacement field
     collapse_transformation = 'antsApplyTransforms -d 3 -o [{}, 1] -t {} -t {} -r {}'.format(
-        os.path.join(dti_output, 'b0_to_T1CollapsedWarp.nii.gz'),
-        os.path.join(dti_output, 'b0_to_T11Warp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_T1_' + 'Warp.nii.gz'),
         os.path.join(dti_output, 'b0_to_T10GenericAffine.mat'),
         robex_t1_inverted_image
     )
+
     collapse_transformation_process = Popen(collapse_transformation.split(), stdout=PIPE)
     collapse_transformation_output, collapse_transformation_error = collapse_transformation_process.communicate()
+
+    # Apply the displacement field to the diffusion data
+    apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float'.format(
+        os.path.join(dti_output, 'b0_to_T1CollapsedWarp.nii.gz'),
+        os.path.join(motion_corrected_directory, 'warped_eddy_corrected_dti_' + subject + '.nii.gz'),
+        robex_t1_inverted_image,
+        os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
+    )
+    apply_transform_to_dti_process = Popen(apply_transform_to_dti.split(), stdout=PIPE)
+    apply_transform_to_dti_output, apply_transform_to_dti_error = apply_transform_to_dti_process.communicate()
+
+    # End of the pre-processing pipeline
