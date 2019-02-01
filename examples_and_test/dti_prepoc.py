@@ -1,7 +1,6 @@
 """
  Created by db242421 on 25/01/19
 """
-import pandas as pd
 from subprocess import Popen, PIPE
 import numpy as np
 from nilearn.image import load_img
@@ -39,17 +38,17 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines"
+root_data_directory = "/neurospin/grip/protocols/MRI/Ines_2018/images/controls"
 # Subject text list
-subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/text/subjects.txt"
-subjects = list(pd.read_csv(subject_txt))
+subject_txt = "/neurospin/grip/protocols/MRI/Ines_2018/subjects.txt"
+subjects = open(subject_txt).read().split()
 
 # Dti directory name
 dti_directory = "diffusion"
 # T1 directory name
 T1_directory = "T1"
 
-eddy_n_threads = 10
+eddy_n_threads = 12
 
 # Loop over all the subjects
 for subject in subjects:
@@ -230,7 +229,7 @@ for subject in subjects:
     robex_t1_inverted_image = os.path.join(t1_output, 'inverted_robex_t1_' + subject + '.nii.gz')
     bet_b0_dti = os.path.join(dti_output, 'bet_dti_b0_' + subject + '.nii.gz')
 
-    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 16'.format(
+    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 10'.format(
         robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'))
 
     ants_registration_process = Popen(ants_registration.split(), stdout=PIPE)
