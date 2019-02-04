@@ -3,7 +3,7 @@
 """
 from subprocess import Popen, PIPE
 import numpy as np
-from nilearn.image import load_img
+from nilearn.image import load_img, resample_to_img
 import os
 import nibabel as nb
 import re
@@ -224,19 +224,43 @@ for subject in subjects:
     nb.save(img=nb.Nifti1Image(robex_t1_inverted, affine=robex_t1_affine),
             filename=os.path.join(t1_output, 'inverted_robex_t1_' + subject + '.nii.gz'))
 
+    # Resample the bias corrected and brain extracted contrast inverted T1 to the EPI
+    resampled_t1_inverted = \
+        resample_to_img(source_img=os.path.join(t1_output, 'inverted_robex_t1_' + subject + '.nii.gz'),
+                        target_img=os.path.join(dti_output, 'bet_dti_b0_' + subject + '.nii.gz'))
+    nb.save(resampled_t1_inverted, filename=os.path.join(t1_output,
+                                                         'r_inverted_robex_t1_' + subject + '.nii.gz'))
+
     # Register the inverted skull-stripped T1 image with the skull-stripped b0 image with
     # Symmetric Normalization (SyN) from ANTs.
     robex_t1_inverted_image = os.path.join(t1_output, 'inverted_robex_t1_' + subject + '.nii.gz')
+    resampled_t1_inverted_image = os.path.join(t1_output,
+                                               'r_inverted_robex_t1_' + subject + '.nii.gz')
     bet_b0_dti = os.path.join(dti_output, 'bet_dti_b0_' + subject + '.nii.gz')
 
-    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 10'.format(
+    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 12'.format(
         robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'))
 
+    # For the resampled T1
+    ants_registration_resampled = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 12'.format(
+        resampled_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_resampled_T1_'))
+
+    # Perform EPI to T1 registration
     ants_registration_process = Popen(ants_registration.split(), stdout=PIPE)
     ants_registration_output, ants_registration_error = ants_registration_process.communicate()
 
+    # Perform EPI to resampled T1 registration
+    ants_registration_resampled_process = Popen(ants_registration_resampled.split(), stdout=PIPE)
+    ants_registration_resampled_output, ants_output_error_resampled = \
+        ants_registration_resampled_process.communicate()
+
+    # Save the output for the EPI to T1 registration
     with open(os.path.join(dti_output, subject + '_dti_bo_to_T1_ants_output.txt'), "w") as text_file:
         text_file.write(ants_registration_output.decode('utf-8'))
+
+    # Save the output for the EPI to resampled T1 registration
+    with open(os.path.join(dti_output, subject + '_dti_b0_to_resampled_T1_ants_output.txt'), 'w') as text_file:
+        text_file.write(ants_registration_resampled_output.decode('utf-8'))
 
     # Collapse the deformation field and the affine transform into one single
     # displacement field
@@ -246,18 +270,42 @@ for subject in subjects:
         os.path.join(dti_output, subject + '_b0_to_T1' + '_0GenericAffine.mat'),
         robex_t1_inverted_image
     )
+    # for the resampled T1 too
+    collapse_transformation_resampled = 'antsApplyTransforms -d 3 -o [{}, 1] -t {} -t {} -r {}'.format(
+        os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + 'CollapsedWarp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + '1Warp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + '0GenericAffine.mat'),
+        resampled_t1_inverted_image
+    )
 
     collapse_transformation_process = Popen(collapse_transformation.split(), stdout=PIPE)
     collapse_transformation_output, collapse_transformation_error = collapse_transformation_process.communicate()
+
+    collapse_transformation_process_resampled = Popen(collapse_transformation_resampled.split(), stdout=PIPE)
+    collapse_transformation_resampled_output, collapse_transformation_resampled_error = \
+        collapse_transformation_process_resampled.communicate()
 
     # Apply the displacement field to the diffusion data
     apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float 1'.format(
         os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
         os.path.join(motion_corrected_directory, 'warped_eddy_corrected_dti_' + subject + '.nii.gz'),
-        robex_t1_inverted_image,
+        resampled_t1_inverted_image,
         os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
     )
     apply_transform_to_dti_process = Popen(apply_transform_to_dti.split(), stdout=PIPE)
     apply_transform_to_dti_output, apply_transform_to_dti_error = apply_transform_to_dti_process.communicate()
+
+    # Apply the displacement field to the diffusion data
+    apply_transform_to_dti_resampled = \
+        'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float 1'.format(
+            os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + 'CollapsedWarp.nii.gz'),
+            os.path.join(motion_corrected_directory, 'resampled_warped_eddy_corrected_dti_' + subject + '.nii.gz'),
+            resampled_t1_inverted_image,
+            os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
+    )
+
+    apply_transform_to_dti_resampled_process = Popen(apply_transform_to_dti_resampled.split(), stdout=PIPE)
+    apply_transform_to_dti_resampled_output, apply_transform_to_dti_resampled_error = \
+        apply_transform_to_dti_resampled_process.communicate()
 
     # End of the pre-processing pipeline
