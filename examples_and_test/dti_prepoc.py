@@ -49,10 +49,10 @@ dti_directory = "diffusion"
 T1_directory = "T1"
 
 eddy_n_threads = 12
-ants_n_threads = 14
+ants_n_threads = 16
 
 # Loop over all the subjects
-for subject in subjects[0:1]:
+for subject in subjects:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
@@ -108,20 +108,24 @@ for subject in subjects[0:1]:
 
     # Call dwipreproc from MRtrix package to perform eddy current
     # correction
-    dwi_preproc = 'dwipreproc {} {} -fslgrad {} {} -rpe_none -pe_dir {} ' \
-                  '-nocleanup -nthreads {} -json_import {} -tempdir {} -eddy_options "--slm=linear"'.format(
-                    dti_image,
-                    os.path.join(
-                       motion_corrected_directory, 'eddy_corrected_' + 'dti_' + subject + '.nii.gz'),
-                    bvec, bval, phase_encoding_direction,
-                    eddy_n_threads,
-                    json_file, motion_corrected_directory)
+    dwi_preproc = [
+        "dwipreproc",
+        dti_image,
+        os.path.join(motion_corrected_directory, 'eddy_corrected_' + 'dti_' + subject + '.nii.gz'),
+        "-fslgrad", bvec, bval,
+        "-pe_dir", "j-",
+        "-rpe_none",
+        "-nocleanup",
+        "-json_import", json_file,
+        "-eddy_options", "--repol --slm=linear",
+        "-tempdir", motion_corrected_directory]
 
-    dwi_preproc_process = Popen(dwi_preproc.split(), stdout=PIPE)
+    dwi_preproc_process = Popen(dwi_preproc, stdout=PIPE)
     dwi_preproc_output, dwi_preproc_error = dwi_preproc_process.communicate()
 
     # Rename the directory containing all the output of eddy correction
-    eddy_directory = [f for f in os.listdir(motion_corrected_directory) if re.match(r"dwipreproc", f)][0]
+    eddy_directory = [f for f in os.listdir(motion_corrected_directory)
+                      if re.match(r"dwipreproc", f)][0]
     os.rename(os.path.join(motion_corrected_directory, eddy_directory),
               os.path.join(motion_corrected_directory, 'eddy_outputs'))
     new_eddy_directory = os.path.join(motion_corrected_directory, 'eddy_outputs')
@@ -132,6 +136,7 @@ for subject in subjects[0:1]:
     eddy_parameters = os.path.join(new_eddy_directory, 'eddy_config.txt')
     eddy_mask = os.path.join(new_eddy_directory, 'eddy_mask.nii')
     eddy_b_vals = os.path.join(new_eddy_directory, 'bvals')
+    eddy_b_vecs = os.path.join(new_eddy_directory, 'bvecs')
 
     eddy_qc = 'eddy_quad {} -idx {} -par {} -m {} -b {} -o {}'.format(
         eddy_output_basename, eddy_indices, eddy_parameters, eddy_mask,
@@ -173,21 +178,23 @@ for subject in subjects[0:1]:
     # Skull Stripping of the t1 image
     robex = os.path.join(root_data_directory, 'scripts/dti_preproc/ROBEX/runROBEX.sh')
 
-    t1_skullstriping = '{} {} {}'.format(robex, t1_image, os.path.join(t1_output,
-                                                                       'robex_t1_' + subject + '.nii.gz'))
+    t1_skullstriping = '{} {} {}'.format(robex, t1_image,
+                                         os.path.join(t1_output, 'robex_t1_' + subject + '.nii.gz'))
     t1_skullstriping_process = Popen(t1_skullstriping.split(), stdout=PIPE)
     t1_skullstriping_output, t1_skullstriping_error = t1_skullstriping_process.communicate()
 
     # Skull Stripping of the b=0 image from motion corrected data
-    dti_motion_corrected_image = load_img(img=os.path.join(motion_corrected_directory,
-                                                          'eddy_corrected_' + 'dti_' + subject + '.nii.gz'
-                                                          ))
+    dti_motion_corrected_image = load_img(
+        img=os.path.join(motion_corrected_directory,
+                         'eddy_corrected_' + 'dti_' + subject + '.nii.gz'))
     dti_motion_corrected_data = dti_motion_corrected_image.get_data()
     dti_motion_corrected_affine = dti_motion_corrected_image.affine
     dti_bo_motion_corrected = dti_motion_corrected_data[..., 0]
 
-    nb.save(img=nb.Nifti1Image(dti_bo_motion_corrected, affine=dti_motion_corrected_affine),
-            filename=os.path.join(motion_corrected_directory, 'dti_bo_motion_corrected_' + subject + '.nii.gz'))
+    nb.save(img=nb.Nifti1Image(dti_bo_motion_corrected,
+                               affine=dti_motion_corrected_affine),
+            filename=os.path.join(motion_corrected_directory,
+                                  'dti_bo_motion_corrected_' + subject + '.nii.gz'))
 
     b0_skullstripping = 'bet2 {} {} -f 0.3'.format(
         os.path.join(motion_corrected_directory, 'dti_bo_motion_corrected_' + subject + '.nii.gz'),
@@ -243,27 +250,13 @@ for subject in subjects[0:1]:
         robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'),
         ants_n_threads)
 
-    # For the resampled T1
-    ants_registration_resampled = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n {}'.format(
-        resampled_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_resampled_T1_'),
-        ants_n_threads)
-
     # Perform EPI to T1 registration
     ants_registration_process = Popen(ants_registration.split(), stdout=PIPE)
     ants_registration_output, ants_registration_error = ants_registration_process.communicate()
 
-    # Perform EPI to resampled T1 registration
-    ants_registration_resampled_process = Popen(ants_registration_resampled.split(), stdout=PIPE)
-    ants_registration_resampled_output, ants_output_error_resampled = \
-        ants_registration_resampled_process.communicate()
-
     # Save the output for the EPI to T1 registration
     with open(os.path.join(dti_output, subject + '_dti_bo_to_T1_ants_output.txt'), "w") as text_file:
         text_file.write(ants_registration_output.decode('utf-8'))
-
-    # Save the output for the EPI to resampled T1 registration
-    with open(os.path.join(dti_output, subject + '_dti_b0_to_resampled_T1_ants_output.txt'), 'w') as text_file:
-        text_file.write(ants_registration_resampled_output.decode('utf-8'))
 
     # Collapse the deformation field and the affine transform into one single
     # displacement field
@@ -273,42 +266,39 @@ for subject in subjects[0:1]:
         os.path.join(dti_output, subject + '_b0_to_T1' + '_0GenericAffine.mat'),
         robex_t1_inverted_image
     )
-    # for the resampled T1 too
-    collapse_transformation_resampled = 'antsApplyTransforms -d 3 -o [{}, 1] -t {} -t {} -r {}'.format(
-        os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + 'CollapsedWarp.nii.gz'),
-        os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + '1Warp.nii.gz'),
-        os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + '0GenericAffine.mat'),
-        resampled_t1_inverted_image
-    )
 
     collapse_transformation_process = Popen(collapse_transformation.split(), stdout=PIPE)
     collapse_transformation_output, collapse_transformation_error = collapse_transformation_process.communicate()
 
-    collapse_transformation_process_resampled = Popen(collapse_transformation_resampled.split(), stdout=PIPE)
-    collapse_transformation_resampled_output, collapse_transformation_resampled_error = \
-        collapse_transformation_process_resampled.communicate()
-
     # Apply the displacement field to the diffusion data
-    apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float 1'.format(
-        os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
-        os.path.join(motion_corrected_directory, 'warped_eddy_corrected_dti_' + subject + '.nii.gz'),
-        robex_t1_inverted_image,
-        os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
+    apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} ' \
+                             '-n NearestNeighbor --float 1'.format(
+                               os.path.join(dti_output,
+                                            subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
+                               os.path.join(motion_corrected_directory,
+                                            'distortion_and_eddy_corrected_dti_' + subject + '.nii.gz'),
+                               resampled_t1_inverted_image,
+                               os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
     )
     apply_transform_to_dti_process = Popen(apply_transform_to_dti.split(), stdout=PIPE)
     apply_transform_to_dti_output, apply_transform_to_dti_error = apply_transform_to_dti_process.communicate()
 
-    # Apply the displacement field to the diffusion data
-    apply_transform_to_dti_resampled = \
-        'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float 1'.format(
-            os.path.join(dti_output, subject + '_b0_to_resampled_T1_' + 'CollapsedWarp.nii.gz'),
-            os.path.join(motion_corrected_directory, 'resampled_warped_eddy_corrected_dti_' + subject + '.nii.gz'),
-            resampled_t1_inverted_image,
-            os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
-    )
+    # Before the end, apply dtifit to check FA map for example, and verify
+    # pre-processing steps are well executed
+    dtifit_directory = os.path.join(root_data_directory, subject, 'dtifit')
+    if os.path.exists(dtifit_directory):
+        shutil.rmtree(dtifit_directory)
+    os.makedirs(dtifit_directory)
 
-    apply_transform_to_dti_resampled_process = Popen(apply_transform_to_dti_resampled.split(), stdout=PIPE)
-    apply_transform_to_dti_resampled_output, apply_transform_to_dti_resampled_error = \
-        apply_transform_to_dti_resampled_process.communicate()
+    dtifit = 'dtifit -k {} -o {} -m {} -r {} -b {}'.format(
+        os.path.join(motion_corrected_directory,
+                     'distortion_and_eddy_corrected_dti_' + subject + '.nii.gz'),
+        os.path.join(dtifit_directory, 'dtifit_' + subject),
+        eddy_mask,
+        os.path.join(new_eddy_directory, 'bvecs'),
+        eddy_b_vals
+    )
+    dtifit_process = Popen(dtifit.split(), stdout=PIPE)
+    dtifit_process_output, dtifit_process_error = dtifit_process.communicate()
 
     # End of the pre-processing pipeline
