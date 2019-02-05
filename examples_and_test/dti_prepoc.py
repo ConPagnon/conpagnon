@@ -295,7 +295,7 @@ for subject in subjects:
                      'distortion_and_eddy_corrected_dti_' + subject + '.nii.gz'),
         os.path.join(dtifit_directory, 'dtifit_' + subject),
         eddy_mask,
-        os.path.join(new_eddy_directory, 'bvecs'),
+        eddy_b_vecs,
         eddy_b_vals
     )
     dtifit_process = Popen(dtifit.split(), stdout=PIPE)
