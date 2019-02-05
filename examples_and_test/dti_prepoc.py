@@ -49,9 +49,10 @@ dti_directory = "diffusion"
 T1_directory = "T1"
 
 eddy_n_threads = 12
+ants_n_threads = 14
 
 # Loop over all the subjects
-for subject in subjects:
+for subject in subjects[0:1]:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
@@ -108,7 +109,7 @@ for subject in subjects:
     # Call dwipreproc from MRtrix package to perform eddy current
     # correction
     dwi_preproc = 'dwipreproc {} {} -fslgrad {} {} -rpe_none -pe_dir {} ' \
-                  '-nocleanup -nthreads {} -json_import {} -tempdir {}'.format(
+                  '-nocleanup -nthreads {} -json_import {} -tempdir {} -eddy_options "--slm=linear"'.format(
                     dti_image,
                     os.path.join(
                        motion_corrected_directory, 'eddy_corrected_' + 'dti_' + subject + '.nii.gz'),
@@ -238,12 +239,14 @@ for subject in subjects:
                                                'r_inverted_robex_t1_' + subject + '.nii.gz')
     bet_b0_dti = os.path.join(dti_output, 'bet_dti_b0_' + subject + '.nii.gz')
 
-    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 12'.format(
-        robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'))
+    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n {}'.format(
+        robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'),
+        ants_n_threads)
 
     # For the resampled T1
-    ants_registration_resampled = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n 12'.format(
-        resampled_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_resampled_T1_'))
+    ants_registration_resampled = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n {}'.format(
+        resampled_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_resampled_T1_'),
+        ants_n_threads)
 
     # Perform EPI to T1 registration
     ants_registration_process = Popen(ants_registration.split(), stdout=PIPE)
@@ -289,7 +292,7 @@ for subject in subjects:
     apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} -n NearestNeighbor --float 1'.format(
         os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
         os.path.join(motion_corrected_directory, 'warped_eddy_corrected_dti_' + subject + '.nii.gz'),
-        resampled_t1_inverted_image,
+        robex_t1_inverted_image,
         os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
     )
     apply_transform_to_dti_process = Popen(apply_transform_to_dti.split(), stdout=PIPE)
