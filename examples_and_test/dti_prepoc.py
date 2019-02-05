@@ -49,7 +49,7 @@ dti_directory = "diffusion"
 T1_directory = "T1"
 
 eddy_n_threads = 12
-ants_n_threads = 16
+ants_n_threads = 14
 
 # Loop over all the subjects
 for subject in subjects:
