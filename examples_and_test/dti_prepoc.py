@@ -52,7 +52,7 @@ eddy_n_threads = 12
 ants_n_threads = 14
 
 # Loop over all the subjects
-for subject in subjects:
+for subject in subjects[5:]:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
@@ -278,7 +278,7 @@ for subject in subjects:
                                os.path.join(motion_corrected_directory,
                                             'distortion_and_eddy_corrected_dti_' + subject + '.nii.gz'),
                                resampled_t1_inverted_image,
-                               os.path.join(motion_corrected_directory, 'eddy_corrected_dti_ab120161.nii.gz')
+                               os.path.join(motion_corrected_directory, 'eddy_corrected_dti_' + subject + '.nii.gz')
     )
     apply_transform_to_dti_process = Popen(apply_transform_to_dti.split(), stdout=PIPE)
     apply_transform_to_dti_output, apply_transform_to_dti_error = apply_transform_to_dti_process.communicate()
@@ -300,5 +300,4 @@ for subject in subjects:
     )
     dtifit_process = Popen(dtifit.split(), stdout=PIPE)
     dtifit_process_output, dtifit_process_error = dtifit_process.communicate()
-
     # End of the pre-processing pipeline
