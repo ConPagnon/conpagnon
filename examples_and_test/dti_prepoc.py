@@ -40,7 +40,7 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 # image folder
 root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/controls"
 # Subject text list
-subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/text/subjects.txt"
+subject_txt = "/neurospin/grip/protocols/MRI/Ines_2018/subjects.txt"
 subjects = open(subject_txt).read().split()
 
 # Dti directory name
