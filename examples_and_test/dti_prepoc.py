@@ -3,7 +3,7 @@
 """
 from subprocess import Popen, PIPE
 import numpy as np
-from nilearn.image import load_img, resample_to_img
+from nilearn.image import load_img, resample_to_img, resample_img
 import os
 import nibabel as nb
 import re
@@ -38,9 +38,9 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/neurospin/grip/protocols/MRI/Ines_2018/images/controls"
+root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/controls"
 # Subject text list
-subject_txt = "/neurospin/grip/protocols/MRI/Ines_2018/subjects.txt"
+subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/text/subjects.txt"
 subjects = open(subject_txt).read().split()
 
 # Dti directory name
@@ -52,7 +52,7 @@ eddy_n_threads = 12
 ants_n_threads = 14
 
 # Loop over all the subjects
-for subject in subjects[26:]:
+for subject in subjects:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
@@ -93,6 +93,15 @@ for subject in subjects[26:]:
     bval = os.path.join(dti_output, 'dti_' + subject + '.bval')
     json_file = os.path.join(dti_output, 'dti_' + subject + '_info.json')
 
+    # Padding with zeros to extend the bounding box
+    target_affine = np.copy(dti_image_affine)
+    target_affine[..., 3] = np.array(np.hstack((target_affine[0:2, 3], [-100, 1])))
+    new_img = resample_img(img=dti_image, target_affine=target_affine,
+                           interpolation='nearest',
+                           target_shape=(128, 128, 70))
+    nb.save(new_img,
+            os.path.join(dti_output, 'dti_' + subject + '.nii.gz'))
+
     # Read the Json file, just extracting the phase encoding direction
     with open(json_file) as f:
         json_data = json.load(f)
@@ -108,9 +117,9 @@ for subject in subjects[26:]:
 
     # Call dwipreproc from MRtrix package to perform eddy current
     # correction
+
     dwi_preproc = [
-        "dwipreproc",
-        dti_image,
+        "dwipreproc", dti_image,
         os.path.join(motion_corrected_directory, 'eddy_corrected_' + 'dti_' + subject + '.nii.gz'),
         "-fslgrad", bvec, bval,
         "-pe_dir", "j-",
@@ -246,12 +255,37 @@ for subject in subjects[26:]:
                                                'r_inverted_robex_t1_' + subject + '.nii.gz')
     bet_b0_dti = os.path.join(dti_output, 'bet_dti_b0_' + subject + '.nii.gz')
 
-    ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n {}'.format(
-        robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'),
-        ants_n_threads)
+    # ants_registration = 'antsRegistrationSyN.sh -d 3 -f {} -m {} -o {} -t s -n {}'.format(
+    #    robex_t1_inverted_image, bet_b0_dti, os.path.join(dti_output, subject + '_b0_to_T1_'),
+    #    ants_n_threads)
+
+    ants_registration = [
+        "antsRegistration",
+        "--dimensionality", "3",
+        "--float", "0",
+        "--output", "[{},{},{}]".format(os.path.join(dti_output, subject + '_b0_to_T1_'),
+                                        os.path.join(dti_output, subject + '_b0_to_T1_Warped.nii.gz'),
+                                        os.path.join(dti_output, subject + '_b0_to_T1_InverseWarped.nii.gz')),
+        "--interpolation", "Linear",
+        "--winsorize-image-intensities", "[0.005,0.995]",
+        "--use-histogram-matching", "0",
+        "--initial-moving-transform", "[{},{},1]".format(robex_t1_inverted_image, bet_b0_dti),
+        "--transform", "Rigid[0.1]",
+        "--metric", "MI[{},{},1,32,Regular,0.25]".format(robex_t1_inverted_image, bet_b0_dti),
+        "--convergence", "[1000x500x250x100,1e-6,10]",
+        "--shrink-factors", "8x4x2x1",
+        "--smoothing-sigmas", "3x2x1x0vox",
+        "--restrict-deformation", "0.1x1x0.1",
+        "--transform", "SyN[0.1,3,0]",
+        "--metric", "CC[{},{},1,4]".format(robex_t1_inverted_image, bet_b0_dti),
+        "--convergence", "[100x70x50x20,1e-6,10]",
+        "--shrink-factors", "8x4x2x1",
+        "--smoothing-sigmas", "3x2x1x0vox",
+        "--verbose", "1"
+    ]
 
     # Perform EPI to T1 registration
-    ants_registration_process = Popen(ants_registration.split(), stdout=PIPE)
+    ants_registration_process = Popen(ants_registration, stdout=PIPE)
     ants_registration_output, ants_registration_error = ants_registration_process.communicate()
 
     # Save the output for the EPI to T1 registration
@@ -279,7 +313,7 @@ for subject in subjects[26:]:
                                             'distortion_and_eddy_corrected_dti_' + subject + '.nii.gz'),
                                resampled_t1_inverted_image,
                                os.path.join(motion_corrected_directory, 'eddy_corrected_dti_' + subject + '.nii.gz')
-    )
+                                                                    )
     apply_transform_to_dti_process = Popen(apply_transform_to_dti.split(), stdout=PIPE)
     apply_transform_to_dti_output, apply_transform_to_dti_error = apply_transform_to_dti_process.communicate()
 
