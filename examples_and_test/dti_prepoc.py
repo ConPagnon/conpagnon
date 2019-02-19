@@ -52,7 +52,7 @@ eddy_n_threads = 12
 ants_n_threads = 14
 
 # Loop over all the subjects
-for subject in subjects[23:]:
+for subject in subjects:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
