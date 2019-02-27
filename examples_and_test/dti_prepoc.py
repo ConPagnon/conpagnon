@@ -38,9 +38,9 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/controls"
+root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/demo"
 # Subject text list
-subject_txt = "/neurospin/grip/protocols/MRI/Ines_2018/subjects.txt"
+subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/demo/demo.txt"
 subjects = open(subject_txt).read().split()
 
 # Dti directory name
@@ -185,7 +185,7 @@ for subject in subjects:
     t1_image = os.path.join(t1_output, 't1_' + subject + '.nii.gz')
 
     # Skull Stripping of the t1 image
-    robex = os.path.join(root_data_directory, 'scripts/dti_preproc/ROBEX/runROBEX.sh')
+    robex = os.path.join('/media/db242421/db242421_data/DTI_preproc_state_Ines/scripts/dti_preproc/ROBEX/runROBEX.sh')
 
     t1_skullstriping = '{} {} {}'.format(robex, t1_image,
                                          os.path.join(t1_output, 'robex_t1_' + subject + '.nii.gz'))
@@ -306,7 +306,7 @@ for subject in subjects:
 
     # Apply the displacement field to the diffusion data
     apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} ' \
-                             '-n NearestNeighbor --float 1'.format(
+                             '-n BSpline --float 1'.format(
                                os.path.join(dti_output,
                                             subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
                                os.path.join(motion_corrected_directory,
