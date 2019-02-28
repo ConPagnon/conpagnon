@@ -38,9 +38,9 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/demo"
+root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/just_apply_transform"
 # Subject text list
-subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/demo/demo.txt"
+subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/just_apply_transform/subjects.txt"
 subjects = open(subject_txt).read().split()
 
 # Dti directory name
