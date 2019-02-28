@@ -38,7 +38,7 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients"
+root_data_directory = "/neurospin/grip/protocols/MRI/Ines_2018/images/patients"
 # Subject text list
 subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients/patients_acm.txt"
 subjects = open(subject_txt).read().split()
