@@ -10,6 +10,7 @@ import pandas as pd
 import re
 import warnings
 import shutil
+import sys
 # TrioTim scanner base directory
 TrioTim_directory = '/neurospin/acquisition/database/TrioTim'
 
@@ -19,9 +20,13 @@ root_directory = '/media/db242421/db242421_data/DTI_preproc_state_Ines/images/pa
 # acquisition date and nip in the corresponding order.
 acquisition_date_nip = pd.read_csv(os.path.join(root_directory, 'patients_acq_date_nip.txt'))
 n_subjects = len(acquisition_date_nip)
+
 # List of regular expression to fetch the right images
 acquisition_identifiers = ['(.*)t1mpr(.*)', r'(.*)_b1000-dw30(.*)\d+$']
 acquisition_output_path = ['T1/dicom', 'diffusion/dicom']
+
+# Redirect all console output to a log file
+log_file = '/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients/download_log.txt'
 
 for subject in range(n_subjects):
     print('Download dicom file for subject: {}'.format(acquisition_date_nip.loc[subject]['NIP']))
@@ -69,3 +74,5 @@ for subject in range(n_subjects):
             for dcm in acq_dicom_files_list:
                 dcm_full_path = os.path.join(subject_dicom_images, dcm)
                 shutil.copyfile(dcm_full_path, os.path.join(acquisition_output_directory, dcm))
+    print('Done download requested dicom images for subject {}'.format(acquisition_date_nip.loc[subject]['NIP']))
+
