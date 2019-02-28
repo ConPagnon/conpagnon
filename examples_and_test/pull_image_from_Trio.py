@@ -1,12 +1,15 @@
 """
- Created by db242421 at 27/02/19
+ Created by db242421: dhaif.bekha@cea.fr
 
+Download dicom images from a MRI scanner database, based on regular
+expression to search the right folder.
  """
 
 import os
 import pandas as pd
 import re
 import warnings
+import shutil
 # TrioTim scanner base directory
 TrioTim_directory = '/neurospin/acquisition/database/TrioTim'
 
@@ -21,6 +24,7 @@ acquisition_identifiers = ['(.*)t1mpr(.*)', r'(.*)_b1000-dw30(.*)\d+$']
 acquisition_output_path = ['T1/dicom', 'diffusion/dicom']
 
 for subject in range(n_subjects):
+    print('Download dicom file for subject: {}'.format(acquisition_date_nip.loc[subject]['NIP']))
     # Locate the acquisition data folder and dive into
     # the corresponding nip
     subject_acquisition_date_directory = os.path.join(TrioTim_directory,
@@ -50,3 +54,18 @@ for subject in range(n_subjects):
                 warnings.warn('Careful! \n Find {} acquisitions folders matching you\'re request: {}. Taking '
                               'the first one.'.format(len(matching_acquisition_folders), matching_acquisition_folders))
                 matching_acquisition_folder = matching_acquisition_folders[0]
+            else:
+                matching_acquisition_folder = matching_acquisition_folders[0]
+            # Dive into the right dicom folder for the right folder
+            subject_dicom_images = os.path.join(subject_dicom, matching_acquisition_folder)
+            # Copy all dicom image in the chosen root directory with the chosen
+            # subtree architecture
+            acquisition_output_directory = os.path.join(root_directory, acquisition_date_nip.loc[subject]['NIP'],
+                                                        acquisition_output_path[acq])
+            if os.path.exists(acquisition_output_directory):
+                shutil.rmtree(acquisition_output_directory)
+            os.makedirs(acquisition_output_directory)
+            acq_dicom_files_list = os.listdir(subject_dicom_images)
+            for dcm in acq_dicom_files_list:
+                dcm_full_path = os.path.join(subject_dicom_images, dcm)
+                shutil.copyfile(dcm_full_path, os.path.join(acquisition_output_directory, dcm))
