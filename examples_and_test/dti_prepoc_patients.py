@@ -38,7 +38,7 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients"
+root_data_directory = "/neurospin/grip/protocols/MRI/Ines_2018/images/patients"
 # Subject text list
 subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients/patients_acm.txt"
 subjects = open(subject_txt).read().split()
@@ -54,7 +54,7 @@ eddy_n_threads = 12
 ants_n_threads = 14
 
 # Loop over all the subjects
-for subject in subjects[0:1]:
+for subject in subjects:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
@@ -321,9 +321,9 @@ for subject in subjects[0:1]:
     # Collapse the deformation field and the affine transform into one single
     # displacement field
     collapse_transformation = 'antsApplyTransforms -d 3 -o [{}, 1] -t {} -t {} -r {}'.format(
-        os.path.join(dti_output, subject + '_T1_to_b0_' + 'CollapsedWarp.nii.gz'),
-        os.path.join(dti_output, subject + '_T1_to_b0_' + '1Warp.nii.gz'),
-        os.path.join(dti_output, subject + '_T1_to_b0' + '_0GenericAffine.mat'),
+        os.path.join(dti_output, subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_T1_' + '1Warp.nii.gz'),
+        os.path.join(dti_output, subject + '_b0_to_T1' + '_0GenericAffine.mat'),
         robex_t1_inverted_image
     )
 
