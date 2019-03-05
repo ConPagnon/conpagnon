@@ -282,7 +282,7 @@ for subject in subjects:
                                   'negative_' + subject + '_lesion_totale_s16.nii.gz'))
 
     negative_subject_lesion_mask = os.path.join(root_data_directory, subject, lesion_directory,
-                                                'negative_' + subject + '_lesion_totale_s32.nii.gz')
+                                                'negative_' + subject + '_lesion_totale_s16.nii.gz')
 
     ants_registration = [
         "antsRegistration",
