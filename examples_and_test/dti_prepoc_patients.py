@@ -38,7 +38,7 @@ It requires a few dependencies: dcm2niix, FSL and MRtrix3, ANTs, ROBEX.
 
 # Directory containing the subjects
 # image folder
-root_data_directory = "/neurospin/grip/protocols/MRI/Ines_2018/images/patients"
+root_data_directory = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients"
 # Subject text list
 subject_txt = "/media/db242421/db242421_data/DTI_preproc_state_Ines/images/patients/patients_acm.txt"
 subjects = open(subject_txt).read().split()
@@ -54,7 +54,7 @@ eddy_n_threads = 12
 ants_n_threads = 14
 
 # Loop over all the subjects
-for subject in subjects:
+for subject in subjects[0:1]:
     # Convert Dicom to nifti image
     subject_dicom_dti = os.path.join(root_data_directory, subject, dti_directory, "dicom")
     dti_output = os.path.join(root_data_directory, subject, dti_directory, "nifti")
@@ -262,36 +262,52 @@ for subject in subjects:
     #    ants_n_threads)
 
     # full path to the lesion image
-    subject_lesion = os.path.join(root_data_directory, subject, dti_directory, subject + '_lesion_totale_s16.nii.gz')
+    subject_lesion = os.path.join(root_data_directory, subject, lesion_directory,
+                                  subject + '_lesion_totale_s16.nii.gz')
+    # Load and negate the voxels value: Ants take a mask with voxels of interest equal to ones,
+    # and voxels to be discarded equal to zeros
+    subject_lesion_image = load_img(subject_lesion)
+    subject_lesion_data = subject_lesion_image.get_data()
+    subject_lesion_affine = subject_lesion_image.affine
 
-    # The lesion mask is drawn in the template space, i.e, the T1 space. So in the call of antsRegistration
-    # below, the b0 is the fixed image and T1 is the moving image. When applying transformation, we will
-    # apply the inverse transformation to register the diffusion on the T1.
+    # Negate the values
+    lesioned_voxels = np.where(subject_lesion_data == 1)
+    lesion_background = np.where(subject_lesion_data == 0)
+
+    subject_lesion_data[lesioned_voxels[0], lesioned_voxels[1], lesioned_voxels[2]] = 0
+    subject_lesion_data[lesion_background[0], lesion_background[1], lesion_background[2]] = 1
+    # Save the new lesion image
+    nb.save(nb.Nifti1Image(subject_lesion_data, affine=subject_lesion_affine),
+            filename=os.path.join(root_data_directory, subject, lesion_directory,
+                                  'negative_' + subject + '_lesion_totale_s16.nii.gz'))
+
+    negative_subject_lesion_mask = os.path.join(root_data_directory, subject, lesion_directory,
+                                                'negative_' + subject + '_lesion_totale_s32.nii.gz')
 
     ants_registration = [
         "antsRegistration",
         "--dimensionality", "3",
         "--float", "0",
-        "--output", "[{},{},{}]".format(os.path.join(dti_output, subject + '_T1_to_b0_'),
-                                        os.path.join(dti_output, subject + '_T1_to_b0_Warped.nii.gz'),
-                                        os.path.join(dti_output, subject + '_T1_to_b0_InverseWarped.nii.gz')),
+        "--output", "[{},{},{}]".format(os.path.join(dti_output, subject + '_b0_to_T1_'),
+                                        os.path.join(dti_output, subject + '_b0_to_T1_Warped.nii.gz'),
+                                        os.path.join(dti_output, subject + '_b0_to_T1_InverseWarped.nii.gz')),
         "--interpolation", "Linear",
         "--winsorize-image-intensities", "[0.005,0.995]",
         "--use-histogram-matching", "0",
-        "--initial-moving-transform", "[{},{},1]".format(bet_b0_dti, robex_t1_inverted_image),
+        "--initial-moving-transform", "[{},{},1]".format(robex_t1_inverted_image, bet_b0_dti),
         "--transform", "Rigid[0.1]",
-        "--metric", "MI[{},{},1,32,Regular,0.25]".format(bet_b0_dti, robex_t1_inverted_image),
+        "--metric", "MI[{},{},1,32,Regular,0.25]".format(robex_t1_inverted_image, bet_b0_dti),
         "--convergence", "[1000x500x250x100,1e-6,10]",
         "--shrink-factors", "8x4x2x1",
         "--smoothing-sigmas", "3x2x1x0vox",
         "--restrict-deformation", "0.1x1x0.1",
         "--transform", "SyN[0.1,3,0]",
-        "--metric", "CC[{},{},1,4]".format(bet_b0_dti, robex_t1_inverted_image),
+        "--metric", "CC[{},{},1,4]".format(robex_t1_inverted_image, bet_b0_dti),
         "--convergence", "[100x70x50x20,1e-6,10]",
         "--shrink-factors", "8x4x2x1",
         "--smoothing-sigmas", "3x2x1x0vox",
-        "--verbose", "1"
-        "-x", "{}".format(subject_lesion)
+        "--verbose", "1",
+        "-x", "{}".format(negative_subject_lesion_mask)
     ]
 
     # Perform EPI to T1 registration
@@ -299,14 +315,14 @@ for subject in subjects:
     ants_registration_output, ants_registration_error = ants_registration_process.communicate()
 
     # Save the output for the EPI to T1 registration
-    with open(os.path.join(dti_output, subject + '_dti_T1_to_b0_ants_output.txt'), "w") as text_file:
+    with open(os.path.join(dti_output, subject + '_dti_b0_to_T1_ants_output.txt'), "w") as text_file:
         text_file.write(ants_registration_output.decode('utf-8'))
 
     # Collapse the deformation field and the affine transform into one single
     # displacement field
     collapse_transformation = 'antsApplyTransforms -d 3 -o [{}, 1] -t {} -t {} -r {}'.format(
-        os.path.join(dti_output, subject + '_T1_to_b0_' + 'InverseCollapsedWarp.nii.gz'),
-        os.path.join(dti_output, subject + '_T1_to_b0_' + '1InverseWarp.nii.gz'),
+        os.path.join(dti_output, subject + '_T1_to_b0_' + 'CollapsedWarp.nii.gz'),
+        os.path.join(dti_output, subject + '_T1_to_b0_' + '1Warp.nii.gz'),
         os.path.join(dti_output, subject + '_T1_to_b0' + '_0GenericAffine.mat'),
         robex_t1_inverted_image
     )
@@ -318,7 +334,7 @@ for subject in subjects:
     apply_transform_to_dti = 'antsApplyTransforms -d 3 -e 3 -t {} -o {} -r {} -i {} ' \
                              '-n BSpline --float 1'.format(
                                os.path.join(dti_output,
-                                            subject + '_T1_to_b0_' + 'InverseCollapsedWarp.nii.gz'),
+                                            subject + '_b0_to_T1_' + 'CollapsedWarp.nii.gz'),
                                os.path.join(motion_corrected_directory,
                                             'distortion_and_eddy_corrected_dti_' + subject + '.nii.gz'),
                                resampled_t1_inverted_image,
