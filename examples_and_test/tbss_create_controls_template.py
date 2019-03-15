@@ -1,5 +1,5 @@
 """
- Created by db242421, (dhaif.bekha@cea.fr).
+ Created by Dhaif BEKHA, (dhaif.bekha@cea.fr).
 
  """
 import pandas as pd
@@ -31,24 +31,37 @@ All the steps of the TBSS pipeline can be found at:
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/TBSS/UserGuide
 ----
 
-Step 0: Build DTI-TK files format tensors 
-        from the DTIFIT function output from FSL.
+Step 1
+------
+Convert the DTIFIT FSL output to the DTITK tensors
+file format.
 
-Step 1: Create a group specific DTI template with bootstrapping.
+Step 2
+------
+Compute a tensors template from a subset group of 
+subjects. This step increase in time with the number
+of subject.
 
-Step 3: Project all controls in the template space with a final voxels
-        size of 1mm3
-        
-TBSS template preparation
------
-Step 4: Generate the population specific template with the isotropic 
-        1 mm3 spacing from the normalized DTI data.
+Step 3
+------
+Warp all subject in the tensor template space 
+previously computed
 
-Step 5: Generate the FA map of the high resolution 
-        population specific DTI template
+Step 4
+------
+Generate a final refine template by taking
+the mean of all normalized tensors image 
+previously computed. 
 
-Step 6: Generate the white matter skeleton from 
-        the high resolution FA map of the DTI template.
+Step 5
+------
+On the final template, compute the 1mm3
+FA template map.
+
+Step 6
+------
+On the previously computed FA map, compute
+the skeleton of the major track.
 
 """
 # read subjects list
@@ -66,6 +79,12 @@ subset_of_controls = 12
 # Template output directory
 template_outdir = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/' \
                   'controls_dti_template'
+
+# Normalized tensors output directory
+normalized_tensors_outdir = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/normalized_tensors'
+
+# Final template output directory for the TBSS analysis
+final_high_res_template_outdir = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/final_template'
 
 """
 Convert DTIFIT fsl output to DTI-TK tensors file format.
@@ -111,28 +130,119 @@ with open(os.path.join(template_outdir, "cmd_create_template.txt"), 'r') as comm
     dtitk_create_template = command_txt.read()
 
 dtitk_create_template_process = Popen(dtitk_create_template.split(), stdout=PIPE)
-dtitk_create_template_output, dtitk_create_template_error = dtitk_create_template_process.communicate()
+dtitk_create_template_output, dtitk_create_template_error = \
+    dtitk_create_template_process.communicate()
 
 # Write command output
-with open(os.path.join(template_outdir, "output_create_template.txt"), 'r') as create_template_out:
+with open(os.path.join(template_outdir, "output_create_template.txt"), 'w') as create_template_out:
     create_template_out.write(dtitk_create_template_output.decode('utf-8'))
 
 """
-Warp all controls tensors in the template space
+Warp all controls tensors in the template space, with final resolution 
+of 1mm3 
 """
+# Loop over all controls subject
+for subject in subjects:
+    dtitk_register = ["python", os.path.join(pyconnectome_script,
+                                             "pyconnectome_dtitk_register"),
+                      "-t", os.path.join(tbss_directory, subject, subject,
+                                         "dtifit_" + subject + "_dtitk.nii.gz"),
+                      "-s", subject,
+                      "-e", os.path.join(template_outdir,
+                                         "mean_diffeomorphic_initial6.nii.gz"),
+                      "-o", normalized_tensors_outdir,
+                      "-b", os.path.join(template_outdir, "mask.nii.gz"),
+                      "-V 2"]
+    dtitk_register_process = Popen(dtitk_register, stdout=PIPE)
+    dtitk_register_output, dtitk_register_error = dtitk_register_process.communicate()
+
+"""
+Generate the population specific DTI template with
+isotropic 1mm3 spacing
+"""
+# Write down in a text file the path to the normalized
+# tensors for all controls
+with open(os.path.join(final_high_res_template_outdir,
+                       "subjects_normalized.txt"), "w") as tensors_path_file:
+    for subject in subjects:
+        tensors_path_file.write(os.path.join(normalized_tensors_outdir, subject,
+                                             "dtifit_" + subject + "_dtitk_diffeo.nii.gz"))
+        tensors_path_file.write("\n")
+# Full path to final tensor template to be written
+mean_final_high_res = os.path.join(final_high_res_template_outdir,
+                                   "mean_final_high_res.nii.gz")
+# Compute the final template with the TVMean command
+compute_final_template = ["TVMean",
+                          "-in", os.path.join(final_high_res_template_outdir,
+                                              "subjects_normalized.txt"),
+                          "-out", mean_final_high_res,
+                          "-type", "ORIGINAL",
+                          "-interp", "LEI"
+                          ]
+print("Computing the final tensor template with isotropic resolution...")
+compute_final_template_process = Popen(compute_final_template, stdout=PIPE)
+compute_final_template_output, compute_final_template_error = \
+    compute_final_template_process.communicate()
+
+# Write command output
+with open(os.path.join(final_high_res_template_outdir,
+                       "TVMean_output.txt"), "w") as TVMean_output:
+    TVMean_output.write(compute_final_template_output.decode('utf-8'))
+
+"""
+Compute the high resolution FA template map from
+the previously computed tensor template
+"""
+generate_FA_template = ["TVtool",
+                        "-in", mean_final_high_res,
+                        "-fa"]
+generate_FA_template_process = Popen(generate_FA_template, stdout=PIPE)
+generate_FA_template_output, generate_FA_template_error = \
+    generate_FA_template_process.communicate()
+# Write command output
+with open(os.path.join(final_high_res_template_outdir,
+                       "TVtool_FA_output.txt"), "w") as TVtool_output:
+    TVtool_output.write(compute_final_template_output.decode('utf-8'))
 
 
+"""
+Optional: Compute the RGB image from
+the final tensor template. Very convenient
+with ITK-SNAP viewer for example.
 
+"""
+generate_RGB_template = ["TVtool",
+                         "-in", mean_final_high_res,
+                         "-rgb"]
+generate_RGB_template_process = Popen(generate_RGB_template, stdout=PIPE)
+generate_RGB_template_output, generate_RGB_template_error = \
+    generate_RGB_template_process.communicate()
+# Write command output
+with open(os.path.join(final_high_res_template_outdir,
+                       "TVtool_RGB_output.txt"), "w") as TVtool_RGB_output:
+    TVtool_RGB_output.write(generate_RGB_template_output.decode('utf-8'))
 
+"""
+Compute the skeleton from
+the FA map template
 
+"""
+skeletonize_FA = ["tbss_skeleton",
+                  "-i", os.path.join(final_high_res_template_outdir,
+                                     "mean_final_high_res_fa.nii.gz"),
+                  "-o", os.path.join(final_high_res_template_outdir,
+                                     "mean_final_high_res_fa_skeleton.nii.gz")
+                  ]
+skeletonize_FA_process = Popen(skeletonize_FA, stdout=PIPE)
+skeletonize_FA_output, skeletonize_FA_error = \
+    skeletonize_FA_process.communicate()
+# Write command output
+with open(os.path.join(final_high_res_template_outdir,
+                       "tbss_skeleton_RGB_output.txt"), "w") as skeleton_output:
+    skeleton_output.write(skeletonize_FA_output.decode('utf-8'))
 
-
-
-
-
-
-
-
-
-
-
+"""
+End of the creation of the FA and corresponding skeleton template.
+The output of this script can now replace the standard templates provide by 
+the FSL software for the TBSS analysis.
+"""
