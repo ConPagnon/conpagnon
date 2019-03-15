@@ -16,9 +16,10 @@ the white matter skeleton based on the FA template. The FA template and
 the corresponding white matter skeleton can be directly use with
 the TBSS methodology.
 
-This code mostly use python wrapper's code around FSL and DTI-TK
-from A. Grigis (antoine.grigis@cea.fr). Please visit :
-https://github.com/neurospin/pyconnectome/tree/master/pyconnectome
+This code mostly use python wrapper's code around FSL and DTI-TK,
+some of A. Grigis (antoine.grigis@cea.fr), and some of mine. Please visit :
+https://github.com/neurospin/pyconnectome/tree/master/pyconnectome.
+
 
 All the steps for the creation of the template are done with the help
 of DTI-TK and can be found at:
