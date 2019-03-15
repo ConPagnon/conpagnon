@@ -34,7 +34,7 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/TBSS/UserGuide
 
 Step 1
 ------
-Convert the DTIFIT FSL output to the DTITK tensors
+Convert the DTIFIT FSL output to the DTI-TK tensors
 file format.
 
 Step 2
@@ -62,7 +62,7 @@ FA template map.
 Step 6
 ------
 On the previously computed FA map, compute
-the skeleton of the major track.
+the skeleton of major tracks.
 
 """
 # read subjects list
