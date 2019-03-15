@@ -68,9 +68,9 @@ the skeleton of the major track.
 subjects = list(pd.read_csv('/neurospin/grip/protocols/MRI/Ines_2018/controls_list.txt',
                             header=None)[0])
 # main TBSS analysis directory
-tbss_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/dtitk_preprocessing'
+tbss_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/dtitk_native_tensors'
 
-# PyConnectome script directory
+# PyConnectome script directory: Change according to you're installation !!
 pyconnectome_script = '/media/db242421/db242421_data/pyconnectome/pyconnectome/scripts'
 
 # Number of controls used for the template creation
