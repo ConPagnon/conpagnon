@@ -10,6 +10,7 @@ import warnings
 from nilearn.image import resample_to_img, load_img
 import numpy as np
 import nibabel as nb
+from pytictoc import TicToc
 """
 
 Goal
@@ -96,8 +97,10 @@ mask_filter = 'negative_*.nii.gz'
 FA_template = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/' \
               'final_template/mean_final_high_res_fa.nii.gz'
 
-
 for subject in subjects:
+    t = TicToc()
+    t.tic()
+    print("Registering FA for subject {} ...\n".format(subject))
     # Full path to the subject FA map
     subject_FA = os.path.join(fa_maps_root_directory, group_directory,
                               subject, fa_map_directory, 'dtifit_' + subject + '_FA.nii.gz')
@@ -187,7 +190,8 @@ for subject in subjects:
         # that this time, the template is the moving image, and the FA image
         # is the fixed image. The result we interested in, is the FA image
         # in the template space, this time stored in the file ending with
-        # inverseWarped.nii.gz.
+        # inverseWarped.nii.gz. The subject mask, is given by the -x
+        # input argument.
         ants_registration = [
             "antsRegistration",
             "--dimensionality", "3",
@@ -226,11 +230,17 @@ for subject in subjects:
         with open(os.path.join(subject_ants_output, subject + '_FA_register_ants_output.txt'), "w") as text_file:
             text_file.write(ants_registration_output.decode('utf-8'))
 
-        # Move the warped FA image to the root subject directory
+        # Move the warped FA image to the root subject directory. Note
+        # that we move the Inverse warped image, which is the FA image
+        # in the template space.
         warped_FA = os.path.join(subject_ants_output, subject + '_Template_InverseWarped.nii.gz')
         move_warped_FA = ["cp", warped_FA, os.path.join(fa_maps_root_directory, group_directory, subject,
                                                         subject + "_warped_FA.nii.gz")
                           ]
         move_warped_FA_process = Popen(move_warped_FA, stdout=PIPE)
         move_warped_FA_process_output, move_warped_FA_process_error = move_warped_FA_process.communicate()
-
+        t.toc()
+"""
+End of the scripts, all FA map are now registered to the
+mean FA template.
+"""
