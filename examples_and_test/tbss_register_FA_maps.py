@@ -79,16 +79,16 @@ the warped image at the root the of the subject folder.
 # root directory containing groups subject directory
 fa_maps_root_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/fa_map_registrations'
 # group directory name
-group_directory = 'patients'
+group_directory = 'controls'
 # FA map directory name
 fa_map_directory = 'dtifit'
 # text file containing subject identifier
-subjects_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/images/patients/patients_acm.txt'
+subjects_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/controls_list.txt'
 subjects = list(pd.read_csv(subjects_list_txt,
                             header=None)[0])
 # If you need to use a mask during registration, put True
 # and False instead
-use_mask = True
+use_mask = False
 # the mask should be in the subject directory,
 # alongside the folder containing the native FA map
 mask_filter = 'negative_*.nii.gz'
@@ -242,5 +242,6 @@ for subject in subjects:
         t.toc()
 """
 End of the scripts, all FA map are now registered to the
-mean FA template.
+mean FA template. The next step will be to properly prepare 
+the data for the statistical analysis with the FSL software.
 """
