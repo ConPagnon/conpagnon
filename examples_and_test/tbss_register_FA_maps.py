@@ -158,6 +158,9 @@ for subject in subjects:
         move_warped_FA = ["cp", warped_FA, os.path.join(fa_maps_root_directory, group_directory, subject,
                                                         subject + "_warped_FA.nii.gz")
                           ]
+
+        move_warped_FA_process = Popen(move_warped_FA, stdout=PIPE)
+        move_warped_FA_process_output, move_warped_FA_process_error = move_warped_FA_process.communicate()
     else:
         # Fetch the subject mask
         list_of_mask = glob.glob(os.path.join(fa_maps_root_directory, group_directory,
