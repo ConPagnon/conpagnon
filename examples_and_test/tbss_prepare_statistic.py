@@ -4,11 +4,51 @@
  """
 import os
 import pandas as pd
-from subprocess import Popen, PIPE, call
-
+from subprocess import Popen, PIPE
+from shutil import rmtree
 """
 This code prepare the data for the voxelswise 
 analysis according to the TBSS pipeline.
+
+Step 0
+------
+We create a directory called 'stats'
+
+Step 1
+------
+Following the TBSS UserGuide, we merge
+all normalized FA map into one 4D file, and 
+call it all_FA.nii.gz
+
+Step 2
+------
+We copy and rename into the stats directory the
+previously computed FA skeleton. We call it
+mean_FA_skeleton.nii.gz.
+
+Step 3
+------
+We copy and rename into the stats directory the
+previously computed FA template. We call it
+mean_FA.nii.gz.
+
+Step 4
+------
+We compute a binary mask volume for
+all_FA.nii.gz and call it mean_FA_mask.nii.gz
+
+Step 5
+------
+With the help of FSLEYES we overlay the mean 
+skeleton onto the FA template, and choose a good
+threshold for the mean skeleton. In this, script
+as an example it's 0.2.
+
+Step 6
+------
+With the previously chosen threshold, we project each
+individual FA map onto the mean thresholded skeleton.
+That step create the file all_FA_skeletonised.nii.gz
 
 """
 
@@ -29,6 +69,9 @@ FA_skeleton = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/' \
 FA_template = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/' \
               'final_template/mean_final_high_res_fa.nii.gz'
 
+# Threshold for the skeleton
+threshold_skeleton = 0.3
+
 # Create a directory called stats
 list_of_directory_in_root = os.listdir(root_directory)
 if 'stats' not in list_of_directory_in_root:
@@ -36,6 +79,7 @@ if 'stats' not in list_of_directory_in_root:
 else:
     # Clear the existing directory to avoid confusion
     # with old file
+    rmtree(path=os.path.join(root_directory, 'stats'), ignore_errors=True)
     os.rmdir(os.path.join(root_directory, 'stats'))
     # Create the desired directory
     os.mkdir(os.path.join(root_directory, 'stats'))
@@ -86,14 +130,14 @@ plot_FA_skeleton = ["fsleyes",
                     os.path.join(stats_directory, 'all_FA.nii.gz'),
                     "-dr", "0 0.8",
                     os.path.join(stats_directory, 'mean_FA_skeleton.nii.gz'),
-                    "-dr", "0.2 0.8",
+                    "-dr", "{} 0.8".format(threshold_skeleton),
                     "-cm", "Green"]
 plot_FA_skeleton_command = Popen(plot_FA_skeleton, stdout=PIPE)
 plot_FA_skeleton_output, plot_FA_skeleton_error = plot_FA_skeleton_command.communicate()
 
 # Threshold the FA skeleton, and project the FA data onto
 # the mean FA skeleton: here, the threshold is 0.2
-tbss_4_prestats = ['cd {} && tbss_4_prestats 0.2'.format(root_directory)]
+tbss_4_prestats = ['cd {} && tbss_4_prestats {}'.format(root_directory, threshold_skeleton)]
 tbss_4_prestats_command = Popen(tbss_4_prestats, shell=True, stdout=PIPE)
 tbss_4_prestats_output, tbss_4_prestats_error = tbss_4_prestats_command.communicate()
 

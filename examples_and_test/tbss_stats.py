@@ -39,7 +39,7 @@ FA_template = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/mean_FA.nii.g
 all_lesions_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_lesions'
 
 for subject in subjects:
-    print(subject)
+    print('Projection lesion mask in template space for subject {}'.format(subject))
     # Collapsed the affine+Rigid transform with
     # the non linear field into one transform
     subject_ants_output = os.path.join(lesions_root_directory, subject, 'ants_output')
@@ -73,11 +73,11 @@ for subject in subjects:
                                   "-t", "{}".format(non_linear_warp),
                                   "-n", "NearestNeighbor",
                                   "-i", "{}".format(os.path.join(lesions_root_directory, subject,
-                                                            'resampled_' + subject + '_lesion_mask.nii.gz')),
+                                                                 'resampled_' + subject + '_lesion_mask.nii.gz')),
                                   "-o", "{}".format(os.path.join(all_lesions_directory,
                                                                  subject + '_warped_lesion.nii.gz'))
                                   ]
 
-    apply_transform_to_lesion_process = Popen(apply_transform_to_lesion, stdout=PIPE)
+    apply_transform_to_lesion_process = Popen(apply_transform_to_lesion_, stdout=PIPE)
     apply_transform_to_lesion_output, apply_transform_to_lesion_error = \
         apply_transform_to_lesion_process.communicate()
