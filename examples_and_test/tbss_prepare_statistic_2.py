@@ -5,8 +5,9 @@
 import os
 import pandas as pd
 from subprocess import Popen, PIPE
-from nilearn.image import load_img, resample_to_img
+from nilearn.image import load_img, resample_to_img, new_img_like
 import nibabel as nb
+import numpy as np
 """
 This script performs the statistical 
 analysis for the TBSS pipeline. 
@@ -24,12 +25,23 @@ from FSL.
 
 """
 
+# Warped FA map root directory
+FA_map_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/fa_map_registrations'
+
 # lesions root directory
 lesions_root_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/' \
                           'fa_map_registrations/patients'
 # patients list in a text file
 subjects_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/images/patients/patients_acm.txt'
 subjects = list(pd.read_csv(subjects_list_txt, header=None)[0])
+
+# controls subject list
+controls_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/controls_list.txt'
+controls = list(pd.read_csv(controls_list_txt, header=None)[0])
+
+# patients subject list
+patients_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/images/patients/patients_acm.txt'
+patients = list(pd.read_csv(patients_list_txt, header=None)[0])
 
 # Full path to the high resolution FA template
 FA_template = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/mean_FA.nii.gz'
@@ -81,3 +93,19 @@ for subject in subjects:
     apply_transform_to_lesion_process = Popen(apply_transform_to_lesion_, stdout=PIPE)
     apply_transform_to_lesion_output, apply_transform_to_lesion_error = \
         apply_transform_to_lesion_process.communicate()
+
+# Setup mask for the controls group.
+# For controls, we do not need to mask any data, but
+# to respect the dimension of design matrix we need
+# to create mask for controls too. It's simply an empty
+# image, fill by voxels with 1 as values.
+for control in controls:
+    # Read the corresponding FA image to get
+    # dimension and resolution
+    control_FA = load_img(os.path.join(FA_map_directory, 'controls', control,
+                                       control + '_warped_FA.nii.gz'))
+    control_mask = new_img_like(ref_niimg=control_FA, data=np.zeros(control_FA.shape),
+                                affine=control_FA.affine)
+    nb.save(control_mask, filename=os.path.join(
+        '/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_controls_mask', control + '_mask.nii.gz'))
+
