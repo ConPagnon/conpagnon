@@ -243,10 +243,10 @@ shutil.copyfile(mean_FA_skeleton_mask_path,
 shutil.copyfile(mean_FA_path,
                 os.path.join(stats_results_directory, "mean_FA.nii.gz"))
 # Choose the output basename of the study
-tbss_output_basename = "tbss_language_profile"
+tbss_output_basename = "tbss_patients_controls"
 # Set the mask option in randomise (check the setup_mask command
 # log file to see an example.
-vxl = str(-4)
+vxl = str(-3)
 vxf = os.path.join(stats_results_directory, "design_mask.nii.gz")
 # Set the number of permutations
 n_permutations = str(5000)
