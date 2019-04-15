@@ -50,6 +50,7 @@ tbss_fill_output, tbss_fill_error = tbss_fill_command.communicate()
 display_results = ["fsleyes",
                    mean_FA_image,
                    "-dr", mean_FA_image_range,
+                   mean_FA_skeleton_image,
                    "-cm", mean_FA_skeleton_color,
                    "-dr", mean_FA_skeleton_range,
                    tbss_fill_output_image,
