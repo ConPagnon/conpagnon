@@ -29,11 +29,11 @@ prepare_stats_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/prepare
 all_subject_mask_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_subjects_mask"
 # Your're statistical analysis directory
 # Advise: on directory per study.
-stats_results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/Groupe_patients_controls"
+stats_results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls"
 os.mkdir(stats_results_directory)
 # subjects text file : note that the NIP should in the same order of the FA image
 # in the all_FA.nii.gz file !
-subjects_list_txt = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_subjects.txt"
+subjects_list_txt = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls.txt"
 subjects = list(pd.read_csv(subjects_list_txt, header=None)[0])
 
 # Excel file path to the cohort clinical information.
@@ -152,7 +152,7 @@ line, correspond to one contrast.
 At the end of this section, we have a clean design matrix
 in the .mat format, and a contrast file in the .con  format.
 """
-design_matrix = patsy.dmatrix('0 + C({})'.format("+".join(variables_in_model)), data=clinical_data,
+design_matrix = patsy.dmatrix('C({}) - 1'.format("+".join(variables_in_model)), data=clinical_data,
                               return_type="dataframe")
 design_matrix.to_csv(os.path.join(prepare_stats_directory, "design_matrix.txt"), sep="\t",
                      index=False, header=False)
@@ -243,13 +243,13 @@ shutil.copyfile(mean_FA_skeleton_mask_path,
 shutil.copyfile(mean_FA_path,
                 os.path.join(stats_results_directory, "mean_FA.nii.gz"))
 # Choose the output basename of the study
-tbss_output_basename = "tbss_patients_controls"
+tbss_output_basename = "LD_controls"
 # Set the mask option in randomise (check the setup_mask command
 # log file to see an example.
 vxl = str(-3)
 vxf = os.path.join(stats_results_directory, "design_mask.nii.gz")
 # Set the number of permutations
-n_permutations = str(5000)
+n_permutations = str(10000)
 
 # Call randomise
 randomise = ["randomise",
