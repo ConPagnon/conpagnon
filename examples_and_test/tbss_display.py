@@ -17,30 +17,32 @@ the threshold you used
 
 """
 from subprocess import Popen, PIPE
+import os
 
 # Set path for plotting
-
+results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/Groupe_patients_controls"
 # The corrected p value
-corrected_p_values_image = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/language_status/" \
-                           "tbss_language_profile_tfce_corrp_tstat1.nii.gz"
+corrected_p_values_image = os.path.join(results_directory,
+                                        "tbss_language_profile_tfce_corrp_tstat2.nii.gz")
+
 # the thicken corrected p value image
 # The FA template
-mean_FA_image = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/language_status/mean_FA.nii.gz"
+mean_FA_image = os.path.join(results_directory, "mean_FA.nii.gz")
 mean_FA_image_range = "0 0.6"
 # The FA template skeleton
 # The threshold you used in the analysis
 skeleton_threshold = str(0.3)
-mean_FA_skeleton_image = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/language_status/mean_FA_skeleton.nii.gz"
+mean_FA_skeleton_image = os.path.join(results_directory, "mean_FA_skeleton.nii.gz")
 mean_FA_skeleton_color = "Green"
 mean_FA_skeleton_range = "{} 0.7".format(skeleton_threshold)
 
 # Filled corrected p values
 tbss_filled_image_color_map = "Red-Yellow"
-tbss_fill_output_image = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/language_status/tbss_fill.nii.gz"
+tbss_fill_output_image = os.path.join(results_directory, "tbss_fill.nii.gz")
 
 tbss_fill = ["tbss_fill",
              corrected_p_values_image,
-             "0.95",
+             "0.99",
              mean_FA_image,
              tbss_fill_output_image
              ]

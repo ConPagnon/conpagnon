@@ -55,7 +55,7 @@ That step create the file all_FA_skeletonised.nii.gz
 # root directory
 root_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines'
 # subject order list
-all_subjects_txt = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_subjects.txt'
+all_subjects_txt = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls.txt'
 subjects = list(pd.read_csv(all_subjects_txt, header=None)[0])
 
 # Warped FA images directory

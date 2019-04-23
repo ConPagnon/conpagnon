@@ -32,7 +32,7 @@ FA_map_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/fa_map_registr
 lesions_root_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/' \
                           'fa_map_registrations/patients'
 # patients list in a text file
-subjects_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/images/patients/patients_acm.txt'
+subjects_list_txt = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/LG.txt'
 subjects = list(pd.read_csv(subjects_list_txt, header=None)[0])
 
 # controls subject list
@@ -40,7 +40,7 @@ controls_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/controls_list.txt'
 controls = list(pd.read_csv(controls_list_txt, header=None)[0])
 
 # patients subject list
-patients_list_txt = '/neurospin/grip/protocols/MRI/Ines_2018/images/patients/patients_acm.txt'
+patients_list_txt = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/LG.txt'
 patients = list(pd.read_csv(patients_list_txt, header=None)[0])
 
 # Full path to the high resolution FA template
