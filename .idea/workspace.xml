@@ -1,0 +1,1354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched." />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/ConPagnon$cpm_mmx.coverage" NAME="cpm_mmx Coverage Results" MODIFIED="1545229064594" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples_and_test" />
+    <SUITE FILE_PATH="coverage/ConPagnon$connectivity_assymetry.coverage" NAME="connectivity_assymetry Coverage Results" MODIFIED="1541757963596" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples_and_test" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="ConPagnon" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="138">
+              <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
+              <folding>
+                <element signature="e#57#66#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2121">
+              <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
+              <folding>
+                <element signature="e#57#66#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="453">
+              <caret line="268" selection-start-line="246" selection-end-line="268" />
+              <folding>
+                <element signature="e#57#76#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="14" column="60" selection-start-line="14" selection-start-column="60" selection-end-line="14" selection-end-column="60" />
+              <folding>
+                <element signature="e#159#168#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-303">
+              <caret line="25" column="80" selection-start-line="25" selection-start-column="80" selection-end-line="25" selection-end-column="80" />
+              <folding>
+                <element signature="e#441#475#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Unit Test" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>continuous</find>
+      <find>t_test</find>
+      <find>groupby</find>
+      <find>ipsilesional</find>
+      <find>Contralesional</find>
+      <find>ipsi</find>
+      <find>left</find>
+      <find>PAL</find>
+      <find>display</find>
+      <find>plt.scatter</find>
+      <find>view_m</find>
+      <find>save_as_html</find>
+      <find>graph_draw</find>
+      <find>draw_h</find>
+      <find>import cairocffi</find>
+      <find>cairocffi</find>
+      <find>shortest</find>
+      <find>shortest_path</find>
+      <find>GraphH</find>
+      <find>_beta</find>
+      <find>pearsonr</find>
+      <find>_betai</find>
+      <find>PhaseEncodingDirectio</find>
+      <find>'t1_' + subject + '.nii.gz'</find>
+      <find>outputs[&quot;subjects_file&quot;]</find>
+      <find>skeleton</find>
+      <find>tract_segmentation</find>
+      <find>track</find>
+      <find>iFOD</find>
+      <find>stats_directory</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>training_connectivity_matrices</replace>
+      <replace>null_min_and_max_distribution</replace>
+      <replace>p_positive_features_significant</replace>
+      <replace>p_value_positive_weights</replace>
+      <replace>pdf_report_filename</replace>
+      <replace>std_intra_estimation</replace>
+      <replace>intra_network_distribution_parameters</replace>
+      <replace>ipsilesional</replace>
+      <replace>contralesional_intra_network_connectivity_dict</replace>
+      <replace>network_model_tukey_analysis</replace>
+      <replace>models</replace>
+      <replace>all_models_f_test_p_values</replace>
+      <replace>whole_brain_mean_connectivity_parameters</replace>
+      <replace>features_labels</replace>
+      <replace>groups</replace>
+      <replace>Right</replace>
+      <replace>left</replace>
+      <replace>right</replace>
+      <replace>template</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/classification_example.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/one_vs_the_rest_features_identification.py" />
+        <option value="$PROJECT_DIR$/plotting/display.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" />
+        <option value="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" />
+        <option value="/media/db242421/db242421_data/Script_Python/Correction_spatio_temporelle/STRmvt_1.py" />
+        <option value="$PROJECT_DIR$/machine_learning/features_indentification.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/slice_timing_and_motion.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/test_mvt_JD.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/test2.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/build_results_tables.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/test.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/canonical_correlation_analysis.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/ROI_damaged_by_stroke.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/illustration_lesion_mapping.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/illustration_atlas_avcnn.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tmp.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/memomix_ab.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/correlation_connectivity_scores.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/times_series_extraction.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/build_connectivity_matrices.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/language_study.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/language_study_lesion_regressed.py" />
+        <option value="$PROJECT_DIR$/connectivity_statistics/parametric_tests.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/resting_state_topiramate.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" />
+        <option value="/volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/graph_tool/draw/cairo_draw.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/predict_the_behavior.py" />
+        <option value="$PROJECT_DIR$/machine_learning/predict_scores.py" />
+        <option value="$PROJECT_DIR$/machine_learning/scores_predictions.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/resample_lesion.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py" />
+        <option value="$PROJECT_DIR$/tbss_stats.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_stats.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/dwi_processing.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_display.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2130" />
+    <option name="y" value="24" />
+    <option name="width" value="1916" />
+    <option name="height" value="1005" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
+              <item name="sphinx" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="t_and_p_values_barplot&#9;null&#9;null" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python&#10;TEXT" />
+    <property name="last_opened_file_path" value="/media/db242421/db242421_data/pyconnectome" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/examples_and_test" />
+      <recent name="$PROJECT_DIR$/machine_learning/cythonized_version" />
+      <recent name="$PROJECT_DIR$/machine_learning" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.dti_prepoc">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="connectivity_assymetry" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="cpm_mmx" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="dti_prepoc" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="features_identification_test_file" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.connectivity_assymetry" />
+      <item itemvalue="Python.cpm_mmx" />
+      <item itemvalue="Python.dti_prepoc" />
+      <item itemvalue="Python.features_identification_test_file" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.dti_prepoc" />
+        <item itemvalue="Python.cpm_mmx" />
+        <item itemvalue="Python.connectivity_assymetry" />
+        <item itemvalue="Python.features_identification_test_file" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="" />
+      <created>1524129839522</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1524129839522</updated>
+      <workItem from="1542990687745" duration="235000" />
+      <workItem from="1543220856390" duration="27000" />
+      <workItem from="1543220908526" duration="2503000" />
+      <workItem from="1543223443604" duration="44237000" />
+      <workItem from="1543416255255" duration="46456000" />
+      <workItem from="1543929165775" duration="6451000" />
+      <workItem from="1544085561856" duration="925000" />
+      <workItem from="1544087165845" duration="6693000" />
+      <workItem from="1544107396467" duration="1207000" />
+      <workItem from="1544108680032" duration="2100000" />
+      <workItem from="1544174295200" duration="22898000" />
+      <workItem from="1544439599062" duration="93000" />
+      <workItem from="1544439719919" duration="88563000" />
+      <workItem from="1544800165300" duration="12079000" />
+      <workItem from="1546506498641" duration="170000" />
+      <workItem from="1546506762288" duration="168417000" />
+      <workItem from="1547483841088" duration="302000" />
+      <workItem from="1547542176038" duration="105727000" />
+      <workItem from="1548152988905" duration="15043000" />
+      <workItem from="1548255614438" duration="123000" />
+      <workItem from="1548255763960" duration="27277000" />
+      <workItem from="1548663234379" duration="19000" />
+      <workItem from="1548663283696" duration="57903000" />
+      <workItem from="1549268988294" duration="38000" />
+      <workItem from="1549269083981" duration="8360000" />
+      <workItem from="1549279469245" duration="7197000" />
+      <workItem from="1549353621226" duration="2126000" />
+      <workItem from="1549356262547" duration="12101000" />
+      <workItem from="1549381511009" duration="6799000" />
+      <workItem from="1549441901435" duration="15448000" />
+      <workItem from="1549878492070" duration="7745000" />
+      <workItem from="1549893043692" duration="8051000" />
+      <workItem from="1549970803522" duration="193000" />
+      <workItem from="1549971035880" duration="12609000" />
+      <workItem from="1550217586088" duration="1251000" />
+      <workItem from="1550237851420" duration="2510000" />
+      <workItem from="1550504310681" duration="5699000" />
+      <workItem from="1550743853152" duration="5406000" />
+      <workItem from="1550763306981" duration="14640000" />
+      <workItem from="1551084594155" duration="866000" />
+      <workItem from="1551262595429" duration="12469000" />
+      <workItem from="1551342169737" duration="10289000" />
+      <workItem from="1551772123018" duration="24000" />
+      <workItem from="1551772225610" duration="10580000" />
+      <workItem from="1551798007691" duration="24135000" />
+      <workItem from="1552380514784" duration="1751000" />
+      <workItem from="1552384053837" duration="35850000" />
+      <workItem from="1552565083522" duration="12732000" />
+      <workItem from="1553590792972" duration="168000" />
+      <workItem from="1553590984970" duration="51381000" />
+      <workItem from="1554189464102" duration="82000" />
+      <workItem from="1554189673205" duration="51000" />
+      <workItem from="1554189777515" duration="716000" />
+      <workItem from="1554190526390" duration="250000" />
+      <workItem from="1554190820222" duration="4000" />
+      <workItem from="1554191105573" duration="70000" />
+      <workItem from="1554191231639" duration="25739000" />
+      <workItem from="1554711241375" duration="55000" />
+      <workItem from="1554711333736" duration="511000" />
+      <workItem from="1554711871177" duration="43820000" />
+      <workItem from="1555311713429" duration="66000" />
+      <workItem from="1555311831557" duration="69166000" />
+    </task>
+    <task id="LOCAL-00168" summary="TODO: Correct the sign in the plotting.">
+      <created>1548406687011</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
+      <option name="project" value="LOCAL" />
+      <updated>1548406687011</updated>
+    </task>
+    <task id="LOCAL-00169" summary="Beginning pipeline DTI preprocessing.">
+      <created>1548433905808</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1548433905808</updated>
+    </task>
+    <task id="LOCAL-00170" summary="Almost finish pre-processing for the control population. &#10;Have to apply the displacement field to the original DTI data, a little&#10;bit tricky because ApplyTransform doesn't manage a 3D warp field and 4D&#10;target.">
+      <created>1549025687584</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
+      <option name="project" value="LOCAL" />
+      <updated>1549025687585</updated>
+    </task>
+    <task id="LOCAL-00171" summary="Finish the pipeline.">
+      <created>1549032715620</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1549032715620</updated>
+    </task>
+    <task id="LOCAL-00172" summary="Clean Typo.">
+      <created>1549038467548</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1549038467548</updated>
+    </task>
+    <task id="LOCAL-00173" summary="Update path">
+      <created>1549042738251</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1549042738251</updated>
+    </task>
+    <task id="LOCAL-00174" summary="Add warping on a resampled T1 template.&#10;Clean the code.">
+      <created>1549300674883</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
+      <option name="project" value="LOCAL" />
+      <updated>1549300674884</updated>
+    </task>
+    <task id="LOCAL-00175" summary="Clean error on ApplyTransform.&#10;Clean Typo">
+      <created>1549365387548</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
+      <option name="project" value="LOCAL" />
+      <updated>1549365387549</updated>
+    </task>
+    <task id="LOCAL-00176" summary="Add dtifit to check results of pre processing.&#10;Add --repol options to replace the outlier in eddy_openmp and advised&#10;--slmlinear options for b=1000 values.&#10;Clean the code">
+      <created>1549387516644</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1549387516645</updated>
+    </task>
+    <task id="LOCAL-00177" summary="14 core for ants">
+      <created>1549387805956</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1549387805956</updated>
+    </task>
+    <task id="LOCAL-00178" summary="14 core for ants">
+      <created>1549388166430</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1549388166431</updated>
+    </task>
+    <task id="LOCAL-00179" summary="Bug correction: file not found because a subject was hard written in &#10;a path and wasn't updated  in the loop">
+      <created>1549453427343</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1549453427344</updated>
+    </task>
+    <task id="LOCAL-00180" summary="Begin to subject 8">
+      <created>1549464647137</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
+      <option name="project" value="LOCAL" />
+      <updated>1549464647138</updated>
+    </task>
+    <task id="LOCAL-00181" summary="Begin to subject 25">
+      <created>1549526742536</created>
+      <option name="number" value="00181" />
+      <option name="presentableId" value="LOCAL-00181" />
+      <option name="project" value="LOCAL" />
+      <updated>1549526742537</updated>
+    </task>
+    <task id="LOCAL-00182" summary="Extend bounding box around EPI images&#10;Performs antsRegistration constrained in phase encoding direction.">
+      <created>1549988059357</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1549988059358</updated>
+    </task>
+    <task id="LOCAL-00183" summary="Put good subject lists nip.">
+      <created>1549989215946</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
+      <option name="project" value="LOCAL" />
+      <updated>1549989215946</updated>
+    </task>
+    <task id="LOCAL-00184" summary="Begin process to subject 23">
+      <created>1550217872028</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
+      <option name="project" value="LOCAL" />
+      <updated>1550217872028</updated>
+    </task>
+    <task id="LOCAL-00185" summary="Loop over all controls subjects">
+      <created>1550575265309</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
+      <option name="project" value="LOCAL" />
+      <updated>1550575265310</updated>
+    </task>
+    <task id="LOCAL-00186" summary="Add BSpline when Applying Transformation.">
+      <created>1551262774464</created>
+      <option name="number" value="00186" />
+      <option name="presentableId" value="LOCAL-00186" />
+      <option name="project" value="LOCAL" />
+      <updated>1551262774465</updated>
+    </task>
+    <task id="LOCAL-00187" summary="Update pre-processing.&#10;Create a code just to apply transform.&#10;Push code to download image from the Trio machine.">
+      <created>1551344898267</created>
+      <option name="number" value="00187" />
+      <option name="presentableId" value="LOCAL-00187" />
+      <option name="project" value="LOCAL" />
+      <updated>1551344898270</updated>
+    </task>
+    <task id="LOCAL-00188" summary="Polish code to download from Trio database">
+      <created>1551346202891</created>
+      <option name="number" value="00188" />
+      <option name="presentableId" value="LOCAL-00188" />
+      <option name="project" value="LOCAL" />
+      <updated>1551346202891</updated>
+    </task>
+    <task id="LOCAL-00189" summary="Remove log file.">
+      <created>1551349134072</created>
+      <option name="number" value="00189" />
+      <option name="presentableId" value="LOCAL-00189" />
+      <option name="project" value="LOCAL" />
+      <updated>1551349134072</updated>
+    </task>
+    <task id="LOCAL-00190" summary="DWI preprocessing for patients.">
+      <created>1551355003229</created>
+      <option name="number" value="00190" />
+      <option name="presentableId" value="LOCAL-00190" />
+      <option name="project" value="LOCAL" />
+      <updated>1551355003230</updated>
+    </task>
+    <task id="LOCAL-00191" summary="Update path">
+      <created>1551355232890</created>
+      <option name="number" value="00191" />
+      <option name="presentableId" value="LOCAL-00191" />
+      <option name="project" value="LOCAL" />
+      <updated>1551355232890</updated>
+    </task>
+    <task id="LOCAL-00192" summary="Correct typo in the antsRegistration call. tested in one subjects, &#10;everything seems fine.">
+      <created>1551784184710</created>
+      <option name="number" value="00192" />
+      <option name="presentableId" value="LOCAL-00192" />
+      <option name="project" value="LOCAL" />
+      <updated>1551784184712</updated>
+    </task>
+    <task id="LOCAL-00193" summary="Fixed Typo when applying transform from registration.&#10;Update path to Ines directory.">
+      <created>1551786529923</created>
+      <option name="number" value="00193" />
+      <option name="presentableId" value="LOCAL-00193" />
+      <option name="project" value="LOCAL" />
+      <updated>1551786529924</updated>
+    </task>
+    <task id="LOCAL-00194" summary="Correct typo for lesion path file.">
+      <created>1551786652765</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
+      <option name="project" value="LOCAL" />
+      <updated>1551786652765</updated>
+    </task>
+    <task id="LOCAL-00195" summary="Loop from sub 14">
+      <created>1551861705235</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
+      <option name="project" value="LOCAL" />
+      <updated>1551861705236</updated>
+    </task>
+    <task id="LOCAL-00196" summary="Correct loop in dti_preproc_patients.py&#10;Add lesion mask resampling to native T1 script.">
+      <created>1552060935075</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
+      <option name="project" value="LOCAL" />
+      <updated>1552060935075</updated>
+    </task>
+    <task id="LOCAL-00197" summary="Creation of the FA template of controls group based on wrappers from&#10;A. Grigis.">
+      <created>1552497921539</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
+      <option name="project" value="LOCAL" />
+      <updated>1552497921540</updated>
+    </task>
+    <task id="LOCAL-00198" summary="Finish the pipeline of template creation.&#10;Output of this code are the FA template, and corresponding &#10;skeleton.&#10;Polish the code.">
+      <created>1552643753736</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
+      <option name="project" value="LOCAL" />
+      <updated>1552643753738</updated>
+    </task>
+    <task id="LOCAL-00199" summary="Update path.">
+      <created>1552644051817</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
+      <option name="project" value="LOCAL" />
+      <updated>1552644051817</updated>
+    </task>
+    <task id="LOCAL-00200" summary="Update DOC.">
+      <created>1552644128442</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
+      <option name="project" value="LOCAL" />
+      <updated>1552644128442</updated>
+    </task>
+    <task id="LOCAL-00201" summary="Update DOC.">
+      <created>1552644224049</created>
+      <option name="number" value="00201" />
+      <option name="presentableId" value="LOCAL-00201" />
+      <option name="project" value="LOCAL" />
+      <updated>1552644224049</updated>
+    </task>
+    <task id="LOCAL-00202" summary="Update DOC.">
+      <created>1552644429418</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
+      <option name="project" value="LOCAL" />
+      <updated>1552644429419</updated>
+    </task>
+    <task id="LOCAL-00203" summary="First commit for tbss_register_FA_maps.py: register the output of&#10;FSL DTIFIT to the population template created by the script &#10;tbss_create_controls_template.py. &#10;Tested on one control, and one patient. Seem to work so far.">
+      <created>1553686837367</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1553686837369</updated>
+    </task>
+    <task id="LOCAL-00204" summary="Clean Code, add comment">
+      <created>1553698758660</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1553698758660</updated>
+    </task>
+    <task id="LOCAL-00205" summary="Code run for patients without error. Launch for the &#10;controls group.">
+      <created>1553702249883</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
+      <option name="project" value="LOCAL" />
+      <updated>1553702249883</updated>
+    </task>
+    <task id="LOCAL-00206" summary="Add command to move warped FA for control.">
+      <created>1553781644704</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
+      <option name="project" value="LOCAL" />
+      <updated>1553781644705</updated>
+    </task>
+    <task id="LOCAL-00207" summary="tbss prepare statistic code: prepare the statistical analysis.">
+      <created>1553865405102</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
+      <option name="project" value="LOCAL" />
+      <updated>1553865405103</updated>
+    </task>
+    <task id="LOCAL-00208" summary="tbss prepare statistic : bug for antsApplyTransform ...">
+      <created>1553875633863</created>
+      <option name="number" value="00208" />
+      <option name="presentableId" value="LOCAL-00208" />
+      <option name="project" value="LOCAL" />
+      <updated>1553875633863</updated>
+    </task>
+    <task id="LOCAL-00209" summary="Multiple updates....">
+      <created>1554305149090</created>
+      <option name="number" value="00209" />
+      <option name="presentableId" value="LOCAL-00209" />
+      <option name="project" value="LOCAL" />
+      <updated>1554305149092</updated>
+    </task>
+    <task id="LOCAL-00210" summary="TBSS almost finish...TIRED.&#10;Antoine preprocessing launched.">
+      <created>1555085849973</created>
+      <option name="number" value="00210" />
+      <option name="presentableId" value="LOCAL-00210" />
+      <option name="project" value="LOCAL" />
+      <updated>1555085849974</updated>
+    </task>
+    <task id="LOCAL-00211" summary="Small routine to plot in a simple way results of the TBSS analysis.">
+      <created>1555340635437</created>
+      <option name="number" value="00211" />
+      <option name="presentableId" value="LOCAL-00211" />
+      <option name="project" value="LOCAL" />
+      <updated>1555340635438</updated>
+    </task>
+    <task id="LOCAL-00212" summary="Correct smmal typo.">
+      <created>1555340870978</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
+      <option name="project" value="LOCAL" />
+      <updated>1555340870978</updated>
+    </task>
+    <task id="LOCAL-00213" summary="Compute statistic seem to work. I will have to change the way&#10;design matrix is computed to simplify contrast vector and &#10;interpretation.">
+      <created>1555340989103</created>
+      <option name="number" value="00213" />
+      <option name="presentableId" value="LOCAL-00213" />
+      <option name="project" value="LOCAL" />
+      <updated>1555340989103</updated>
+    </task>
+    <task id="LOCAL-00214" summary="Correct small typo.">
+      <created>1555341969515</created>
+      <option name="number" value="00214" />
+      <option name="presentableId" value="LOCAL-00214" />
+      <option name="project" value="LOCAL" />
+      <updated>1555341969515</updated>
+    </task>
+    <task id="LOCAL-00215" summary="Compute statistic for Left patients and controls group.">
+      <created>1556029877323</created>
+      <option name="number" value="00215" />
+      <option name="presentableId" value="LOCAL-00215" />
+      <option name="project" value="LOCAL" />
+      <updated>1556029877324</updated>
+    </task>
+    <task id="LOCAL-00216" summary="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched.">
+      <created>1556031472078</created>
+      <option name="number" value="00216" />
+      <option name="presentableId" value="LOCAL-00216" />
+      <option name="project" value="LOCAL" />
+      <updated>1556031472078</updated>
+    </task>
+    <option name="localTasksCounter" value="217" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1020396000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-1" y="-4" width="1922" height="1034" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49676377" visible="true" weight="0.24226254" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.2497332" />
+      <window_info id="Favorites" order="2" sideWeight="0.50323623" side_tool="true" weight="0.12753469" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286638" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.77520216" weight="0.24453694" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39910313" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286638" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.6851654" visible="true" weight="0.28340518" />
+      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.6613248" weight="0.2952586" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.30711207" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.31483456" side_tool="true" weight="0.3739224" />
+      <window_info anchor="bottom" id="Inspection Results" order="13" weight="0.3295964" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" sideWeight="0.49447078" weight="0.3244397" />
+      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.49473685" visible="true" weight="0.22091782" />
+      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.50526315" side_tool="true" visible="true" weight="0.22091782" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="DWI preprocessing for patients." />
+    <MESSAGE value="Update path" />
+    <MESSAGE value="Correct typo in the antsRegistration call. tested in one subjects, &#10;everything seems fine." />
+    <MESSAGE value="Fixed Typo when applying transform from registration.&#10;Update path to Ines directory." />
+    <MESSAGE value="Correct typo for lesion path file." />
+    <MESSAGE value="Loop from sub 14" />
+    <MESSAGE value="Correct loop in dti_preproc_patients.py&#10;Add lesion mask resampling to native T1 script." />
+    <MESSAGE value="Creation of the FA template of controls group based on wrappers from&#10;A. Grigis." />
+    <MESSAGE value="Finish the pipeline of template creation.&#10;Output of this code are the FA template, and corresponding &#10;skeleton.&#10;Polish the code." />
+    <MESSAGE value="Update path." />
+    <MESSAGE value="Update DOC." />
+    <MESSAGE value="First commit for tbss_register_FA_maps.py: register the output of&#10;FSL DTIFIT to the population template created by the script &#10;tbss_create_controls_template.py. &#10;Tested on one control, and one patient. Seem to work so far." />
+    <MESSAGE value="Clean Code, add comment" />
+    <MESSAGE value="Code run for patients without error. Launch for the &#10;controls group." />
+    <MESSAGE value="Add command to move warped FA for control." />
+    <MESSAGE value="tbss prepare statistic code: prepare the statistical analysis." />
+    <MESSAGE value="tbss prepare statistic : bug for antsApplyTransform ..." />
+    <MESSAGE value="Multiple updates...." />
+    <MESSAGE value="TBSS almost finish...TIRED.&#10;Antoine preprocessing launched." />
+    <MESSAGE value="Small routine to plot in a simple way results of the TBSS analysis." />
+    <MESSAGE value="Correct smmal typo." />
+    <MESSAGE value="Compute statistic seem to work. I will have to change the way&#10;design matrix is computed to simplify contrast vector and &#10;interpretation." />
+    <MESSAGE value="Correct small typo." />
+    <MESSAGE value="Compute statistic for Left patients and controls group." />
+    <MESSAGE value="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched." />
+    <option name="LAST_COMMIT_MESSAGE" value="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/scipy/stats/stats.py</url>
+          <line>159</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/svm/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="108" column="8" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/random_projection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-727">
+          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/predict_the_behavior.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-125">
+          <caret line="466" column="53" lean-forward="true" selection-start-line="466" selection-start-column="53" selection-end-line="466" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/machine_learning/features_indentification.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="151" selection-start-line="151" selection-end-line="158" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="62" column="21" selection-start-line="62" selection-start-column="21" selection-end-line="62" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../.PyCharm2018.3/system/python_stubs/2039683057/scipy/special/_ufuncs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="504" column="4" selection-start-line="504" selection-start-column="4" selection-end-line="504" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/scipy/stats/stats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="168" selection-start-line="168" selection-end-line="168" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/machine_learning/cpm_predict_behavior.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2420">
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/cpm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3133">
+          <caret line="163" column="99" selection-start-line="163" selection-start-column="99" selection-end-line="163" selection-end-column="99" />
+          <folding>
+            <element signature="e#0#48#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/joblib/parallel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2790">
+          <caret line="472" column="8" selection-start-line="472" selection-start-column="8" selection-end-line="472" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/svm/classes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="843" column="8" selection-start-line="843" selection-start-column="8" selection-end-line="843" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/mutual_info_.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-74">
+          <caret line="293" column="4" selection-start-line="293" selection-start-column="4" selection-end-line="293" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/univariate_selection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="669" lean-forward="true" selection-start-line="669" selection-end-line="669" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/model_selection/_split.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="33">
+          <caret line="1919" column="4" selection-start-line="1919" selection-start-column="4" selection-end-line="1919" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/model_selection/_search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="1066" column="8" selection-start-line="1066" selection-start-column="8" selection-end-line="1066" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/model_selection/_validation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="570" column="4" selection-start-line="570" selection-start-column="4" selection-end-line="570" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/machine_learning/CPM_method.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="72" column="39" selection-start-line="72" selection-start-column="39" selection-end-line="72" selection-end-column="39" />
+          <folding>
+            <element signature="e#566#584#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/decomposition/pca.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6532">
+          <caret line="301" column="8" selection-start-line="301" selection-start-column="8" selection-end-line="301" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-253">
+          <caret line="27" column="8" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/pipeline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="43" column="12" lean-forward="true" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/machine_learning/scores_predictions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
+          <folding>
+            <element signature="e#43#104#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="548" selection-start-line="548" selection-end-line="548" />
+          <folding>
+            <element signature="e#43#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nilearn/image/image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-91">
+          <caret line="933" column="4" selection-start-line="933" selection-start-column="4" selection-end-line="933" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../.PyCharm2018.3/system/python_stubs/2039683057/posix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="1311" column="4" selection-start-line="1311" selection-start-column="4" selection-end-line="1311" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1311">
+          <caret line="65" selection-start-line="65" selection-end-line="66" selection-end-column="65" />
+          <folding>
+            <element signature="e#315#324#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nilearn/image/resampling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-165">
+          <caret line="289" column="4" selection-start-line="289" selection-start-column="4" selection-end-line="289" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/numpy/lib/index_tricks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2089">
+          <caret line="478" selection-start-line="478" selection-end-line="478" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/resample_lesion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="42" lean-forward="true" selection-start-line="42" selection-end-line="42" />
+          <folding>
+            <element signature="e#87#107#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="23" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///media/db242421/db242421_data/pyconnectome/pyconnectome/scripts/pyconnectome_dtitk_import_tensors">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1564">
+          <caret line="77" column="22" lean-forward="true" selection-start-line="77" selection-start-column="22" selection-end-line="77" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///media/db242421/db242421_data/pyconnectome/pyconnectome/scripts/pyconnectome_dtitk_create_templates">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="156" lean-forward="true" selection-start-line="156" selection-end-line="156" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/typing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="2327" column="8" selection-start-line="2327" selection-start-column="8" selection-end-line="2327" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///media/db242421/db242421_data/pyconnectome/pyconnectome/tractography/dtitk_tbss.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-747">
+          <caret line="571" column="4" selection-start-line="571" selection-start-column="4" selection-end-line="571" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/h5py/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="35" selection-start-line="35" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nilearn/image/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="320" selection-start-line="320" selection-end-line="330" selection-end-column="113" />
+          <folding>
+            <element signature="e#41#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tbss_stats.py" />
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/dti_prepoc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2737">
+          <caret line="126" column="20" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="20" />
+          <folding>
+            <element signature="e#41#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/tractseg/python_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="41" column="54" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="473">
+          <caret line="96" selection-start-line="96" selection-end-line="97" selection-end-column="60" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/tractseg/libs/mrtrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1079">
+          <caret line="137" column="106" lean-forward="true" selection-start-line="137" selection-start-column="106" selection-end-line="137" selection-end-column="106" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/features_elimination.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="3" selection-end-column="4" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/patsy/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="14" column="60" selection-start-line="14" selection-start-column="60" selection-end-line="14" selection-end-column="60" />
+          <folding>
+            <element signature="e#159#168#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2121">
+          <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="268" selection-start-line="246" selection-end-line="268" />
+          <folding>
+            <element signature="e#57#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-303">
+          <caret line="25" column="80" selection-start-line="25" selection-start-column="80" selection-end-line="25" selection-end-column="80" />
+          <folding>
+            <element signature="e#441#475#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
