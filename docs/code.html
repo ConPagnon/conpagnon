@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Code Documentation &#8212; ConPagnon 2.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Project description" href="projectDescription.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-computing.compute_connectivity_matrices">
+<span id="code-documentation"></span><h1>Code Documentation<a class="headerlink" href="#module-computing.compute_connectivity_matrices" title="Permalink to this headline">¶</a></h1>
+<p>Created on Tue Sep 19 17:02:19 2017</p>
+<p>ComPagnon 2.0</p>
+<p>&#64;author: Dhaif BEKHA</p>
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.create_connectivity_mask">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">create_connectivity_mask</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#create_connectivity_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.create_connectivity_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create boolean mask for each subjects accounting
+for discarded roi if they exist.</p>
+<dl>
+<dt>time_series_dictionary: dict</dt><dd><dl>
+<dt>The time series dictionary structured as follow:</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groupes.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
+</ul>
+<p>subject time series in an array of shape (number of regions, number of time points)
+A key ‘discarded_rois’ containing an array of the index of ROIs
+where the corresponding labels is ‘void’. If no void labels is detected,
+then the array is empty.</p>
+</dd>
+</dl>
+</dd>
+<dt>groupes: list</dt><dd><p>The list of groups in the study.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output: dict</dt><dd><p>The same time series dictionary with a field called ‘masked_array’ for
+each subjects. A masked array is a boolean mask accounting for discarded
+rois, True for a discarded rois, and False elsewhere.</p>
+</dd>
+</dl>
+<p>If ‘discarded_rois’ is empty the mask is False at every position
+in the array.
+Almost all the operation in ConPagnon accounts for discarded rois with
+masked array via the dedicated module in NumPy.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.extract_sub_connectivity_matrices">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">extract_sub_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_connectivity_matrices</em>, <em>kinds</em>, <em>regions_index</em>, <em>vectorize=False</em>, <em>discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#extract_sub_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.extract_sub_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract sub matrices given region index.</p>
+<dl class="simple">
+<dt>subjects_connectivity_matrices: dict</dt><dd><p>The dictionnary containing for each subjects, for each group and kind, the
+connectivity matrices, of shape (n_features, n_features), and also
+the boolean mask array indicating the discarded roi.</p>
+</dd>
+<dt>kinds: list</dt><dd><p>The list of kinds.</p>
+</dd>
+<dt>regions_index: list, or 1D numpy.array of shape (number of indices, )</dt><dd><p>The list of index of regions you want to extract the connectivity. The
+region index also correspond to the index of ROIs in the 4D reference
+atlas of the study.</p>
+</dd>
+<dt>vectorize: bool, optional</dt><dd><p>If True, the extracted sub-matrices are vectorized, keeping
+the diagonal of the matrix, and the corresponding boolean
+mask.</p>
+</dd>
+<dt>discard_diagonal: bool, optional</dt><dd><p>If True, the diagonal is discard when the extracted connectivity matrices are vectorized.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output: dict</dt><dd><p>A dictionnary containing for each group and kinds, for each subject
+the extract sub-matrice, and the corresponding boolean mask.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.group_mean_connectivity">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">group_mean_connectivity</code><span class="sig-paren">(</span><em>subjects_connectivity_matrices</em>, <em>kinds</em>, <em>axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#group_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.group_mean_connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the mean connectivity matrices for each kind accounting for masked rois.</p>
+<p>Read the notes for the tangent space !</p>
+<dl>
+<dt>subjects_connectivity_matrices<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary organised as follow :</dt><dd><blockquote>
+<div><ul class="simple">
+<li><p>The first keys levels is the different groupes in the study.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is the different kind matrices</p></li>
+</ul>
+<p>for each subjects, a ‘discarded_rois’ key for the
+discarded rois array index, a ‘masked_array’ key containing
+the array of Boolean of True for the discarded_rois index, and False
+elsewhere.</p>
+</dd>
+</dl>
+</dd>
+<dt>kinds<span class="classifier">list</span></dt><dd><p>List of kinds you want the mean connectivity. Choices
+are ‘correlation’, ‘tangent’, ‘covariances’, ‘precision’, ‘partial 
+correlation’. Off course, the kind should be in the subjects_connectivity_matrices
+dictionnary.</p>
+</dd>
+<dt>axis<span class="classifier">int, optional</span></dt><dd><p>The axis you want to compute the mean, the subjects axis. Default is 0.</p>
+</dd>
+</dl>
+<dl>
+<dt>output<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groups in the study.</p></li>
+<li><p>The second keys levels is the mean connectivity matrices for</p></li>
+</ul>
+<p>the different kinds. They are array of shape (number of regions , number of regions)
+if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>individual_connectivity_matrices : These function returned a organised
+dictionnary containing the connectivity matrices for different kinds. This is
+simply the argument <cite>subjects_connectivity_matrices</cite></p>
+<p>When computing the mean, we account for the ‘discarded_rois’ entries. That mean 
+when the value is True in the masked_array, we discard the rois for the corresponding
+subject in the derivation of the mean.</p>
+<p>When I compute the mean in the tangent space, it’s a arithmetic mean. This
+mean matrix is in the tangent space, that is NOT in the same space as correlation or partial correlation matrix.
+Be careful with the interpretation !!</p>
+<p>That said, the tangent space is defined at ONE point in the manifold of symmetric matrices.
+This point is the geometric mean for the POOLED groups if multiple group are studied !</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.individual_connectivity_matrices">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">individual_connectivity_matrices</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>kinds</em>, <em>covariance_estimator</em>, <em>vectorize=False</em>, <em>discarding_diagonal=False</em>, <em>z_fisher_transform=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#individual_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.individual_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the connectivity matrices for groups of subjects</p>
+<p>This function computes connectivity matrices for different metrics.</p>
+<dl>
+<dt>time_series_dictionary<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groupes in the study.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
+</ul>
+<p>subject time series in an array of shape (number of regions, number of time points) 
+A key ‘discarded_rois’ containing an array of the index of ROIs 
+where the corresponding labels is ‘void’. If no void labels is detected,
+then the array should be empty.</p>
+</dd>
+</dl>
+</dd>
+<dt>kinds<span class="classifier">list</span></dt><dd><p>List of the different metrics you want to compute the 
+connectivity matrices. Choices are ‘tangent’, ‘correlation’,
+‘partial correlation’, ‘covariance’, ‘precision’.</p>
+</dd>
+<dt>covariance_estimator<span class="classifier">estimator object</span></dt><dd><p>All the kinds  are based on derivation of covariances matrices. You need
+to precise the estimator, see Notes.</p>
+</dd>
+<dt>vectorize<span class="classifier">bool, optional</span></dt><dd><p>If True, the connectivity matrices are reshape into 1D arrays of 
+the vectorized lower part of the matrices. Useful for classification,
+regression…
+Default is False.</p>
+</dd>
+<dt>z_fisher_transform: bool, optional</dt><dd><p>If True, the z fisher transform is apply to all
+the connectivity matrices. Default is False</p>
+</dd>
+<dt>discarding_diagonal: bool, optional</dt><dd><p>If True, the diagonal is discarded in
+the vectorization process. Default is False.</p>
+</dd>
+</dl>
+<dl>
+<dt>output<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groupes in the study.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels contain multiple keys : multiple</p></li>
+</ul>
+<p>kind keys containing the corresponding kind matrix.
+a ‘discarded_rois’ key containing the index of discarded
+rois.
+Finally you should find a ‘masked_array’ key : This key 
+contains a array of Boolean, shape (numbers of regions, numbers of regions)
+where the value are True for the index in ‘discarded_rois’ array, and False
+elsewhere. See Note for further details. The diagonal of the
+matrix are saved for each kind too in a dedicated field.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple">
+<dt>time_series_extraction, time_series_extraction_with_individual_atlases :</dt><dd><p>These are the functions which extract the time series according atlas
+regions and returned a structured dictionnary. 
+This is simply the argument <cite>time_series_dictionary</cite>.</p>
+</dd>
+</dl>
+<p>Covariances estimator are estimators compute in the scikit-learn library.
+Multiple estimator can be found in the module sklearn.covariance, popular
+choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
+<p>In the output dictionnary, each subjects have a masked array of boolean. The
+masked will be useful when computing the mean connectivity matrices, we will
+account the discarded rois in the derivation. For the statistical test you might
+want perform, it will be useful too, to discarded those rois. A True value is
+a masked roi, False elsewhere.</p>
+<p>For the tangent kind, the derivation of individual matrices need to be
+made on the POOLED GROUPS which is performed here.</p>
+<p>The derivation of connectivity matrices are based on Nilearn functions. I
+encourage the user to read the following docstring of important functions :
+nilearn.connectome.ConnectivityMeasure</p>
+<dl>
+<dt>For the use of tangent :</dt><dd><dl class="footnote brackets">
+<dt class="label" id="id1"><span class="brackets">1</span></dt>
+<dd><ol class="upperalpha simple" start="7">
+<li><p>Varoquaux et al. “Detection of brain functional-connectivity</p></li>
+</ol>
+</dd>
+</dl>
+<p>difference in post-stroke patients using group-level covariance modeling”, MICCAI 2010</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">inter_network_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionnary</em>, <em>groupes</em>, <em>kinds</em>, <em>atlas_file</em>, <em>sheetname</em>, <em>network_column_name</em>, <em>roi_indices_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#inter_network_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute for each subjects, the inter network connectivity matrices</p>
+<dl class="simple">
+<dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity matrices dictionnary for each groupes, and kind in the study.</p>
+</dd>
+<dt>groupes: list</dt><dd><p>The list of groups in the study</p>
+</dd>
+<dt>kinds: list</dt><dd><p>The list of kinds in the study</p>
+</dd>
+<dt>atlas_file: string</dt><dd><p>The full path to an excel file containing information on the atlas</p>
+</dd>
+<dt>network_column_name: string</dt><dd><p>The name of the column in the excel file containing the network label for each roi</p>
+</dd>
+<dt>roi_indices_column_name</dt><dd><p>The name of the column in the excel file containing the index of each ROI in the 4D atlas file.</p>
+</dd>
+<dt>sheetname: string</dt><dd><p>The name of the active sheet in the excel file</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output: dict</dt><dd><p>The subjects inter network connectivity matrices dictionnary, for each group and kinds. Each matrices
+should have shape (number of network, number of network).</p>
+</dd>
+</dl>
+<p>The inter-network connectivity is simply defined as the mean of all possible
+connection between a network pair. We also account for the possible discarded rois
+in one or both the network by computing the mean on a masked array structure, that is,
+the inter-network coefficient of interest, along with the corresponding value of the masked
+array.</p>
+<p>This inter-network composite score is used in the following references :</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets">1</span></dt>
+<dd><p>M. Brier, “Loss of Intranetwork and Internetwork Resting State Functional Connections with Alzheimer’s
+Disease Progression” The Journal of Neuroscience, 2012.</p>
+</dd>
+<dt class="label" id="id3"><span class="brackets">2</span></dt>
+<dd><p>P. Wang, “Aberrant intra- and inter-network connectivity architectures in Alzheimer’s disease and mild
+cognitive impairment”, Nature Publishing Group, 2015.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.intra_network_functional_connectivity">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">intra_network_functional_connectivity</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionnary</em>, <em>groupes</em>, <em>kinds</em>, <em>atlas_file</em>, <em>network_column_name</em>, <em>sheetname</em>, <em>roi_indices_column_name</em>, <em>color_of_network_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#intra_network_functional_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.intra_network_functional_connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute for each subjects, the intra network connectivity for each network in the study.</p>
+<dl class="simple">
+<dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
+and corresponding mask array for discarded rois, for each group.</p>
+</dd>
+<dt>groupes: list</dt><dd><p>The list of groups in the study</p>
+</dd>
+<dt>kinds: list</dt><dd><p>The list of kinds in the study</p>
+</dd>
+<dt>atlas_file: string</dt><dd><p>The full path to an excel file containing information on the atlas</p>
+</dd>
+<dt>network_column_name: string</dt><dd><p>The name of the column in the excel file containing the network label for each roi</p>
+</dd>
+<dt>roi_indices_column_name: string</dt><dd><p>The name of the column in the excel file containing the index of each ROI in the 4D atlas file.</p>
+</dd>
+<dt>sheetname: string</dt><dd><p>The name of the active sheet in the excel file</p>
+</dd>
+<dt>color_of_network_column: string</dt><dd><p>The name of the columns containing for each roi, the corresponding network color.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output 1: dict</dt><dd><p>A dictionnary structure containing for each subject and for each network: the network connectivity,
+the vectorized array of coefficients of the network without the diagonal, the corresponding vectorized
+mask array accounting for discarded rois, the diagonal of the mask array, the masked array structure
+of the network, and finally the number of rois in the network.</p>
+</dd>
+<dt>output 2: dict</dt><dd><p>A dictionnary network, containing information fetch from the atlas excel file of the atlas.</p>
+</dd>
+<dt>output 3: list</dt><dd><p>The network label list.</p>
+</dd>
+<dt>output 4: array of shape (number of network, 3)</dt><dd><p>The array containing the color in the normalized RGB space, in the order of the network label list.</p>
+</dd>
+</dl>
+<p>The intra connectivity is simply defined as the mean, for each network,
+of the coefficient belonging to the network. Because connectivity metrics are symmetric,
+we only taking the vectorize part of the network connectivity matrices. We account for discarded roi,
+as we compute the mean on a numpy masked array structure, that is the vectorized array
+along with the vectorized boolean mask for the current network.</p>
+<p>This intra-network composite scores is used in the following references:</p>
+<dl class="footnote brackets">
+<dt class="label" id="id4"><span class="brackets">1</span></dt>
+<dd><p>M. Brier, “Loss of Intranetwork and Internetwork Resting State Functional Connections with Alzheimer’s
+Disease Progression” The Journal of Neuroscience, 2012.</p>
+</dd>
+<dt class="label" id="id5"><span class="brackets">2</span></dt>
+<dd><p>P. Wang, “Aberrant intra- and inter-network connectivity architectures in Alzheimer’s disease and mild
+cognitive impairment”, Nature Publishing Group, 2015.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">mean_of_flatten_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionary</em>, <em>groupes</em>, <em>kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#mean_of_flatten_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the flat mean connectivity for each subjects.</p>
+<dl class="simple">
+<dt>subjects_individual_matrices_dictionary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
+and corresponding mask array for discarded rois, for each group.</p>
+</dd>
+<dt>groupes: list</dt><dd><p>The list of groupes in the study</p>
+</dd>
+<dt>kinds: list</dt><dd><p>The list of kinds in the study</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output: dict</dt><dd><p>A dictionnary containing for each subject in group, a masked array structure containing
+the numerical array of the connectivity coefficient of interest, along with the boolean
+mask accounting for discarded rois. The second key, contain the mean of the extracted
+connectivity coefficient for each subject, also accounting for discarded rois it they
+exist.</p>
+</dd>
+</dl>
+<p>The subjects connectivity matrices shouldn’t be vectorized, the shape should
+be (n_features, n_features).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.pooled_groups_connectivity">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">pooled_groups_connectivity</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>kinds</em>, <em>covariance_estimator</em>, <em>vectorize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute connectivity matrices of pooled groups.</p>
+<p>This function simply stack the all the times series of each group in one pooled groups and compute 
+the connectivity matrices  on the whole group. When computing the tangent kind this function is
+called.</p>
+<p>time_series_dictionary : dict
+A multi-levels dictionnary organised as follow :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The first keys levels is the different groupes in the study.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
+</ul>
+<p>subject time series in an array of shape (number of regions, number of time points) 
+A key ‘discarded_rois’ containing an array of the index of ROIs 
+where the corresponding labels is ‘void’. If no void labels is detected,
+then the array should be empty.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>kinds<span class="classifier">list</span></dt><dd><p>List of the different metrics you want to compute the 
+connectivity matrices. Choices are ‘tangent’, ‘correlation’,
+‘partial correlation’, ‘covariance’, ‘precision’.</p>
+</dd>
+<dt>covariance_estimator<span class="classifier">estimator object</span></dt><dd><p>All the kinds  are based on derivation of covariances matrices. You need
+to precise the estimator, see Notes.</p>
+</dd>
+<dt>vectorize<span class="classifier">bool</span></dt><dd><p>If True, the connectivity matrices are reshape into 1D arrays of 
+the vectorized lower part of the matrices. Useful for classification,
+regression…
+Diagonal are discarded.</p>
+</dd>
+</dl>
+<dl>
+<dt>output 1<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
+<li><p>The first level keys is the different kinds</p></li>
+<li><p>The second levels is simply a ndimensional array of connectivity</p></li>
+</ul>
+<p>matrices of shape (number of subjects, number of regions, number of regions)
+if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else</p>
+</dd>
+</dl>
+</dd>
+<dt>output 2<span class="classifier">list</span></dt><dd><p>The list of subject IDs, in the order of time series computation.</p>
+</dd>
+</dl>
+<p>Covariances estimator are estimators compute in the scikit-learn library.
+Multiple estimator can be found in the module sklearn.covariance, popular
+choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.pooled_groups_tangent_mean">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">pooled_groups_tangent_mean</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>covariance_estimator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_tangent_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_tangent_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the geometric mean of covariances connectivity matrices for the tangent kind.</p>
+<p>The geometric mean is the point in the symmetric manifold matrices spaces 
+where the tangent space is defined. Therefore it’s make sense for the pooled
+groups only.</p>
+<dl>
+<dt>time_series_dictionary<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groupes in the study.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
+</ul>
+<p>subject time series in an array of shape (number of regions, number of time points) 
+A key ‘discarded_rois’ containing an array of the index of ROIs 
+where the corresponding labels is ‘void’. If no void labels is detected,
+then the array should be empty.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>covariance_estimator : estimator object
+All the kinds  are based on derivation of covariances matrices. You need
+to precise the estimator, see Notes.</p>
+<dl class="simple">
+<dt>output<span class="classifier">numpy.array of shape (n_features, n_features)</span></dt><dd><p>The geometric mean a the pooled group.</p>
+</dd>
+</dl>
+<p>time_series_extraction, time_series_extraction_with_individual_atlases :
+These are the functions which extract the time series according atlas
+regions and returned a structured dictionnary. This is simply the argument
+<cite>time_series_dictionary</cite>.</p>
+<p>Covariances estimator are estimators compute in the scikit-learn library.
+Multiple estimator can be found in the module sklearn.covariance, popular
+choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
+<p>For now, we doesnt account for discarded rois for the derivation of the
+geometric mean.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.subjects_mean_connectivity_">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">subjects_mean_connectivity_</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionnary</em>, <em>connectivity_coefficient_position</em>, <em>kinds</em>, <em>groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#subjects_mean_connectivity_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.subjects_mean_connectivity_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute for each subjects, the mean connectivity for some connectivity coefficient in the general subjects
+connectivity matrices.</p>
+<dl class="simple">
+<dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
+and corresponding mask array for discarded rois, for each group.</p>
+</dd>
+<dt>connectivity_coefficient_position: numpy.array of shape (number of rois, row_index, column_index)</dt><dd><p>The array containing the position in the connectivity matrices of the rois you want
+to extract the connectivity coefficients.</p>
+</dd>
+<dt>kinds: list</dt><dd><p>The list of kinds.</p>
+</dd>
+<dt>groupes: list</dt><dd><p>The list of the two group in the study.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output: dict</dt><dd><p>A dictionnary containing for each subject in group, a masked array structure containing
+the numerical array of the connectivity coefficient of interest, along with the boolean
+mask accounting for discarded rois. The second key, contain the mean of the extracted
+connectivity coefficient for each subject, also accounting for discarded rois it they
+exist.</p>
+</dd>
+</dl>
+<p>The subjects connectivity matrices shouldn’t be vectorized, the shape should
+be (n_features, n_features).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.time_series_extraction">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">time_series_extraction</code><span class="sig-paren">(</span><em>root_fmri_data_directory</em>, <em>groupes</em>, <em>subjects_id_data_path</em>, <em>reference_atlas</em>, <em>group_data</em>, <em>repetition_time</em>, <em>low_pass_filtering=None</em>, <em>high_pass_filtering=None</em>, <em>detrend_signal=True</em>, <em>standardize_signal=True</em>, <em>smooth_signal=None</em>, <em>resampling_target='data'</em>, <em>memory_level=1</em>, <em>nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Times series extractions for each subjects on a common atlas.</p>
+<p>This function extract time series for each subjects according predefined regions on one common atlas.</p>
+<dl>
+<dt>root_fmri_data_directory<span class="classifier">str</span></dt><dd><p>The full path of a root directory containing one or numerous
+sub-directories where functional images are.</p>
+</dd>
+<dt>groupes<span class="classifier">list</span></dt><dd><p>The list of groups of interest, i.e the name of the
+sub-directories containing the functional images you want 
+to study.</p>
+</dd>
+<dt>subjects_id_data_path<span class="classifier">str</span></dt><dd><p>The full path to the data file containing the subjects IDs.</p>
+</dd>
+<dt>group_data<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionnary structured as follow :</dt><dd><ul class="simple">
+<li><p>The first keys level is the different groups</p></li>
+</ul>
+<p>to study.
+- The second level keys is the subjects IDs for
+all subjects in each groupes.
+- The third level keys contain multiple field : 
+‘functional_file’ contain the full path to the subject
+fmri file, ‘atlas_file’ contain the full path to the 
+subject atlas, ‘label_file’ the full path to the subject
+atlas label, ‘confounds_file’ the full path to the subject
+confounds file if they exist, a empty list if not.</p>
+</dd>
+</dl>
+</dd>
+<dt>reference_atlas<span class="classifier">str</span></dt><dd><p>The full path to the reference atlas which will be used
+to extract signals from regions.</p>
+</dd>
+<dt>repetition_time<span class="classifier">float</span></dt><dd><p>The repetition time in second, i.e the time between two volumes
+in a fmri image.</p>
+</dd>
+<dt>low_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The low pass frequency in Hz cut-off for filtering the times series.
+Default is None.</p>
+</dd>
+<dt>high_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The high pass frequency in Hz cut-off for filtering the time series.
+Default is None</p>
+</dd>
+<dt>detrend_signal<span class="classifier">bool, optional</span></dt><dd><p>Detrend the time series removing the first order moment to the
+time series, i.e removing the mean signals to each time series.
+Default if True.</p>
+</dd>
+<dt>standardize_signal<span class="classifier">bool, optional</span></dt><dd><p>Set the times series to unit variance
+Default is True.</p>
+</dd>
+<dt>smooth_signal<span class="classifier">float or None, optional</span></dt><dd><p>The full-width half maximum in millimeters of a Gaussian
+spatial smoothing to apply to the time series.
+Default is None.</p>
+</dd>
+<dt>resampling_target<span class="classifier">str</span></dt><dd><p>Gives the reference image which the source image image
+will be resample. 
+Choices are  : {“mask”, “maps”, “data”, None}. 
+Default is ‘data’.</p>
+</dd>
+<dt>memory_level<span class="classifier">int, optional</span></dt><dd><p>Caching parameters of functions. Default is 1.</p>
+</dd>
+<dt>nilearn_cache_directory<span class="classifier">str or None</span></dt><dd><p>The full path which will contain the folder used to cache
+the regions extractions. If None, no cache is performing.
+Default is None.</p>
+</dd>
+</dl>
+<dl>
+<dt>output<span class="classifier">dict</span></dt><dd><dl>
+<dt>A dictionnary structured as follow :</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groupes.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
+</ul>
+<p>subject time series in an array of shape (number of regions, number of time points)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>data_architecture.fetch_data : This function
+returned the organised dictionnary with all the information needed for the
+time series extraction on a common atlas. This is 
+simply the argument <cite>group_data</cite>.</p>
+<p>The times series extraction is based on functions contain is the Nilearn
+packages. I encourage the users to consult the docstring of the following
+function for the detailed mechanism of signal extraction : nilearn.signal.clean,
+nilearn.input_data.NiftiMapsMasker.</p>
+<p>The subjects IDs file, whatever the format, should not contain any header.
+It’s should have a row column of ID for each subjects.</p>
+<p>The Nilearn official documentation on Github :
+[1] <a class="reference external" href="http://nilearn.github.io/index.html">http://nilearn.github.io/index.html</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases">
+<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">time_series_extraction_with_individual_atlases</code><span class="sig-paren">(</span><em>root_fmri_data_directory</em>, <em>groupes</em>, <em>subjects_id_data_path</em>, <em>group_data</em>, <em>repetition_time</em>, <em>low_pass_filtering=None</em>, <em>high_pass_filtering=None</em>, <em>detrend_signal=True</em>, <em>standardize_signal=True</em>, <em>smooth_signal=None</em>, <em>resampling_target='data'</em>, <em>memory_level=1</em>, <em>nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Times series extractions for each subjects with an individual atlas.</p>
+<p>This function extract time series for each subjects according predefined regions in individual atlases.</p>
+<dl>
+<dt>root_fmri_data_directory<span class="classifier">str</span></dt><dd><p>The full path of a root directory containing one or numerous
+sub-directories where functional images are.</p>
+</dd>
+<dt>groupes<span class="classifier">list</span></dt><dd><p>The list of groups of interest, i.e the name of the
+sub-directories containing the functional images you want 
+to study.</p>
+</dd>
+<dt>subjects_id_data_path<span class="classifier">str</span></dt><dd><p>The full path to the data file containing the subjects IDs.</p>
+</dd>
+<dt>group_data<span class="classifier">dict</span></dt><dd><dl>
+<dt>A multi-levels dictionary structured as follow :</dt><dd><ul class="simple">
+<li><p>The first keys level is the different groups</p></li>
+</ul>
+<p>to study.
+- The second level keys is the subjects IDs for
+all subjects in each groupes.
+- The third level keys contain multiple field : 
+‘functional_file’ contain the full path to the subject
+fmri file, ‘atlas_file’ contain the full path to the 
+subject atlas, ‘label_file’ the full path to the subject
+atlas label, ‘confounds_file’ the full path to the subject
+confounds file if they exist, a empty list if not.</p>
+</dd>
+</dl>
+</dd>
+<dt>repetition_time<span class="classifier">float</span></dt><dd><p>The repetition time in second, i.e the time between two volumes
+in a fmri image.</p>
+</dd>
+<dt>low_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The low pass frequency in Hz cut-off for filtering the times series.
+Default is None.</p>
+</dd>
+<dt>high_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The high pass frequency in Hz cut-off for filtering the time series.
+Default is None</p>
+</dd>
+<dt>detrend_signal<span class="classifier">bool, optional</span></dt><dd><p>Detrend the time series removing the first order moment to the
+time series, i.e removing the mean signals to each time series.
+Default if True.</p>
+</dd>
+<dt>standardize_signal<span class="classifier">bool, optional</span></dt><dd><p>Set the times series to unit variance
+Default is True.</p>
+</dd>
+<dt>smooth_signal<span class="classifier">float or None, optional</span></dt><dd><p>The full-width half maximum in millimeters of a Gaussian
+spatial smoothing to apply to the time series.
+Default is None.</p>
+</dd>
+<dt>resampling_target<span class="classifier">str</span></dt><dd><p>Gives the reference image which the source image image
+will be resample. 
+Choices are  : {“mask”, “maps”, “data”, None}. 
+Default is ‘data’.</p>
+</dd>
+<dt>memory_level<span class="classifier">int, optional</span></dt><dd><p>Caching parameters of functions. Default is 1.</p>
+</dd>
+<dt>nilearn_cache_directory<span class="classifier">str or None</span></dt><dd><p>The full path which will contain the folder used to cache
+the regions extractions. If None, no cache is performing.
+Default is None.</p>
+</dd>
+</dl>
+<dl>
+<dt>output<span class="classifier">dict</span></dt><dd><dl>
+<dt>A dictionnary structured as follow :</dt><dd><ul class="simple">
+<li><p>The first keys levels is the different groupes.</p></li>
+<li><p>The second keys levels is the subjects IDs</p></li>
+<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
+</ul>
+<p>subject time series in an array of shape (number of regions, number of time points) 
+A key ‘discarded_rois’ containing an array of the index of ROIs 
+where the corresponding labels is ‘void’. If no void labels is detected,
+then the array is empty.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>data_architecture.fetch_data_with_individual_atlases : This function
+returned the organised dictionnary with all the information needed for the
+time series extraction with individual atlases. This is 
+simply the argument <cite>group_data</cite>.</p>
+<p>The times series extraction is based on functions contain is the Nilearn
+packages. I encourage the users to consult the docstring of the following
+function for the detailed mechanism of signal extraction : nilearn.signal.clean,
+nilearn.input_data.NiftiMapsMasker.</p>
+<p>The subjects IDs file, whatever the format, should not contain any header.
+It’s should have a row column of ID for each subjects.</p>
+<p>Remembers that the discarded rois are defined according to their labels
+which must be declared as ‘void’ in the subject atlas labels files.</p>
+<p>The Nilearn official documentation on Github :
+[1] <a class="reference external" href="http://nilearn.github.io/index.html">http://nilearn.github.io/index.html</a></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ConPagnon</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="projectDescription.html">Project description</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="projectDescription.html" title="previous chapter">Project description</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Dhaif BEKHA.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/code.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

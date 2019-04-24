@@ -1,0 +1,1371 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>computing.compute_connectivity_matrices &#8212; ConPagnon 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for computing.compute_connectivity_matrices</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python2</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Tue Sep 19 17:02:19 2017</span>
+
+<span class="sd">ComPagnon 2.0</span>
+
+<span class="sd">@author: Dhaif BEKHA</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">data_handling.data_architecture</span> <span class="k">import</span> <span class="n">read_text_data_file</span><span class="p">,</span> <span class="n">create_group_dictionnary</span>
+<span class="kn">from</span> <span class="nn">data_handling</span> <span class="k">import</span> <span class="n">atlas</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">nilearn</span> <span class="k">import</span> <span class="n">input_data</span>
+<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="k">import</span> <span class="n">ConnectivityMeasure</span><span class="p">,</span> <span class="n">vec_to_sym_matrix</span>
+<span class="kn">from</span> <span class="nn">utils.array_operation</span> <span class="k">import</span> <span class="n">masked_arrays_mean</span><span class="p">,</span> <span class="n">check_2d</span><span class="p">,</span> <span class="n">vectorizer</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="k">import</span> <span class="n">array_operation</span>
+<span class="kn">import</span> <span class="nn">webcolors</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">data_handling.data_management</span> <span class="k">import</span> <span class="n">remove_duplicate</span>
+
+
+<div class="viewcode-block" id="create_connectivity_mask"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.create_connectivity_mask">[docs]</a><span class="k">def</span> <span class="nf">create_connectivity_mask</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create boolean mask for each subjects accounting</span>
+<span class="sd">    for discarded roi if they exist.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time_series_dictionary: dict</span>
+<span class="sd">        The time series dictionary structured as follow:</span>
+<span class="sd">            - The first keys levels is the different groupes.</span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is two keys : &#39;time_series&#39; containing the</span>
+<span class="sd">            subject time series in an array of shape (number of regions, number of time points)</span>
+<span class="sd">            A key &#39;discarded_rois&#39; containing an array of the index of ROIs</span>
+<span class="sd">            where the corresponding labels is &#39;void&#39;. If no void labels is detected,</span>
+<span class="sd">            then the array is empty.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of groups in the study.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        The same time series dictionary with a field called &#39;masked_array&#39; for</span>
+<span class="sd">        each subjects. A masked array is a boolean mask accounting for discarded</span>
+<span class="sd">        rois, True for a discarded rois, and False elsewhere.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If &#39;discarded_rois&#39; is empty the mask is False at every position</span>
+<span class="sd">    in the array.</span>
+<span class="sd">    Almost all the operation in ConPagnon accounts for discarded rois with</span>
+<span class="sd">    masked array via the dedicated module in NumPy.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subject_in_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subject_in_group</span><span class="p">:</span>
+            <span class="c1"># If a field discarded_rois exist:</span>
+            <span class="n">number_of_regions</span> <span class="o">=</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;time_series&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># mask computation</span>
+            <span class="n">subject_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">number_of_regions</span><span class="p">,</span> <span class="n">number_of_regions</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;bool&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;discarded_rois&#39;</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># We compute a mask according the position of discarded roi</span>
+                <span class="c1"># number of regions</span>
+                <span class="n">empty_roi_position</span> <span class="o">=</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;discarded_rois&#39;</span><span class="p">]</span>
+                <span class="c1"># Replace by True the boolean value position corresponding to discarded rois</span>
+                <span class="c1"># If empty_roi_position is not empty</span>
+                <span class="k">if</span> <span class="n">empty_roi_position</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">discarded_roi</span> <span class="ow">in</span> <span class="n">empty_roi_position</span><span class="p">:</span>
+                        <span class="c1"># True for the entire rows corresponding to the current empty roi</span>
+                        <span class="n">subject_mask</span><span class="p">[:,</span> <span class="n">discarded_roi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="c1"># True for the entire columns corresponding to the current empty roi</span>
+                        <span class="n">subject_mask</span><span class="p">[</span><span class="n">discarded_roi</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># We compute a mask, with False everywhere, because all the test</span>
+                <span class="c1"># is performed with masked array in general.</span>
+                <span class="n">subject_mask</span> <span class="o">=</span> <span class="n">subject_mask</span>
+
+            <span class="c1"># Create a new field</span>
+            <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_mask</span>
+
+    <span class="k">return</span> <span class="n">time_series_dictionary</span></div>
+
+
+<div class="viewcode-block" id="time_series_extraction_with_individual_atlases"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases">[docs]</a><span class="k">def</span> <span class="nf">time_series_extraction_with_individual_atlases</span><span class="p">(</span><span class="n">root_fmri_data_directory</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">subjects_id_data_path</span><span class="p">,</span> <span class="n">group_data</span><span class="p">,</span>
+                                                   <span class="n">repetition_time</span><span class="p">,</span> <span class="n">low_pass_filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">high_pass_filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                   <span class="n">detrend_signal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">standardize_signal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">smooth_signal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                   <span class="n">resampling_target</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">memory_level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                   <span class="n">nilearn_cache_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                   <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Times series extractions for each subjects with an individual atlas.</span>
+<span class="sd">    </span>
+<span class="sd">    This function extract time series for each subjects according predefined regions in individual atlases.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    root_fmri_data_directory : str</span>
+<span class="sd">        The full path of a root directory containing one or numerous</span>
+<span class="sd">        sub-directories where functional images are.</span>
+<span class="sd">        </span>
+<span class="sd">    groupes : list</span>
+<span class="sd">        The list of groups of interest, i.e the name of the</span>
+<span class="sd">        sub-directories containing the functional images you want </span>
+<span class="sd">        to study.</span>
+<span class="sd">        </span>
+<span class="sd">    subjects_id_data_path : str</span>
+<span class="sd">        The full path to the data file containing the subjects IDs.</span>
+<span class="sd">        </span>
+<span class="sd">    group_data : dict</span>
+<span class="sd">        A multi-levels dictionary structured as follow :</span>
+<span class="sd">            - The first keys level is the different groups</span>
+<span class="sd">            to study.</span>
+<span class="sd">            - The second level keys is the subjects IDs for</span>
+<span class="sd">            all subjects in each groupes.</span>
+<span class="sd">            - The third level keys contain multiple field : </span>
+<span class="sd">            &#39;functional_file&#39; contain the full path to the subject</span>
+<span class="sd">            fmri file, &#39;atlas_file&#39; contain the full path to the </span>
+<span class="sd">            subject atlas, &#39;label_file&#39; the full path to the subject</span>
+<span class="sd">            atlas label, &#39;confounds_file&#39; the full path to the subject</span>
+<span class="sd">            confounds file if they exist, a empty list if not.</span>
+<span class="sd">    </span>
+<span class="sd">    repetition_time : float</span>
+<span class="sd">        The repetition time in second, i.e the time between two volumes</span>
+<span class="sd">        in a fmri image.</span>
+<span class="sd">        </span>
+<span class="sd">    low_pass_filtering : float or None, optional</span>
+<span class="sd">        The low pass frequency in Hz cut-off for filtering the times series.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">    </span>
+<span class="sd">    high_pass_filtering : float or None, optional</span>
+<span class="sd">        The high pass frequency in Hz cut-off for filtering the time series.</span>
+<span class="sd">        Default is None</span>
+<span class="sd">        </span>
+<span class="sd">    detrend_signal : bool, optional</span>
+<span class="sd">        Detrend the time series removing the first order moment to the</span>
+<span class="sd">        time series, i.e removing the mean signals to each time series.</span>
+<span class="sd">        Default if True.</span>
+<span class="sd">        </span>
+<span class="sd">    standardize_signal : bool, optional</span>
+<span class="sd">        Set the times series to unit variance</span>
+<span class="sd">        Default is True.</span>
+<span class="sd">        </span>
+<span class="sd">    smooth_signal : float or None, optional</span>
+<span class="sd">        The full-width half maximum in millimeters of a Gaussian</span>
+<span class="sd">        spatial smoothing to apply to the time series.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">        </span>
+<span class="sd">    resampling_target : str</span>
+<span class="sd">        Gives the reference image which the source image image</span>
+<span class="sd">        will be resample. </span>
+<span class="sd">        Choices are  : {“mask”, “maps”, “data”, None}. </span>
+<span class="sd">        Default is &#39;data&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    memory_level : int, optional</span>
+<span class="sd">        Caching parameters of functions. Default is 1.</span>
+<span class="sd">        </span>
+<span class="sd">    nilearn_cache_directory : str or None</span>
+<span class="sd">        The full path which will contain the folder used to cache</span>
+<span class="sd">        the regions extractions. If None, no cache is performing.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    output : dict</span>
+<span class="sd">        A dictionnary structured as follow :</span>
+<span class="sd">            - The first keys levels is the different groupes. </span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is two keys : &#39;time_series&#39; containing the</span>
+<span class="sd">            subject time series in an array of shape (number of regions, number of time points) </span>
+<span class="sd">            A key &#39;discarded_rois&#39; containing an array of the index of ROIs </span>
+<span class="sd">            where the corresponding labels is &#39;void&#39;. If no void labels is detected,</span>
+<span class="sd">            then the array is empty.</span>
+<span class="sd">            </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    </span>
+<span class="sd">    data_architecture.fetch_data_with_individual_atlases : This function</span>
+<span class="sd">    returned the organised dictionnary with all the information needed for the</span>
+<span class="sd">    time series extraction with individual atlases. This is </span>
+<span class="sd">    simply the argument `group_data`.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    </span>
+<span class="sd">    The times series extraction is based on functions contain is the Nilearn</span>
+<span class="sd">    packages. I encourage the users to consult the docstring of the following</span>
+<span class="sd">    function for the detailed mechanism of signal extraction : nilearn.signal.clean,</span>
+<span class="sd">    nilearn.input_data.NiftiMapsMasker.</span>
+<span class="sd">    </span>
+<span class="sd">    The subjects IDs file, whatever the format, should not contain any header.</span>
+<span class="sd">    It&#39;s should have a row column of ID for each subjects.</span>
+<span class="sd">    </span>
+<span class="sd">    Remembers that the discarded rois are defined according to their labels</span>
+<span class="sd">    which must be declared as &#39;void&#39; in the subject atlas labels files. </span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    The Nilearn official documentation on Github :</span>
+<span class="sd">    [1] http://nilearn.github.io/index.html</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Dictionnary initialisation for each group, and subject as keys.</span>
+    <span class="n">times_series_dictionnary</span> <span class="o">=</span> <span class="n">create_group_dictionnary</span><span class="p">(</span><span class="n">subjects_id_data_path</span><span class="o">=</span><span class="n">subjects_id_data_path</span><span class="p">,</span> <span class="n">groupes</span><span class="o">=</span><span class="n">groupes</span><span class="p">,</span>
+                                                        <span class="n">root_fmri_data_directory</span><span class="o">=</span><span class="n">root_fmri_data_directory</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">group_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># For each each subject found in the group_data dictionnary, which fetch all the path for important file.</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># We fetch the individual atlas of the subject</span>
+            <span class="n">subject_atlas</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;atlas_file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Fetch of discarded rois index, reading the subject atlas labels file, and looking for a &#39;void&#39; label.</span>
+            <span class="n">subject_atlas_labels</span> <span class="o">=</span> <span class="n">read_text_data_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;label_file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">subject_void_rois</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">subject_atlas_labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;void&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Fetch of the subject functional file.</span>
+            <span class="n">subject_fmri</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;functional_file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Fetch the file containing the signal regressors, if it exist</span>
+            <span class="k">if</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;counfounds_file&#39;</span><span class="p">]:</span>
+                <span class="n">subject_confounds</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;counfounds_file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subject_confounds</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># Set the computation parameters for time series, via the NifTiMapsMasker class</span>
+            <span class="n">subject_masker</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">NiftiMapsMasker</span><span class="p">(</span>
+                <span class="n">maps_img</span><span class="o">=</span><span class="n">subject_atlas</span><span class="p">,</span> <span class="n">resampling_target</span><span class="o">=</span><span class="n">resampling_target</span><span class="p">,</span>
+                <span class="n">smoothing_fwhm</span><span class="o">=</span><span class="n">smooth_signal</span><span class="p">,</span> <span class="n">high_pass</span><span class="o">=</span><span class="n">high_pass_filtering</span><span class="p">,</span>
+                <span class="n">low_pass</span><span class="o">=</span><span class="n">low_pass_filtering</span><span class="p">,</span> <span class="n">detrend</span><span class="o">=</span><span class="n">detrend_signal</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="n">standardize_signal</span><span class="p">,</span>
+                <span class="n">t_r</span><span class="o">=</span><span class="n">repetition_time</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="n">nilearn_cache_directory</span><span class="p">,</span> <span class="n">memory_level</span><span class="o">=</span><span class="n">memory_level</span><span class="p">)</span>
+            
+            <span class="c1"># We extract the subject time series, for each regions defined in the atlas, if confounds was found,</span>
+            <span class="c1"># we regress them</span>
+            <span class="n">subject_time_series</span> <span class="o">=</span> <span class="n">subject_masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">imgs</span><span class="o">=</span><span class="n">subject_fmri</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="n">subject_confounds</span><span class="p">)</span>
+            
+            <span class="c1"># We fill the dictionnary for each and subjects, with the</span>
+            <span class="c1"># time series array of shape (time point, number of regions),</span>
+            <span class="c1"># and the list of index of discarded rois.</span>
+            <span class="n">times_series_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time_series&#39;</span><span class="p">:</span> <span class="n">subject_time_series</span><span class="p">,</span>
+                                                         <span class="s1">&#39;discarded_rois&#39;</span><span class="p">:</span> <span class="n">subject_void_rois</span><span class="p">}</span>
+
+    <span class="n">times_series_dictionnary</span> <span class="o">=</span> <span class="n">create_connectivity_mask</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="o">=</span><span class="n">times_series_dictionnary</span><span class="p">,</span>
+                                                        <span class="n">groupes</span><span class="o">=</span><span class="n">groupes</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">times_series_dictionnary</span></div>
+
+
+<div class="viewcode-block" id="time_series_extraction"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.time_series_extraction">[docs]</a><span class="k">def</span> <span class="nf">time_series_extraction</span><span class="p">(</span><span class="n">root_fmri_data_directory</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">subjects_id_data_path</span><span class="p">,</span>
+                           <span class="n">reference_atlas</span><span class="p">,</span> <span class="n">group_data</span><span class="p">,</span> <span class="n">repetition_time</span><span class="p">,</span>
+                           <span class="n">low_pass_filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">high_pass_filtering</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">detrend_signal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">standardize_signal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">smooth_signal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resampling_target</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">memory_level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                           <span class="n">nilearn_cache_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot;Times series extractions for each subjects on a common atlas.</span>
+<span class="sd">    </span>
+<span class="sd">    This function extract time series for each subjects according predefined regions on one common atlas.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    root_fmri_data_directory : str</span>
+<span class="sd">        The full path of a root directory containing one or numerous</span>
+<span class="sd">        sub-directories where functional images are.</span>
+<span class="sd">    groupes : list</span>
+<span class="sd">        The list of groups of interest, i.e the name of the</span>
+<span class="sd">        sub-directories containing the functional images you want </span>
+<span class="sd">        to study.</span>
+<span class="sd">    subjects_id_data_path : str</span>
+<span class="sd">        The full path to the data file containing the subjects IDs.</span>
+<span class="sd">    group_data : dict</span>
+<span class="sd">        A multi-levels dictionnary structured as follow :</span>
+<span class="sd">            - The first keys level is the different groups</span>
+<span class="sd">            to study.</span>
+<span class="sd">            - The second level keys is the subjects IDs for</span>
+<span class="sd">            all subjects in each groupes.</span>
+<span class="sd">            - The third level keys contain multiple field : </span>
+<span class="sd">            &#39;functional_file&#39; contain the full path to the subject</span>
+<span class="sd">            fmri file, &#39;atlas_file&#39; contain the full path to the </span>
+<span class="sd">            subject atlas, &#39;label_file&#39; the full path to the subject</span>
+<span class="sd">            atlas label, &#39;confounds_file&#39; the full path to the subject</span>
+<span class="sd">            confounds file if they exist, a empty list if not.</span>
+<span class="sd">    reference_atlas : str</span>
+<span class="sd">        The full path to the reference atlas which will be used</span>
+<span class="sd">        to extract signals from regions.</span>
+<span class="sd">    repetition_time : float</span>
+<span class="sd">        The repetition time in second, i.e the time between two volumes</span>
+<span class="sd">        in a fmri image.</span>
+<span class="sd">    low_pass_filtering : float or None, optional</span>
+<span class="sd">        The low pass frequency in Hz cut-off for filtering the times series.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">    high_pass_filtering : float or None, optional</span>
+<span class="sd">        The high pass frequency in Hz cut-off for filtering the time series.</span>
+<span class="sd">        Default is None</span>
+<span class="sd">    detrend_signal : bool, optional</span>
+<span class="sd">        Detrend the time series removing the first order moment to the</span>
+<span class="sd">        time series, i.e removing the mean signals to each time series.</span>
+<span class="sd">        Default if True.</span>
+<span class="sd">    standardize_signal : bool, optional</span>
+<span class="sd">        Set the times series to unit variance</span>
+<span class="sd">        Default is True.</span>
+<span class="sd">    smooth_signal : float or None, optional</span>
+<span class="sd">        The full-width half maximum in millimeters of a Gaussian</span>
+<span class="sd">        spatial smoothing to apply to the time series.</span>
+<span class="sd">        Default is None.</span>
+<span class="sd">    resampling_target : str</span>
+<span class="sd">        Gives the reference image which the source image image</span>
+<span class="sd">        will be resample. </span>
+<span class="sd">        Choices are  : {“mask”, “maps”, “data”, None}. </span>
+<span class="sd">        Default is &#39;data&#39;.</span>
+<span class="sd">    memory_level : int, optional</span>
+<span class="sd">        Caching parameters of functions. Default is 1.</span>
+<span class="sd">    nilearn_cache_directory : str or None</span>
+<span class="sd">        The full path which will contain the folder used to cache</span>
+<span class="sd">        the regions extractions. If None, no cache is performing.</span>
+<span class="sd">        Default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output : dict</span>
+<span class="sd">        A dictionnary structured as follow :</span>
+<span class="sd">            - The first keys levels is the different groupes. </span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is two keys : &#39;time_series&#39; containing the</span>
+<span class="sd">            subject time series in an array of shape (number of regions, number of time points) </span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    data_architecture.fetch_data : This function</span>
+<span class="sd">    returned the organised dictionnary with all the information needed for the</span>
+<span class="sd">    time series extraction on a common atlas. This is </span>
+<span class="sd">    simply the argument `group_data`.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The times series extraction is based on functions contain is the Nilearn</span>
+<span class="sd">    packages. I encourage the users to consult the docstring of the following</span>
+<span class="sd">    function for the detailed mechanism of signal extraction : nilearn.signal.clean,</span>
+<span class="sd">    nilearn.input_data.NiftiMapsMasker.</span>
+<span class="sd">    </span>
+<span class="sd">    The subjects IDs file, whatever the format, should not contain any header.</span>
+<span class="sd">    It&#39;s should have a row column of ID for each subjects.</span>
+<span class="sd">        </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    The Nilearn official documentation on Github :</span>
+<span class="sd">    [1] http://nilearn.github.io/index.html</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Dictionnary initialisation for time series, for each group, and for each subjects.</span>
+    <span class="n">times_series_dictionnary</span> <span class="o">=</span> <span class="n">create_group_dictionnary</span><span class="p">(</span><span class="n">subjects_id_data_path</span><span class="o">=</span><span class="n">subjects_id_data_path</span><span class="p">,</span>
+                                                        <span class="n">groupes</span><span class="o">=</span><span class="n">groupes</span><span class="p">,</span>
+                                                        <span class="n">root_fmri_data_directory</span><span class="o">=</span><span class="n">root_fmri_data_directory</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">group_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># For each subject in the group_data dictionnary</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># Fetch the subject functional file path</span>
+            <span class="n">subject_fmri</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;functional_file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Fetch the subject regressors file path, if it exist</span>
+            <span class="k">if</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;counfounds_file&#39;</span><span class="p">]:</span>
+                <span class="n">subject_confounds</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;counfounds_file&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subject_confounds</span> <span class="o">=</span> <span class="kc">None</span>
+            
+            <span class="c1"># Set the computation parameters for time series, via the NifTiMapsMasker class</span>
+            <span class="n">subject_masker</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">NiftiMapsMasker</span><span class="p">(</span><span class="n">maps_img</span><span class="o">=</span><span class="n">reference_atlas</span><span class="p">,</span> <span class="n">resampling_target</span><span class="o">=</span><span class="n">resampling_target</span><span class="p">,</span>
+                                                        <span class="n">smoothing_fwhm</span><span class="o">=</span><span class="n">smooth_signal</span><span class="p">,</span> <span class="n">high_pass</span><span class="o">=</span><span class="n">high_pass_filtering</span><span class="p">,</span>
+                                                        <span class="n">low_pass</span><span class="o">=</span><span class="n">low_pass_filtering</span><span class="p">,</span> <span class="n">detrend</span><span class="o">=</span><span class="n">detrend_signal</span><span class="p">,</span>
+                                                        <span class="n">standardize</span><span class="o">=</span><span class="n">standardize_signal</span><span class="p">,</span> <span class="n">t_r</span><span class="o">=</span><span class="n">repetition_time</span><span class="p">,</span>
+                                                        <span class="n">memory</span><span class="o">=</span><span class="n">nilearn_cache_directory</span><span class="p">,</span> <span class="n">memory_level</span><span class="o">=</span><span class="n">memory_level</span><span class="p">)</span>
+            
+            <span class="c1"># We extract the subject time series, for each regions defined in the atlas, if confounds was found,</span>
+            <span class="c1"># we regress them</span>
+            <span class="n">subject_time_series</span> <span class="o">=</span> <span class="n">subject_masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">imgs</span><span class="o">=</span><span class="n">subject_fmri</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="n">subject_confounds</span><span class="p">)</span>
+            
+            <span class="c1"># We fill the time series array of shape (times points, number of regions) for each subject in each group in</span>
+            <span class="c1"># time series dictionnary</span>
+            <span class="n">times_series_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time_series&#39;</span><span class="p">:</span> <span class="n">subject_time_series</span><span class="p">}</span>
+
+    <span class="n">times_series_dictionnary</span> <span class="o">=</span> <span class="n">create_connectivity_mask</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="o">=</span><span class="n">times_series_dictionnary</span><span class="p">,</span>
+                                                        <span class="n">groupes</span><span class="o">=</span><span class="n">groupes</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">times_series_dictionnary</span></div>
+
+
+<div class="viewcode-block" id="individual_connectivity_matrices"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.individual_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">individual_connectivity_matrices</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">covariance_estimator</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">discarding_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">z_fisher_transform</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the connectivity matrices for groups of subjects</span>
+<span class="sd">    </span>
+<span class="sd">    This function computes connectivity matrices for different metrics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    time_series_dictionary : dict</span>
+<span class="sd">        A multi-levels dictionnary organised as follow :</span>
+<span class="sd">            - The first keys levels is the different groupes in the study. </span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is two keys : &#39;time_series&#39; containing the</span>
+<span class="sd">            subject time series in an array of shape (number of regions, number of time points) </span>
+<span class="sd">            A key &#39;discarded_rois&#39; containing an array of the index of ROIs </span>
+<span class="sd">            where the corresponding labels is &#39;void&#39;. If no void labels is detected,</span>
+<span class="sd">            then the array should be empty.</span>
+<span class="sd">            </span>
+<span class="sd">    kinds : list</span>
+<span class="sd">        List of the different metrics you want to compute the </span>
+<span class="sd">        connectivity matrices. Choices are &#39;tangent&#39;, &#39;correlation&#39;,</span>
+<span class="sd">        &#39;partial correlation&#39;, &#39;covariance&#39;, &#39;precision&#39;.</span>
+<span class="sd">        </span>
+<span class="sd">    covariance_estimator : estimator object</span>
+<span class="sd">        All the kinds  are based on derivation of covariances matrices. You need</span>
+<span class="sd">        to precise the estimator, see Notes.</span>
+<span class="sd">        </span>
+<span class="sd">    vectorize : bool, optional</span>
+<span class="sd">        If True, the connectivity matrices are reshape into 1D arrays of </span>
+<span class="sd">        the vectorized lower part of the matrices. Useful for classification,</span>
+<span class="sd">        regression...</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    z_fisher_transform: bool, optional</span>
+<span class="sd">        If True, the z fisher transform is apply to all</span>
+<span class="sd">        the connectivity matrices. Default is False</span>
+
+<span class="sd">    discarding_diagonal: bool, optional</span>
+<span class="sd">        If True, the diagonal is discarded in</span>
+<span class="sd">        the vectorization process. Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output : dict</span>
+<span class="sd">        A multi-levels dictionnary organised as follow :</span>
+<span class="sd">            - The first keys levels is the different groupes in the study. </span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels contain multiple keys : multiple</span>
+<span class="sd">            kind keys containing the corresponding kind matrix.</span>
+<span class="sd">            a &#39;discarded_rois&#39; key containing the index of discarded</span>
+<span class="sd">            rois.</span>
+<span class="sd">            Finally you should find a &#39;masked_array&#39; key : This key </span>
+<span class="sd">            contains a array of Boolean, shape (numbers of regions, numbers of regions)</span>
+<span class="sd">            where the value are True for the index in &#39;discarded_rois&#39; array, and False</span>
+<span class="sd">            elsewhere. See Note for further details. The diagonal of the</span>
+<span class="sd">            matrix are saved for each kind too in a dedicated field.</span>
+<span class="sd">            </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    time_series_extraction, time_series_extraction_with_individual_atlases :</span>
+<span class="sd">        These are the functions which extract the time series according atlas</span>
+<span class="sd">        regions and returned a structured dictionnary. </span>
+<span class="sd">        This is simply the argument `time_series_dictionary`.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes </span>
+<span class="sd">    -----</span>
+<span class="sd">    Covariances estimator are estimators compute in the scikit-learn library.</span>
+<span class="sd">    Multiple estimator can be found in the module sklearn.covariance, popular</span>
+<span class="sd">    choices are the Ledoit-Wolf estimator, or the OAS estimator.</span>
+<span class="sd">    </span>
+<span class="sd">    In the output dictionnary, each subjects have a masked array of boolean. The</span>
+<span class="sd">    masked will be useful when computing the mean connectivity matrices, we will</span>
+<span class="sd">    account the discarded rois in the derivation. For the statistical test you might</span>
+<span class="sd">    want perform, it will be useful too, to discarded those rois. A True value is</span>
+<span class="sd">    a masked roi, False elsewhere.</span>
+<span class="sd">    </span>
+<span class="sd">    For the tangent kind, the derivation of individual matrices need to be</span>
+<span class="sd">    made on the POOLED GROUPS which is performed here. </span>
+<span class="sd">    </span>
+<span class="sd">    The derivation of connectivity matrices are based on Nilearn functions. I</span>
+<span class="sd">    encourage the user to read the following docstring of important functions :</span>
+<span class="sd">    nilearn.connectome.ConnectivityMeasure</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    For the use of tangent :</span>
+<span class="sd">        .. [1]  G. Varoquaux et al. “Detection of brain functional-connectivity</span>
+<span class="sd">        difference in post-stroke patients using group-level covariance modeling&quot;, MICCAI 2010</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">saving_subjects_connectivity_matrices_dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">subjects_list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">:</span>
+            <span class="n">subject_time_series</span> <span class="o">=</span> <span class="p">[</span><span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;time_series&#39;</span><span class="p">]]</span>
+            <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+
+            <span class="c1"># operation on the boolean mask for each subject</span>
+            <span class="n">subject_mask</span> <span class="o">=</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">vectorize</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">discarding_diagonal</span><span class="p">:</span>
+                    <span class="n">subject_mask_diagonal_</span><span class="p">,</span> <span class="n">subject_mask_</span> <span class="o">=</span> \
+                        <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">],</span>
+                                   <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discarding_diagonal</span><span class="p">,</span>
+                                   <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;boolean&#39;</span><span class="p">)</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">subject_mask_</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span>
+                        <span class="s1">&#39;diagonal_mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_mask_diagonal_</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># discarding_diagonal is False</span>
+                    <span class="n">subject_mask_diagonal_</span><span class="p">,</span> <span class="n">subject_mask_</span> <span class="o">=</span> \
+                        <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subject_mask</span><span class="p">,</span>
+                                   <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discarding_diagonal</span><span class="p">,</span>
+                                   <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;boolean&#39;</span><span class="p">)</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">subject_mask_</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span>
+                        <span class="s1">&#39;diagonal_mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_mask_diagonal_</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_mask</span>
+                <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;diagonal_mask&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">subject_mask</span><span class="p">)</span>
+
+            <span class="c1"># Fetch the index of discarded rois</span>
+            <span class="k">if</span> <span class="s1">&#39;discarded_rois&#39;</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;discarded_rois&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;discarded_rois&#39;</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="c1"># We compute connectivity matrices except for the tangent kind, which need the pooled groups</span>
+                <span class="k">if</span> <span class="n">kind</span> <span class="o">!=</span> <span class="s1">&#39;tangent&#39;</span><span class="p">:</span>
+                    <span class="n">kind_measure</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">cov_estimator</span><span class="o">=</span><span class="n">covariance_estimator</span><span class="p">)</span>
+                    <span class="c1"># the current subject connectivity matrices</span>
+                    <span class="n">subject_kind_matrice</span> <span class="o">=</span> <span class="n">kind_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">subject_time_series</span><span class="p">)</span>
+                    <span class="c1"># We fill the subject dictionnary, accounting for vectorization option</span>
+                    <span class="k">if</span> <span class="n">vectorize</span><span class="p">:</span>
+                        <span class="c1"># if discard_diagonal is True</span>
+                        <span class="k">if</span> <span class="n">discarding_diagonal</span><span class="p">:</span>
+                            <span class="n">subject_kind_matrice_diagonal_</span><span class="p">,</span> <span class="n">subject_kind_matrice_</span> <span class="o">=</span> \
+                                <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subject_kind_matrice</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                                           <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discarding_diagonal</span><span class="p">,</span>
+                                           <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">subject_kind_matrice_diagonal_</span><span class="p">,</span> <span class="n">subject_kind_matrice_</span> <span class="o">=</span> \
+                                <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subject_kind_matrice</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                           <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">z_fisher_transform</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                            <span class="c1"># Apply a fisher transform, i.e arctanh to each connectivity coefficient</span>
+                            <span class="n">undefined_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">subject_kind_matrice_</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="n">subject_kind_matrice_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="n">subject_kind_matrice_</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">undefined_value</span><span class="p">)</span>
+                            <span class="c1"># Fill with nan, the undefined value after transformation</span>
+                            <span class="n">subject_kind_matrice_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">undefined_value</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">subject_kind_matrice_</span> <span class="o">=</span> <span class="n">subject_kind_matrice_</span>
+
+                        <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">subject_kind_matrice_</span><span class="p">[:]</span>
+                        <span class="c1"># Save the diagonal in this case:</span>
+                        <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span> <span class="o">+</span> <span class="s1">&#39;_diagonal&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">subject_kind_matrice_diagonal_</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># If we do not vectorize the connectivity matrix</span>
+                        <span class="k">if</span> <span class="n">z_fisher_transform</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                            <span class="c1"># Apply a fisher transform, i.e arctanh to each connectivity coefficient</span>
+                            <span class="c1"># For r = 1, in the diagonal, arctanh is not defined.</span>
+                            <span class="c1"># We compute a mask where False value are ignored</span>
+                            <span class="n">undefined_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">subject_kind_matrice</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="n">subject_kind_matrice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="n">subject_kind_matrice</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">undefined_value</span><span class="p">)</span>
+                            <span class="n">subject_kind_matrice</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">undefined_value</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">subject_kind_matrice</span> <span class="o">=</span> <span class="n">subject_kind_matrice</span>
+
+                        <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">subject_kind_matrice</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s1">&#39;tangent&#39;</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="c1"># We call pooled_groups_connectivity on the tangent space, returning along the tangent matrices</span>
+        <span class="c1"># the labels subjects in the same order of tangent connectivity matrices:</span>
+        <span class="n">tangent_matrix</span><span class="p">,</span> <span class="n">subjects_order</span> <span class="o">=</span> <span class="n">pooled_groups_connectivity</span><span class="p">(</span>
+            <span class="n">time_series_dictionary</span><span class="o">=</span><span class="n">time_series_dictionary</span><span class="p">,</span>
+            <span class="n">kinds</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tangent&#39;</span><span class="p">],</span>
+            <span class="n">covariance_estimator</span><span class="o">=</span><span class="n">covariance_estimator</span><span class="p">,</span>
+            <span class="n">vectorize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">group_subject_list</span> <span class="o">=</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">group_subject_list</span><span class="p">:</span>
+                <span class="n">subjects_order_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subjects_order</span><span class="p">)</span>
+                <span class="n">sub_index</span> <span class="o">=</span> <span class="n">subjects_order_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">vectorize</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">discarding_diagonal</span><span class="p">:</span>
+                        <span class="n">diagonal_matrice_tangent</span><span class="p">,</span> <span class="n">corresponding_tangent_matrice</span> <span class="o">=</span> \
+                            <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">tangent_matrix</span><span class="p">[</span><span class="s1">&#39;tangent&#39;</span><span class="p">][</span><span class="n">sub_index</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                                       <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discarding_diagonal</span><span class="p">,</span>
+                                       <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">diagonal_matrice_tangent</span><span class="p">,</span> <span class="n">corresponding_tangent_matrice</span> <span class="o">=</span> \
+                            <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">tangent_matrix</span><span class="p">[</span><span class="s1">&#39;tangent&#39;</span><span class="p">][</span><span class="n">sub_index</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                                       <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;tangent&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">corresponding_tangent_matrice</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;tangent&#39;</span> <span class="o">+</span> <span class="s1">&#39;_diagonal&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">diagonal_matrice_tangent</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">corresponding_tangent_matrice</span> <span class="o">=</span> <span class="n">tangent_matrix</span><span class="p">[</span><span class="s1">&#39;tangent&#39;</span><span class="p">][</span><span class="n">sub_index</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+                    <span class="n">saving_subjects_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;tangent&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">corresponding_tangent_matrice</span>
+
+    <span class="k">return</span> <span class="n">saving_subjects_connectivity_matrices_dictionary</span></div>
+
+
+<div class="viewcode-block" id="pooled_groups_tangent_mean"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.pooled_groups_tangent_mean">[docs]</a><span class="k">def</span> <span class="nf">pooled_groups_tangent_mean</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">,</span> <span class="n">covariance_estimator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the geometric mean of covariances connectivity matrices for the tangent kind.</span>
+<span class="sd">    </span>
+<span class="sd">    The geometric mean is the point in the symmetric manifold matrices spaces </span>
+<span class="sd">    where the tangent space is defined. Therefore it&#39;s make sense for the pooled</span>
+<span class="sd">    groups only.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time_series_dictionary : dict</span>
+<span class="sd">        A multi-levels dictionnary organised as follow :</span>
+<span class="sd">            - The first keys levels is the different groupes in the study. </span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is two keys : &#39;time_series&#39; containing the</span>
+<span class="sd">            subject time series in an array of shape (number of regions, number of time points) </span>
+<span class="sd">            A key &#39;discarded_rois&#39; containing an array of the index of ROIs </span>
+<span class="sd">            where the corresponding labels is &#39;void&#39;. If no void labels is detected,</span>
+<span class="sd">            then the array should be empty.</span>
+<span class="sd">    </span>
+<span class="sd">    covariance_estimator : estimator object</span>
+<span class="sd">    All the kinds  are based on derivation of covariances matrices. You need</span>
+<span class="sd">    to precise the estimator, see Notes.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns </span>
+<span class="sd">    -------</span>
+<span class="sd">    output : numpy.array of shape (n_features, n_features)</span>
+<span class="sd">        The geometric mean a the pooled group.</span>
+<span class="sd">        </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    time_series_extraction, time_series_extraction_with_individual_atlases :</span>
+<span class="sd">    These are the functions which extract the time series according atlas</span>
+<span class="sd">    regions and returned a structured dictionnary. This is simply the argument</span>
+<span class="sd">    `time_series_dictionary`.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Covariances estimator are estimators compute in the scikit-learn library.</span>
+<span class="sd">    Multiple estimator can be found in the module sklearn.covariance, popular</span>
+<span class="sd">    choices are the Ledoit-Wolf estimator, or the OAS estimator.</span>
+<span class="sd">    </span>
+<span class="sd">    For now, we doesnt account for discarded rois for the derivation of the</span>
+<span class="sd">    geometric mean.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tangent_measure</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;tangent&#39;</span><span class="p">,</span> <span class="n">cov_estimator</span><span class="o">=</span><span class="n">covariance_estimator</span><span class="p">)</span>
+    <span class="n">group_stacked_time_series</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># appending subject time series</span>
+            <span class="n">group_stacked_time_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;time_series&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Projecting in tangent space the whole cohort of subjects at the geometric mean</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">tangent_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">group_stacked_time_series</span><span class="p">)</span>
+    <span class="c1"># Retrieve the geometric mean</span>
+    <span class="n">tangent_mean_</span> <span class="o">=</span> <span class="n">tangent_measure</span><span class="o">.</span><span class="n">mean_</span>
+
+    <span class="k">return</span> <span class="n">tangent_mean_</span></div>
+
+
+<div class="viewcode-block" id="group_mean_connectivity"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.group_mean_connectivity">[docs]</a><span class="k">def</span> <span class="nf">group_mean_connectivity</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the mean connectivity matrices for each kind accounting for masked rois.</span>
+<span class="sd">    </span>
+<span class="sd">    Read the notes for the tangent space !</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_connectivity_matrices : dict</span>
+<span class="sd">         A multi-levels dictionnary organised as follow :</span>
+<span class="sd">             - The first keys levels is the different groupes in the study. </span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is the different kind matrices</span>
+<span class="sd">            for each subjects, a &#39;discarded_rois&#39; key for the</span>
+<span class="sd">            discarded rois array index, a &#39;masked_array&#39; key containing</span>
+<span class="sd">            the array of Boolean of True for the discarded_rois index, and False</span>
+<span class="sd">            elsewhere.</span>
+<span class="sd">    </span>
+<span class="sd">    kinds : list</span>
+<span class="sd">        List of kinds you want the mean connectivity. Choices</span>
+<span class="sd">        are &#39;correlation&#39;, &#39;tangent&#39;, &#39;covariances&#39;, &#39;precision&#39;, &#39;partial </span>
+<span class="sd">        correlation&#39;. Off course, the kind should be in the subjects_connectivity_matrices</span>
+<span class="sd">        dictionnary.</span>
+<span class="sd">        </span>
+<span class="sd">    axis : int, optional</span>
+<span class="sd">        The axis you want to compute the mean, the subjects axis. Default is 0.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns </span>
+<span class="sd">    -------</span>
+<span class="sd">    output : dict</span>
+<span class="sd">        A multi-levels dictionnary organised as follow :</span>
+<span class="sd">            - The first keys levels is the different groups in the study.</span>
+<span class="sd">            - The second keys levels is the mean connectivity matrices for</span>
+<span class="sd">            the different kinds. They are array of shape (number of regions , number of regions)</span>
+<span class="sd">            if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else.</span>
+<span class="sd">            </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    individual_connectivity_matrices : These function returned a organised</span>
+<span class="sd">    dictionnary containing the connectivity matrices for different kinds. This is</span>
+<span class="sd">    simply the argument `subjects_connectivity_matrices`</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    </span>
+<span class="sd">    When computing the mean, we account for the &#39;discarded_rois&#39; entries. That mean </span>
+<span class="sd">    when the value is True in the masked_array, we discard the rois for the corresponding</span>
+<span class="sd">    subject in the derivation of the mean.</span>
+<span class="sd">    </span>
+<span class="sd">    When I compute the mean in the tangent space, it&#39;s a arithmetic mean. This</span>
+<span class="sd">    mean matrix is in the tangent space, that is NOT in the same space as correlation or partial correlation matrix.</span>
+<span class="sd">    Be careful with the interpretation !!</span>
+<span class="sd">    </span>
+<span class="sd">    That said, the tangent space is defined at ONE point in the manifold of symmetric matrices.</span>
+<span class="sd">    This point is the geometric mean for the POOLED groups if multiple group are studied !</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group_mean_connectivity_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># Dictionnary initialisation : for each group, we generate the list of kinds as keys</span>
+        <span class="n">group_mean_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+        <span class="c1"># Subject list of the current group</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+            <span class="c1"># We stack the subjects connectivity matrices for the group and current kind</span>
+            <span class="n">kind_stack_matrices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span>
+                                            <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">])</span>
+            <span class="c1"># We also stack the subjects boolean array</span>
+            <span class="n">mask_array_stack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span>
+                                         <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">])</span>
+            <span class="c1"># We compute the mean for each kind, accounting for the discarded rois,</span>
+            <span class="c1"># via the function call masked_array_mean</span>
+            <span class="n">group_mean_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="n">masked_arrays_mean</span><span class="p">(</span><span class="n">arrays</span><span class="o">=</span><span class="n">kind_stack_matrices</span><span class="p">,</span>
+                                                                                <span class="n">masked_array</span><span class="o">=</span><span class="n">mask_array_stack</span><span class="p">,</span>
+                                                                                <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">group_mean_connectivity_matrices</span></div>
+
+
+<div class="viewcode-block" id="pooled_groups_connectivity"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.pooled_groups_connectivity">[docs]</a><span class="k">def</span> <span class="nf">pooled_groups_connectivity</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">covariance_estimator</span><span class="p">,</span> <span class="n">vectorize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute connectivity matrices of pooled groups.</span>
+<span class="sd">    </span>
+<span class="sd">    This function simply stack the all the times series of each group in one pooled groups and compute </span>
+<span class="sd">    the connectivity matrices  on the whole group. When computing the tangent kind this function is</span>
+<span class="sd">    called.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters </span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    time_series_dictionary : dict</span>
+<span class="sd">    A multi-levels dictionnary organised as follow :</span>
+<span class="sd">        - The first keys levels is the different groupes in the study. </span>
+<span class="sd">        - The second keys levels is the subjects IDs</span>
+<span class="sd">        - The third levels is two keys : &#39;time_series&#39; containing the</span>
+<span class="sd">        subject time series in an array of shape (number of regions, number of time points) </span>
+<span class="sd">        A key &#39;discarded_rois&#39; containing an array of the index of ROIs </span>
+<span class="sd">        where the corresponding labels is &#39;void&#39;. If no void labels is detected,</span>
+<span class="sd">        then the array should be empty.</span>
+
+<span class="sd">    kinds : list</span>
+<span class="sd">        List of the different metrics you want to compute the </span>
+<span class="sd">        connectivity matrices. Choices are &#39;tangent&#39;, &#39;correlation&#39;,</span>
+<span class="sd">        &#39;partial correlation&#39;, &#39;covariance&#39;, &#39;precision&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    covariance_estimator : estimator object</span>
+<span class="sd">        All the kinds  are based on derivation of covariances matrices. You need</span>
+<span class="sd">        to precise the estimator, see Notes.</span>
+<span class="sd">        </span>
+<span class="sd">    vectorize : bool</span>
+<span class="sd">        If True, the connectivity matrices are reshape into 1D arrays of </span>
+<span class="sd">        the vectorized lower part of the matrices. Useful for classification,</span>
+<span class="sd">        regression...</span>
+<span class="sd">        Diagonal are discarded.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    </span>
+<span class="sd">    output 1 : dict</span>
+<span class="sd">        A multi-levels dictionnary organised as follow :</span>
+<span class="sd">            - The first level keys is the different kinds</span>
+<span class="sd">            - The second levels is simply a ndimensional array of connectivity</span>
+<span class="sd">            matrices of shape (number of subjects, number of regions, number of regions)</span>
+<span class="sd">            if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else</span>
+<span class="sd">            </span>
+<span class="sd">    output 2 : list</span>
+<span class="sd">        The list of subject IDs, in the order of time series computation.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">   </span>
+<span class="sd">    Covariances estimator are estimators compute in the scikit-learn library.</span>
+<span class="sd">    Multiple estimator can be found in the module sklearn.covariance, popular</span>
+<span class="sd">    choices are the Ledoit-Wolf estimator, or the OAS estimator.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">group_stacked_time_series</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">time_series_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">subject_list</span> <span class="o">=</span> <span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subject_list</span><span class="p">:</span>
+            <span class="c1"># Appending a tuple: time series and the corresponding labels of the subjects</span>
+            <span class="n">group_stacked_time_series</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">time_series_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;time_series&#39;</span><span class="p">],</span> <span class="n">subject</span><span class="p">))</span>
+    
+    <span class="c1"># We compute the connectivity matrices for each subject in the pooled group</span>
+    <span class="n">pooled_connectivity_matrices_dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+    <span class="n">stacked_couple_subject_time_series</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">group_stacked_time_series</span><span class="p">)</span>
+    <span class="n">group_stacked_time_series</span> <span class="o">=</span> <span class="n">stacked_couple_subject_time_series</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">subject_labels</span> <span class="o">=</span> <span class="n">stacked_couple_subject_time_series</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="n">connectivity_measure</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+                                                   <span class="n">cov_estimator</span><span class="o">=</span><span class="n">covariance_estimator</span><span class="p">,</span>
+                                                   <span class="n">vectorize</span><span class="o">=</span><span class="n">vectorize</span><span class="p">)</span>
+        <span class="n">pooled_connectivity_matrices_dictionary</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">connectivity_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">group_stacked_time_series</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">pooled_connectivity_matrices_dictionary</span><span class="p">,</span> <span class="n">subject_labels</span></div>
+
+
+<div class="viewcode-block" id="extract_sub_connectivity_matrices"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.extract_sub_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">extract_sub_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span>
+                                      <span class="n">regions_index</span><span class="p">,</span>
+                                      <span class="n">vectorize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract sub matrices given region index.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_connectivity_matrices: dict</span>
+<span class="sd">        The dictionnary containing for each subjects, for each group and kind, the</span>
+<span class="sd">        connectivity matrices, of shape (n_features, n_features), and also</span>
+<span class="sd">        the boolean mask array indicating the discarded roi.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds.</span>
+<span class="sd">    regions_index: list, or 1D numpy.array of shape (number of indices, )</span>
+<span class="sd">        The list of index of regions you want to extract the connectivity. The</span>
+<span class="sd">        region index also correspond to the index of ROIs in the 4D reference</span>
+<span class="sd">        atlas of the study.</span>
+<span class="sd">    vectorize: bool, optional</span>
+<span class="sd">        If True, the extracted sub-matrices are vectorized, keeping</span>
+<span class="sd">        the diagonal of the matrix, and the corresponding boolean</span>
+<span class="sd">        mask.</span>
+<span class="sd">    discard_diagonal: bool, optional</span>
+<span class="sd">        If True, the diagonal is discard when the extracted connectivity matrices are vectorized.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary containing for each group and kinds, for each subject</span>
+<span class="sd">        the extract sub-matrice, and the corresponding boolean mask.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Copy of the subjects connectivity matrices dictionnary</span>
+    <span class="n">subjects_connectivity_matrices_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices_copy</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="c1"># Sub extraction of connectivity matrices according the provided region_index array</span>
+                <span class="n">row_sliced</span> <span class="o">=</span> <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">regions_index</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="n">row_sliced</span><span class="p">[:,</span> <span class="n">regions_index</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">vectorize</span><span class="p">:</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">row_sliced</span><span class="p">[:,</span> <span class="n">regions_index</span><span class="p">],</span>
+                                   <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discard_diagonal</span><span class="p">,</span>
+                                   <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Sub extraction of corresponding masked array</span>
+            <span class="n">row_mask_sliced</span> <span class="o">=</span> <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">][</span><span class="n">regions_index</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row_mask_sliced</span><span class="p">[:,</span> <span class="n">regions_index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">vectorize</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">subjects_connectivity_matrices_copy</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="p">(</span>
+                    <span class="n">numpy_array</span><span class="o">=</span><span class="n">row_mask_sliced</span><span class="p">[:,</span> <span class="n">regions_index</span><span class="p">],</span>
+                    <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discard_diagonal</span><span class="p">,</span>
+                    <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;boolean&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Return the subjects sub connectivity matrices</span>
+    <span class="n">subjects_sub_connectivity_matrices</span> <span class="o">=</span> <span class="n">subjects_connectivity_matrices_copy</span>
+
+    <span class="k">return</span> <span class="n">subjects_sub_connectivity_matrices</span></div>
+
+
+<div class="viewcode-block" id="subjects_mean_connectivity_"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.subjects_mean_connectivity_">[docs]</a><span class="k">def</span> <span class="nf">subjects_mean_connectivity_</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">,</span>
+                                <span class="n">connectivity_coefficient_position</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span>
+                                <span class="n">groupes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute for each subjects, the mean connectivity for some connectivity coefficient in the general subjects</span>
+<span class="sd">    connectivity matrices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_individual_matrices_dictionnary: dict</span>
+<span class="sd">        The subjects connectivity dictionnary containing connectivity matrices</span>
+<span class="sd">        and corresponding mask array for discarded rois, for each group.</span>
+
+<span class="sd">    connectivity_coefficient_position: numpy.array of shape (number of rois, row_index, column_index)</span>
+<span class="sd">        The array containing the position in the connectivity matrices of the rois you want</span>
+<span class="sd">        to extract the connectivity coefficients.</span>
+
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds.</span>
+
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of the two group in the study.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary containing for each subject in group, a masked array structure containing</span>
+<span class="sd">        the numerical array of the connectivity coefficient of interest, along with the boolean</span>
+<span class="sd">        mask accounting for discarded rois. The second key, contain the mean of the extracted</span>
+<span class="sd">        connectivity coefficient for each subject, also accounting for discarded rois it they</span>
+<span class="sd">        exist.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The subjects connectivity matrices shouldn&#39;t be vectorized, the shape should</span>
+<span class="sd">    be (n_features, n_features).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Indices of the connectivity coefficient in terms of row and column index.</span>
+    <span class="n">row_index</span> <span class="o">=</span> <span class="n">connectivity_coefficient_position</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">column_index</span> <span class="o">=</span> <span class="n">connectivity_coefficient_position</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Extract from the subject connectivity dictionnary the connectivity coefficients</span>
+
+    <span class="c1"># Dictionnary initialisation to store the regions connectivity coefficients, and the mask value for further</span>
+    <span class="c1"># accounting for discarded rois</span>
+    <span class="n">connectivity_of_interest</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">connectivity_of_interest</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">subjects_list</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">:</span>
+            <span class="n">connectivity_of_interest</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="c1"># Check is subject matrice is two dimensional</span>
+                <span class="n">check_2d</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">])</span>
+                <span class="c1"># Check is the corresponding mask is two dimensional</span>
+                <span class="n">check_2d</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">])</span>
+
+                <span class="c1"># Extract connectivity coefficient based on the list of indices of row and column index</span>
+                <span class="n">subjects_connectivity_of_interest</span> <span class="o">=</span> \
+                    <span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">row_index</span><span class="p">,</span>
+                                                                                    <span class="n">column_index</span><span class="p">]</span>
+                <span class="c1"># Extract corresponding mask values</span>
+                <span class="n">subjects_masked_array_connectivity_of_interest</span> <span class="o">=</span> \
+                    <span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">][</span><span class="n">row_index</span><span class="p">,</span>
+                                                                                              <span class="n">column_index</span><span class="p">]</span>
+                <span class="c1"># Build a masked array structure for further computation accounting for discarded roi</span>
+                <span class="n">subjects_connectivity_of_interest_ma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">subjects_connectivity_of_interest</span><span class="p">,</span>
+                                                                   <span class="n">mask</span><span class="o">=</span><span class="n">subjects_masked_array_connectivity_of_interest</span><span class="p">)</span>
+                <span class="c1"># Compute the mean connectivity for the current subject, accounting for discarded rois</span>
+                <span class="n">mean_subject_connectivity_of_interest</span> <span class="o">=</span> <span class="n">subjects_connectivity_of_interest_ma</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="c1"># Fill the dictionnary, saving the subject masked array structure and</span>
+                <span class="c1"># mean connectivity of extracted coefficient.</span>
+                <span class="n">connectivity_of_interest</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="p">{</span><span class="s1">&#39;connectivity masked array&#39;</span><span class="p">:</span> <span class="n">subjects_connectivity_of_interest_ma</span><span class="p">,</span>
+                     <span class="s1">&#39;mean connectivity&#39;</span><span class="p">:</span> <span class="n">mean_subject_connectivity_of_interest</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">connectivity_of_interest</span></div>
+
+
+<div class="viewcode-block" id="intra_network_functional_connectivity"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.intra_network_functional_connectivity">[docs]</a><span class="k">def</span> <span class="nf">intra_network_functional_connectivity</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">,</span>
+                                          <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">,</span>
+                                          <span class="n">network_column_name</span><span class="p">,</span>
+                                          <span class="n">sheetname</span><span class="p">,</span>
+                                          <span class="n">roi_indices_column_name</span><span class="p">,</span> <span class="n">color_of_network_column</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute for each subjects, the intra network connectivity for each network in the study.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_individual_matrices_dictionnary: dict</span>
+<span class="sd">        The subjects connectivity dictionnary containing connectivity matrices</span>
+<span class="sd">        and corresponding mask array for discarded rois, for each group.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of groups in the study</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds in the study</span>
+<span class="sd">    atlas_file: string</span>
+<span class="sd">        The full path to an excel file containing information on the atlas</span>
+<span class="sd">    network_column_name: string</span>
+<span class="sd">        The name of the column in the excel file containing the network label for each roi</span>
+<span class="sd">    roi_indices_column_name: string</span>
+<span class="sd">        The name of the column in the excel file containing the index of each ROI in the 4D atlas file.</span>
+<span class="sd">    sheetname: string</span>
+<span class="sd">        The name of the active sheet in the excel file</span>
+<span class="sd">    color_of_network_column: string</span>
+<span class="sd">        The name of the columns containing for each roi, the corresponding network color.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output 1: dict</span>
+<span class="sd">        A dictionnary structure containing for each subject and for each network: the network connectivity,</span>
+<span class="sd">        the vectorized array of coefficients of the network without the diagonal, the corresponding vectorized</span>
+<span class="sd">        mask array accounting for discarded rois, the diagonal of the mask array, the masked array structure</span>
+<span class="sd">        of the network, and finally the number of rois in the network.</span>
+<span class="sd">    output 2: dict</span>
+<span class="sd">        A dictionnary network, containing information fetch from the atlas excel file of the atlas.</span>
+<span class="sd">    output 3: list</span>
+<span class="sd">        The network label list.</span>
+<span class="sd">    output 4: array of shape (number of network, 3)</span>
+<span class="sd">        The array containing the color in the normalized RGB space, in the order of the network label list.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The intra connectivity is simply defined as the mean, for each network,</span>
+<span class="sd">    of the coefficient belonging to the network. Because connectivity metrics are symmetric,</span>
+<span class="sd">    we only taking the vectorize part of the network connectivity matrices. We account for discarded roi,</span>
+<span class="sd">    as we compute the mean on a numpy masked array structure, that is the vectorized array</span>
+<span class="sd">    along with the vectorized boolean mask for the current network.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    This intra-network composite scores is used in the following references:</span>
+
+<span class="sd">    .. [1] M. Brier, &quot;Loss of Intranetwork and Internetwork Resting State Functional Connections with Alzheimer&#39;s</span>
+<span class="sd">       Disease Progression&quot; The Journal of Neuroscience, 2012.</span>
+<span class="sd">    .. [2] P. Wang, &quot;Aberrant intra- and inter-network connectivity architectures in Alzheimer&#39;s disease and mild</span>
+<span class="sd">       cognitive impairment&quot;, Nature Publishing Group, 2015.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">network_dict</span> <span class="o">=</span> <span class="n">atlas</span><span class="o">.</span><span class="n">fetch_atlas_functional_network</span><span class="p">(</span><span class="n">atlas_excel_file</span><span class="o">=</span><span class="n">atlas_file</span><span class="p">,</span>
+                                                        <span class="n">sheetname</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span>
+                                                        <span class="n">network_column_name</span><span class="o">=</span><span class="n">network_column_name</span><span class="p">)</span>
+    <span class="n">network_labels_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">network_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="c1"># The list of network are NOT in the same order of the atlas in the analysis, </span>
+    <span class="c1"># we have to fetch the color according to network labels list.</span>
+    
+    <span class="n">network_label_color_name</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">network_dict</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s1">&#39;dataframe&#39;</span><span class="p">][</span><span class="n">color_of_network_column</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+                                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">network_labels_list</span><span class="p">]</span>
+    <span class="n">network_label_colors</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">255</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">webcolors</span><span class="o">.</span><span class="n">name_to_rgb</span><span class="p">(</span><span class="n">network_label_color_name</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">network_label_color_name</span><span class="p">))])</span>
+    
+    <span class="c1"># For each subject in each group : the network intra-connectivity</span>
+    <span class="c1"># is defined as the mean of the connectivity coefficient inside</span>
+    <span class="c1"># the network.</span>
+
+    <span class="c1"># Intra network dictionnary initialisation</span>
+    <span class="n">intra_network_connectivity_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">groupes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">intra_network_connectivity_dict</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">subjects_list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">:</span>
+            <span class="n">intra_network_connectivity_dict</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="n">intra_network_connectivity_dict</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">network_labels_list</span><span class="p">)</span>
+
+    <span class="c1"># Initialisation of the list containing the label of network which have at least two regions</span>
+    <span class="n">valid_network_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Initialisation of the list containing the color of the label network which have at least two regions</span>
+    <span class="n">valid_network_color_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">network_labels_list</span><span class="p">:</span>
+
+        <span class="c1"># Fetch the indices of the network roi in the 4D atlas file, it will the same indices to slice in the subject</span>
+        <span class="c1"># connectivity matrices</span>
+        <span class="n">network_roi_4d_indices</span> <span class="o">=</span> <span class="n">network_dict</span><span class="p">[</span><span class="n">network</span><span class="p">][</span><span class="s1">&#39;dataframe&#39;</span><span class="p">][</span><span class="n">roi_indices_column_name</span><span class="p">]</span>
+        <span class="c1"># Fetch the number of rois in the network</span>
+        <span class="n">n_roi_in_network</span> <span class="o">=</span> <span class="n">network_dict</span><span class="p">[</span><span class="n">network</span><span class="p">][</span><span class="s1">&#39;number of rois&#39;</span><span class="p">]</span>
+        <span class="c1"># Computation make sense only they are at least two regions in the current network</span>
+        <span class="k">if</span> <span class="n">n_roi_in_network</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># It is a valid network, we append it&#39;s label and color for plotting purpose in the t-test</span>
+            <span class="n">valid_network_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+            <span class="n">valid_network_color_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">network_label_colors</span><span class="p">[</span><span class="n">network_labels_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">network</span><span class="p">)])</span>
+            <span class="c1"># Extract the sub matrix corresponding to the current network for all kinds</span>
+            <span class="n">network_connectivity_matrix</span> <span class="o">=</span> <span class="n">extract_sub_connectivity_matrices</span><span class="p">(</span>
+                <span class="n">subjects_connectivity_matrices</span><span class="o">=</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">,</span>
+                <span class="n">kinds</span><span class="o">=</span><span class="n">kinds</span><span class="p">,</span> <span class="n">regions_index</span><span class="o">=</span><span class="n">network_roi_4d_indices</span><span class="p">,</span> <span class="n">vectorize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="c1"># For Each group, each kind and subject:</span>
+            <span class="c1"># sum the lower diagonal of each network, accounting for the discarded ROIs,</span>
+            <span class="c1"># if they are some in the network</span>
+            <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+                <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">network_connectivity_matrix</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                        <span class="c1"># Vectorize the network connectivity matrix</span>
+                        <span class="n">diag_network</span><span class="p">,</span> <span class="n">vectorize_network</span> <span class="o">=</span> <span class="n">array_operation</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span>
+                            <span class="n">numpy_array</span><span class="o">=</span><span class="n">network_connectivity_matrix</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">],</span>
+                            <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+                        <span class="c1"># Vectorize the boolean mask</span>
+                        <span class="n">diag_network_mask</span><span class="p">,</span> <span class="n">vectorize_network_mask</span> <span class="o">=</span> <span class="n">array_operation</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span>
+                            <span class="n">numpy_array</span><span class="o">=</span><span class="n">network_connectivity_matrix</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">],</span>
+                            <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;boolean&#39;</span><span class="p">)</span>
+                        <span class="c1"># Construct the masked array structure for the current network</span>
+                        <span class="n">network_masked_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">vectorize_network</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">vectorize_network_mask</span><span class="p">)</span>
+                        <span class="c1"># Compute the mean for the network, accounting for discarded</span>
+                        <span class="c1"># rois via the numpy masked array structure</span>
+                        <span class="n">network_mean</span> <span class="o">=</span> <span class="n">network_masked_array</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                        <span class="c1"># Fill the intra network dictionnary</span>
+                        <span class="n">intra_network_connectivity_dict</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">network</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s1">&#39;network connectivity strength&#39;</span><span class="p">:</span> <span class="n">network_mean</span><span class="p">,</span>
+                            <span class="s1">&#39;network array&#39;</span><span class="p">:</span> <span class="n">vectorize_network</span><span class="p">,</span>
+                            <span class="s1">&#39;network diagonal array&#39;</span><span class="p">:</span> <span class="n">diag_network</span><span class="p">,</span>
+                            <span class="s1">&#39;network mask&#39;</span><span class="p">:</span> <span class="n">vectorize_network_mask</span><span class="p">,</span>
+                            <span class="s1">&#39;network diagonal masked array&#39;</span><span class="p">:</span> <span class="n">diag_network_mask</span><span class="p">,</span>
+                            <span class="s1">&#39;number of rois in network&#39;</span><span class="p">:</span> <span class="n">n_roi_in_network</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">intra_network_connectivity_dict</span><span class="p">,</span> <span class="n">network_dict</span><span class="p">,</span> <span class="n">valid_network_list</span><span class="p">,</span>  <span class="n">valid_network_color_list</span></div>
+
+
+<div class="viewcode-block" id="inter_network_subjects_connectivity_matrices"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">inter_network_subjects_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span>
+                                                 <span class="n">kinds</span><span class="p">,</span> <span class="n">atlas_file</span><span class="p">,</span> <span class="n">sheetname</span><span class="p">,</span>
+                                                 <span class="n">network_column_name</span><span class="p">,</span> <span class="n">roi_indices_column_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute for each subjects, the inter network connectivity matrices</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_individual_matrices_dictionnary: dict</span>
+<span class="sd">        The subjects connectivity matrices dictionnary for each groupes, and kind in the study.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of groups in the study</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds in the study</span>
+<span class="sd">    atlas_file: string</span>
+<span class="sd">        The full path to an excel file containing information on the atlas</span>
+<span class="sd">    network_column_name: string</span>
+<span class="sd">        The name of the column in the excel file containing the network label for each roi</span>
+<span class="sd">    roi_indices_column_name</span>
+<span class="sd">        The name of the column in the excel file containing the index of each ROI in the 4D atlas file.</span>
+<span class="sd">    sheetname: string</span>
+<span class="sd">        The name of the active sheet in the excel file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        The subjects inter network connectivity matrices dictionnary, for each group and kinds. Each matrices</span>
+<span class="sd">        should have shape (number of network, number of network).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The inter-network connectivity is simply defined as the mean of all possible</span>
+<span class="sd">    connection between a network pair. We also account for the possible discarded rois</span>
+<span class="sd">    in one or both the network by computing the mean on a masked array structure, that is,</span>
+<span class="sd">    the inter-network coefficient of interest, along with the corresponding value of the masked</span>
+<span class="sd">    array.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    This inter-network composite score is used in the following references :</span>
+
+<span class="sd">    .. [1] M. Brier, &quot;Loss of Intranetwork and Internetwork Resting State Functional Connections with Alzheimer&#39;s</span>
+<span class="sd">       Disease Progression&quot; The Journal of Neuroscience, 2012.</span>
+<span class="sd">    .. [2] P. Wang, &quot;Aberrant intra- and inter-network connectivity architectures in Alzheimer&#39;s disease and mild</span>
+<span class="sd">       cognitive impairment&quot;, Nature Publishing Group, 2015.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Fetch all the network information from a excel file</span>
+    <span class="n">network_dict</span> <span class="o">=</span> <span class="n">atlas</span><span class="o">.</span><span class="n">fetch_atlas_functional_network</span><span class="p">(</span><span class="n">atlas_excel_file</span><span class="o">=</span><span class="n">atlas_file</span><span class="p">,</span>
+                                                        <span class="n">sheetname</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span>
+                                                        <span class="n">network_column_name</span><span class="o">=</span><span class="n">network_column_name</span><span class="p">)</span>
+    <span class="c1"># The list of network name</span>
+    <span class="n">network_labels_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">network_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c1"># Find all possible pair of network</span>
+    <span class="n">network_possible_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">network_labels_list</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">subjects_inter_network_connectivity_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">groupes</span><span class="p">)</span>
+    <span class="n">n_network</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">network_labels_list</span><span class="p">)</span>
+
+    <span class="c1"># Build the network labels order from network possible</span>
+    <span class="c1"># pair list for plotting purpose</span>
+    <span class="n">network_possible_pairs_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">network_possible_pairs</span><span class="p">)</span>
+    <span class="n">network_labels_order</span> <span class="o">=</span> <span class="n">remove_duplicate</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">network_possible_pairs_array</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">network_labels_order</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">network_possible_pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Initialize a dictionnary for each network</span>
+    <span class="c1"># Extract the inter network connectivity matrix</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">subjects_list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">:</span>
+            <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">network_possible_pairs</span><span class="p">)</span>
+                <span class="n">all_inter_network_strength</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">pair_of_network</span> <span class="ow">in</span> <span class="n">network_possible_pairs</span><span class="p">:</span>
+                    <span class="n">inter_network_coefficient_to_sum</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">inter_network_coefficient_to_sum_mask</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="c1"># Fetch the roi index in 4D atlas of the first network</span>
+                    <span class="c1"># in the pair via the network dictionary, and number of rois</span>
+                    <span class="n">first_network_roi_index</span> <span class="o">=</span> <span class="n">network_dict</span><span class="p">[</span><span class="n">pair_of_network</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">&#39;dataframe&#39;</span><span class="p">][</span><span class="n">roi_indices_column_name</span><span class="p">]</span>
+                    <span class="c1"># Fetch the roi index in 4D atlas of the second network in the pair</span>
+                    <span class="n">second_network_roi_index</span> <span class="o">=</span> <span class="n">network_dict</span><span class="p">[</span><span class="n">pair_of_network</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s1">&#39;dataframe&#39;</span><span class="p">][</span><span class="n">roi_indices_column_name</span><span class="p">]</span>
+                    <span class="c1"># Loop over the pair of coefficient between the pair of network</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">first_network_roi_index</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">second_network_roi_index</span><span class="p">:</span>
+                            <span class="c1"># Append the coefficient to sum of all possible inter network coefficient pair</span>
+                            <span class="n">inter_network_coefficient_to_sum</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+                            <span class="c1"># Append the corresponding values in the masked array accounting for discarded rois.</span>
+                            <span class="n">inter_network_coefficient_to_sum_mask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">subjects_individual_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+    
+                    <span class="c1"># Construct the masked array structure</span>
+                    <span class="c1"># TODO: ABS or not Abs?</span>
+                    <span class="n">inter_network_pair_masked_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">inter_network_coefficient_to_sum</span><span class="p">,</span>
+                                                                  <span class="n">mask</span><span class="o">=</span><span class="n">inter_network_coefficient_to_sum_mask</span><span class="p">)</span>
+                    <span class="c1"># Average of the masked array structure, this is the inter network strength</span>
+                    <span class="n">inter_network_strength</span> <span class="o">=</span> <span class="n">inter_network_pair_masked_array</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    
+                    <span class="n">all_inter_network_strength</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inter_network_strength</span><span class="p">)</span>
+    
+                    <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">pair_of_network</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s1">&#39;strength&#39;</span><span class="p">:</span> <span class="n">inter_network_strength</span><span class="p">,</span>
+                        <span class="s1">&#39;connectivity coefficient&#39;</span><span class="p">:</span> <span class="n">inter_network_pair_masked_array</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                        <span class="s1">&#39;masked array&#39;</span><span class="p">:</span> <span class="n">inter_network_pair_masked_array</span><span class="o">.</span><span class="n">mask</span>
+                                                                                                            <span class="p">}</span>
+    
+                <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_inter_network_strength</span><span class="p">),</span> <span class="n">diagonal</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_network</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">,</span> <span class="n">network_labels_order</span></div>
+
+
+<div class="viewcode-block" id="mean_of_flatten_connectivity_matrices"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">mean_of_flatten_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the flat mean connectivity for each subjects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_individual_matrices_dictionary: dict</span>
+<span class="sd">        The subjects connectivity dictionnary containing connectivity matrices</span>
+<span class="sd">        and corresponding mask array for discarded rois, for each group.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of groupes in the study</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds in the study</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary containing for each subject in group, a masked array structure containing</span>
+<span class="sd">        the numerical array of the connectivity coefficient of interest, along with the boolean</span>
+<span class="sd">        mask accounting for discarded rois. The second key, contain the mean of the extracted</span>
+<span class="sd">        connectivity coefficient for each subject, also accounting for discarded rois it they</span>
+<span class="sd">        exist.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The subjects connectivity matrices shouldn&#39;t be vectorized, the shape should</span>
+<span class="sd">    be (n_features, n_features).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connectivity_of_interest</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">subjects_individual_matrices_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">subjects_individual_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">connectivity_of_interest</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">subjects_list</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">:</span>
+            <span class="n">connectivity_of_interest</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="c1"># Vectorize the array for the current kind</span>
+                <span class="n">diag_connectivity</span><span class="p">,</span> <span class="n">vectorize_connectivity</span> <span class="o">=</span> <span class="n">array_operation</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span>
+                    <span class="n">numpy_array</span><span class="o">=</span><span class="n">subjects_individual_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">],</span>
+                    <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span><span class="p">)</span>
+                <span class="c1"># Vectorize the corresponding boolean mask</span>
+                <span class="n">diag_mask</span><span class="p">,</span> <span class="n">vectorize_mask</span> <span class="o">=</span> <span class="n">array_operation</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span>
+                    <span class="n">numpy_array</span><span class="o">=</span><span class="n">subjects_individual_matrices_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">],</span>
+                    <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;boolean&#39;</span><span class="p">)</span>
+                <span class="c1"># Compute the masked mean accounting for discarded ROIs</span>
+                <span class="n">vectorize_connectivity_masked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">vectorize_connectivity</span><span class="p">,</span>
+                                                                   <span class="n">mask</span><span class="o">=</span><span class="n">vectorize_mask</span><span class="p">)</span>
+                <span class="n">flat_mean_subject_connectivity</span> <span class="o">=</span> <span class="n">vectorize_connectivity_masked</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="c1"># Fill the dictionnary with the mean connectivity of interest for the current subjects</span>
+                <span class="n">connectivity_of_interest</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;connectivity masked array&#39;</span><span class="p">:</span> <span class="n">vectorize_connectivity_masked</span><span class="p">,</span>
+                    <span class="s1">&#39;mean connectivity&#39;</span><span class="p">:</span> <span class="n">flat_mean_subject_connectivity</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">connectivity_of_interest</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ConPagnon</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../projectDescription.html">Project description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Dhaif BEKHA.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
