@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>data_handling.dictionary_operations &#8212; ConPagnon 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for data_handling.dictionary_operations</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">computing</span> <span class="k">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
+<span class="kn">from</span> <span class="nn">utils.array_operation</span> <span class="k">import</span> <span class="n">array_rebuilder</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contain useful operation on subjects connectivity matrices dictionnary.</span>
+
+<span class="sd">Author: Dhaif BEKHA.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># TODO: create a function for merging dictionnary key easily</span>
+
+
+<div class="viewcode-block" id="groupby_factor_connectivity_matrices"><a class="viewcode-back" href="../../code.html#data_handling.dictionary_operations.groupby_factor_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">groupby_factor_connectivity_matrices</span><span class="p">(</span><span class="n">population_data_file</span><span class="p">,</span> <span class="n">sheetname</span><span class="p">,</span>
+                                         <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">,</span>
+                                         <span class="n">groupes</span><span class="p">,</span> <span class="n">factors</span><span class="p">,</span>
+                                         <span class="n">drop_subjects_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Group by attribute the subjects connectivity matrices.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Read the excel containing information of interest</span>
+    <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">population_data_file</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
+
+    <span class="c1"># Drop subjects if needed</span>
+    <span class="k">if</span> <span class="n">drop_subjects_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">population_text_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">drop_subjects_list</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">population_text_data</span>
+
+    <span class="n">all_subjects_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">all_subjects_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">population_text_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">all_subjects_list</span><span class="p">]</span>
+
+    <span class="c1"># Using pandas, group the dataframe by the factor list entered and store</span>
+    <span class="c1"># it in a dictionnary</span>
+    <span class="n">population_data_by_factor</span> <span class="o">=</span> <span class="n">population_text_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">factors</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span>
+    <span class="c1"># Store all the keys, i.e all the possible factor pairs.</span>
+    <span class="n">factors_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">population_data_by_factor</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c1"># Create a subjects connectivity matrices dictionnary, with factor keys as first level</span>
+    <span class="c1"># keys, instead of groupes list</span>
+    <span class="n">group_by_factor_subjects_connectivity_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">factors_keys</span><span class="p">)</span>
+    <span class="c1"># Stack the connectivity matrices</span>
+    <span class="n">stacked_matrices</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span>
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+    <span class="c1"># Fill the dictionnary, with the corresponding subject level dictionary for each</span>
+    <span class="c1"># factor key pair</span>
+    <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors_keys</span><span class="p">:</span>
+        <span class="c1"># subjects list ID for the current factor pair key</span>
+        <span class="n">subject_for_this_factor</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">population_data_by_factor</span><span class="p">[</span><span class="n">factor</span><span class="p">])</span>
+        <span class="n">group_by_factor_subjects_connectivity_matrices</span><span class="p">[</span><span class="n">factor</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">subject_for_this_factor</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subject_for_this_factor</span><span class="p">:</span>
+            <span class="n">group_by_factor_subjects_connectivity_matrices</span><span class="p">[</span><span class="n">factor</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacked_matrices</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">group_by_factor_subjects_connectivity_matrices</span><span class="p">,</span> <span class="n">population_data_by_factor</span><span class="p">,</span> <span class="n">factors_keys</span></div>
+
+
+<div class="viewcode-block" id="random_draw_of_connectivity_matrices"><a class="viewcode-back" href="../../code.html#data_handling.dictionary_operations.random_draw_of_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">random_draw_of_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary</span><span class="p">,</span> <span class="n">groupe</span><span class="p">,</span> <span class="n">n_matrices</span><span class="p">,</span>
+                                         <span class="n">subjects_id_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extract_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Randomly pick N connectivity matrices from a subjects connectivity dictionnary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_connectivity_dictionary: dict</span>
+<span class="sd">        The subjects dictionnary containing connectivity matrices</span>
+<span class="sd">    groupe: str</span>
+<span class="sd">        The group in which you want pick the matrices</span>
+<span class="sd">    n_matrices: int</span>
+<span class="sd">        The number of connectivity matrices you want</span>
+<span class="sd">        to randomly choose</span>
+<span class="sd">    subjects_id_list: list, optional</span>
+<span class="sd">        The subjects identifiers list in which you</span>
+<span class="sd">        want to choose matrices. If None, random matrices</span>
+<span class="sd">        are picked in the entire group. Default is None.</span>
+<span class="sd">    random_state: int, optional</span>
+<span class="sd">        The seed of the pseudo random number generator to use when shuffling</span>
+<span class="sd">        the data. If int, random_state is the seed used by the random number</span>
+<span class="sd">        generator; If RandomState instance, random_state is the random number</span>
+<span class="sd">        generator; If None, the random number generator is the RandomState</span>
+<span class="sd">        instance used by `np.random`.</span>
+<span class="sd">    extract_kwargs: dict, optional</span>
+<span class="sd">        A dictionnary of argument passed to extract_sub_connectivity_matrices</span>
+<span class="sd">        function. Default is None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output 1: dict</span>
+<span class="sd">        The connectivity matrices dictionary, with subjects chosen</span>
+<span class="sd">        randomly.</span>
+<span class="sd">    output 2: list</span>
+<span class="sd">        The  list of randomly chosen subjects identifier.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">random_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># If a subjects list ids is entered</span>
+    <span class="k">if</span> <span class="n">subjects_id_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">subjects_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subjects_id_list</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># We take all the subjects ids</span>
+        <span class="n">subjects_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="c1"># Shuffle the subjects id list, without impacting the original array</span>
+    <span class="n">shuffle_subjects_id</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">subjects_id</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="c1"># Randomly pick N subjects</span>
+    <span class="n">random_draw_subjects_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shuffle_subjects_id</span><span class="p">,</span> <span class="n">n_matrices</span><span class="p">)</span>
+    <span class="c1"># Extract the corresponding sub-dictionnary</span>
+    <span class="n">random_subjects_dictionary</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">subjects_connectivity_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">random_draw_subjects_id</span><span class="p">}</span>
+
+    <span class="n">random_dictionary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_subjects_dictionary</span>
+    <span class="c1"># if we want specific sub-matrices we extract them</span>
+    <span class="c1"># extract sub connectivity matrices function</span>
+    <span class="k">if</span> <span class="n">extract_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">random_dictionary</span> <span class="o">=</span> <span class="n">ccm</span><span class="o">.</span><span class="n">extract_sub_connectivity_matrices</span><span class="p">(</span>
+            <span class="n">subjects_connectivity_matrices</span><span class="o">=</span><span class="n">random_dictionary</span><span class="p">,</span>
+            <span class="n">kinds</span><span class="o">=</span><span class="n">extract_kwargs</span><span class="p">[</span><span class="s1">&#39;kinds&#39;</span><span class="p">],</span>
+            <span class="n">regions_index</span><span class="o">=</span><span class="n">extract_kwargs</span><span class="p">[</span><span class="s1">&#39;regions_index&#39;</span><span class="p">],</span>
+            <span class="n">vectorize</span><span class="o">=</span><span class="n">extract_kwargs</span><span class="p">[</span><span class="s1">&#39;vectorize&#39;</span><span class="p">],</span>
+            <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">extract_kwargs</span><span class="p">[</span><span class="s1">&#39;discard_diagonal&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">random_dictionary</span><span class="p">,</span> <span class="n">random_draw_subjects_id</span></div>
+
+
+<div class="viewcode-block" id="merge_dictionary"><a class="viewcode-back" href="../../code.html#data_handling.dictionary_operations.merge_dictionary">[docs]</a><span class="k">def</span> <span class="nf">merge_dictionary</span><span class="p">(</span><span class="n">dict_list</span><span class="p">,</span> <span class="n">new_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Merge a list of dictionary</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    new_key: str, optional</span>
+<span class="sd">        The key of the new merged dictionary. If None, the</span>
+<span class="sd">        dictionaries in the list are simply merged together.</span>
+<span class="sd">        Default is None</span>
+<span class="sd">    dict_list: list</span>
+<span class="sd">        A list of the dictionary to be merged</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary with one key, and merged dictionary</span>
+<span class="sd">        as value.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Note that all the dictionnary you want to merge must have</span>
+<span class="sd">    different keys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">merged_dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dict_list</span><span class="p">:</span>
+        <span class="n">merged_dictionary</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">new_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_dictionary</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dictionary</span> <span class="o">=</span> <span class="n">merged_dictionary</span>
+    <span class="k">return</span> <span class="n">dictionary</span></div>
+
+
+<div class="viewcode-block" id="stack_subjects_connectivity_matrices"><a class="viewcode-back" href="../../code.html#data_handling.dictionary_operations.stack_subjects_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">stack_subjects_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Re-arrange the subjects connectivity dictionary to return a stack version per group</span>
+<span class="sd">    and kind.</span>
+
+<span class="sd">    :param subjects_connectivity_dictionary:</span>
+<span class="sd">    :param groupes:</span>
+<span class="sd">    :param kinds:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize dictionary</span>
+    <span class="n">stack_connectivity_dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">groupes</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">subjects_connectivity_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">stack_connectivity_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+            <span class="n">group_stacked_connectivity</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">subjects_connectivity_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">kind</span><span class="p">])</span>
+                                          <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">]</span>
+            <span class="n">group_stacked_mask</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">subjects_connectivity_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">])</span>
+                                  <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">]</span>
+
+            <span class="n">stack_connectivity_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;connectivity matrices&#39;</span><span class="p">:</span> <span class="n">group_stacked_connectivity</span><span class="p">,</span>
+                <span class="s1">&#39;masked_array&#39;</span><span class="p">:</span> <span class="n">group_stacked_mask</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">stack_connectivity_dictionary</span></div>
+
+
+<div class="viewcode-block" id="rebuild_subject_connectivity_matrices"><a class="viewcode-back" href="../../code.html#data_handling.dictionary_operations.rebuild_subject_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">rebuild_subject_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span>
+                                          <span class="n">diagonal_were_kept</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given the subject connectivity dictionary, the matrix are rebuild from the vectorized</span>
+<span class="sd">    one.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_connectivity_dictionary: dict</span>
+<span class="sd">        The subjects connectivity dictionary</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of groups to rebuild the subjects matrices.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds to rebuild.</span>
+<span class="sd">    diagonal_were_kept: bool, optional</span>
+<span class="sd">        If True, the reconstructed matrix, will have</span>
+<span class="sd">        the diagonal store in the kind diagonal field of</span>
+<span class="sd">        the dictionary, and the mask diagonal field for</span>
+<span class="sd">        the mask.</span>
+<span class="sd">        If False, the reconstructed matrix will have</span>
+<span class="sd">        a zeros diagonal, and a True diagonal for the</span>
+<span class="sd">        mask.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output 1: dict</span>
+<span class="sd">        The reconstructed subjects connectivity</span>
+<span class="sd">        matrices. All the matrices have now</span>
+<span class="sd">        shape (number_of_regions, number_of_regions).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If in the input dictionary, the matrices and corresponding</span>
+<span class="sd">    mask where vectorized with the diagonal kept, the argument</span>
+<span class="sd">    `diagonal_is_there` must be set to False. A dimension</span>
+<span class="sd">    error will be raises otherwise.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Copy of the original dictionary to avoid side effect</span>
+    <span class="n">subjects_connectivity_dictionary_</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">subjects_in_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="c1"># First, we rebuild the vectorized mask</span>
+        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_in_group</span><span class="p">:</span>
+            <span class="n">vectorized_subject_mask</span> <span class="o">=</span> \
+                <span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span>
+            <span class="c1"># If the diagonal where kept in the vectorization process</span>
+            <span class="k">if</span> <span class="n">diagonal_were_kept</span><span class="p">:</span>
+                <span class="c1"># We simply rebuild the boolean mask</span>
+                <span class="n">rebuild_subject_mask</span> <span class="o">=</span> <span class="n">array_rebuilder</span><span class="p">(</span>
+                    <span class="n">vectorized_array</span><span class="o">=</span><span class="n">vectorized_subject_mask</span><span class="p">,</span>
+                    <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="n">diagonal</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># We fetch the mask diagonal in the corresponding</span>
+                <span class="c1"># subject dictionary</span>
+                <span class="n">subject_kind_mask_diagonal</span> <span class="o">=</span> \
+                    <span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;diagonal_mask&#39;</span><span class="p">]</span>
+                <span class="n">rebuild_subject_mask</span> <span class="o">=</span> <span class="n">array_rebuilder</span><span class="p">(</span>
+                    <span class="n">vectorized_array</span><span class="o">=</span><span class="n">vectorized_subject_mask</span><span class="p">,</span>
+                    <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="n">diagonal</span><span class="o">=</span><span class="n">subject_kind_mask_diagonal</span><span class="p">)</span>
+            <span class="c1"># Now, iterate over the kind to rebuild the subject connectivity</span>
+            <span class="c1"># matrices</span>
+            <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+                <span class="c1"># Fetch the vectorized connectivity matrice of the current subject</span>
+                <span class="n">vectorized_subject_matrix</span> <span class="o">=</span> \
+                    <span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span>
+                <span class="c1"># If the diagonal where kept in the vectorization process</span>
+                <span class="k">if</span> <span class="n">diagonal_were_kept</span><span class="p">:</span>
+                    <span class="c1"># Rebuild the connectivity matrices</span>
+                    <span class="n">rebuild_subject_matrix</span> <span class="o">=</span> <span class="n">array_rebuilder</span><span class="p">(</span>
+                        <span class="n">vectorized_array</span><span class="o">=</span><span class="n">vectorized_subject_matrix</span><span class="p">,</span>
+                        <span class="n">diagonal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Fetch the kind diagonal</span>
+                    <span class="n">subject_kind_diagonal</span> <span class="o">=</span> <span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span> <span class="o">+</span> <span class="s1">&#39;_diagonal&#39;</span><span class="p">]</span>
+                    <span class="c1"># Rebuild the array</span>
+                    <span class="c1"># override the present corresponding field</span>
+                    <span class="n">rebuild_subject_matrix</span> <span class="o">=</span> <span class="n">array_rebuilder</span><span class="p">(</span>
+                        <span class="n">vectorized_array</span><span class="o">=</span><span class="n">vectorized_subject_matrix</span><span class="p">,</span>
+                        <span class="n">diagonal</span><span class="o">=</span><span class="n">subject_kind_diagonal</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="s1">&#39;numeric&#39;</span>
+                    <span class="p">)</span>
+
+                <span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="n">rebuild_subject_matrix</span>
+                <span class="n">subjects_connectivity_dictionary_</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;masked_array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rebuild_subject_mask</span>
+
+    <span class="k">return</span> <span class="n">subjects_connectivity_dictionary_</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ConPagnon</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../projectDescription.html">Project description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code.html">Code Documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Dhaif BEKHA.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
