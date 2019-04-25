@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched." />
+    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_display.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_display.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/code.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/code.rst" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,65 +36,51 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="32">
+              <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+              <folding>
+                <element signature="e#534#543#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
-              <folding>
-                <element signature="e#57#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
+          <provider selected="true" editor-type-id="restructured-text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2121">
-              <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
-              <folding>
-                <element signature="e#57#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
+          <provider selected="true" editor-type-id="restructured-text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="268" selection-start-line="246" selection-end-line="268" />
-              <folding>
-                <element signature="e#57#76#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="14" column="60" selection-start-line="14" selection-start-column="60" selection-end-line="14" selection-end-column="60" />
-              <folding>
-                <element signature="e#159#168#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
+          <provider selected="true" editor-type-id="restructured-text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-303">
-              <caret line="25" column="80" selection-start-line="25" selection-start-column="80" selection-end-line="25" selection-end-column="80" />
+            <state relative-caret-position="-492">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
               <folding>
                 <element signature="e#441#475#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="88" selection-start-line="88" selection-end-line="88" />
+              <folding>
+                <element signature="e#57#66#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -167,10 +157,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/classification_example.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/one_vs_the_rest_features_identification.py" />
-        <option value="$PROJECT_DIR$/plotting/display.py" />
         <option value="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" />
         <option value="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" />
         <option value="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" />
@@ -217,12 +203,16 @@
         <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" />
+        <option value="$PROJECT_DIR$/sphinx/conf.py" />
+        <option value="$PROJECT_DIR$/sphinx/projectDescription.rst" />
+        <option value="$PROJECT_DIR$/sphinx/index.rst" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_display.py" />
+        <option value="$PROJECT_DIR$/sphinx/code.rst" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2130" />
+    <option name="x" value="129" />
     <option name="y" value="24" />
     <option name="width" value="1916" />
     <option name="height" value="1005" />
@@ -243,6 +233,26 @@
             <path>
               <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
               <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
+              <item name="computing" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
+              <item name="connectivity_statistics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
+              <item name="data_handling" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
               <item name="sphinx" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -253,10 +263,11 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="t_and_p_values_barplot&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python&#10;TEXT" />
-    <property name="last_opened_file_path" value="/media/db242421/db242421_data/pyconnectome" />
+    <property name="last_opened_file_path" value="/media/db242421/db242421_data/Script_Python/Jarvis/Jarvis.py" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
@@ -475,56 +486,7 @@
       <workItem from="1554711333736" duration="511000" />
       <workItem from="1554711871177" duration="43820000" />
       <workItem from="1555311713429" duration="66000" />
-      <workItem from="1555311831557" duration="69166000" />
-    </task>
-    <task id="LOCAL-00168" summary="TODO: Correct the sign in the plotting.">
-      <created>1548406687011</created>
-      <option name="number" value="00168" />
-      <option name="presentableId" value="LOCAL-00168" />
-      <option name="project" value="LOCAL" />
-      <updated>1548406687011</updated>
-    </task>
-    <task id="LOCAL-00169" summary="Beginning pipeline DTI preprocessing.">
-      <created>1548433905808</created>
-      <option name="number" value="00169" />
-      <option name="presentableId" value="LOCAL-00169" />
-      <option name="project" value="LOCAL" />
-      <updated>1548433905808</updated>
-    </task>
-    <task id="LOCAL-00170" summary="Almost finish pre-processing for the control population. &#10;Have to apply the displacement field to the original DTI data, a little&#10;bit tricky because ApplyTransform doesn't manage a 3D warp field and 4D&#10;target.">
-      <created>1549025687584</created>
-      <option name="number" value="00170" />
-      <option name="presentableId" value="LOCAL-00170" />
-      <option name="project" value="LOCAL" />
-      <updated>1549025687585</updated>
-    </task>
-    <task id="LOCAL-00171" summary="Finish the pipeline.">
-      <created>1549032715620</created>
-      <option name="number" value="00171" />
-      <option name="presentableId" value="LOCAL-00171" />
-      <option name="project" value="LOCAL" />
-      <updated>1549032715620</updated>
-    </task>
-    <task id="LOCAL-00172" summary="Clean Typo.">
-      <created>1549038467548</created>
-      <option name="number" value="00172" />
-      <option name="presentableId" value="LOCAL-00172" />
-      <option name="project" value="LOCAL" />
-      <updated>1549038467548</updated>
-    </task>
-    <task id="LOCAL-00173" summary="Update path">
-      <created>1549042738251</created>
-      <option name="number" value="00173" />
-      <option name="presentableId" value="LOCAL-00173" />
-      <option name="project" value="LOCAL" />
-      <updated>1549042738251</updated>
-    </task>
-    <task id="LOCAL-00174" summary="Add warping on a resampled T1 template.&#10;Clean the code.">
-      <created>1549300674883</created>
-      <option name="number" value="00174" />
-      <option name="presentableId" value="LOCAL-00174" />
-      <option name="project" value="LOCAL" />
-      <updated>1549300674884</updated>
+      <workItem from="1555311831557" duration="87430000" />
     </task>
     <task id="LOCAL-00175" summary="Clean error on ApplyTransform.&#10;Clean Typo">
       <created>1549365387548</created>
@@ -820,11 +782,60 @@
       <option name="project" value="LOCAL" />
       <updated>1556031472078</updated>
     </task>
-    <option name="localTasksCounter" value="217" />
+    <task id="LOCAL-00217" summary="First stone of the ConPagnon documentation">
+      <created>1556095103154</created>
+      <option name="number" value="00217" />
+      <option name="presentableId" value="LOCAL-00217" />
+      <option name="project" value="LOCAL" />
+      <updated>1556095103154</updated>
+    </task>
+    <task id="LOCAL-00218" summary="Modify absolute path to find module.">
+      <created>1556095190169</created>
+      <option name="number" value="00218" />
+      <option name="presentableId" value="LOCAL-00218" />
+      <option name="project" value="LOCAL" />
+      <updated>1556095190170</updated>
+    </task>
+    <task id="LOCAL-00219" summary="Add code documentation pages, and &#10;project description pages.">
+      <created>1556095235123</created>
+      <option name="number" value="00219" />
+      <option name="presentableId" value="LOCAL-00219" />
+      <option name="project" value="LOCAL" />
+      <updated>1556095235123</updated>
+    </task>
+    <task id="LOCAL-00220" summary="Adding website files to be hosted on Github for&#10;the ConPagnon documentation.">
+      <created>1556095601454</created>
+      <option name="number" value="00220" />
+      <option name="presentableId" value="LOCAL-00220" />
+      <option name="project" value="LOCAL" />
+      <updated>1556095601454</updated>
+    </task>
+    <task id="LOCAL-00221" summary=".nojekyll file to tell Github to not&#10;use Jekyll Theme.">
+      <created>1556096022228</created>
+      <option name="number" value="00221" />
+      <option name="presentableId" value="LOCAL-00221" />
+      <option name="project" value="LOCAL" />
+      <updated>1556096022228</updated>
+    </task>
+    <task id="LOCAL-00222" summary="Add another module to the documentation.">
+      <created>1556196493937</created>
+      <option name="number" value="00222" />
+      <option name="presentableId" value="LOCAL-00222" />
+      <option name="project" value="LOCAL" />
+      <updated>1556196493937</updated>
+    </task>
+    <task id="LOCAL-00223" summary="Add a module in ze doc">
+      <created>1556200210622</created>
+      <option name="number" value="00223" />
+      <option name="presentableId" value="LOCAL-00223" />
+      <option name="project" value="LOCAL" />
+      <updated>1556200210623</updated>
+    </task>
+    <option name="localTasksCounter" value="224" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1020396000" />
+    <option name="totallyTimeSpent" value="1038660000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -836,7 +847,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-4" width="1922" height="1034" extended-state="6" />
+    <frame x="0" y="-6" width="1920" height="1035" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49676377" visible="true" weight="0.24226254" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.2497332" />
@@ -859,8 +871,8 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49447078" weight="0.3244397" />
-      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.49473685" visible="true" weight="0.22091782" />
-      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.50526315" side_tool="true" visible="true" weight="0.22091782" />
+      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.49473685" visible="true" weight="0.11366062" />
+      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.50526315" side_tool="true" visible="true" weight="0.11366062" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -917,13 +929,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DWI preprocessing for patients." />
-    <MESSAGE value="Update path" />
-    <MESSAGE value="Correct typo in the antsRegistration call. tested in one subjects, &#10;everything seems fine." />
-    <MESSAGE value="Fixed Typo when applying transform from registration.&#10;Update path to Ines directory." />
-    <MESSAGE value="Correct typo for lesion path file." />
-    <MESSAGE value="Loop from sub 14" />
-    <MESSAGE value="Correct loop in dti_preproc_patients.py&#10;Add lesion mask resampling to native T1 script." />
     <MESSAGE value="Creation of the FA template of controls group based on wrappers from&#10;A. Grigis." />
     <MESSAGE value="Finish the pipeline of template creation.&#10;Output of this code are the FA template, and corresponding &#10;skeleton.&#10;Polish the code." />
     <MESSAGE value="Update path." />
@@ -942,7 +947,14 @@
     <MESSAGE value="Correct small typo." />
     <MESSAGE value="Compute statistic for Left patients and controls group." />
     <MESSAGE value="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched." />
-    <option name="LAST_COMMIT_MESSAGE" value="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched." />
+    <MESSAGE value="First stone of the ConPagnon documentation" />
+    <MESSAGE value="Modify absolute path to find module." />
+    <MESSAGE value="Add code documentation pages, and &#10;project description pages." />
+    <MESSAGE value="Adding website files to be hosted on Github for&#10;the ConPagnon documentation." />
+    <MESSAGE value=".nojekyll file to tell Github to not&#10;use Jekyll Theme." />
+    <MESSAGE value="Add another module to the documentation." />
+    <MESSAGE value="Add a module in ze doc" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add a module in ze doc" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -956,54 +968,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/svm/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="108" column="8" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/random_projection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-727">
-          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/predict_the_behavior.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-125">
-          <caret line="466" column="53" lean-forward="true" selection-start-line="466" selection-start-column="53" selection-end-line="466" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/machine_learning/features_indentification.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="151" selection-start-line="151" selection-end-line="158" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="62" column="21" selection-start-line="62" selection-start-column="21" selection-end-line="62" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../.PyCharm2018.3/system/python_stubs/2039683057/scipy/special/_ufuncs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="504" column="4" selection-start-line="504" selection-start-column="4" selection-end-line="504" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/scipy/stats/stats.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
@@ -1284,16 +1248,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" selection-end-column="4" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/patsy/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1310,32 +1264,12 @@
     <entry file="file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2121">
-          <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="453">
           <caret line="268" selection-start-line="246" selection-end-line="268" />
           <folding>
             <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-303">
-          <caret line="25" column="80" selection-start-line="25" selection-start-column="80" selection-end-line="25" selection-end-column="80" />
-          <folding>
-            <element signature="e#441#475#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1349,6 +1283,61 @@
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2121">
+          <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+          <folding>
+            <element signature="e#534#543#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-492">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#441#475#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///media/db242421/db242421_data/Script_Python/Jarvis/Jarvis.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="88" selection-start-line="88" selection-end-line="88" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
+      <provider selected="true" editor-type-id="restructured-text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
+      <provider selected="true" editor-type-id="restructured-text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
+      <provider selected="true" editor-type-id="restructured-text-editor" />
     </entry>
   </component>
 </project>

@@ -20,10 +20,10 @@ from subprocess import Popen, PIPE
 import os
 
 # Set path for plotting
-results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/Groupe_patients_controls"
+results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LG_controls/"
 # The corrected p value
 corrected_p_values_image = os.path.join(results_directory,
-                                        "tbss_language_profile_tfce_corrp_tstat2.nii.gz")
+                                        "LG_controls_tfce_corrp_tstat1.nii.gz")
 
 # the thicken corrected p value image
 # The FA template
