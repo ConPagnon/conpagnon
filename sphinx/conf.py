@@ -26,16 +26,8 @@ release = '2.0.0'
 
 
 # -- General configuration ---------------------------------------------------
-
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc',
-              'guzzle_sphinx_theme']
-
-
 # Add any paths that contain templates here, relative to this directory.
-templates_path = guzzle_sphinx_theme.html_theme_path()
+html_theme_path = guzzle_sphinx_theme.html_theme_path()
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -54,6 +46,13 @@ html_theme = 'guzzle_sphinx_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# Add any Sphinx extension module names here, as strings. They can be
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+# ones.
+extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc']
+extensions.append('guzzle_sphinx_theme')
 
 # Guzzle theme options
 html_theme_options = {
