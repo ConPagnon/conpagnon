@@ -17,12 +17,12 @@ import guzzle_sphinx_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'ConPagnon'
-copyright = '2016 - 2019, Dhaif BEKHA'
-author = 'Dhaif BEKHA'
+#project = 'ConPagnon'
+#copyright = '2016 - 2019, Dhaif BEKHA'
+#author = 'Dhaif BEKHA'
 
 # The full version, including alpha/beta/rc tags
-release = '2.0.0'
+#release = '2.0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -54,8 +54,8 @@ html_static_path = ['_static']
 extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc']
 extensions.append('guzzle_sphinx_theme')
 
-# Guzzle theme options
+# Guzzle theme options (see theme.conf for more information)
 html_theme_options = {
-    # Set the name of the project to appear in the sidebar
-    "project_nav_name": project,
+    # Set the name of the project to appear in the left sidebar.
+    "project_nav_name": 'ConPagnon',
 }
