@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="TBSS stats launched on Right Lesioned Vs controls&#10;Antoine preprocessing launched.">
+    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Add a theme">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_display.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_display.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/code.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/code.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/conf.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,11 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+            <state relative-caret-position="578">
+              <caret line="59" column="34" selection-start-line="59" selection-start-column="34" selection-end-line="59" selection-end-column="34" />
               <folding>
                 <element signature="e#534#543#0" expanded="true" />
               </folding>
@@ -47,7 +47,55 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2583">
+              <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
+              <folding>
+                <element signature="e#57#66#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2016">
+              <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
+              <folding>
+                <element signature="e#57#66#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2352">
+              <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
+              <folding>
+                <element signature="e#57#66#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+              <folding>
+                <element signature="e#57#76#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
           <provider selected="true" editor-type-id="restructured-text-editor" />
         </entry>
@@ -60,30 +108,6 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
           <provider selected="true" editor-type-id="restructured-text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-492">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
-              <folding>
-                <element signature="e#441#475#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="88" selection-start-line="88" selection-end-line="88" />
-              <folding>
-                <element signature="e#57#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
         </entry>
       </file>
     </leaf>
@@ -203,19 +227,19 @@
         <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" />
-        <option value="$PROJECT_DIR$/sphinx/conf.py" />
         <option value="$PROJECT_DIR$/sphinx/projectDescription.rst" />
         <option value="$PROJECT_DIR$/sphinx/index.rst" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_display.py" />
         <option value="$PROJECT_DIR$/sphinx/code.rst" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_display.py" />
+        <option value="$PROJECT_DIR$/sphinx/conf.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="129" />
+    <option name="x" value="2739" />
     <option name="y" value="24" />
-    <option name="width" value="1916" />
-    <option name="height" value="1005" />
+    <option name="width" value="1914" />
+    <option name="height" value="976" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -223,6 +247,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -243,23 +268,12 @@
             <path>
               <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
               <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-              <item name="data_handling" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
               <item name="sphinx" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -486,35 +500,8 @@
       <workItem from="1554711333736" duration="511000" />
       <workItem from="1554711871177" duration="43820000" />
       <workItem from="1555311713429" duration="66000" />
-      <workItem from="1555311831557" duration="87430000" />
-    </task>
-    <task id="LOCAL-00175" summary="Clean error on ApplyTransform.&#10;Clean Typo">
-      <created>1549365387548</created>
-      <option name="number" value="00175" />
-      <option name="presentableId" value="LOCAL-00175" />
-      <option name="project" value="LOCAL" />
-      <updated>1549365387549</updated>
-    </task>
-    <task id="LOCAL-00176" summary="Add dtifit to check results of pre processing.&#10;Add --repol options to replace the outlier in eddy_openmp and advised&#10;--slmlinear options for b=1000 values.&#10;Clean the code">
-      <created>1549387516644</created>
-      <option name="number" value="00176" />
-      <option name="presentableId" value="LOCAL-00176" />
-      <option name="project" value="LOCAL" />
-      <updated>1549387516645</updated>
-    </task>
-    <task id="LOCAL-00177" summary="14 core for ants">
-      <created>1549387805956</created>
-      <option name="number" value="00177" />
-      <option name="presentableId" value="LOCAL-00177" />
-      <option name="project" value="LOCAL" />
-      <updated>1549387805956</updated>
-    </task>
-    <task id="LOCAL-00178" summary="14 core for ants">
-      <created>1549388166430</created>
-      <option name="number" value="00178" />
-      <option name="presentableId" value="LOCAL-00178" />
-      <option name="project" value="LOCAL" />
-      <updated>1549388166431</updated>
+      <workItem from="1555311831557" duration="92013000" />
+      <workItem from="1556608963031" duration="2236000" />
     </task>
     <task id="LOCAL-00179" summary="Bug correction: file not found because a subject was hard written in &#10;a path and wasn't updated  in the loop">
       <created>1549453427343</created>
@@ -831,11 +818,39 @@
       <option name="project" value="LOCAL" />
       <updated>1556200210623</updated>
     </task>
-    <option name="localTasksCounter" value="224" />
+    <task id="LOCAL-00224" summary="Add a theme">
+      <created>1556201781722</created>
+      <option name="number" value="00224" />
+      <option name="presentableId" value="LOCAL-00224" />
+      <option name="project" value="LOCAL" />
+      <updated>1556201781722</updated>
+    </task>
+    <task id="LOCAL-00225" summary="Try sphinx guzzle theme to work.">
+      <created>1556609627496</created>
+      <option name="number" value="00225" />
+      <option name="presentableId" value="LOCAL-00225" />
+      <option name="project" value="LOCAL" />
+      <updated>1556609627497</updated>
+    </task>
+    <task id="LOCAL-00226" summary="Fix guzzle theme error. It was html_template_path&#10;instead of template_path variable to fetch&#10;the theme.">
+      <created>1556610651657</created>
+      <option name="number" value="00226" />
+      <option name="presentableId" value="LOCAL-00226" />
+      <option name="project" value="LOCAL" />
+      <updated>1556610651657</updated>
+    </task>
+    <task id="LOCAL-00227" summary="Add the Guzzle documentation theme.">
+      <created>1556610811134</created>
+      <option name="number" value="00227" />
+      <option name="presentableId" value="LOCAL-00227" />
+      <option name="project" value="LOCAL" />
+      <updated>1556610811134</updated>
+    </task>
+    <option name="localTasksCounter" value="228" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1038660000" />
+    <option name="totallyTimeSpent" value="1045479000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -847,10 +862,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-6" width="1920" height="1035" extended-state="6" />
+    <frame x="1920" y="-6" width="1920" height="1035" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49676377" visible="true" weight="0.24226254" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49676377" visible="true" weight="0.24493062" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.2497332" />
       <window_info id="Favorites" order="2" sideWeight="0.50323623" side_tool="true" weight="0.12753469" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -861,7 +876,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286638" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.6851654" visible="true" weight="0.28340518" />
+      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.6851654" visible="true" weight="0.26185346" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.6613248" weight="0.2952586" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.30711207" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -871,8 +886,8 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49447078" weight="0.3244397" />
-      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.49473685" visible="true" weight="0.11366062" />
-      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.50526315" side_tool="true" visible="true" weight="0.11366062" />
+      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.49343064" visible="true" weight="0.11366062" />
+      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.5065693" side_tool="true" visible="true" weight="0.11366062" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -929,10 +944,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Creation of the FA template of controls group based on wrappers from&#10;A. Grigis." />
-    <MESSAGE value="Finish the pipeline of template creation.&#10;Output of this code are the FA template, and corresponding &#10;skeleton.&#10;Polish the code." />
-    <MESSAGE value="Update path." />
-    <MESSAGE value="Update DOC." />
     <MESSAGE value="First commit for tbss_register_FA_maps.py: register the output of&#10;FSL DTIFIT to the population template created by the script &#10;tbss_create_controls_template.py. &#10;Tested on one control, and one patient. Seem to work so far." />
     <MESSAGE value="Clean Code, add comment" />
     <MESSAGE value="Code run for patients without error. Launch for the &#10;controls group." />
@@ -954,7 +965,11 @@
     <MESSAGE value=".nojekyll file to tell Github to not&#10;use Jekyll Theme." />
     <MESSAGE value="Add another module to the documentation." />
     <MESSAGE value="Add a module in ze doc" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add a module in ze doc" />
+    <MESSAGE value="Add a theme" />
+    <MESSAGE value="Try sphinx guzzle theme to work." />
+    <MESSAGE value="Fix guzzle theme error. It was html_template_path&#10;instead of template_path variable to fetch&#10;the theme." />
+    <MESSAGE value="Add the Guzzle documentation theme." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add the Guzzle documentation theme." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1198,13 +1213,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tbss_stats.py" />
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples_and_test/dti_prepoc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2737">
@@ -1219,16 +1227,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="25">
           <caret line="41" column="54" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="96" selection-start-line="96" selection-end-line="97" selection-end-column="60" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1264,10 +1262,16 @@
     <entry file="file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file:///media/db242421/db242421_data/Script_Python/Jarvis/Jarvis.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="268" selection-start-line="246" selection-end-line="268" />
+        <state relative-caret-position="4809">
+          <caret line="253" column="16" lean-forward="true" selection-start-line="253" selection-start-column="16" selection-end-line="253" selection-end-column="16" />
           <folding>
             <element signature="e#57#76#0" expanded="true" />
           </folding>
@@ -1276,7 +1280,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
+        <state relative-caret-position="2583">
           <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
           <folding>
             <element signature="e#57#66#0" expanded="true" />
@@ -1286,7 +1290,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2121">
+        <state relative-caret-position="2016">
           <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
           <folding>
             <element signature="e#57#66#0" expanded="true" />
@@ -1294,35 +1298,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
-          <folding>
-            <element signature="e#534#543#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-492">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#441#475#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///media/db242421/db242421_data/Script_Python/Jarvis/Jarvis.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="88" selection-start-line="88" selection-end-line="88" />
+        <state relative-caret-position="2352">
+          <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
           <folding>
             <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+          <folding>
+            <element signature="e#57#76#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1330,14 +1321,41 @@
     <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
       <provider selected="true" editor-type-id="restructured-text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
+    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1785">
+          <caret line="88" selection-start-line="88" selection-end-line="88" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="11" column="12" lean-forward="true" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+          <folding>
+            <element signature="e#441#475#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
       <provider selected="true" editor-type-id="restructured-text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
+      <provider selected="true" editor-type-id="restructured-text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="59" column="34" selection-start-line="59" selection-start-column="34" selection-end-line="59" selection-end-column="34" />
+          <folding>
+            <element signature="e#534#543#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
