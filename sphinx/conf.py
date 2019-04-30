@@ -35,7 +35,7 @@ extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc',
 
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = [guzzle_sphinx_theme.html_theme_path()]
+templates_path = guzzle_sphinx_theme.html_theme_path()
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
