@@ -29,7 +29,7 @@ prepare_stats_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/prepare
 all_subject_mask_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_subjects_mask"
 # Your're statistical analysis directory
 # Advise: on directory per study.
-stats_results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls"
+stats_results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls2"
 os.mkdir(stats_results_directory)
 # subjects text file : note that the NIP should in the same order of the FA image
 # in the all_FA.nii.gz file !
