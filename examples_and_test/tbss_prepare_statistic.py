@@ -123,6 +123,11 @@ binary_mask_volume = ["fslmaths", os.path.join(stats_directory, 'all_FA.nii.gz')
 binary_mask_volume_command = Popen(binary_mask_volume, stdout=PIPE)
 binary_mask_volume_output, binary_mask_volume_error = binary_mask_volume_command.communicate()
 
+# project the FA data onto the mean FA skeleton
+tbss_4_prestats = ['cd {} && tbss_4_prestats {}'.format(root_directory, threshold_skeleton)]
+tbss_4_prestats_command = Popen(tbss_4_prestats, shell=True, stdout=PIPE)
+tbss_4_prestats_output, tbss_4_prestats_error = tbss_4_prestats_command.communicate()
+
 # Choose a threshold for the mean FA skeleton
 # A typical value is 0. or 0.3
 # To help you, we can plot the mean FA skeleton on all_FA
@@ -135,11 +140,6 @@ plot_FA_skeleton = ["fsleyes",
 plot_FA_skeleton_command = Popen(plot_FA_skeleton, stdout=PIPE)
 plot_FA_skeleton_output, plot_FA_skeleton_error = plot_FA_skeleton_command.communicate()
 
-# Threshold the FA skeleton, and project the FA data onto
-# the mean FA skeleton
-tbss_4_prestats = ['cd {} && tbss_4_prestats {}'.format(root_directory, threshold_skeleton)]
-tbss_4_prestats_command = Popen(tbss_4_prestats, shell=True, stdout=PIPE)
-tbss_4_prestats_output, tbss_4_prestats_error = tbss_4_prestats_command.communicate()
 
 """
 End of data preparation. The next and last step
