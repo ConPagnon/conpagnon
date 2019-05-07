@@ -22,22 +22,43 @@ the corresponding voxels with the help
 of the "setup_masks" function.
 
 """
+tbss_lvl2 = "/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2"
 
 # the prepare_stats directory
-prepare_stats_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/prepare_stats"
+prepare_stats_directory = os.path.join(tbss_lvl2, "prepare_stats")
 # directory containing all the mask
-all_subject_mask_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_subjects_mask"
+all_subject_mask_directory = os.path.join(tbss_lvl2, "all_subjects_mask")
+if all_subject_mask_directory.split(sep="/")[-1] not in os.listdir(os.path.join(tbss_lvl2, "results")):
+
+    os.mkdir(all_subject_mask_directory)
+else:
+    # Clear the existing directory to avoid confusion
+    # with old file
+    shutil.rmtree(path=all_subject_mask_directory, ignore_errors=True)
+    # Create the desired directory
+    os.mkdir(all_subject_mask_directory)
+
 # Your're statistical analysis directory
-# Advise: on directory per study.
-stats_results_directory = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls2"
-os.mkdir(stats_results_directory)
+# Advise: one directory per study.
+stats_results_directory = os.path.join(tbss_lvl2, "results", "LD_controls")
+if stats_results_directory.split(sep="/")[-1] not in os.listdir(os.path.join(tbss_lvl2, "results")):
+
+    os.mkdir(stats_results_directory)
+else:
+    # Clear the existing directory to avoid confusion
+    # with old file
+    shutil.rmtree(path=stats_results_directory, ignore_errors=True)
+    # Create the desired directory
+    os.mkdir(stats_results_directory)
+
 # subjects text file : note that the NIP should in the same order of the FA image
 # in the all_FA.nii.gz file !
-subjects_list_txt = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls.txt"
+subjects_list_txt = "/neurospin/grip/protocols/MRI/Ines_2018/LD_controls.txt"
 subjects = list(pd.read_csv(subjects_list_txt, header=None)[0])
 
 # Excel file path to the cohort clinical information.
-clinical_data_excel = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/prepare_stats/design_matrix_example.xlsx"
+clinical_data_excel = os.path.join(prepare_stats_directory, "design_matrix.xlsx")
+
 clinical_data = pd.read_excel(clinical_data_excel)
 
 # Te equation of you're model
@@ -45,11 +66,11 @@ model_equation = "Groups"
 variables_in_model = model_equation.split(sep=' + ')
 
 # Important path
-mean_FA_skeleton_mask_path = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/mean_FA_skeleton_mask.nii.gz"
-all_FA_skeletonised_path = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/all_FA_skeletonised.nii.gz"
-mean_FA_path = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/mean_FA.nii.gz"
-mean_FA_mask_path = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/mean_FA_mask.nii.gz"
-all_FA_path = "/media/db242421/db242421_data/DTI_TBSS_M2Ines/stats/all_FA.nii.gz"
+mean_FA_skeleton_mask_path = os.path.join(tbss_lvl2, "stats/mean_FA_skeleton_mask.nii.gz")
+all_FA_skeletonised_path = os.path.join(tbss_lvl2, "stats/all_FA_skeletonised.nii.gz")
+mean_FA_path = os.path.join(tbss_lvl2, "stats/mean_FA.nii.gz")
+mean_FA_mask_path = os.path.join(tbss_lvl2, "stats/mean_FA_mask.nii.gz")
+all_FA_path = os.path.join(tbss_lvl2, "stats/all_FA.nii.gz")
 
 # Full path to the contrast file. User should create you're own contrast file.
 contrast_file = os.path.join(prepare_stats_directory, "contrast_matrix.txt")
@@ -243,13 +264,13 @@ shutil.copyfile(mean_FA_skeleton_mask_path,
 shutil.copyfile(mean_FA_path,
                 os.path.join(stats_results_directory, "mean_FA.nii.gz"))
 # Choose the output basename of the study
-tbss_output_basename = "LD_controls"
+tbss_output_basename = stats_results_directory.split(sep="/")[-1]
 # Set the mask option in randomise (check the setup_mask command
 # log file to see an example.
 vxl = str(-3)
 vxf = os.path.join(stats_results_directory, "design_mask.nii.gz")
 # Set the number of permutations
-n_permutations = str(10000)
+n_permutations = str(50)
 
 # Call randomise
 randomise = ["randomise",

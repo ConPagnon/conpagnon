@@ -6,6 +6,7 @@ import os
 import pandas as pd
 from subprocess import Popen, PIPE
 from shutil import rmtree
+import sys
 """
 This code prepare the data for the voxelswise 
 analysis according to the TBSS pipeline.
@@ -53,21 +54,21 @@ That step create the file all_FA_skeletonised.nii.gz
 """
 
 # root directory
-root_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines'
+root_directory = '/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2'
 # subject order list
-all_subjects_txt = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/LD_controls.txt'
+all_subjects_txt = '/neurospin/grip/protocols/MRI/Ines_2018/LD_controls.txt'
 subjects = list(pd.read_csv(all_subjects_txt, header=None)[0])
 
 # Warped FA images directory
-all_FA_directory = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/all_FA'
+all_FA_directory = '/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2/all_FA'
 
 # Full path to the skeleton of the FA template
-FA_skeleton = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/' \
-              'final_template/mean_final_high_res_fa_skeleton.nii.gz'
+FA_skeleton = '/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2/dtitk_final_template/' \
+              'mean_final_high_res_fa_skeleton.nii.gz'
 
 # Full path the high resolution FA template
-FA_template = '/media/db242421/db242421_data/DTI_TBSS_M2Ines/controls_dtitk/' \
-              'final_template/mean_final_high_res_fa.nii.gz'
+FA_template = '/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2/dtitk_final_template/' \
+              'mean_final_high_res_fa.nii.gz'
 
 # Threshold for the skeleton
 threshold_skeleton = 0.3
@@ -80,7 +81,6 @@ else:
     # Clear the existing directory to avoid confusion
     # with old file
     rmtree(path=os.path.join(root_directory, 'stats'), ignore_errors=True)
-    os.rmdir(os.path.join(root_directory, 'stats'))
     # Create the desired directory
     os.mkdir(os.path.join(root_directory, 'stats'))
 stats_directory = os.path.join(root_directory, 'stats')
@@ -124,7 +124,7 @@ binary_mask_volume_command = Popen(binary_mask_volume, stdout=PIPE)
 binary_mask_volume_output, binary_mask_volume_error = binary_mask_volume_command.communicate()
 
 # Choose a threshold for the mean FA skeleton
-# A typical value is 0.2
+# A typical value is 0. or 0.3
 # To help you, we can plot the mean FA skeleton on all_FA
 plot_FA_skeleton = ["fsleyes",
                     os.path.join(stats_directory, 'all_FA.nii.gz'),
@@ -136,7 +136,7 @@ plot_FA_skeleton_command = Popen(plot_FA_skeleton, stdout=PIPE)
 plot_FA_skeleton_output, plot_FA_skeleton_error = plot_FA_skeleton_command.communicate()
 
 # Threshold the FA skeleton, and project the FA data onto
-# the mean FA skeleton: here, the threshold is 0.2
+# the mean FA skeleton
 tbss_4_prestats = ['cd {} && tbss_4_prestats {}'.format(root_directory, threshold_skeleton)]
 tbss_4_prestats_command = Popen(tbss_4_prestats, shell=True, stdout=PIPE)
 tbss_4_prestats_output, tbss_4_prestats_error = tbss_4_prestats_command.communicate()
