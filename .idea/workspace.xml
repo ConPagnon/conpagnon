@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Add a theme">
+    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Update.">
+      <change afterPath="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_display.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_display.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/conf.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,59 +36,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="59" column="34" selection-start-line="59" selection-start-column="34" selection-end-line="59" selection-end-column="34" />
-              <folding>
-                <element signature="e#534#543#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2583">
-              <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
-              <folding>
-                <element signature="e#57#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2016">
-              <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
-              <folding>
-                <element signature="e#57#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2352">
-              <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
-              <folding>
-                <element signature="e#57#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+            <state relative-caret-position="-749">
+              <caret line="59" column="92" lean-forward="true" selection-start-line="59" selection-start-column="92" selection-end-line="59" selection-end-column="92" />
               <folding>
                 <element signature="e#57#76#0" expanded="true" />
               </folding>
@@ -96,18 +49,63 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
-          <provider selected="true" editor-type-id="restructured-text-editor" />
+        <entry file="file://$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret selection-end-line="3" selection-end-column="4" />
+              <folding>
+                <element signature="e#57#76#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
-          <provider selected="true" editor-type-id="restructured-text-editor" />
+        <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="592">
+              <caret line="137" column="29" selection-start-line="137" selection-start-column="29" selection-end-line="137" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="55" />
+              <folding>
+                <element signature="e#57#75#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
-          <provider selected="true" editor-type-id="restructured-text-editor" />
+        <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nibabel/streamlines/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="32">
+              <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2289">
+              <caret line="115" column="44" selection-start-line="115" selection-start-column="44" selection-end-line="115" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="300" column="79" selection-start-line="300" selection-start-column="79" selection-end-line="300" selection-end-column="79" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -122,12 +120,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>continuous</find>
-      <find>t_test</find>
-      <find>groupby</find>
-      <find>ipsilesional</find>
-      <find>Contralesional</find>
-      <find>ipsi</find>
       <find>left</find>
       <find>PAL</find>
       <find>display</find>
@@ -152,6 +144,12 @@
       <find>track</find>
       <find>iFOD</find>
       <find>stats_directory</find>
+      <find>/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2/all_subjects_mask</find>
+      <find>all_lesions_directory</find>
+      <find>stats_results_directory</find>
+      <find>all_subject_mask_directory</find>
+      <find>2012</find>
+      <find>FA_template</find>
     </findStrings>
     <replaceStrings>
       <replace>training_connectivity_matrices</replace>
@@ -172,6 +170,9 @@
       <replace>Right</replace>
       <replace>left</replace>
       <replace>right</replace>
+      <replace>all_controls_mask</replace>
+      <replace>all_subject_mask_directory</replace>
+      <replace>trac_analysis_directory</replace>
       <replace>template</replace>
     </replaceStrings>
   </component>
@@ -181,13 +182,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" />
-        <option value="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" />
-        <option value="/media/db242421/db242421_data/Script_Python/Correction_spatio_temporelle/STRmvt_1.py" />
-        <option value="$PROJECT_DIR$/machine_learning/features_indentification.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/slice_timing_and_motion.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/test_mvt_JD.py" />
         <option value="$PROJECT_DIR$/examples_and_test/test2.py" />
         <option value="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" />
         <option value="$PROJECT_DIR$/examples_and_test/build_results_tables.py" />
@@ -224,22 +218,29 @@
         <option value="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_stats.py" />
         <option value="$PROJECT_DIR$/examples_and_test/dwi_processing.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" />
         <option value="$PROJECT_DIR$/sphinx/projectDescription.rst" />
         <option value="$PROJECT_DIR$/sphinx/index.rst" />
         <option value="$PROJECT_DIR$/sphinx/code.rst" />
         <option value="$PROJECT_DIR$/examples_and_test/tbss_display.py" />
         <option value="$PROJECT_DIR$/sphinx/conf.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" />
+        <option value="/media/db242421/db242421_data/Downloads/scratch.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" />
+        <option value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py" />
+        <option value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py" />
+        <option value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" />
+        <option value="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2739" />
-    <option name="y" value="24" />
-    <option name="width" value="1914" />
-    <option name="height" value="976" />
+    <option name="x" value="-265" />
+    <option name="y" value="-6" />
+    <option name="width" value="1910" />
+    <option name="height" value="978" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -247,7 +248,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -258,22 +258,13 @@
             <path>
               <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
               <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-              <item name="computing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-              <item name="connectivity_statistics" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-              <item name="sphinx" type="462c0819:PsiDirectoryNode" />
+              <item name="examples_and_test" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -281,8 +272,8 @@
     <property name="SearchEverywhereHistoryKey" value="t_and_p_values_barplot&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python&#10;TEXT" />
-    <property name="last_opened_file_path" value="/media/db242421/db242421_data/Script_Python/Jarvis/Jarvis.py" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="last_opened_file_path" value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -303,7 +294,29 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.dti_prepoc">
+  <component name="RunManager" selected="Python.tbss_prepare_statistic_2">
+    <configuration name="AFQ_tract_profile" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="ConPagnon" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -318,28 +331,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="connectivity_assymetry" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="ConPagnon" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -392,7 +383,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="features_identification_test_file" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="tbss_prepare_statistic" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ConPagnon" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -400,12 +391,34 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples_and_test" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="WORKING_DIRECTORY" value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" />
+      <option name="SCRIPT_NAME" value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tbss_prepare_statistic_2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ConPagnon" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -415,17 +428,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.connectivity_assymetry" />
       <item itemvalue="Python.cpm_mmx" />
       <item itemvalue="Python.dti_prepoc" />
-      <item itemvalue="Python.features_identification_test_file" />
+      <item itemvalue="Python.AFQ_tract_profile" />
+      <item itemvalue="Python.tbss_prepare_statistic" />
+      <item itemvalue="Python.tbss_prepare_statistic_2" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.tbss_prepare_statistic_2" />
+        <item itemvalue="Python.tbss_prepare_statistic" />
+        <item itemvalue="Python.AFQ_tract_profile" />
         <item itemvalue="Python.dti_prepoc" />
         <item itemvalue="Python.cpm_mmx" />
-        <item itemvalue="Python.connectivity_assymetry" />
-        <item itemvalue="Python.features_identification_test_file" />
       </list>
     </recent_temporary>
   </component>
@@ -501,35 +516,20 @@
       <workItem from="1554711871177" duration="43820000" />
       <workItem from="1555311713429" duration="66000" />
       <workItem from="1555311831557" duration="92013000" />
-      <workItem from="1556608963031" duration="2236000" />
-    </task>
-    <task id="LOCAL-00179" summary="Bug correction: file not found because a subject was hard written in &#10;a path and wasn't updated  in the loop">
-      <created>1549453427343</created>
-      <option name="number" value="00179" />
-      <option name="presentableId" value="LOCAL-00179" />
-      <option name="project" value="LOCAL" />
-      <updated>1549453427344</updated>
-    </task>
-    <task id="LOCAL-00180" summary="Begin to subject 8">
-      <created>1549464647137</created>
-      <option name="number" value="00180" />
-      <option name="presentableId" value="LOCAL-00180" />
-      <option name="project" value="LOCAL" />
-      <updated>1549464647138</updated>
-    </task>
-    <task id="LOCAL-00181" summary="Begin to subject 25">
-      <created>1549526742536</created>
-      <option name="number" value="00181" />
-      <option name="presentableId" value="LOCAL-00181" />
-      <option name="project" value="LOCAL" />
-      <updated>1549526742537</updated>
-    </task>
-    <task id="LOCAL-00182" summary="Extend bounding box around EPI images&#10;Performs antsRegistration constrained in phase encoding direction.">
-      <created>1549988059357</created>
-      <option name="number" value="00182" />
-      <option name="presentableId" value="LOCAL-00182" />
-      <option name="project" value="LOCAL" />
-      <updated>1549988059358</updated>
+      <workItem from="1556608963031" duration="11166000" />
+      <workItem from="1557131636259" duration="36000" />
+      <workItem from="1557132278392" duration="1364000" />
+      <workItem from="1557138080121" duration="15150000" />
+      <workItem from="1557474268273" duration="10701000" />
+      <workItem from="1557741969807" duration="168000" />
+      <workItem from="1557742271846" duration="15648000" />
+      <workItem from="1558343042717" duration="26243000" />
+      <workItem from="1558688273739" duration="3447000" />
+      <workItem from="1558944588485" duration="186000" />
+      <workItem from="1558951719836" duration="166000" />
+      <workItem from="1558952193929" duration="36000" />
+      <workItem from="1558952319515" duration="16000" />
+      <workItem from="1558952590534" duration="13638000" />
     </task>
     <task id="LOCAL-00183" summary="Put good subject lists nip.">
       <created>1549989215946</created>
@@ -846,11 +846,39 @@
       <option name="project" value="LOCAL" />
       <updated>1556610811134</updated>
     </task>
-    <option name="localTasksCounter" value="228" />
+    <task id="LOCAL-00228" summary="Theme not working....">
+      <created>1556611241601</created>
+      <option name="number" value="00228" />
+      <option name="presentableId" value="LOCAL-00228" />
+      <option name="project" value="LOCAL" />
+      <updated>1556611241601</updated>
+    </task>
+    <task id="LOCAL-00229" summary="Update.">
+      <created>1556642978260</created>
+      <option name="number" value="00229" />
+      <option name="presentableId" value="LOCAL-00229" />
+      <option name="project" value="LOCAL" />
+      <updated>1556642978260</updated>
+    </task>
+    <task id="LOCAL-00230" summary="Update TBSS path for the neurospin network">
+      <created>1557217867569</created>
+      <option name="number" value="00230" />
+      <option name="presentableId" value="LOCAL-00230" />
+      <option name="project" value="LOCAL" />
+      <updated>1557217867570</updated>
+    </task>
+    <task id="LOCAL-00231" summary="Swap tbss prestats and display of skeleton in fslview.">
+      <created>1557219411650</created>
+      <option name="number" value="00231" />
+      <option name="presentableId" value="LOCAL-00231" />
+      <option name="project" value="LOCAL" />
+      <updated>1557219411650</updated>
+    </task>
+    <option name="localTasksCounter" value="232" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1045479000" />
+    <option name="totallyTimeSpent" value="1141208000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -862,10 +890,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="-6" width="1920" height="1035" extended-state="6" />
+    <frame x="-1" y="-4" width="1922" height="1034" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49676377" visible="true" weight="0.24493062" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49676377" weight="0.255603" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.2497332" />
       <window_info id="Favorites" order="2" sideWeight="0.50323623" side_tool="true" weight="0.12753469" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -876,7 +904,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286638" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.6851654" visible="true" weight="0.26185346" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="8" sideWeight="0.6851654" visible="true" weight="0.5377155" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.6613248" weight="0.2952586" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.30711207" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -886,8 +914,8 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" sideWeight="0.49447078" weight="0.3244397" />
-      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.49343064" visible="true" weight="0.11366062" />
-      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.5065693" side_tool="true" visible="true" weight="0.11366062" />
+      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.5850816" visible="true" weight="0.27321237" />
+      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.41491842" side_tool="true" visible="true" weight="0.27321237" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -944,10 +972,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="First commit for tbss_register_FA_maps.py: register the output of&#10;FSL DTIFIT to the population template created by the script &#10;tbss_create_controls_template.py. &#10;Tested on one control, and one patient. Seem to work so far." />
-    <MESSAGE value="Clean Code, add comment" />
-    <MESSAGE value="Code run for patients without error. Launch for the &#10;controls group." />
-    <MESSAGE value="Add command to move warped FA for control." />
     <MESSAGE value="tbss prepare statistic code: prepare the statistical analysis." />
     <MESSAGE value="tbss prepare statistic : bug for antsApplyTransform ..." />
     <MESSAGE value="Multiple updates...." />
@@ -969,7 +993,11 @@
     <MESSAGE value="Try sphinx guzzle theme to work." />
     <MESSAGE value="Fix guzzle theme error. It was html_template_path&#10;instead of template_path variable to fetch&#10;the theme." />
     <MESSAGE value="Add the Guzzle documentation theme." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add the Guzzle documentation theme." />
+    <MESSAGE value="Theme not working...." />
+    <MESSAGE value="Update." />
+    <MESSAGE value="Update TBSS path for the neurospin network" />
+    <MESSAGE value="Swap tbss prestats and display of skeleton in fslview." />
+    <option name="LAST_COMMIT_MESSAGE" value="Swap tbss prestats and display of skeleton in fslview." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -983,98 +1011,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/scipy/stats/stats.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="168" selection-start-line="168" selection-end-line="168" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/machine_learning/cpm_predict_behavior.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2420">
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/cpm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3133">
-          <caret line="163" column="99" selection-start-line="163" selection-start-column="99" selection-end-line="163" selection-end-column="99" />
-          <folding>
-            <element signature="e#0#48#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/joblib/parallel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2790">
-          <caret line="472" column="8" selection-start-line="472" selection-start-column="8" selection-end-line="472" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/svm/classes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="843" column="8" selection-start-line="843" selection-start-column="8" selection-end-line="843" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/mutual_info_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-74">
-          <caret line="293" column="4" selection-start-line="293" selection-start-column="4" selection-end-line="293" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/univariate_selection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="669" lean-forward="true" selection-start-line="669" selection-end-line="669" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/model_selection/_split.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="1919" column="4" selection-start-line="1919" selection-start-column="4" selection-end-line="1919" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/model_selection/_search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="1066" column="8" selection-start-line="1066" selection-start-column="8" selection-end-line="1066" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/model_selection/_validation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="570" column="4" selection-start-line="570" selection-start-column="4" selection-end-line="570" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/machine_learning/CPM_method.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="72" column="39" selection-start-line="72" selection-start-column="39" selection-end-line="72" selection-end-column="39" />
-          <folding>
-            <element signature="e#566#584#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/decomposition/pca.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6532">
-          <caret line="301" column="8" selection-start-line="301" selection-start-column="8" selection-end-line="301" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-253">
@@ -1095,16 +1031,6 @@
           <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
           <folding>
             <element signature="e#43#104#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="548" selection-start-line="548" selection-end-line="548" />
-          <folding>
-            <element signature="e#43#59#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1268,59 +1194,6 @@
     <entry file="file://$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4809">
-          <caret line="253" column="16" lean-forward="true" selection-start-line="253" selection-start-column="16" selection-end-line="253" selection-end-column="16" />
-          <folding>
-            <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2583">
-          <caret line="126" column="24" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2016">
-          <caret line="101" column="24" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="24" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2352">
-          <caret line="120" column="31" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="8" column="3" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
-          <folding>
-            <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1785">
@@ -1331,12 +1204,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
+    <entry file="file://$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="11" column="12" lean-forward="true" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+        <state relative-caret-position="11508">
+          <caret line="548" selection-start-line="548" selection-end-line="548" />
           <folding>
-            <element signature="e#441#475#0" expanded="true" />
+            <element signature="e#43#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1218">
+          <caret line="59" column="36" selection-start-line="59" selection-start-column="36" selection-end-line="59" selection-end-column="36" />
+          <folding>
+            <element signature="e#534#543#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
+      <provider selected="true" editor-type-id="restructured-text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
+      <provider selected="true" editor-type-id="restructured-text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="198" column="23" selection-start-line="198" selection-start-column="23" selection-end-line="198" selection-end-column="23" />
+          <folding>
+            <element signature="e#57#76#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1344,15 +1243,141 @@
     <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
       <provider selected="true" editor-type-id="restructured-text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="59" column="34" selection-start-line="59" selection-start-column="34" selection-end-line="59" selection-end-column="34" />
+        <state relative-caret-position="-2984">
+          <caret line="86" column="40" lean-forward="true" selection-start-line="86" selection-start-column="40" selection-end-line="86" selection-end-column="40" />
           <folding>
-            <element signature="e#534#543#0" expanded="true" />
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nipype/interfaces/mrtrix/convert.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="265" lean-forward="true" selection-start-line="265" selection-end-line="265" />
+          <folding>
+            <element signature="e#138#246#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../.local/lib/python3.6/site-packages/dipy-0.15.0-py3.6-linux-x86_64.egg/dipy/viz/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/../.local/lib/python3.6/site-packages/dipy-0.15.0-py3.6-linux-x86_64.egg/dipy/segment/bundles.py" />
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/dipy/segment/bundles.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+          <folding>
+            <element signature="e#441#475#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="29" selection-start-line="29" selection-end-line="38" selection-end-column="40" />
+          <folding>
+            <element signature="e#57#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-811">
+          <caret line="48" column="15" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="92" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1982">
+          <caret line="146" column="3" selection-start-line="146" selection-start-column="3" selection-end-line="146" selection-end-column="3" />
+          <folding>
+            <element signature="e#57#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///media/db242421/db242421_data/Downloads/scratch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="214" column="41" lean-forward="true" selection-start-line="214" selection-start-column="41" selection-end-line="214" selection-end-column="41" />
+          <folding>
+            <element signature="e#46#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2289">
+          <caret line="115" column="44" selection-start-line="115" selection-start-column="44" selection-end-line="115" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="300" column="79" selection-start-line="300" selection-start-column="79" selection-end-line="300" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="137" column="29" selection-start-line="137" selection-start-column="29" selection-end-line="137" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nibabel/streamlines/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-749">
+          <caret line="59" column="92" lean-forward="true" selection-start-line="59" selection-start-column="92" selection-end-line="59" selection-end-column="92" />
+          <folding>
+            <element signature="e#57#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="3" selection-end-column="4" />
+          <folding>
+            <element signature="e#57#76#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="55" />
+          <folding>
+            <element signature="e#57#75#0" expanded="true" />
           </folding>
         </state>
       </provider>
