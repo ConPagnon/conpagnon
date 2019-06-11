@@ -16,7 +16,7 @@ in MRTrix3.
 
 # Set paths
 root_directory = '/neurospin/grip/protocols/MRI/MEMODEV_AB_2018/MEMODEV_MRI/diffusion'
-subjects_list_txt = '/neurospin/grip/protocols/MRI/MEMODEV_AB_2018/sujets_memodev_diffusion2.txt'
+subjects_list_txt = '/neurospin/grip/protocols/MRI/MEMODEV_AB_2018/MEMODEV_MRI/diffusion/sujets_preproc_diff_suite.txt'
 subjects = list(pd.read_csv(subjects_list_txt, header=None)[0])
 
 
