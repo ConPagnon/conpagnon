@@ -84,7 +84,6 @@ def list_fmri_data(root_fmri_data_directory):
     # Creating the dictionnary with sub-directories names as keys, i.e
     # the different groups of the study and full path to functional images
     # as values
-    groupes = os.listdir(root_fmri_data_directory)
     n_groupes = len(groupes)
     fmri_files_dict = dict([(groupes[groupe], fmri_files[fmri_file])
                             for groupe, fmri_file in zip(range(n_groupes),range(n_groupes)) ])
