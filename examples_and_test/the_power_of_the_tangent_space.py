@@ -128,7 +128,7 @@ controls_time_series = np.array([times_series['TDC'][s]['time_series'] for s in 
 patients_time_series = np.array([times_series['patients_r'][s]['time_series'] for s in patients])
 
 # Number of bootstrap
-m = 10000
+m = 10
 size_subset_controls = 15
 
 # generate null distribution with the controls group
@@ -141,6 +141,16 @@ bootstrap_matrix = np.array([np.random.choice(
     indices,
     size=size_subset_controls,
     replace=False) for b in range(m)])
+
+from computing.compute_connectivity_matrices import tangent_space_projection
+
+test = tangent_space_projection(reference_group=controls_time_series,
+                                group_to_project=patients_time_series,
+                                bootstrap_number=500,
+                                bootstrap_size=size_subset_controls,
+                                output_directory="/media/db242421/db242421_data/ConPagnon_data/tangent_space/"
+                                                 "test_fonction",
+                                verif_null=True,statistic='z')
 
 for b in range(m):
     print('Bootstrap # {}'.format(b))
@@ -179,12 +189,12 @@ null_distribution_array = np.array(null_distribution)
 n_rois = 10
 random_roi = np.random.choice(a=np.arange(start=0, stop=null_distribution_array.shape[1], step=1),
                               size=n_rois)
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/null_distribution_tangent.pdf') \
+with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction/null_distribution_tangent.pdf') \
         as pdf:
 
     for i in range(n_rois):
-        plt.subplot(5, 2, i+1)
-        plt.hist(x=null_distribution_array[random_roi[i], ...], bins='auto', edgecolor='black')
+        plt.subplot(10, 2, i+1)
+        plt.hist(x=null_distribution_array[..., random_roi[i]], bins='auto', edgecolor='black')
         plt.title('# {}'.format(random_roi[i]))
         plt.subplots_adjust(hspace=1, wspace=.01)
     pdf.savefig()
