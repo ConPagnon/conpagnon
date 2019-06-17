@@ -20,6 +20,10 @@ import webcolors
 import itertools
 from math import sqrt
 from data_handling.data_management import remove_duplicate
+from scipy.stats import zmap, ttest_1samp
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.pyplot as plt
+from utils.folders_and_files_management import save_object
 
 
 def create_connectivity_mask(time_series_dictionary, groupes):
@@ -1278,3 +1282,117 @@ def mean_of_flatten_connectivity_matrices(subjects_individual_matrices_dictionar
                     'mean connectivity': flat_mean_subject_connectivity}
 
     return connectivity_of_interest
+
+
+def tangent_space_projection(reference_group, group_to_project, bootstrap_number,
+                             bootstrap_size, output_directory, verif_null=True,
+                             correction_method="bonferroni",
+                             alpha=0.05, statistic="t"):
+    """Project a group of time series to a space tangent to a reference connectivity matrix.
+    The reference matrix is derived from a reference times series group.
+    """
+    # Initialize a list containing the null distribution
+    null_distribution = []
+
+    # Generate a bootstrap matrix of indices
+    # before the loop.
+    indices = np.arange(0, reference_group.shape[0], step=1)
+    bootstrap_matrix = np.array([np.random.choice(
+        indices,
+        size=bootstrap_size,
+        replace=False) for b in range(bootstrap_number)])
+
+    # Loop over the bootstrap indices
+    for b in range(bootstrap_number):
+        print('Bootstrap # {}'.format(b))
+        bootstrap_reference_group = bootstrap_matrix[b, :]
+        # We chose one subject of the reference group
+        # among the bootstrap sample
+        left_out_subject = bootstrap_reference_group[0]
+        subset_reference_group = bootstrap_reference_group[1:]
+        # Compute mean matrices, and connectivity matrices
+        # in the tangent on the subset of subject from the
+        # reference group without the leftout subject.
+        connectivity_measure = ConnectivityMeasure(kind='tangent',
+                                                   vectorize=True,
+                                                   discard_diagonal=True)
+        reference_group_subset_matrices = \
+            connectivity_measure.fit_transform(X=reference_group[subset_reference_group, ...])
+        reference_group_subset_mean = connectivity_measure.mean_
+        # Project at the previously computed mean
+        # the leftout control subject
+        leftout_subject = \
+            connectivity_measure.transform(
+                X=[reference_group[left_out_subject, ...]])[0]
+
+        # Compute a z-score between the left out controls tangent connectivity
+        # and the resampled controls group
+        if statistic == "z":
+
+            stat_null = zmap(scores=leftout_subject, compare=reference_group_subset_matrices)
+        elif statistic == "t":
+
+            # Another statistic: one sample t test, controls - the left out controls
+            # as contrast
+            stat_null = -1.0 * ttest_1samp(a=reference_group_subset_matrices, popmean=leftout_subject)[0]
+        else:
+            raise ValueError("Statistic type unknown. Type are z or t statistic, "
+                             "you entered {}".format(statistic))
+
+        # Store the results of the test, as null distribution
+        null_distribution.append(stat_null)
+
+    null_distribution_array = np.array(null_distribution)
+    if verif_null:
+        # plot of some null distribution randomly chosen
+        n_rois = 20
+        random_roi = np.random.choice(a=np.arange(start=0, stop=null_distribution_array.shape[1], step=1),
+                                      size=n_rois)
+        with PdfPages(os.path.join(output_directory, "null_distribution_random_roi.pdf")) \
+                as pdf:
+
+            for i in range(n_rois):
+                plt.subplot(10, 2, i + 1)
+                plt.hist(x=null_distribution_array[..., random_roi[i]], bins='auto', edgecolor='black')
+                plt.title('# {}'.format(random_roi[i]))
+                plt.subplots_adjust(hspace=1, wspace=.01)
+            pdf.savefig()
+            plt.show()
+
+    # Compute tangent connectivity matrices on the whole
+    # reference group
+    reference_group_connectivity = ConnectivityMeasure(kind='tangent',
+                                                       vectorize=True,
+                                                       discard_diagonal=True)
+
+    reference_group_tangent_matrices = reference_group_connectivity.fit_transform(X=reference_group)
+    # Compute the tangent mean for the controls group
+    reference_group_tangent_mean = reference_group_connectivity.mean_
+
+    # Project each subject's matrices belonging to
+    # group to project in the tangent space
+    group_to_project_tangent_matrices = reference_group_connectivity.transform(
+        X=group_to_project)
+    save_object(
+        object_to_save=group_to_project_tangent_matrices,
+        saving_directory=output_directory,
+        filename='projected_group_connectivity_matrices')
+
+    # Test for each projected subject, and for each brain connection
+    # if there exist a significant connectivity difference between the
+    # a subject and the reference group.
+    if statistic == "z":
+        # Z-statistic between a projected subject and the whole
+        # reference group
+        group_to_project_scores = zmap(scores=group_to_project_tangent_matrices,
+                                       compare=reference_group_tangent_matrices)
+    elif statistic == "t":
+        # A one sample t-test between the reference group and a projected subject
+        group_to_project_scores = np.array([-1.0 * ttest_1samp(
+            a=reference_group_tangent_matrices, popmean=group_to_project_tangent_matrices[p, ...])[0]
+                                            for p in range(group_to_project_tangent_matrices.shape[0])])
+
+    # Compute the raw p value based on the previously
+    # computed null distribution
+
+    return null_distribution_array
