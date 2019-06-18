@@ -103,6 +103,13 @@ nilearn_cache_directory = '/media/db242421/db242421_data/ConPagnon/nilearn_cache
 # Repetition time between time points in the fmri acquisition, usually 2.4s or 2.5s
 repetition_time = 2.5
 
+# Load behavioral scores
+behavioral_scores = data_management.read_excel_file(
+    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
+                    'Resting State AVCnn_cohort data.xlsx',
+    sheetname='Middle Cerebral Artery+controls')
+behavioral_scores = behavioral_scores.set_index(["NIP"])
+
 times_series = ccm.time_series_extraction(
     root_fmri_data_directory=root_fmri_data_directory,
     groupes=groups,
@@ -113,132 +120,57 @@ times_series = ccm.time_series_extraction(
     nilearn_cache_directory=nilearn_cache_directory
 )
 
-controls = list(times_series['TDC'].keys())
-patients = list(times_series['patients_r'].keys())
+# try to select a sub group directly from the time series
+# dictionary
+groups_by_factor, population_df_by_factor, factor_keys =\
+    dictionary_operations.groupby_factor_connectivity_matrices(
+        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
+                    'Resting State AVCnn_cohort data2.xlsx',
+        sheetname='Middle Cerebral Artery+controls',
+        subjects_connectivity_matrices_dictionnary=times_series,
+        groupes=['patients_r'], factors=['langage_clinique'],
+        drop_subjects_list=None)
 
-# Order patients by language performance: worst to best
-# patients = ['sub24_ed110159', 'sub20_hd120032', 'sub08_jl110342', 'sub26_as110192', 'sub44_av130474',
-#            'sub21_yg120001', 'sub32_mp130025', 'sub14_rs120006', 'sub10_dl120547', 'sub07_lc110496',
-#            'sub13_vl110480', 'sub04_rc110343', 'sub39_ya130305', 'sub34_jc130100', 'sub30_zp130008',
-#            'sub25_ec110149', 'sub41_sa130332', 'sub43_mc130373', 'sub38_mv130274', 'sub17_eb120007',
-#            'sub12_ab110489', 'sub35_gc130101', 'sub37_la130266', 'sub23_lf120459', 'sub06_ml110125']
+times_series = {'reference_group': groups_by_factor['N'],
+                'group_to_project': groups_by_factor['A']}
+
+reference_group = list(times_series['reference_group'].keys())
+subjects_to_project = list(times_series['group_to_project'].keys())
 
 # Stack the times series for each group
-controls_time_series = np.array([times_series['TDC'][s]['time_series'] for s in controls])
-patients_time_series = np.array([times_series['patients_r'][s]['time_series'] for s in patients])
+reference_group_time_series = np.array([times_series['reference_group'][s]['time_series']
+                                        for s in reference_group])
+group_to_project_time_series = np.array([times_series['group_to_project'][s]['time_series']
+                                         for s in subjects_to_project])
 
 # Number of bootstrap
-m = 10
-size_subset_controls = 15
-
-# generate null distribution with the controls group
-# by leave one out
-one_patients_time_series = patients_time_series[0, ...]
-null_distribution = []
-
-indices = np.arange(0, len(controls), step=1)
-bootstrap_matrix = np.array([np.random.choice(
-    indices,
-    size=size_subset_controls,
-    replace=False) for b in range(m)])
+m = 10000
+size_subset_reference_group = 10
 
 from computing.compute_connectivity_matrices import tangent_space_projection
 
-test = tangent_space_projection(reference_group=controls_time_series,
-                                group_to_project=patients_time_series,
-                                bootstrap_number=500,
-                                bootstrap_size=size_subset_controls,
-                                output_directory="/media/db242421/db242421_data/ConPagnon_data/tangent_space/"
-                                                 "test_fonction",
-                                verif_null=True,statistic='z')
+tangent_space_projection_dict = tangent_space_projection(
+    reference_group=reference_group_time_series,
+    group_to_project=group_to_project_time_series,
+    bootstrap_number=m,
+    bootstrap_size=size_subset_reference_group,
+    output_directory="/media/db242421/db242421_data/ConPagnon_data/tangent_space/"
+                     "test_fonction",
+    verif_null=True,
+    statistic='t')
 
-for b in range(m):
-    print('Bootstrap # {}'.format(b))
-    bootstrap_controls = bootstrap_matrix[b, :]
-    # We chose one controls among the bootstrap sample
-    left_out_subject = bootstrap_controls[0]
-    subset_controls = bootstrap_controls[1:]
-    # Compute mean matrices, and connectivity matrices
-    # in the tangent on the subset of controls without
-    # the leftout subject.
-    connectivity_measure = ConnectivityMeasure(kind='tangent',
-                                               vectorize=True,
-                                               discard_diagonal=True)
-    controls_subset_matrices = \
-        connectivity_measure.fit_transform(X=controls_time_series[subset_controls, ...])
-    controls_subset_mean = connectivity_measure.mean_
-    # Project at the previously computed mean
-    # the leftout control subject
-    leftout_control = \
-        connectivity_measure.transform(
-            X=[controls_time_series[left_out_subject, ...]])[0]
+# Retrieves import results from the dictionary
 
-    # Compute a z-score between the left out controls tangent connectivity
-    # and the resampled controls group
-    z_null = zmap(scores=leftout_control, compare=controls_subset_matrices)
-    # Another statistic: one sample t test, controls - the left out controls
-    # as contrast
-    t_null = -1.0*ttest_1samp(a=controls_subset_matrices, popmean=leftout_control)[0]
+# Corrected p values for each projected subject
+p_values_corrected = tangent_space_projection_dict['p_values_corrected']
+# Tangent Connectivity matrices for each projected subject
+group_to_project_tangent_matrices = tangent_space_projection_dict['group_to_project_tangent_matrices']
+# Reference group mean correlation matrices
+reference_group_tangent_mean = tangent_space_projection_dict['reference_group_tangent_mean']
+# output statistic for each projected subject
+group_to_project_stats = tangent_space_projection_dict['group_to_project_stats']
 
-    # Store the results of the test, as null distribution
-    null_distribution.append(t_null)
-
-null_distribution_array = np.array(null_distribution)
-
-# plot of some null distribution randomly chosen
-n_rois = 10
-random_roi = np.random.choice(a=np.arange(start=0, stop=null_distribution_array.shape[1], step=1),
-                              size=n_rois)
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction/null_distribution_tangent.pdf') \
-        as pdf:
-
-    for i in range(n_rois):
-        plt.subplot(10, 2, i+1)
-        plt.hist(x=null_distribution_array[..., random_roi[i]], bins='auto', edgecolor='black')
-        plt.title('# {}'.format(random_roi[i]))
-        plt.subplots_adjust(hspace=1, wspace=.01)
-    pdf.savefig()
-    plt.show()
-
-
-# Compute tangent connectivity matrices on the whole controls group
-controls_connectivity = ConnectivityMeasure(kind='tangent',
-                                            vectorize=True,
-                                            discard_diagonal=True)
-controls_tangent_matrices = controls_connectivity.fit_transform(X=controls_time_series)
-# Compute the tangent mean for the controls group
-controls_tangent_mean = controls_connectivity.mean_
-
-# Project each patient's correlation matrices in the
-# tangent space, using the controls group tangent mean
-patients_tangent_matrices = controls_connectivity.transform(X=patients_time_series)
-folders_and_files_management.save_object(
-    object_to_save=patients_tangent_matrices,
-    saving_directory='/media/db242421/db242421_data/ConPagnon_data/tangent_space',
-    filename='patients_tangent_matrices')
-# Test for each patient, the difference in connectivity regarding
-# the controls group
-patients_z_scores = zmap(scores=patients_tangent_matrices, compare=controls_tangent_matrices)
-patients_t_scores = np.array([-1.0*ttest_1samp(a=controls_tangent_matrices,
-                                               popmean=patients_tangent_matrices[p, ...])[0]
-                              for p in range(patients_tangent_matrices.shape[0])])
-
-p_values = np.empty(shape=patients_z_scores.shape)
-for patient in range(patients_z_scores.shape[0]):
-    for i in range(patients_z_scores.shape[1]):
-        # with the z-score, or the t-score
-        p_values[patient, i] = \
-            np.sum(np.abs(null_distribution_array[:, i]) > np.abs(patients_t_scores[patient, i])) / m
-        #    np.sum(np.abs(null_distribution_array[:, i]) > np.abs(patients_z_scores[patient, i])) / m
-
-# correct the p values for each patients
-p_values_corrected = np.empty(shape=patients_z_scores.shape)
-for patient in range(patients_z_scores.shape[0]):
-    p_values_corrected[patient, ...] = multipletests(pvals=p_values[patient, ...],
-                                                     method='bonferroni',
-                                                     alpha=0.05)[1]
-
-# Count the number of time a node appear across patients
+# Count the number of time a node appear across subjects_to_project
 significant_hit_per_nodes = vec_to_sym_matrix(np.sum(p_values_corrected < 0.05, axis=0),
                                               diagonal=np.zeros(n_nodes))
 significant_hit_per_nodes_g = nx.from_numpy_array(significant_hit_per_nodes)
@@ -250,23 +182,18 @@ plot_connectome(adjacency_matrix=empty_adjacency_matrix,
                 node_coords=atlas_nodes,
                 node_color=labels_colors,
                 node_size=significant_node_degree,
-                title='Common nodes across patients')
+                title='Common nodes across subjects_to_project')
 plt.show()
 
-# Load behavioral scores
-behavioral_scores = data_management.read_excel_file(
-    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
-                    'Resting State AVCnn_cohort data.xlsx',
-    sheetname='Middle Cerebral Artery+controls')
 
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction'
                           'patient_t_score_bonf_dsigma__.pdf') as pdf:
-    for patient in range(len(patients)):
-        if patients[patient] in behavioral_scores.index:
+    for subject in range(len(subjects_to_project)):
+        if subjects_to_project[subject] in behavioral_scores.index:
 
             # compute node degree for each subject
             # based on the surviving connection
-            patient_significant_edges = vec_to_sym_matrix(p_values_corrected[patient, ...] < 0.05,
+            patient_significant_edges = vec_to_sym_matrix(p_values_corrected[subject, ...] < 0.05,
                                                           diagonal=np.zeros(n_nodes))
             patient_adjacency_matrices = nx.from_numpy_array(patient_significant_edges)
             degrees = np.array([val for (node, val) in patient_adjacency_matrices.degree()])*40
@@ -275,17 +202,17 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
             plt.figure()
             plot_connectome(
 
-                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[patient, ...] < 0.05,
-                                                               patients_tangent_matrices[patient, ...]),
+                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < 0.05,
+                                                               group_to_project_tangent_matrices[subject, ...]),
                                                    diagonal=np.zeros(n_nodes)),
                 node_coords=atlas_nodes,
                 node_color=labels_colors,
                 title='{}, Lesion: {}, Language: {}, Speech: {}, PC1: {}'.format(
-                    patients[patient][0:5],
-                    behavioral_scores.loc[patients[patient]]['Lesion'],
-                    behavioral_scores.loc[patients[patient]]['langage_clinique'],
-                    behavioral_scores.loc[patients[patient]]['Parole'],
-                    round(behavioral_scores.loc[patients[patient]]['pc1_language'], 3)),
+                    subjects_to_project[subject][0:5],
+                    behavioral_scores.loc[subjects_to_project[subject]]['Lesion'],
+                    behavioral_scores.loc[subjects_to_project[subject]]['langage_clinique'],
+                    behavioral_scores.loc[subjects_to_project[subject]]['Parole'],
+                    round(behavioral_scores.loc[subjects_to_project[subject]]['pc1_language'], 3)),
                 colorbar=True,
                 node_size=degrees,
                 node_kwargs={'edgecolor': 'black', 'alpha': 1},
@@ -295,16 +222,16 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
 
             plt.figure()
             view = plotting.view_connectome(
-                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[patient, ...] < 0.05,
-                                                               patients_t_scores[patient, ...]),
+                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < 0.05,
+                                                               group_to_project_stats[subject, ...]),
                                                    diagonal=np.zeros(n_nodes)),
                 coords=atlas_nodes,
                 cmap='bwr')
             view.save_as_html(os.path.join('/media/db242421/db242421_data/ConPagnon_data/tangent_space',
-                                           patients[patient] + '_t_score.html'))
+                                           subjects_to_project[subject] + '_t_score.html'))
     # Plot tangent mean controls connectome
     plt.figure()
-    plot_connectome(adjacency_matrix=controls_tangent_mean, node_coords=atlas_nodes,
+    plot_connectome(adjacency_matrix=reference_group_tangent_mean, node_coords=atlas_nodes,
                     node_color=labels_colors, edge_threshold='80%', title='Controls tangent mean',
                     colorbar=True)
     pdf.savefig()
@@ -312,131 +239,22 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
 
 
 sc = StandardScaler()
-absolute_max_distance = np.max(np.abs(patients_tangent_matrices), axis=1)
+absolute_max_distance = np.max(np.abs(group_to_project_tangent_matrices), axis=1)
 X = sm.add_constant(absolute_max_distance)
-y = np.array(behavioral_scores.loc[patients]['pc1_language_zscores'])
+y = np.array(behavioral_scores.loc[subjects_to_project]['pc1_language_zscores'])
 dist_tangent = sm.OLS(y, X).fit()
 dist_tangent.summary()
-
-
-plt.figure()
-plt.plot(np.max(np.abs(patients_tangent_matrices), axis=1),
-         behavioral_scores.loc[patients]['pc1_language_zscores'], 'o')
-plt.xlabel('Absolute max distance to controls')
-plt.ylabel('PC1 language (mean performance score)')
-plt.show()
-
-all_adjacency_matrix = [vec_to_sym_matrix(np.array(p_values_corrected[patient, ...] < 0.05, dtype=int),
-                                          diagonal=np.zeros(n_nodes)) for patient in range(len(patients))]
-all_edge_weight_matrix = [vec_to_sym_matrix(np.multiply(np.array(p_values_corrected[patient, ...] < 0.05, dtype=int),
-                                                        patients_tangent_matrices[patient, ...]),
-                                            diagonal=np.zeros(n_nodes)) for patient in range(len(patients))]
-
-
-all_patients_graph = [nx.from_numpy_array(all_edge_weight_matrix[p]) for p in range(len(patients))]
-
-# For each patients measure the similarity of the graph versus
-# the other
-node_dictionary = {node_number: labels_regions[node_number] for node_number in range(n_nodes)}
-all_graph_for_grakel = [[[all_adjacency_matrix[p], node_dictionary]] for p in range(len(patients))]
-
-# Build Graph representation suitable for most of the Grakel algorithm
-my_graphs = [Graph(list(all_patients_graph[i].edges()), node_labels=node_dictionary,
-                edge_labels={edge: all_edge_weight_matrix[i][edge] for edge in all_patients_graph[i].edges()})
-             for i in range(len(patients))]
-
-# without weight on edges, simply adjacency matrix, and node labels.
-my_graphs2 = [Graph(all_adjacency_matrix[i], node_labels=node_dictionary) for i in range(len(patients))]
-
-
-kernel = GraphKernel(kernel={'name': 'neighborhood_hash'}, normalize=True)
-result_kernel = kernel.fit_transform(my_graphs2)
-
-plt.figure()
-plot_matrix(matrix=result_kernel, labels_colors='auto', mpart='all',
-            horizontal_labels=patients, vertical_labels=patients)
-plt.show()
-# Classification based on the previous computed kernel
-svc = SVC(kernel='precomputed')
-
-
-graph_array = np.array(my_graphs2)
-
-kernel = GraphKernel(kernel={'name': 'shortest_path'}, normalize=True)
-nh = kernel.fit_transform(X=my_graphs2)
-
-for patient in range(len(patients)):
-
-    print('Request subject: {}'.format(patients[patient]))
-    print('--------------')
-    most_similar = np.argsort(nh[patient, ...])[-2]
-    print('Most similar subject: {}'.format(patients[most_similar]))
-    print('\n')
-    with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
-                          'most_similar_subjects_pairs.pdf') as pdf:
-
-        patient_significant_edges = vec_to_sym_matrix(p_values_corrected[patient, ...] < 0.05,
-                                                      diagonal=np.zeros(n_nodes))
-        patient_adjacency_matrices = nx.from_numpy_array(patient_significant_edges)
-        degrees = np.array([val for (node, val) in patient_adjacency_matrices.degree()]) * 40
-
-        most_similar_patient_significant_edges = vec_to_sym_matrix(p_values_corrected[most_similar, ...] < 0.05,
-                                                      diagonal=np.zeros(n_nodes))
-        most_similar_patient_adjacency_matrices = nx.from_numpy_array( most_similar_patient_significant_edges)
-        most_similar_degrees = np.array([val for (node, val) in most_similar_patient_adjacency_matrices.degree()])*40
-
-        # plot corrected connection
-        plt.figure()
-        plot_connectome(
-
-            adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[patient, ...] < 0.05,
-                                                           patients_tangent_matrices[patient, ...]),
-                                               diagonal=np.zeros(n_nodes)),
-            node_coords=atlas_nodes,
-            node_color=labels_colors,
-            title='{}, Lesion: {}, Language: {}, Speech: {}, PC1: {}'.format(
-                patients[patient][0:5],
-                behavioral_scores.loc[patients[patient]]['Lesion'],
-                behavioral_scores.loc[patients[patient]]['langage_clinique'],
-                behavioral_scores.loc[patients[patient]]['Parole'],
-                round(behavioral_scores.loc[patients[patient]]['pc1_language'], 3)),
-            colorbar=True,
-            node_size=degrees,
-            node_kwargs={'edgecolor': 'black', 'alpha': 1},
-            edge_threshold=None)
-     #   pdf.savefig()
-        plt.show()
-        plt.figure()
-        plot_connectome(
-
-            adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[most_similar, ...] < 0.05,
-                                                           patients_tangent_matrices[most_similar, ...]),
-                                               diagonal=np.zeros(n_nodes)),
-            node_coords=atlas_nodes,
-            node_color=labels_colors,
-            title='{}, Lesion: {}, Language: {}, Speech: {}, PC1: {}'.format(
-                patients[most_similar][0:5],
-                behavioral_scores.loc[patients[most_similar]]['Lesion'],
-                behavioral_scores.loc[patients[most_similar]]['langage_clinique'],
-                behavioral_scores.loc[patients[most_similar]]['Parole'],
-                round(behavioral_scores.loc[patients[most_similar]]['pc1_language'], 3)),
-            colorbar=True,
-            node_size=most_similar_degrees,
-            node_kwargs={'edgecolor': 'black', 'alpha': 1},
-            edge_threshold=None)
-     #   pdf.savefig()
-        plt.show()
 
 # SVM classification
 labels = np.array([0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1])
 sss = StratifiedShuffleSplit(n_splits=10000)
-accuracy = cross_val_score(estimator=LinearSVC(C=1), X=patients_tangent_matrices, y=labels,
+accuracy = cross_val_score(estimator=LinearSVC(C=1), X=group_to_project_tangent_matrices, y=labels,
                            cv=sss, n_jobs=6)
 print('Accuracy: {} % +- {} %'.format(round(np.array(accuracy).mean(), 2)*100,
                                       round(np.array(accuracy).std(), 2)*100))
 
-atypical = patients_tangent_matrices[np.where(labels == 1)[0], ...]
-typical = patients_tangent_matrices[np.where(labels == 0)[0], ...]
+atypical = group_to_project_tangent_matrices[np.where(labels == 1)[0], ...]
+typical = group_to_project_tangent_matrices[np.where(labels == 0)[0], ...]
 
 # Prediction of raw NEEL score based on functional connectivity
 list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
@@ -449,13 +267,13 @@ list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
 
 # Scaled the raw behavioral scores
 sc_score = StandardScaler()
-all_scores_array = np.array(behavioral_scores.loc[patients][list_of_scores])
+all_scores_array = np.array(behavioral_scores.loc[subjects_to_project][list_of_scores])
 all_scaled_scores = sc_score.fit_transform(all_scores_array)
 
 # Scaled the features if needed
 sc_features = StandardScaler()
 maxScaler = MaxAbsScaler()
-patients_tangent_matrices_sc = maxScaler.fit_transform(patients_tangent_matrices)
+patients_tangent_matrices_sc = maxScaler.fit_transform(group_to_project_tangent_matrices)
 
 # PCA on connectivity matrices
 pca = decomposition.PCA(n_components=0.95)
@@ -466,8 +284,8 @@ patients_tangent_matrices_pca = pca.transform(patients_tangent_matrices_sc)
 # computed with the scaled matrices with the maximum
 maximum_features_mask = np.where(np.abs(patients_tangent_matrices_sc) == 1)
 patients_tangent_matrices_masked = \
-    [patients_tangent_matrices[p, np.where(np.abs(patients_tangent_matrices_sc[p, ...]) == 1)]
-     for p in range(len(patients))]
+    [group_to_project_tangent_matrices[p, np.where(np.abs(patients_tangent_matrices_sc[p, ...]) == 1)]
+     for p in range(len(subjects_to_project))]
 
 # Selection parameter, if alpha equal to 1, all features are selected
 alpha = 1
@@ -502,13 +320,13 @@ if __name__ == '__main__':
                                    scoring='neg_mean_squared_error',
                                    n_jobs=10,
                                    verbose=1)
-        grid_search.fit(patients_tangent_matrices, all_scaled_scores[..., score])
+        grid_search.fit(group_to_project_tangent_matrices, all_scaled_scores[..., score])
 
         # Reduce the dimensionality of connectivity matrices with the best
         # K selection
         best_K = grid_search.best_params_['K_best_features__k']
         K_best_reducer = SelectKBest(f_regression, k=best_K)
-        patients_tangent_matrices_KBest = K_best_reducer.fit_transform(patients_tangent_matrices,
+        patients_tangent_matrices_KBest = K_best_reducer.fit_transform(group_to_project_tangent_matrices,
                                                                        all_scaled_scores[..., score])
         # Select the best C parameters from previous selection
         best_alpha = grid_search.best_params_['ridge__alpha']
@@ -532,7 +350,7 @@ if __name__ == '__main__':
             'selected features indices': K_best_reducer.get_support(),
             'alpha': best_c[list_of_scores[score]]['alpha'],
             'best K': best_K,
-            'correlation_score_connectivity': vcorrcoef(X=patients_tangent_matrices.T,
+            'correlation_score_connectivity': vcorrcoef(X=group_to_project_tangent_matrices.T,
                                                         y=all_scaled_scores[:, score])[0]}
 
         print('Prediction done for {} test'.format(list_of_scores[score]))
@@ -595,9 +413,9 @@ if __name__ == '__main__':
 
     # TODO permuation testing !!!!!!
     n_permutations = 10001
-    permutations = [np.random.choice(np.arange(0, len(patients), 1), replace=False, size=len(patients))
+    permutations = [np.random.choice(np.arange(0, len(subjects_to_project), 1), replace=False, size=len(subjects_to_project))
                     for n in range(n_permutations)]
-    permutations[0] = np.arange(0, len(patients), 1)
+    permutations[0] = np.arange(0, len(subjects_to_project), 1)
     r2_null_distribution = dict.fromkeys(list_of_scores)
     for score in list_of_scores:
         print('Prediction for {} test'.format(score))
@@ -606,7 +424,7 @@ if __name__ == '__main__':
             backend='multiprocessing',
             temp_folder='/media/db242421/db242421_data/ConPagnon_data/tangent_space/joblib_dir')(delayed(predict_scores)(
                 connectivity_matrices=patients_tangent_matrices_KBest,
-                raw_score=behavioral_scores.loc[patients][score][b],
+                raw_score=behavioral_scores.loc[subjects_to_project][score][b],
                 scoring='neg_mean_squared_error',
                 c_grid=c_grid,
                 scale_predictors=False,
@@ -638,17 +456,17 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
         plt.show()
 
 
-# Illustration , tangent matrices of patients
+# Illustration , tangent matrices of subjects_to_project
 with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
                           'patient_matrices_max_abs_scaled.pdf') as pdf:
 
-    for patient in range(len(patients)):
+    for subject in range(len(subjects_to_project)):
         plt.figure()
-        plot_matrix(matrix=vec_to_sym_matrix(patients_tangent_matrices_sc[patient, ...],
+        plot_matrix(matrix=vec_to_sym_matrix(patients_tangent_matrices_sc[subject, ...],
                                              diagonal=np.zeros(n_nodes)),
                     labels_colors=labels_colors, horizontal_labels=labels_regions,
                     vertical_labels=labels_regions,
-                    title='{}'.format(patients[patient]))
+                    title='{}'.format(subjects_to_project[subject]))
         pdf.savefig()
         plt.show()
 
