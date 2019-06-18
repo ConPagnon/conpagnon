@@ -16,12 +16,16 @@ Author: Dhaif BEKHA.
 def groupby_factor_connectivity_matrices(population_data_file, sheetname,
                                          subjects_connectivity_matrices_dictionnary,
                                          groupes, factors,
-                                         drop_subjects_list=None):
+                                         drop_subjects_list=None,
+                                         index_col=0):
     """Group by attribute the subjects connectivity matrices.
-
+    # TODO: 18/09/2019: I added index_col to precise the index of the column
+    # TODO: to be considered as the index of the whole dataframe.
+    # TODO: Side Note: this function work with a time series dictionary too. !!
+    # TODO: Refractoring of subjects_connectivity_matrices_dictionary to subjects_dictionary.
     """
     # Read the excel containing information of interest
-    population_text_data = pd.read_excel(population_data_file, sheet_name=sheetname)
+    population_text_data = pd.read_excel(population_data_file, sheet_name=sheetname, index_col=index_col)
 
     # Drop subjects if needed
     if drop_subjects_list is not None:
