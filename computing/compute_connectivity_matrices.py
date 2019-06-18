@@ -24,7 +24,8 @@ from scipy.stats import zmap, ttest_1samp
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 from utils.folders_and_files_management import save_object
-
+import os
+from statsmodels.stats.multitest import multipletests
 
 def create_connectivity_mask(time_series_dictionary, groupes):
     """Create boolean mask for each subjects accounting
@@ -1391,8 +1392,30 @@ def tangent_space_projection(reference_group, group_to_project, bootstrap_number
         group_to_project_scores = np.array([-1.0 * ttest_1samp(
             a=reference_group_tangent_matrices, popmean=group_to_project_tangent_matrices[p, ...])[0]
                                             for p in range(group_to_project_tangent_matrices.shape[0])])
+    else:
+        raise ValueError("Statistic type unknown. Type are z or t statistic, "
+                         "you entered {}".format(statistic))
 
     # Compute the raw p value based on the previously
-    # computed null distribution
+    # computed null distribution, for each subject.
+    p_values = np.empty(shape=group_to_project_scores.shape)
+    for subject in range(group_to_project_scores.shape[0]):
+        for i in range(group_to_project_scores.shape[1]):
+            # with the z-score, or the t-score
+            p_values[subject, i] = \
+                np.sum(np.abs(null_distribution_array[:, i]) > np.abs(group_to_project_scores[subject, i])) / \
+                bootstrap_number
 
-    return null_distribution_array
+    # correct the p values for each subject
+    # in the group to project
+    p_values_corrected = np.empty(shape=group_to_project_scores.shape)
+    for subject in range(group_to_project_scores.shape[0]):
+        p_values_corrected[subject, ...] = multipletests(pvals=p_values[subject, ...],
+                                                         method=correction_method,
+                                                         alpha=alpha)[1]
+
+    return {"null_distribution": null_distribution_array, "p_values_corrected": p_values_corrected,
+            "reference_group_tangent_mean": reference_group_tangent_mean,
+            "reference_group_tangent_matrices": reference_group_tangent_matrices,
+            "group_to_project_tangent_matrices": group_to_project_tangent_matrices,
+            "group_to_project_stats": group_to_project_scores}
