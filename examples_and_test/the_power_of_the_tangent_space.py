@@ -16,13 +16,13 @@ os.environ['MKL_NUM_THREADS'] = '1'
 import numpy as np
 import matplotlib.pyplot as plt
 from nilearn.connectome import ConnectivityMeasure, vec_to_sym_matrix
-from statsmodels.stats.multitest import multipletests
+
 from nilearn.plotting import plot_connectome
-from scipy.stats import zmap, pearsonr
+
 import networkx as nx
-from scipy.stats import ttest_1samp
+
 from nilearn import plotting
-from grakel import GraphKernel, datasets, Graph
+
 from sklearn.model_selection import LeaveOneOut, cross_val_score, StratifiedShuffleSplit, GridSearchCV
 from sklearn.feature_selection import SelectKBest, f_regression, SelectFpr, mutual_info_regression
 from sklearn.svm import SVC
@@ -146,6 +146,7 @@ group_to_project_time_series = np.array([times_series['group_to_project'][s]['ti
 # Number of bootstrap
 m = 10000
 size_subset_reference_group = 10
+alpha = 0.01
 
 from computing.compute_connectivity_matrices import tangent_space_projection
 
@@ -155,9 +156,11 @@ tangent_space_projection_dict = tangent_space_projection(
     bootstrap_number=m,
     bootstrap_size=size_subset_reference_group,
     output_directory="/media/db242421/db242421_data/ConPagnon_data/tangent_space/"
-                     "test_fonction",
+                     "test_fonction2",
     verif_null=True,
-    statistic='t')
+    statistic='z',
+    correction_method="bonferroni",
+    alpha=alpha)
 
 # Retrieves import results from the dictionary
 
@@ -171,7 +174,7 @@ reference_group_tangent_mean = tangent_space_projection_dict['reference_group_ta
 group_to_project_stats = tangent_space_projection_dict['group_to_project_stats']
 
 # Count the number of time a node appear across subjects_to_project
-significant_hit_per_nodes = vec_to_sym_matrix(np.sum(p_values_corrected < 0.05, axis=0),
+significant_hit_per_nodes = vec_to_sym_matrix(np.sum(p_values_corrected < alpha, axis=0),
                                               diagonal=np.zeros(n_nodes))
 significant_hit_per_nodes_g = nx.from_numpy_array(significant_hit_per_nodes)
 significant_node_degree = np.array([val for (node, val) in significant_hit_per_nodes_g.degree()])*10
@@ -186,23 +189,24 @@ plot_connectome(adjacency_matrix=empty_adjacency_matrix,
 plt.show()
 
 
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction'
-                          'patient_t_score_bonf_dsigma__.pdf') as pdf:
+with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction2/'
+                          'projected_group_stats_z_bonf_0.01.pdf') as pdf:
     for subject in range(len(subjects_to_project)):
         if subjects_to_project[subject] in behavioral_scores.index:
 
             # compute node degree for each subject
             # based on the surviving connection
-            patient_significant_edges = vec_to_sym_matrix(p_values_corrected[subject, ...] < 0.05,
+            patient_significant_edges = vec_to_sym_matrix(p_values_corrected[subject, ...] < alpha,
                                                           diagonal=np.zeros(n_nodes))
             patient_adjacency_matrices = nx.from_numpy_array(patient_significant_edges)
             degrees = np.array([val for (node, val) in patient_adjacency_matrices.degree()])*40
 
             # plot corrected connection
+
             plt.figure()
             plot_connectome(
 
-                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < 0.05,
+                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
                                                                group_to_project_tangent_matrices[subject, ...]),
                                                    diagonal=np.zeros(n_nodes)),
                 node_coords=atlas_nodes,
@@ -222,7 +226,7 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
 
             plt.figure()
             view = plotting.view_connectome(
-                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < 0.05,
+                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
                                                                group_to_project_stats[subject, ...]),
                                                    diagonal=np.zeros(n_nodes)),
                 coords=atlas_nodes,
@@ -246,10 +250,10 @@ dist_tangent = sm.OLS(y, X).fit()
 dist_tangent.summary()
 
 # SVM classification
-labels = np.array([0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1])
+labels = np.array([0 if behavioral_scores.loc[s]['Lesion'] == 'G' else 1 for s in subjects_to_project])
 sss = StratifiedShuffleSplit(n_splits=10000)
 accuracy = cross_val_score(estimator=LinearSVC(C=1), X=group_to_project_tangent_matrices, y=labels,
-                           cv=sss, n_jobs=6)
+                           cv=LeaveOneOut(), n_jobs=6)
 print('Accuracy: {} % +- {} %'.format(round(np.array(accuracy).mean(), 2)*100,
                                       round(np.array(accuracy).std(), 2)*100))
 
