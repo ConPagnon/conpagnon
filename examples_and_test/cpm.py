@@ -51,11 +51,10 @@ subjects_matrices = subjects_connectivity_matrices
 
 # Select a subset of patients
 # Compute the connectivity matrices dictionary with factor as keys.
-group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
+group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, = \
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file='/neurospin/grip/protocols/MRI/AVCnn_Dhaif_2018/regression_data/regression_data.xlsx',
-        sheetname='cohort_functional_data',
-        subjects_connectivity_matrices_dictionnary=subjects_matrices,
+        sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=subjects_matrices,
         groupes=['patients'], factors=['Lesion'], drop_subjects_list=['sub40_np130304'])
 
 subjects_matrices = {}

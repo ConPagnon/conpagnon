@@ -122,25 +122,24 @@ times_series = ccm.time_series_extraction(
 
 # try to select a sub group directly from the time series
 # dictionary
-groups_by_factor, population_df_by_factor, factor_keys =\
+groups_by_factor, population_df_by_factor, factor_keys = \
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
-                    'Resting State AVCnn_cohort data2.xlsx',
-        sheetname='Middle Cerebral Artery+controls',
-        subjects_connectivity_matrices_dictionnary=times_series,
-        groupes=['patients_r'], factors=['langage_clinique'],
+                             'Resting State AVCnn_cohort data2.xlsx', sheetname='Middle Cerebral Artery+controls',
+        subjects_connectivity_matrices_dictionnary=times_series, groupes=['patients_r'], factors=['Lesion',
+                                                                                                  'Parole'],
         drop_subjects_list=None)
 
-times_series = {'reference_group': groups_by_factor['N'],
-                'group_to_project': groups_by_factor['A']}
+times_series_ = {'reference_group': groups_by_factor[('G', 'N')],
+                 'group_to_project': groups_by_factor[('D', 'N')]}
 
-reference_group = list(times_series['reference_group'].keys())
-subjects_to_project = list(times_series['group_to_project'].keys())
+reference_group = list(times_series_['reference_group'].keys())
+subjects_to_project = list(times_series_['group_to_project'].keys())
 
 # Stack the times series for each group
-reference_group_time_series = np.array([times_series['reference_group'][s]['time_series']
+reference_group_time_series = np.array([times_series_['reference_group'][s]['time_series']
                                         for s in reference_group])
-group_to_project_time_series = np.array([times_series['group_to_project'][s]['time_series']
+group_to_project_time_series = np.array([times_series_['group_to_project'][s]['time_series']
                                          for s in subjects_to_project])
 
 # Number of bootstrap
@@ -158,7 +157,7 @@ tangent_space_projection_dict = tangent_space_projection(
     output_directory="/media/db242421/db242421_data/ConPagnon_data/tangent_space/"
                      "test_fonction2",
     verif_null=True,
-    statistic='z',
+    statistic='t',
     correction_method="bonferroni",
     alpha=alpha)
 
@@ -190,58 +189,78 @@ plt.show()
 
 
 with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction2/'
-                          'projected_group_stats_z_bonf_0.01.pdf') as pdf:
+                          'projected_group_stats_t_bonf_0.01_LG_ParoleTypique_LD_Paroletypique.pdf') as pdf:
     for subject in range(len(subjects_to_project)):
         if subjects_to_project[subject] in behavioral_scores.index:
 
             # compute node degree for each subject
             # based on the surviving connection
-            patient_significant_edges = vec_to_sym_matrix(p_values_corrected[subject, ...] < alpha,
+            group_to_project_significant_edges = vec_to_sym_matrix(p_values_corrected[subject, ...] < alpha,
                                                           diagonal=np.zeros(n_nodes))
-            patient_adjacency_matrices = nx.from_numpy_array(patient_significant_edges)
+            patient_adjacency_matrices = nx.from_numpy_array(group_to_project_significant_edges)
             degrees = np.array([val for (node, val) in patient_adjacency_matrices.degree()])*40
 
             # plot corrected connection
+            if np.unique(group_to_project_significant_edges).size == 1:
+                plt.figure()
+                plot_connectome(
+                    adjacency_matrix=empty_adjacency_matrix,
+                    node_coords=atlas_nodes,
+                    node_color=labels_colors,
+                    title='{}, Lesion: {}, Language: {}, Speech: {}, PC1: {}'.format(
+                        subjects_to_project[subject][0:5],
+                        behavioral_scores.loc[subjects_to_project[subject]]['Lesion'],
+                        behavioral_scores.loc[subjects_to_project[subject]]['langage_clinique'],
+                        behavioral_scores.loc[subjects_to_project[subject]]['Parole'],
+                        round(behavioral_scores.loc[subjects_to_project[subject]]['pc1_language'], 3)),
+                    colorbar=False,
+                    node_kwargs={'edgecolor': 'black', 'alpha': 1})
+                pdf.savefig()
+                plt.show()
+            else:
 
-            plt.figure()
-            plot_connectome(
+                plt.figure()
+                plot_connectome(
 
-                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
-                                                               group_to_project_tangent_matrices[subject, ...]),
-                                                   diagonal=np.zeros(n_nodes)),
-                node_coords=atlas_nodes,
-                node_color=labels_colors,
-                title='{}, Lesion: {}, Language: {}, Speech: {}, PC1: {}'.format(
-                    subjects_to_project[subject][0:5],
-                    behavioral_scores.loc[subjects_to_project[subject]]['Lesion'],
-                    behavioral_scores.loc[subjects_to_project[subject]]['langage_clinique'],
-                    behavioral_scores.loc[subjects_to_project[subject]]['Parole'],
-                    round(behavioral_scores.loc[subjects_to_project[subject]]['pc1_language'], 3)),
-                colorbar=True,
-                node_size=degrees,
-                node_kwargs={'edgecolor': 'black', 'alpha': 1},
-                edge_threshold=None)
-            pdf.savefig()
-            plt.show()
+                    adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
+                                                                   group_to_project_tangent_matrices[subject, ...]),
+                                                       diagonal=np.zeros(n_nodes)),
+                    node_coords=atlas_nodes,
+                    node_color=labels_colors,
+                    title='{}, Lesion: {}, Language: {}, Speech: {}, PC1: {}'.format(
+                        subjects_to_project[subject][0:5],
+                        behavioral_scores.loc[subjects_to_project[subject]]['Lesion'],
+                        behavioral_scores.loc[subjects_to_project[subject]]['langage_clinique'],
+                        behavioral_scores.loc[subjects_to_project[subject]]['Parole'],
+                        round(behavioral_scores.loc[subjects_to_project[subject]]['pc1_language'], 3)),
+                    colorbar=True,
+                    node_size=degrees,
+                    node_kwargs={'edgecolor': 'black', 'alpha': 1},
+                    edge_threshold=None)
+                pdf.savefig()
+                plt.show()
 
-            plt.figure()
-            view = plotting.view_connectome(
-                adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
-                                                               group_to_project_stats[subject, ...]),
-                                                   diagonal=np.zeros(n_nodes)),
-                coords=atlas_nodes,
-                cmap='bwr')
-            view.save_as_html(os.path.join('/media/db242421/db242421_data/ConPagnon_data/tangent_space',
-                                           subjects_to_project[subject] + '_t_score.html'))
+                plt.figure()
+                view = plotting.view_connectome(
+                    adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
+                                                                   group_to_project_stats[subject, ...]),
+                                                       diagonal=np.zeros(n_nodes)),
+                    coords=atlas_nodes,
+                    cmap='bwr')
+                view.save_as_html(os.path.join('/media/db242421/db242421_data/ConPagnon_data/tangent_space',
+                                               subjects_to_project[subject] + '_t_score.html'))
     # Plot tangent mean controls connectome
     plt.figure()
     plot_connectome(adjacency_matrix=reference_group_tangent_mean, node_coords=atlas_nodes,
-                    node_color=labels_colors, edge_threshold='80%', title='Controls tangent mean',
+                    node_color=labels_colors, edge_threshold='80%', title='{} tangent mean'.format("reference group"),
                     colorbar=True)
     pdf.savefig()
     plt.show()
 
 
+
+
+#### Prediction ####
 sc = StandardScaler()
 absolute_max_distance = np.max(np.abs(group_to_project_tangent_matrices), axis=1)
 X = sm.add_constant(absolute_max_distance)

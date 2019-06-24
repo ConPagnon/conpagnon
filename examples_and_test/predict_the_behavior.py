@@ -52,8 +52,7 @@ t, p, k = groupby_factor_connectivity_matrices(
     population_data_file=os.path.join(root_directory, 'behavioral_data.xlsx'),
     sheetname='Middle Cerebral Artery+controls',
     subjects_connectivity_matrices_dictionnary=subjects_connectivity_matrices,
-    groupes=['non_impaired_language', 'impaired_language'],
-    factors=['Lesion'])
+    groupes=['non_impaired_language', 'impaired_language'], factors=['Lesion'])
 # rename the new key
 subjects_connectivity_matrices['left_lesioned_patients'] = t[('G')]
 # Dump old key

@@ -540,13 +540,13 @@ for group in groupes:
 
 # Overall and Within network, ipsilesional and contralesional connectivity differences
 # Compute the connectivity matrices dictionary with factor as keys.
-group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys =\
-    dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file=cohort_excel_file_path,
-        sheetname='cohort_functional_data',
-        subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
-        groupes=['PAL', 'PNL'], factors=['Lesion', 'langage_clinique'],
-        drop_subjects_list=None)
+group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys = \
+    dictionary_operations.groupby_factor_connectivity_matrices(population_data_file=cohort_excel_file_path,
+                                                               sheetname='cohort_functional_data',
+                                                               subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
+                                                               groupes=['PAL', 'PNL'],
+                                                               factors=['Lesion', 'langage_clinique'],
+                                                               drop_subjects_list=None)
 
 # Create ipsilesional and contralesional dictionary
 ipsi_dict = {}

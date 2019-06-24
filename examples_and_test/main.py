@@ -379,11 +379,12 @@ subjects_to_drop = ['sub40_np130304']
 population_attribute = ['Lesion', 'langage_clinique']
 
 # Compute the connectivity matrices dictionnary with factor as keys.
-group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, =\
-    dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file=population_text_data,
-        sheetname='cohort_functional_data', subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
-        groupes=groupes, factors=['Lesion', 'langage_clinique'], drop_subjects_list=['sub40_np130304'])
+group_by_factor_subjects_connectivity, population_df_by_factor, factor_keys, = \
+    dictionary_operations.groupby_factor_connectivity_matrices(population_data_file=population_text_data,
+                                                               sheetname='cohort_functional_data',
+                                                               subjects_connectivity_matrices_dictionnary=Z_subjects_connectivity_matrices,
+                                                               groupes=groupes, factors=['Lesion', 'langage_clinique'],
+                                                               drop_subjects_list=['sub40_np130304'])
 
 # Create ipsilesional and contralesional dictionnary
 ipsi_dict = {}
