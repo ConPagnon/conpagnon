@@ -1403,8 +1403,8 @@ def tangent_space_projection(reference_group, group_to_project, bootstrap_number
         for i in range(group_to_project_scores.shape[1]):
             # with the z-score, or the t-score
             p_values[subject, i] = \
-                np.sum(np.abs(null_distribution_array[:, i]) > np.abs(group_to_project_scores[subject, i])) / \
-                bootstrap_number
+                (np.sum(np.abs(null_distribution_array[:, i]) > np.abs(group_to_project_scores[subject, i])) + 1) / \
+                (bootstrap_number + 1)
 
     # correct the p values for each subject
     # in the group to project
