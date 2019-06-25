@@ -15,14 +15,10 @@ import os
 os.environ['MKL_NUM_THREADS'] = '1'
 import numpy as np
 import matplotlib.pyplot as plt
-from nilearn.connectome import ConnectivityMeasure, vec_to_sym_matrix
-
+from nilearn.connectome import vec_to_sym_matrix
 from nilearn.plotting import plot_connectome
-
 import networkx as nx
-
 from nilearn import plotting
-
 from sklearn.model_selection import LeaveOneOut, cross_val_score, StratifiedShuffleSplit, GridSearchCV
 from sklearn.feature_selection import SelectKBest, f_regression, SelectFpr, mutual_info_regression
 from sklearn.svm import SVC
@@ -40,7 +36,7 @@ from plotting.display import plot_matrix
 import statsmodels.api as sm
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.model_selection import train_test_split, cross_val_predict
-from sklearn.datasets import samples_generator
+from computing.compute_connectivity_matrices import tangent_space_projection
 
 # Reload all module
 importlib.reload(data_management)
@@ -120,18 +116,27 @@ times_series = ccm.time_series_extraction(
     nilearn_cache_directory=nilearn_cache_directory
 )
 
+# Output directory
+output_dir = "/media/db242421/db242421_data/ConPagnon_data/tangent_space/projection_of_groups"
+report_name = "controls_ref_patients_proj_t_stat_bonf.pdf"
+
+# Name of the projected group
+projected_group_name = "patients"
+
+# Name of the reference group
+reference_group_name = "controls"
+
 # try to select a sub group directly from the time series
 # dictionary
 groups_by_factor, population_df_by_factor, factor_keys = \
     dictionary_operations.groupby_factor_connectivity_matrices(
         population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
                              'Resting State AVCnn_cohort data2.xlsx', sheetname='Middle Cerebral Artery+controls',
-        subjects_connectivity_matrices_dictionnary=times_series, groupes=['patients_r'], factors=['Lesion',
-                                                                                                  'Parole'],
+        subjects_connectivity_matrices_dictionnary=times_series, groupes=['patients_r', 'TDC'], factors=['Groupe'],
         drop_subjects_list=None)
 
-times_series_ = {'reference_group': groups_by_factor[('G', 'N')],
-                 'group_to_project': groups_by_factor[('D', 'N')]}
+times_series_ = {'reference_group': groups_by_factor['C'],
+                 'group_to_project': groups_by_factor['P']}
 
 reference_group = list(times_series_['reference_group'].keys())
 subjects_to_project = list(times_series_['group_to_project'].keys())
@@ -144,18 +149,16 @@ group_to_project_time_series = np.array([times_series_['group_to_project'][s]['t
 
 # Number of bootstrap
 m = 10000
-size_subset_reference_group = 10
+size_subset_reference_group = 15
 alpha = 0.01
 
-from computing.compute_connectivity_matrices import tangent_space_projection
 
 tangent_space_projection_dict = tangent_space_projection(
     reference_group=reference_group_time_series,
     group_to_project=group_to_project_time_series,
     bootstrap_number=m,
     bootstrap_size=size_subset_reference_group,
-    output_directory="/media/db242421/db242421_data/ConPagnon_data/tangent_space/"
-                     "test_fonction2",
+    output_directory=output_dir,
     verif_null=True,
     statistic='t',
     correction_method="bonferroni",
@@ -184,12 +187,11 @@ plot_connectome(adjacency_matrix=empty_adjacency_matrix,
                 node_coords=atlas_nodes,
                 node_color=labels_colors,
                 node_size=significant_node_degree,
-                title='Common nodes across subjects_to_project')
+                title='Damaged nodes map across subjects_to_project')
 plt.show()
 
 
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/test_fonction2/'
-                          'projected_group_stats_t_bonf_0.01_LG_ParoleTypique_LD_Paroletypique.pdf') as pdf:
+with backend_pdf.PdfPages(os.path.join(output_dir, report_name)) as pdf:
     for subject in range(len(subjects_to_project)):
         if subjects_to_project[subject] in behavioral_scores.index:
 
@@ -240,25 +242,23 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
                 pdf.savefig()
                 plt.show()
 
-                plt.figure()
-                view = plotting.view_connectome(
-                    adjacency_matrix=vec_to_sym_matrix(np.multiply(p_values_corrected[subject, ...] < alpha,
-                                                                   group_to_project_stats[subject, ...]),
-                                                       diagonal=np.zeros(n_nodes)),
-                    coords=atlas_nodes,
-                    cmap='bwr')
-                view.save_as_html(os.path.join('/media/db242421/db242421_data/ConPagnon_data/tangent_space',
-                                               subjects_to_project[subject] + '_t_score.html'))
     # Plot tangent mean controls connectome
     plt.figure()
-    plot_connectome(adjacency_matrix=reference_group_tangent_mean, node_coords=atlas_nodes,
-                    node_color=labels_colors, edge_threshold='80%', title='{} tangent mean'.format("reference group"),
+    plot_connectome(adjacency_matrix=reference_group_tangent_mean,
+                    node_coords=atlas_nodes,
+                    node_color=labels_colors, edge_threshold='80%',
+                    title='{} tangent mean'.format(reference_group_name),
                     colorbar=True)
     pdf.savefig()
     plt.show()
 
-
-
+#  Count the nunmber of positive and negative
+# connection: total, per node with and before correction
+from nilearn.plotting import plot_stat_map, plot_roi
+lesion = os.path.join(output_dir, "patients_controls/ab120432_warped_lesion.nii.gz")
+plt.figure()
+plot_roi(roi_img=lesion,)
+plt.show()
 
 #### Prediction ####
 sc = StandardScaler()
