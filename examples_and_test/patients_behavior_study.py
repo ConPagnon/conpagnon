@@ -88,7 +88,7 @@ individual_confounds_directory = \
 
 # output csv directory
 output_csv_directory_path = '/media/db242421/db242421_data/ConPagnon_data/patients_behavior_ACM'
-score = 'pc2_language_zscores'
+score = 'lexExp_zscore'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path_score,
                                                         erase_previous=True)
@@ -98,9 +98,10 @@ output_figure_directory_path = os.path.join(output_csv_directory, 'figures')
 output_figure_directory = data_management.create_directory(directory=output_figure_directory_path,
                                                            erase_previous=True)
 # Cohort behavioral data
-cohort_excel_file_path = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data.xlsx'
+cohort_excel_file_path = '/media/db242421/db242421_data/ConPagnon_data/regression_data/regression_data_2.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
-                                                  sheetname='cohort_functional_data')
+                                                  sheetname='cohort_functional_data',
+                                                  subjects_column_name='subjects')
 
 # Clean the behavioral data by keeping only the subjects in the study
 subjects_list = open(subjects_ID_data_path).read().split()
@@ -992,10 +993,10 @@ correction_method = ['fdr_bh', 'bonferroni']
 models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
-variables_model = ['pc2_language_zscores', 'Sexe', 'lesion_normalized']
+variables_model = ['lexExp_zscore', 'Sexe', 'lesion_normalized']
 
 # formulation of the model
-model_formula = 'pc2_language_zscores +  Sexe + lesion_normalized'
+model_formula = 'lexExp_zscore +  Sexe + lesion_normalized'
 
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
