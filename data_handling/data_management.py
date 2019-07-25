@@ -111,7 +111,8 @@ def dataframe_to_csv(dataframe, path, delimiter=',', index=False):
     dataframe.to_csv(path, sep=delimiter, index=index)
 
 
-def read_excel_file(excel_file_path, sheetname):
+def read_excel_file(excel_file_path, sheetname,
+                    subjects_column_name):
     """Read a excel document
 
     Parameters
@@ -120,13 +121,18 @@ def read_excel_file(excel_file_path, sheetname):
         Full path to the excel document
     sheetname: str
         The sheetname to read in the excel document
+    subjects_column_name: str
+        The column name containing the subjects identifiers.
 
     Returns
     -------
     output: pandas.DataFrame
-        A panda DataFrame
+        A panda DataFrame, indexed by subject name.
     """
+
     data = pd.read_excel(io=excel_file_path, sheet_name=sheetname)
+    # Shift the index
+    data = data.set_index(subjects_column_name)
 
     return data
 
