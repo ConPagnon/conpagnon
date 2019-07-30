@@ -24,10 +24,10 @@ def _parse_line(line, rx_dict):
 
 
 stat_results_directory = "/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/Ines_2018/stats_tracts_2"
-model_names = ["_Parole", "_SyntExp", "_SyntComp", "_LexExp", "_LexComp", "_PC1"]
+model_names = ["_Parole_LD", "_SyntExp_LD", "_SyntComp_LD", "_LexExp_LD", "_LexComp_LD", "_PC1_LD"]
 parameters = ["FA"]
-sides = ["contra", "ipsi"]
-bundle_names = ["SLF", "MLF", "AF"]
+sides = ["lat"]
+bundle_names = ["MLF", "SLF", "AF"]
 
 
 parameters_results_dict = dict.fromkeys(parameters)
@@ -47,6 +47,8 @@ for parameter in parameters:
                                    bundle + "_" + side + "_" + parameter)),
                            "Lesion_ratio_": re.compile(r"Lesion_ratio\s\s\s\s[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?.*$"),
                            "Lesion_ratio__": re.compile(r"Lesion_ratio\s\s[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?.*$"),
+                           "Lesion_ratio___":re.compile(r"Lesion_ratio\s[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?.*$"),
+                           "Lesion_ratio____":re.compile(r"Lesion_ratio\s\s\s\s\s[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?.*$"),
                            bundle + "_" + side + "_" + parameter + "_":
                                re.compile(r"{}\s\s\s\s\s[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?.*$".format(
                                    bundle + "_" + side + "_" + parameter)),
@@ -73,12 +75,11 @@ for parameter in parameters:
 
                 # read the result txt file
                 with open(bundle_model_result) as bundle_result_file:
-                    #print(bundle_result_file.read())
                     # Go through each line, to have a match for the
                     # regular expression
                     for line in bundle_result_file:
                         key, match = _parse_line(line, rx_dict=rx_dict)
-
+                        print(key)
                         if key == "Lesion_ratio":
                             model_bundle_lesion_ratio = match.group()
                             t_lesion_ratio, p_lesion_ratio = model_bundle_lesion_ratio.split()[3:5]
@@ -90,6 +91,12 @@ for parameter in parameters:
                             # Format the t and p couple: t={}, p={}
                             lesion_ratio_data = "t={}, p={}".format(t_lesion_ratio, p_lesion_ratio)
                         if key == "Lesion_ratio__":
+                            model_bundle_lesion_ratio = match.group()
+                            t_lesion_ratio, p_lesion_ratio = model_bundle_lesion_ratio.split()[3:5]
+                        if key == "Lesion_ratio___":
+                            model_bundle_lesion_ratio = match.group()
+                            t_lesion_ratio, p_lesion_ratio = model_bundle_lesion_ratio.split()[3:5]
+                        if key == "Lesion_ratio____":
                             model_bundle_lesion_ratio = match.group()
                             t_lesion_ratio, p_lesion_ratio = model_bundle_lesion_ratio.split()[3:5]
                             # Format the t and p couple: t={}, p={}
