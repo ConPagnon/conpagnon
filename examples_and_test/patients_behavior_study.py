@@ -90,7 +90,7 @@ individual_confounds_directory = \
 # output csv directory
 output_csv_directory_path = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif' \
                             '/ConPagnon_data/patients_behavior_ACM'
-score = 'lexExp_zscore'
+score = 'lexExp_zscore_test'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path_score,
                                                         erase_previous=True)
