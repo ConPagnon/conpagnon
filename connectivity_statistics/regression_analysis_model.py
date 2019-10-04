@@ -126,6 +126,121 @@ def regression_analysis_network_level(groups, kinds, networks_list, root_analysi
                                                      path=model_network_csv_file)
 
 
+def regression_analysis_network_level_v2(groups, kinds, networks_list, root_analysis_directory,
+                                         network_model, variables_in_model, score_of_interest,
+                                         behavioral_dataframe,
+                                         correction_method=['fdr_bh'],
+                                         alpha=0.05):
+
+    """Perform linear regression between a behavioral score and a functional connectivity "score".
+
+
+    :param groups:
+    :param kinds:
+    :param networks_list:
+    :param root_analysis_directory:
+    :param network_model:
+    :param variables_in_model:
+    :param behavioral_dataframe:
+    :param correction_method:
+    :param alpha:
+    :return:
+    """
+
+    # The design matrix is the same for all model
+    design_matrix = dmatrix('+'.join(variables_in_model), behavioral_dataframe, return_type='dataframe')
+    for model in network_model:
+        for kind in kinds:
+            all_network_connectivity = []
+            all_network_p_values = []
+            for network in networks_list:
+                data_directory = os.path.join(root_analysis_directory,
+                                              kind)
+                # Concatenate all the intra-network dataframe
+                network_model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
+                    csv_file=os.path.join(data_directory, network, group + '_' + model + '_' +
+                                          network + '_' + 'connectivity.csv')) for group in groups])
+                # Shift index to be the subjects identifiers
+                network_model_dataframe = data_management.shift_index_column(
+                    panda_dataframe=network_model_dataframe,
+                    columns_to_index=['subjects'])
+
+                connectivity_score_name = network_model_dataframe.columns[0]
+                # fetch the score of interest in the behavioral dataframe
+                score_dataframe = behavioral_dataframe[[score_of_interest]]
+                # fetch the variables in the model, except connectivity score
+                model_variables = behavioral_dataframe[variables_in_model]
+                # Add variables in the model to complete the overall DataFrame
+                network_model_dataframe = data_management.merge_list_dataframes(
+                    [network_model_dataframe, score_dataframe,
+                     model_variables])
+                # Build the model formula: the variable to explain is the first column of the
+                # dataframe, and we add to the left all variable in the model
+                model_formulation = score_of_interest + '~' + '+'.join(variables_in_model + [connectivity_score_name])
+                # Build response variable vector, build matrix design
+                network_response, network_design = parametric_tests.design_matrix_builder(
+                    dataframe=network_model_dataframe,
+                    formula=model_formulation)
+
+                # Fit the model
+                network_model_fit = parametric_tests.ols_regression(y=network_response,
+                                                                    X=network_design)
+
+                # Creation of a directory for the current analysis for the current network
+                regression_output_directory = folders_and_files_management.create_directory(
+                    directory=os.path.join(root_analysis_directory,
+                                           'regression_analysis', kind, network))
+
+                # Write output regression results in csv files
+                data_management.write_ols_results(ols_fit=network_model_fit, design_matrix=network_design,
+                                                  response_variable=network_response,
+                                                  output_dir=regression_output_directory,
+                                                  model_name=model,
+                                                  design_matrix_index_name='subjects')
+
+                all_network_connectivity.append(network_response)
+                all_network_p_values.append(network_model_fit.pvalues)
+
+                # Take only the index subjects present in the analysis, because design matrix is for the whole
+                # cohort !!!
+                design_matrix = design_matrix.loc[network_design.index]
+
+            # Multiple comparison correction
+            # merge by index the dataframe from all the network for the current model
+            all_network_response = data_management.merge_list_dataframes(all_network_connectivity)
+            # Re-index the response variable dataframe to match the index of design matrix
+            all_networks_connectivity = all_network_response.reindex(design_matrix.index)
+            # t-test for each variable in the model
+            contrasts = np.identity(np.array(design_matrix).shape[1])
+            raw_p = np.array(all_network_p_values).T
+            for corr_method in correction_method:
+                if corr_method in ['fdr_bh', 'bonferroni']:
+                    raw_p_shape = raw_p.shape
+                    fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
+                                                           method=corr_method, alpha=alpha)[1].reshape(raw_p_shape)
+                    corrected_p_values = fdr_corrected_p_values
+                else:
+                    # return raw p
+                    corrected_p_values = raw_p
+
+                # Append in each model for all networkCSV file,
+                # the corrected p-values for the chosen
+                # correction method
+                for network in networks_list:
+                    model_network_csv_file = os.path.join(root_analysis_directory,
+                                                          'regression_analysis', kind,
+                                                          network, model + '_parameters.csv')
+
+                    # Read the csv file
+                    model_network_parameters = data_management.read_csv(model_network_csv_file)
+                    # Add a last column for adjusted p-values
+                    model_network_parameters[corr_method + 'corrected_pvalues'] = \
+                        corrected_p_values[:, networks_list.index(network)]
+                    # Write it back to csf format
+                    data_management.dataframe_to_csv(dataframe=model_network_parameters,
+                                                     path=model_network_csv_file)
+
+
 def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                                     whole_brain_model, variables_in_model,
                                     behavioral_dataframe,
@@ -146,7 +261,7 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                                       kind)
         all_model_response = []
         for model in whole_brain_model:
-            # List of the corresponding dataframes
+            # List of the corresponding dataframe
             model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
                 csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
                 for group in groups])
@@ -327,8 +442,10 @@ def regression_analysis_whole_brain_v2(groups, kinds, root_analysis_directory,
                 data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
 
 
-def regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary, groups_in_model, behavioral_data_path,
-                                           sheet_name, subjects_to_drop, model_formula, kinds_to_model,  root_analysis_directory,
+def regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary, groups_in_model,
+                                           behavioral_data_path,
+                                           sheet_name, subjects_to_drop, model_formula, kinds_to_model,
+                                           root_analysis_directory,
                                            inter_network_model, network_labels_list, network_labels_colors,
                                            pvals_correction_method=['fdr_bh'], vectorize=True,
                                            discard_diagonal=False, nperms_maxT = 10000, contrasts = 'Id',
@@ -409,15 +526,14 @@ def regression_analysis_internetwork_level(internetwork_subjects_connectivity_di
                     pdf.savefig()
                     # Significant p values
                     display.plot_matrix(matrix=corr_method_results[variable]['corrected pvalues'],
-                        labels_colors=network_labels_colors, mpart='lower', k=-1, 
-                        colormap='hot',
-                        colorbar_params={'shrink': .5}, center=0,
-                        vmin=0, vmax=alpha, labels_size=8, 
-                        horizontal_labels=network_labels_list,
-                        vertical_labels=network_labels_list,
-                        linewidths=.5, linecolor='black', 
-                        title=corr_method + '_' + variable + '_p values',
-                        figure_size=(12, 9))
+                                        labels_colors=network_labels_colors, mpart='lower', k=-1,
+                                        colormap='hot', colorbar_params={'shrink': .5}, center=0,
+                                        vmin=0, vmax=alpha, labels_size=8,
+                                        horizontal_labels=network_labels_list,
+                                        vertical_labels=network_labels_list,
+                                        linewidths=.5, linecolor='black',
+                                        title=corr_method + '_' + variable + '_p values',
+                                        figure_size=(12, 9))
                     pdf.savefig()
 
 
