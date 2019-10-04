@@ -39,9 +39,9 @@ Analysis of AVCnn cohort : patients, link connectivity and behavior.
 """
 
 # Atlas set up
-atlas_folder = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/atlas_reference'
+atlas_folder = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
-labels_text_file = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/' \
+labels_text_file = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/' \
                    'atlas/atlas_reference/atlas4D_2_labels.csv'
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
           'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
@@ -62,7 +62,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 groupes = ['patients']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
-    '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/fmri_images'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/fmri_images'
 # Check all functional files existence
 folders_and_files_management.check_directories_existence(
     root_directory=root_fmri_data_directory,
@@ -76,19 +76,19 @@ individual_atlas_labels_extension = '*.csv'
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/text_data/acm_patients.txt'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/text_data/acm_patients.txt'
 
 # Full to the following directories: individual atlases images,
 # individual text labels files, and individual confounds directories.
 individual_atlases_directory = \
-    '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/individual_atlases_V2'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/individual_atlases_V2'
 individual_atlases_labels_directory = \
-    '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/individual_atlases_labels_V2'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/individual_atlases_labels_V2'
 individual_confounds_directory = \
-    '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/regressors'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/regressors'
 
 # output csv directory
-output_csv_directory_path = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif' \
+output_csv_directory_path = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif' \
                             '/ConPagnon_data/patients_behavior_ACM'
 score = 'lexExp_zscore_test'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
@@ -100,7 +100,7 @@ output_figure_directory_path = os.path.join(output_csv_directory, 'figures')
 output_figure_directory = data_management.create_directory(directory=output_figure_directory_path,
                                                            erase_previous=True)
 # Cohort behavioral data
-cohort_excel_file_path = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/' \
+cohort_excel_file_path = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/' \
                          'ConPagnon_data/regression_data/regression_data_2.xlsx'
 behavioral_data = data_management.read_excel_file(excel_file_path=cohort_excel_file_path,
                                                   sheetname='cohort_functional_data',
@@ -134,7 +134,7 @@ organised_data_with_individual_atlas = data_architecture.fetch_data_with_individ
     individual_counfounds_directory=individual_confounds_directory)
 
 # Nilearn cache directory
-nilearn_cache_directory = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/nilearn_cache'
+nilearn_cache_directory = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/nilearn_cache'
 
 # Repetition time between time points in the fmri acquisition, usually 2.4s or 2.5s
 repetition_time = 2.5
@@ -215,7 +215,7 @@ homotopic_roi_indices = np.array([
     (62, 63), (64, 65), (66, 67), (68, 69), (70, 71)])
 
 # Atlas excel information file
-atlas_excel_file = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/atlas_AVCnn/atlas_version2.xlsx'
+atlas_excel_file = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/atlas_AVCnn/atlas_version2.xlsx'
 sheetname = 'complete_atlas'
 
 atlas_information = pd.read_excel(atlas_excel_file, sheetname='complete_atlas')
@@ -958,6 +958,14 @@ folders_and_files_management.save_object(object_to_save=homotopic_connectivity,
                                          filename='whole_brain_mean_homotopic_connectivity.pkl')
 # Save the intra-network mean homotopic dictionary
 folders_and_files_management.save_object(object_to_save=homotopic_intranetwork_d,
+
+
+
+
+
+
+
+
                                          saving_directory=dictionary_output_directory,
                                          filename='intra_network_mean_homotopic_connectivity.pkl')
 # Save the whole brain intra_network connectivity dictionary
@@ -991,12 +999,15 @@ groups_in_models = ['patients']
 
 # data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
-correction_method = ['fdr_bh', 'bonferroni']
+correction_method = ['bonferroni']
 # Fit three linear model for the three type of overall connections
 models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
 # variables in the model
-variables_model = ['lexExp_zscore', 'Sexe', 'lesion_normalized']
+variables_model = ['lesion_normalized']
+
+# Score of interest
+score_of_interest = 'lexExp_zscore'
 
 # formulation of the model
 model_formula = 'lexExp_zscore +  Sexe + lesion_normalized'
@@ -1011,16 +1022,24 @@ ipsi_contra_model_network_list = ['DMN', 'Executive',
                                   'Salience', 'Sensorimotor', 'Visuospatial',
                                   'Primary_Visual', 'Secondary_Visual']
 
-# Analysis of whole brain connectivity, whole brain mean homotopic connectivity,
-# mean ipsilesional and contralesional connectivity. Joint correction for 4 models.
-regression_analysis_model.regression_analysis_whole_brain(groups=groups_in_models,
-                                                          kinds=kinds_to_model,
-                                                          root_analysis_directory=output_csv_directory,
-                                                          whole_brain_model=models_to_build,
-                                                          variables_in_model=variables_model,
-                                                          behavioral_dataframe=behavioral_data,
-                                                          correction_method=correction_method,
-                                                          alpha=0.05)
+# Analysis for whole brain models: the score is the variable to be explained
+regression_analysis_model.regression_analysis_whole_brain_v2(groups=groups_in_models,
+                                                             kinds=kinds_to_model,
+                                                             root_analysis_directory=output_csv_directory,
+                                                             whole_brain_model=models_to_build,
+                                                             variables_in_model=variables_model,
+                                                             score_of_interest=score_of_interest,
+                                                             behavioral_dataframe=behavioral_data)
+
+regression_analysis_model.regression_analysis_network_level_v2(groups=groups_in_models,
+                                                               kinds=kinds,
+                                                               networks_list=model_network_list,
+                                                               root_analysis_directory=output_csv_directory,
+                                                               network_model=['intra_homotopic'],
+                                                               variables_in_model=variables_model,
+                                                               score_of_interest=score_of_interest,
+                                                               behavioral_dataframe=behavioral_data,
+                                                               correction_method=correction_method)
 
 # Analysis of intra-network mean homotopic connectivity: correction for 12 models.
 regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
@@ -1046,90 +1065,6 @@ regression_analysis_model.regression_analysis_network_level(groups=groups_in_mod
                                                             behavioral_dataframe=behavioral_data,
                                                             correction_method=correction_method,
                                                             alpha=0.05)
-
-# Inter-network statistic : whole brain, ipsilesional and contralesional
-inter_network_model = 'overall_inter_network'
-# Whole brain internetwork
-# Load the dictionary
-whole_brain_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(output_csv_directory, 'dictionary',
-                                     'subjects_inter_network_connectivity_matrices.pkl'))
-# Load the network labels list for plotting purpose when plotting the inter-network
-# matrices
-whole_brain_internetwork_labels = folders_and_files_management.load_object(
-    os.path.join(output_csv_directory, 'dictionary', 'whole_brain_inter_networks_labels.pkl'))
-
-regression_analysis_model.regression_analysis_internetwork_level(
-    internetwork_subjects_connectivity_dictionary=whole_brain_internetwork_matrices,
-    groups_in_model=groups_in_models,
-    behavioral_data_path=cohort_excel_file_path,
-    sheet_name='cohort_functional_data',
-    subjects_to_drop=None,
-    model_formula=model_formula,
-    kinds_to_model=kinds_to_model,
-    root_analysis_directory=output_csv_directory,
-    inter_network_model=inter_network_model,
-    network_labels_list=network_labels_list,
-    network_labels_colors=network_label_colors,
-    pvals_correction_method=correction_method, vectorize=True,
-    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
-    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
-    alpha=0.05)
-
-# Ipsilesional inter-network analysis
-ipsi_internetwork_model = 'ipsi_inter_network'
-ipsi_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(
-        output_csv_directory, 'dictionary/subjects_inter_network_ipsi_connectivity_matrices.pkl'))
-
-# Load the network labels list for plotting purpose when plotting the inter-network
-# matrices
-ipsilesional_internetwork_labels = folders_and_files_management.load_object(
-    os.path.join(output_csv_directory, 'dictionary', 'ipsi_inter_networks_labels.pkl'))
-
-regression_analysis_model.regression_analysis_internetwork_level(
-    internetwork_subjects_connectivity_dictionary=ipsi_internetwork_matrices,
-    groups_in_model=groups_in_models,
-    behavioral_data_path=cohort_excel_file_path,
-    sheet_name='cohort_functional_data',
-    subjects_to_drop=None,
-    model_formula=model_formula,
-    kinds_to_model=kinds_to_model,
-    root_analysis_directory=output_csv_directory,
-    inter_network_model=ipsi_internetwork_model,
-    network_labels_list=ipsilesional_internetwork_labels,
-    network_labels_colors=network_label_colors,
-    pvals_correction_method=correction_method, vectorize=True,
-    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
-    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
-    alpha=0.05)
-
-# Contralesional inter-network analysis
-contra_internetwork_model = 'contra_inter_network'
-contra_internetwork_matrices = folders_and_files_management.load_object(
-    full_path_to_object=os.path.join(output_csv_directory,
-                                     'dictionary/subjects_inter_network_contra_connectivity_matrices.pkl'))
-# Load the network labels list for plotting purpose when plotting the inter-network
-# matrices
-contralesional_internetwork_labels = folders_and_files_management.load_object(
-    os.path.join(output_csv_directory, 'dictionary', 'contra_inter_networks_labels.pkl'))
-
-regression_analysis_model.regression_analysis_internetwork_level(
-    internetwork_subjects_connectivity_dictionary=contra_internetwork_matrices,
-    groups_in_model=groups_in_models,
-    behavioral_data_path=cohort_excel_file_path,
-    sheet_name='cohort_functional_data',
-    subjects_to_drop=None,
-    model_formula=model_formula,
-    kinds_to_model=kinds_to_model,
-    root_analysis_directory=output_csv_directory,
-    inter_network_model=contra_internetwork_model,
-    network_labels_list=network_labels_list,
-    network_labels_colors=network_label_colors,
-    pvals_correction_method=correction_method, vectorize=True,
-    discard_diagonal=False, nperms_maxT=10000, contrasts='Id',
-    compute_pvalues='True', pvalues_tail='True', NA_action='drop',
-    alpha=0.05)
 
 # Display of the results
 # The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
