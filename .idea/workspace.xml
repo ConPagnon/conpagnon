@@ -2,10 +2,223 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Update.">
-      <change afterPath="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ConPagnon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ConPagnon.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/db242421.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/db242421.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/computing/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/computing/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" beforeDir="false" afterPath="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connectivity_statistics/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connectivity_statistics/parametric_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/parametric_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_handling/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_handling/atlas.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/atlas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_handling/data_architecture.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/data_architecture.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_handling/data_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/data_management.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_handling/dictionary_operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/dictionary_operations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.buildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.buildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.nojekyll" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.nojekyll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/computing/compute_connectivity_matrices.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/computing/compute_connectivity_matrices.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/data_handling/atlas.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/data_handling/atlas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/data_handling/data_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/data_handling/data_management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/data_handling/dictionary_operations.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/data_handling/dictionary_operations.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_modules/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/code.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/code.rst.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/index.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/index.rst.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/projectDescription.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/projectDescription.rst.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/alabaster.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/alabaster.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/basic.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/basic.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/css/bootstrap-theme.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/css/bootstrap-theme.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/css/bootstrap.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/css/bootstrap.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/custom.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/doctools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/doctools.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/documentation_options.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/documentation_options.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/file.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/file.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/stylesheet.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Black.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Black.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Bold.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Bold.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-ExtraLight.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-ExtraLight.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Light.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Light.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Regular.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Regular.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Semibold.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Semibold.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/LICENSE.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Black.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Black.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Bold.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Bold.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-ExtraLight.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-ExtraLight.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Light.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Light.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Regular.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Regular.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Semibold.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Semibold.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/ReadMe.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/ReadMe.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/SourceSerifProReadMe.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/SourceSerifProReadMe.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Black.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Black.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Bold.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-ExtraLight.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-ExtraLight.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Light.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Light.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Regular.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Semibold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Semibold.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Black.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Black.otf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Bold.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Bold.otf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-ExtraLight.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-ExtraLight.otf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Light.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Light.otf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Regular.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Regular.otf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Semibold.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Semibold.otf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Black.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Black.ttf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Bold.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Bold.ttf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-ExtraLight.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-ExtraLight.ttf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Light.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Light.ttf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Regular.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Regular.ttf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Semibold.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Semibold.ttf.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/bower.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/source-serif-pro.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/source-serif-pro.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/guzzle.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/guzzle.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/jquery-3.2.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/jquery-3.2.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/jquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/jquery.min.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/jquery.min.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/js/bootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/js/bootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/js/bootstrap.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/js/bootstrap.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/language_data.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/language_data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/minus.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/minus.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/plus.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/plus.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/pygments.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/pygments.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/searchtools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/searchtools.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/underscore-1.3.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/underscore-1.3.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_static/underscore.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/underscore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/code.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/code.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/genindex.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/objects.inv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/projectDescription.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/projectDescription.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/py-modindex.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/search.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/searchindex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/ROI_damaged_by_stroke.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/ROI_damaged_by_stroke.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/build_connectivity_matrices.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/build_connectivity_matrices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/classification_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/classification_example.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/correlation_connectivity_scores.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/correlation_connectivity_scores.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/cpm.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/cpm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/dwi_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dwi_processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/features_elimination.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/features_elimination.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/illustration_atlas_avcnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/illustration_atlas_avcnn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/language_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/language_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/language_study_lesion_regressed.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/language_study_lesion_regressed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/memomix_ab.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/memomix_ab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/networkx_to_graph_files.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/networkx_to_graph_files.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/one_vs_the_rest_features_identification.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/one_vs_the_rest_features_identification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/patients_controls_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/patients_controls_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/predict_the_behavior.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/predict_the_behavior.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/resample_lesion.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/resample_lesion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/resting_state_topiramate.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/resting_state_topiramate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_display.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_display.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/times_series_extraction.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/times_series_extraction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/tractometry_with_probability_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tractometry_with_probability_mask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/CPM_method.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/CPM_method.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/classification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/cpm_predict_behavior.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cpm_predict_behavior.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/cythonized_version/CPM_method.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cythonized_version/CPM_method.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/cythonized_version/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cythonized_version/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/cythonized_version/features_indentification_cython.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cythonized_version/features_indentification_cython.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/features_indentification.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/features_indentification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/other_selection_method_CPM.txt" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/other_selection_method_CPM.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/scores_predictions.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/scores_predictions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plotting/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/plotting/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plotting/display.py" beforeDir="false" afterPath="$PROJECT_DIR$/plotting/display.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_bigdata_blocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_bigdata_blocks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_maxT.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_maxT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/descriptive_statistics.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/descriptive_statistics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/mulm_dataframe.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/mulm_dataframe.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/reducers.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/reducers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_in_epac.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_in_epac.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_ols.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_ols.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/code.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/code.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/conf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/index.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/make.bat" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/make.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphinx/projectDescription.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/projectDescription.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/array_operation.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/array_operation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/folders_and_files_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/folders_and_files_management.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/pre_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/pre_preprocessing.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,82 +246,6 @@
   </component>
   <component name="FavoritesManager">
     <favorites_list name="ConPagnon" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-749">
-              <caret line="59" column="92" lean-forward="true" selection-start-line="59" selection-start-column="92" selection-end-line="59" selection-end-column="92" />
-              <folding>
-                <element signature="e#57#76#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="3" selection-end-column="4" />
-              <folding>
-                <element signature="e#57#76#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="592">
-              <caret line="137" column="29" selection-start-line="137" selection-start-column="29" selection-end-line="137" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="55" />
-              <folding>
-                <element signature="e#57#75#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nibabel/streamlines/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2289">
-              <caret line="115" column="44" selection-start-line="115" selection-start-column="44" selection-end-line="115" selection-end-column="44" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="191">
-              <caret line="300" column="79" selection-start-line="300" selection-start-column="79" selection-end-line="300" selection-end-column="79" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -179,94 +316,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/examples_and_test/test2.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/build_results_tables.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/test.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/canonical_correlation_analysis.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/ROI_damaged_by_stroke.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/illustration_lesion_mapping.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/illustration_atlas_avcnn.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tmp.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/memomix_ab.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/correlation_connectivity_scores.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/times_series_extraction.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/build_connectivity_matrices.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/language_study.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/language_study_lesion_regressed.py" />
-        <option value="$PROJECT_DIR$/connectivity_statistics/parametric_tests.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/resting_state_topiramate.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" />
-        <option value="/volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/graph_tool/draw/cairo_draw.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/predict_the_behavior.py" />
-        <option value="$PROJECT_DIR$/machine_learning/predict_scores.py" />
-        <option value="$PROJECT_DIR$/machine_learning/scores_predictions.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/resample_lesion.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py" />
-        <option value="$PROJECT_DIR$/tbss_stats.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_stats.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/dwi_processing.py" />
-        <option value="$PROJECT_DIR$/sphinx/projectDescription.rst" />
-        <option value="$PROJECT_DIR$/sphinx/index.rst" />
-        <option value="$PROJECT_DIR$/sphinx/code.rst" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_display.py" />
-        <option value="$PROJECT_DIR$/sphinx/conf.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" />
-        <option value="/media/db242421/db242421_data/Downloads/scratch.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" />
-        <option value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py" />
-        <option value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py" />
-        <option value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" />
-        <option value="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" />
-      </list>
-    </option>
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-265" />
     <option name="y" value="-6" />
     <option name="width" value="1910" />
     <option name="height" value="978" />
   </component>
+  <component name="ProjectId" id="1RjeFa66jbyFPbZpjJIqvvrqS0Z" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ConPagnon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ConPagnon" type="462c0819:PsiDirectoryNode" />
-              <item name="examples_and_test" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
-  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="t_and_p_values_barplot&#9;null&#9;null" />
@@ -428,9 +485,9 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.AFQ_tract_profile" />
       <item itemvalue="Python.cpm_mmx" />
       <item itemvalue="Python.dti_prepoc" />
-      <item itemvalue="Python.AFQ_tract_profile" />
       <item itemvalue="Python.tbss_prepare_statistic" />
       <item itemvalue="Python.tbss_prepare_statistic_2" />
     </list>
@@ -530,6 +587,7 @@
       <workItem from="1558952193929" duration="36000" />
       <workItem from="1558952319515" duration="16000" />
       <workItem from="1558952590534" duration="13638000" />
+      <workItem from="1570184832898" duration="248000" />
     </task>
     <task id="LOCAL-00183" summary="Put good subject lists nip.">
       <created>1549989215946</created>
@@ -877,9 +935,6 @@
     <option name="localTasksCounter" value="232" />
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1141208000" />
-  </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
@@ -888,35 +943,6 @@
       <are-packages-shown value="true" />
       <is-autoscroll-to-source value="true" />
     </todo-panel>
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="-1" y="-4" width="1922" height="1034" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49676377" weight="0.255603" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.2497332" />
-      <window_info id="Favorites" order="2" sideWeight="0.50323623" side_tool="true" weight="0.12753469" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3286638" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.77520216" weight="0.24453694" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39910313" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286638" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="8" sideWeight="0.6851654" visible="true" weight="0.5377155" />
-      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.6613248" weight="0.2952586" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.30711207" />
-      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.31483456" side_tool="true" weight="0.3739224" />
-      <window_info anchor="bottom" id="Inspection Results" order="13" weight="0.3295964" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" sideWeight="0.49447078" weight="0.3244397" />
-      <window_info anchor="right" x="-179" y="184" width="1855" height="1026" id="SciView" order="4" sideWeight="0.5850816" visible="true" weight="0.27321237" />
-      <window_info anchor="right" x="0" y="0" width="414" height="892" id="Documentation" order="5" sideWeight="0.41491842" side_tool="true" visible="true" weight="0.27321237" />
-    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -937,20 +963,7 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
+              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -1009,378 +1022,5 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/feature_selection/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-253">
-          <caret line="27" column="8" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/sklearn/pipeline.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="43" column="12" lean-forward="true" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/machine_learning/scores_predictions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
-          <folding>
-            <element signature="e#43#104#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nilearn/image/image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-91">
-          <caret line="933" column="4" selection-start-line="933" selection-start-column="4" selection-end-line="933" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../.PyCharm2018.3/system/python_stubs/2039683057/posix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="1311" column="4" selection-start-line="1311" selection-start-column="4" selection-end-line="1311" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1311">
-          <caret line="65" selection-start-line="65" selection-end-line="66" selection-end-column="65" />
-          <folding>
-            <element signature="e#315#324#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nilearn/image/resampling.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-165">
-          <caret line="289" column="4" selection-start-line="289" selection-start-column="4" selection-end-line="289" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/numpy/lib/index_tricks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2089">
-          <caret line="478" selection-start-line="478" selection-end-line="478" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/resample_lesion.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="42" lean-forward="true" selection-start-line="42" selection-end-line="42" />
-          <folding>
-            <element signature="e#87#107#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="23" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///media/db242421/db242421_data/pyconnectome/pyconnectome/scripts/pyconnectome_dtitk_import_tensors">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1564">
-          <caret line="77" column="22" lean-forward="true" selection-start-line="77" selection-start-column="22" selection-end-line="77" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///media/db242421/db242421_data/pyconnectome/pyconnectome/scripts/pyconnectome_dtitk_create_templates">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="156" lean-forward="true" selection-start-line="156" selection-end-line="156" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/typing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="2327" column="8" selection-start-line="2327" selection-start-column="8" selection-end-line="2327" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///media/db242421/db242421_data/pyconnectome/pyconnectome/tractography/dtitk_tbss.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-747">
-          <caret line="571" column="4" selection-start-line="571" selection-start-column="4" selection-end-line="571" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/h5py/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="35" selection-start-line="35" selection-end-line="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nilearn/image/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="320" selection-start-line="320" selection-end-line="330" selection-end-column="113" />
-          <folding>
-            <element signature="e#41#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tbss_stats.py" />
-    <entry file="file://$PROJECT_DIR$/examples_and_test/dti_prepoc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2737">
-          <caret line="126" column="20" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="20" />
-          <folding>
-            <element signature="e#41#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/tractseg/python_api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="41" column="54" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/tractseg/libs/mrtrix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1079">
-          <caret line="137" column="106" lean-forward="true" selection-start-line="137" selection-start-column="106" selection-end-line="137" selection-end-column="106" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/features_elimination.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/patsy/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="14" column="60" selection-start-line="14" selection-start-column="60" selection-end-line="14" selection-end-column="60" />
-          <folding>
-            <element signature="e#159#168#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:///media/db242421/db242421_data/Script_Python/Jarvis/Jarvis.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/dwi_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1785">
-          <caret line="88" selection-start-line="88" selection-end-line="88" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11508">
-          <caret line="548" selection-start-line="548" selection-end-line="548" />
-          <folding>
-            <element signature="e#43#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/conf.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1218">
-          <caret line="59" column="36" selection-start-line="59" selection-start-column="36" selection-end-line="59" selection-end-column="36" />
-          <folding>
-            <element signature="e#534#543#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/index.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/projectDescription.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="198" column="23" selection-start-line="198" selection-start-column="23" selection-end-line="198" selection-end-column="23" />
-          <folding>
-            <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sphinx/code.rst">
-      <provider selected="true" editor-type-id="restructured-text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2984">
-          <caret line="86" column="40" lean-forward="true" selection-start-line="86" selection-start-column="40" selection-end-line="86" selection-end-column="40" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nipype/interfaces/mrtrix/convert.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
-          <caret line="265" lean-forward="true" selection-start-line="265" selection-end-line="265" />
-          <folding>
-            <element signature="e#138#246#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../.local/lib/python3.6/site-packages/dipy-0.15.0-py3.6-linux-x86_64.egg/dipy/viz/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/../.local/lib/python3.6/site-packages/dipy-0.15.0-py3.6-linux-x86_64.egg/dipy/segment/bundles.py" />
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/dipy/segment/bundles.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_display.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
-          <folding>
-            <element signature="e#441#475#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="29" selection-start-line="29" selection-end-line="38" selection-end-column="40" />
-          <folding>
-            <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-811">
-          <caret line="48" column="15" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="92" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1982">
-          <caret line="146" column="3" selection-start-line="146" selection-start-column="3" selection-end-line="146" selection-end-column="3" />
-          <folding>
-            <element signature="e#57#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///media/db242421/db242421_data/Downloads/scratch.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="214" column="41" lean-forward="true" selection-start-line="214" selection-start-column="41" selection-end-line="214" selection-end-column="41" />
-          <folding>
-            <element signature="e#46#55#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2289">
-          <caret line="115" column="44" selection-start-line="115" selection-start-column="44" selection-end-line="115" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="300" column="79" selection-start-line="300" selection-start-column="79" selection-end-line="300" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_prepare_statistic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="592">
-          <caret line="137" column="29" selection-start-line="137" selection-start-column="29" selection-end-line="137" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/nibabel/streamlines/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="66" column="4" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-749">
-          <caret line="59" column="92" lean-forward="true" selection-start-line="59" selection-start-column="92" selection-end-line="59" selection-end-column="92" />
-          <folding>
-            <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" selection-end-column="4" />
-          <folding>
-            <element signature="e#57#76#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="55" />
-          <folding>
-            <element signature="e#57#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>

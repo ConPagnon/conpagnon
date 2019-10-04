@@ -227,8 +227,106 @@ def regression_analysis_whole_brain(groups, kinds, root_analysis_directory,
                     corrected_p_values[:, whole_brain_model.index(model)]
                 # Write it back to csf format
                 data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
-                
-                
+
+
+def regression_analysis_whole_brain_v2(groups, kinds, root_analysis_directory,
+                                       whole_brain_model, variables_in_model, score_of_interest,
+                                       behavioral_dataframe,
+                                       correction_method=['fdr_bh'],
+                                       alpha=0.05):
+    """Compute a linear model with a continuous score test as the response variable.
+
+    :param groups:
+    :param kinds:
+    :param root_analysis_directory:
+    :param whole_brain_model:
+    :param variables_in_model:
+    :param score_of_interest:
+    :param behavioral_dataframe:
+    :param correction_method:
+    :param alpha:
+    :return:
+    """
+    for kind in kinds:
+        # directory where the data are
+        data_directory = os.path.join(root_analysis_directory,
+                                      kind)
+        all_model_response = []
+        all_model_p_values = []
+        for model in whole_brain_model:
+            # List of the corresponding dataframe
+            model_dataframe = data_management.concatenate_dataframes([data_management.read_csv(
+                csv_file=os.path.join(data_directory, group + '_' + kind + '_' + model + '.csv'))
+                for group in groups])
+
+            # Shift index to be the subjects identifiers
+            model_dataframe = data_management.shift_index_column(panda_dataframe=model_dataframe,
+                                                                 columns_to_index=['subjects'])
+            # Fetch the name of the columns containing the
+            # connectivity score. There is only one element
+            # since we shifted the index to subject list
+            # previously.
+            connectivity_score_name = model_dataframe.columns[0]
+            # fetch the score of interest in the behavioral dataframe
+            score_dataframe = behavioral_dataframe[[score_of_interest]]
+            # fecth the variables in the model, except connectivity score
+            model_variables = behavioral_dataframe[variables_in_model]
+            # Add variables in the model to complete the overall DataFrame
+            model_dataframe = data_management.merge_list_dataframes([model_dataframe, score_dataframe, model_variables])
+            # Build the model formula: the variable to explain is the first column of the
+            # dataframe, and we add to the left all variable in the model
+            model_formulation = score_of_interest + '~' + '+'.join(variables_in_model + [connectivity_score_name])
+            # Build response, and design matrix from the model model formulation
+            model_response, model_design = \
+                parametric_tests.design_matrix_builder(dataframe=model_dataframe,
+                                                       formula=model_formulation,
+                                                       return_type='dataframe')
+            # regression with a simple OLS model
+            model_fit = parametric_tests.ols_regression(y=model_response, X=model_design)
+
+            # Creation of a directory for the current analysis
+            regression_output_directory = folders_and_files_management.create_directory(
+                directory=os.path.join(root_analysis_directory, 'regression_analysis', kind))
+
+            # Write output regression results in csv files
+            data_management.write_ols_results(ols_fit=model_fit, design_matrix=model_design,
+                                              response_variable=model_response,
+                                              output_dir=regression_output_directory,
+                                              model_name=model,
+                                              design_matrix_index_name='subjects')
+            # Appending current model response
+            all_model_response.append(model_response)
+
+            # Take only the index subjects present in the analysis, because design matrix is for the whole
+            # cohort !!!
+            design_matrix = model_design.loc[model_design.index]
+
+            # append p values
+            all_model_p_values.append(np.array(model_fit.pvalues))
+
+        raw_p = np.array(all_model_p_values).T
+        for corr_method in correction_method:
+            if corr_method in ['fdr_bh', 'bonferroni']:
+                raw_p_shape = raw_p.shape
+                fdr_corrected_p_values = multipletests(pvals=raw_p.flatten(),
+                                                       method=corr_method, alpha=alpha)[1].reshape(raw_p_shape)
+                corrected_p_values = fdr_corrected_p_values
+            else:
+                corrected_p_values = raw_p
+
+            # Append in each model CSV file, the corrected p-values for maximum statistic
+            for model in whole_brain_model:
+                model_csv_file = os.path.join(root_analysis_directory, 'regression_analysis', kind,
+                                              model + '_parameters.csv')
+                # Read the csv file
+                model_parameters = data_management.read_csv(model_csv_file)
+                # Add a last column for adjusted p-values
+                model_parameters[corr_method + 'corrected_pvalues'] = \
+                    corrected_p_values[:, whole_brain_model.index(model)]
+                # Write it back to csf format
+                data_management.dataframe_to_csv(dataframe=model_parameters, path=model_csv_file)
+
+
 def regression_analysis_internetwork_level(internetwork_subjects_connectivity_dictionary, groups_in_model, behavioral_data_path,
                                            sheet_name, subjects_to_drop, model_formula, kinds_to_model,  root_analysis_directory,
                                            inter_network_model, network_labels_list, network_labels_colors,
