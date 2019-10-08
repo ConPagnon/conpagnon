@@ -90,7 +90,7 @@ individual_confounds_directory = \
 # output csv directory
 output_csv_directory_path = '/media/db242421/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif' \
                             '/ConPagnon_data/patients_behavior_ACM'
-score = 'lexExp_zscore_test'
+score = 'syntcomp_zscore_081019'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path_score,
                                                         erase_previous=True)
@@ -999,7 +999,7 @@ groups_in_models = ['patients']
 
 # data_directory = os.path.join('D:\\text_output_11042018', kind)
 # Choose the correction method
-correction_method = ['bonferroni']
+correction_method = ['bonferroni', 'fdr_bh']
 # Fit three linear model for the three type of overall connections
 models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
 
@@ -1007,10 +1007,7 @@ models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', '
 variables_model = ['lesion_normalized']
 
 # Score of interest
-score_of_interest = 'lexExp_zscore'
-
-# formulation of the model
-model_formula = 'lexExp_zscore +  Sexe + lesion_normalized'
+score_of_interest = 'syntaxComp_zscore'
 
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
@@ -1033,7 +1030,7 @@ regression_analysis_model.regression_analysis_whole_brain_v2(groups=groups_in_mo
 
 regression_analysis_model.regression_analysis_network_level_v2(groups=groups_in_models,
                                                                kinds=kinds,
-                                                               networks_list=model_network_list,
+                                                               networks_list=ipsi_contra_model_network_list,
                                                                root_analysis_directory=output_csv_directory,
                                                                network_model=['intra_homotopic'],
                                                                variables_in_model=variables_model,
