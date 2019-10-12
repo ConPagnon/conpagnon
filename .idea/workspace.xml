@@ -2,223 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Update.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/ConPagnon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ConPagnon.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/db242421.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/db242421.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/computing/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/computing/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" beforeDir="false" afterPath="$PROJECT_DIR$/computing/compute_connectivity_matrices.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connectivity_statistics/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/non_parametric_tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connectivity_statistics/parametric_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/parametric_tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handling/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handling/atlas.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/atlas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handling/data_architecture.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/data_architecture.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handling/data_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/data_management.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_handling/dictionary_operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_handling/dictionary_operations.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/.buildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.buildinfo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/.nojekyll" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.nojekyll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/computing/compute_connectivity_matrices.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/computing/compute_connectivity_matrices.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/data_handling/atlas.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/data_handling/atlas.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/data_handling/data_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/data_handling/data_management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/data_handling/dictionary_operations.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/data_handling/dictionary_operations.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_modules/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_modules/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/code.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/code.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/index.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/index.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_sources/projectDescription.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/projectDescription.rst.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/alabaster.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/alabaster.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/basic.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/basic.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/css/bootstrap-theme.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/css/bootstrap-theme.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/css/bootstrap.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/css/bootstrap.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/custom.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/doctools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/doctools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/documentation_options.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/documentation_options.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/file.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/file.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/glyphicons-halflings-regular.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Bold-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-BoldItalic-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBold-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-ExtraBoldItalic-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Italic-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Light-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-LightItalic-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Regular-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-Semibold-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/fonts/OpenSans-SemiboldItalic-webfont.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/open-sans/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/open-sans/stylesheet.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Black.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Black.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Bold.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Bold.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-ExtraLight.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-ExtraLight.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Light.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Light.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Regular.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Regular.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Semibold.eot" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/EOT/SourceSerifPro-Semibold.eot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/LICENSE.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Black.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Black.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Bold.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Bold.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-ExtraLight.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-ExtraLight.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Light.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Light.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Regular.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Regular.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Semibold.otf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/OTF/SourceSerifPro-Semibold.otf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/ReadMe.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/ReadMe.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/SourceSerifProReadMe.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/SourceSerifProReadMe.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Black.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Black.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Bold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Bold.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-ExtraLight.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-ExtraLight.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Light.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Light.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Regular.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Regular.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Semibold.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/TTF/SourceSerifPro-Semibold.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Black.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Black.otf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Bold.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Bold.otf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-ExtraLight.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-ExtraLight.otf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Light.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Light.otf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Regular.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Regular.otf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Semibold.otf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/OTF/SourceSerifPro-Semibold.otf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Black.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Black.ttf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Bold.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Bold.ttf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-ExtraLight.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-ExtraLight.ttf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Light.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Light.ttf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Regular.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Regular.ttf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Semibold.ttf.woff" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/WOFF/TTF/SourceSerifPro-Semibold.ttf.woff" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/bower.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/source-serif-pro.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/fonts/source-serif-pro/source-serif-pro.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/guzzle.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/guzzle.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/jquery-3.2.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/jquery-3.2.1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/jquery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/jquery.min.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/jquery.min.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/js/bootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/js/bootstrap.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/js/bootstrap.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/js/bootstrap.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/language_data.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/language_data.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/minus.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/minus.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/plus.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/plus.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/pygments.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/pygments.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/searchtools.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/searchtools.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/underscore-1.3.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/underscore-1.3.1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_static/underscore.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_static/underscore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/code.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/code.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/genindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/objects.inv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/projectDescription.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/projectDescription.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/py-modindex.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/searchindex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/AFQ_tract_profile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/ROI_damaged_by_stroke.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/ROI_damaged_by_stroke.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/behavior_to_lesion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/build_connectivity_matrices.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/build_connectivity_matrices.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/classification_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/classification_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/connectivity_assymetry.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/controls_tract_probability_maps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/convert_to_AFQ_Browser_data_format.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/correlation_connectivity_scores.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/correlation_connectivity_scores.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/cpm.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/cpm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/cpm_mmx.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/discriminative_connections_identification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dti_prepoc_patients.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dwi_preproc_ants_apply_transform.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/dwi_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dwi_processing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/features_elimination.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/features_elimination.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/illustration_atlas_avcnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/illustration_atlas_avcnn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/language_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/language_study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/language_study_lesion_regressed.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/language_study_lesion_regressed.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/memomix_ab.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/memomix_ab.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/networkx_to_graph_files.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/networkx_to_graph_files.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/one_vs_the_rest_features_identification.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/one_vs_the_rest_features_identification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/patients_controls_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/patients_controls_study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/predict_the_behavior.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/predict_the_behavior.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/pull_image_from_Trio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/regress_lesion_artifact.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/resample_lesion.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/resample_lesion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/resting_state_topiramate.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/resting_state_topiramate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_compute_statistic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_create_controls_template.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_display.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_display.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_prepare_statistic_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tbss_register_FA_maps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/times_series_extraction.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/times_series_extraction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/tractometry_with_probability_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/tractometry_with_probability_mask.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/CPM_method.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/CPM_method.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/classification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/cpm_predict_behavior.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cpm_predict_behavior.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/cythonized_version/CPM_method.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cythonized_version/CPM_method.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/cythonized_version/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cythonized_version/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/cythonized_version/features_indentification_cython.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/cythonized_version/features_indentification_cython.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/features_indentification.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/features_indentification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/other_selection_method_CPM.txt" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/other_selection_method_CPM.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/scores_predictions.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/scores_predictions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plotting/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/plotting/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plotting/display.py" beforeDir="false" afterPath="$PROJECT_DIR$/plotting/display.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_bigdata_blocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_bigdata_blocks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_maxT.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/examples/t_tests_maxT.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/descriptive_statistics.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/descriptive_statistics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/mulm_dataframe.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/dataframe/mulm_dataframe.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/reducers.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/reducers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_in_epac.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_in_epac.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_ols.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/tests/test_mulm_ols.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylearn_mulm/mulm/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylearn_mulm/mulm/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/code.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/code.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/conf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/index.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/make.bat" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/make.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sphinx/projectDescription.rst" beforeDir="false" afterPath="$PROJECT_DIR$/sphinx/projectDescription.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/array_operation.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/array_operation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/folders_and_files_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/folders_and_files_management.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/pre_preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/pre_preprocessing.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -255,72 +42,8 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>left</find>
-      <find>PAL</find>
-      <find>display</find>
-      <find>plt.scatter</find>
-      <find>view_m</find>
-      <find>save_as_html</find>
-      <find>graph_draw</find>
-      <find>draw_h</find>
-      <find>import cairocffi</find>
-      <find>cairocffi</find>
-      <find>shortest</find>
-      <find>shortest_path</find>
-      <find>GraphH</find>
-      <find>_beta</find>
-      <find>pearsonr</find>
-      <find>_betai</find>
-      <find>PhaseEncodingDirectio</find>
-      <find>'t1_' + subject + '.nii.gz'</find>
-      <find>outputs[&quot;subjects_file&quot;]</find>
-      <find>skeleton</find>
-      <find>tract_segmentation</find>
-      <find>track</find>
-      <find>iFOD</find>
-      <find>stats_directory</find>
-      <find>/neurospin/grip/protocols/MRI/Ines_2018/images/tbss_lvl2/all_subjects_mask</find>
-      <find>all_lesions_directory</find>
-      <find>stats_results_directory</find>
-      <find>all_subject_mask_directory</find>
-      <find>2012</find>
-      <find>FA_template</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>training_connectivity_matrices</replace>
-      <replace>null_min_and_max_distribution</replace>
-      <replace>p_positive_features_significant</replace>
-      <replace>p_value_positive_weights</replace>
-      <replace>pdf_report_filename</replace>
-      <replace>std_intra_estimation</replace>
-      <replace>intra_network_distribution_parameters</replace>
-      <replace>ipsilesional</replace>
-      <replace>contralesional_intra_network_connectivity_dict</replace>
-      <replace>network_model_tukey_analysis</replace>
-      <replace>models</replace>
-      <replace>all_models_f_test_p_values</replace>
-      <replace>whole_brain_mean_connectivity_parameters</replace>
-      <replace>features_labels</replace>
-      <replace>groups</replace>
-      <replace>Right</replace>
-      <replace>left</replace>
-      <replace>right</replace>
-      <replace>all_controls_mask</replace>
-      <replace>all_subject_mask_directory</replace>
-      <replace>trac_analysis_directory</replace>
-      <replace>template</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-265" />
-    <option name="y" value="-6" />
-    <option name="width" value="1910" />
-    <option name="height" value="978" />
   </component>
   <component name="ProjectId" id="1RjeFa66jbyFPbZpjJIqvvrqS0Z" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -588,6 +311,8 @@
       <workItem from="1558952319515" duration="16000" />
       <workItem from="1558952590534" duration="13638000" />
       <workItem from="1570184832898" duration="248000" />
+      <workItem from="1570800495726" duration="10923000" />
+      <workItem from="1570863721501" duration="10080000" />
     </task>
     <task id="LOCAL-00183" summary="Put good subject lists nip.">
       <created>1549989215946</created>
@@ -1019,6 +744,11 @@
           <url>file:///volatile/db242421_python/envs/ConPagnon/lib/python3.6/site-packages/scipy/stats/stats.py</url>
           <line>159</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/connectivity_statistics/regression_analysis_model.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
