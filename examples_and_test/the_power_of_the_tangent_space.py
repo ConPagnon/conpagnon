@@ -39,7 +39,6 @@ from sklearn.model_selection import train_test_split, cross_val_predict
 from computing.compute_connectivity_matrices import tangent_space_projection
 from nilearn.image import load_img
 import nibabel as nb
-os.environ['MKL_NUM_THREADS'] = '1'
 # Reload all module
 importlib.reload(data_management)
 importlib.reload(atlas)
@@ -52,9 +51,10 @@ importlib.reload(data_architecture)
 importlib.reload(dictionary_operations)
 
 # Atlas set up
-atlas_folder = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference'
+atlas_folder = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/atlas_reference'
 atlas_name = 'atlas4D_2.nii'
-labels_text_file = '/media/db242421/db242421_data/ConPagnon_data/atlas/atlas_reference/atlas4D_2_labels.csv'
+labels_text_file = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/' \
+                   'atlas_reference/atlas4D_2_labels.csv'
 colors = ['navy', 'sienna', 'orange', 'orchid', 'indianred', 'olive',
           'goldenrod', 'turquoise', 'darkslategray', 'limegreen', 'black',
           'lightpink']
@@ -74,7 +74,7 @@ atlas_nodes, labels_regions, labels_colors, n_nodes = atlas.fetch_atlas(
 groups = ['patients_r', 'TDC']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/fmri_images'
 # Check all functional files existence
 folders_and_files_management.check_directories_existence(
     root_directory=root_fmri_data_directory,
@@ -83,7 +83,8 @@ folders_and_files_management.check_directories_existence(
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients_and_controls_all.txt'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/text_data/' \
+    'acm_patients_and_controls_all.txt'
 
 organised_data = data_architecture.fetch_data(
     subjects_id_data_path=subjects_ID_data_path,
@@ -96,17 +97,17 @@ organised_data = data_architecture.fetch_data(
 kinds = ['tangent']
 
 # Nilearn cache directory
-nilearn_cache_directory = '/media/db242421/db242421_data/ConPagnon/nilearn_cache'
+nilearn_cache_directory = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/nilearn_cache'
 
 # Repetition time between time points in the fmri acquisition, usually 2.4s or 2.5s
 repetition_time = 2.5
 
 # Load behavioral scores
 behavioral_scores = data_management.read_excel_file(
-    excel_file_path='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
-                    'Resting State AVCnn_cohort data.xlsx',
-    sheetname='Middle Cerebral Artery+controls')
-behavioral_scores = behavioral_scores.set_index(["NIP"])
+    excel_file_path='/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/regression_data/'
+                    'regression_data_2.xlsx',
+    sheetname='cohort_functional_data', subjects_column_name='subjects')
+# behavioral_scores = behavioral_scores.set_index(["subjects"])
 
 times_series = ccm.time_series_extraction(
     root_fmri_data_directory=root_fmri_data_directory,
@@ -119,30 +120,33 @@ times_series = ccm.time_series_extraction(
 )
 
 # Output directory
-output_dir = "/media/db242421/db242421_data/ConPagnon_data/tangent_space/projection_of_groups"
-report_name = "LG_Atyp_ref_LG_Typ_proj_t_stat_fdr_bh.pdf"
+output_dir = "/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/" \
+             "avcnn_language_score_prediction"
+report_name = "controls_reference_LG_patients_projected_t_stat.pdf"
 
 # Directory containing all lesion files
-lesion_dir = "/media/db242421/db242421_data/ConPagnon_data/all_lesion_cleaned"
+lesion_dir = "/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/all_lesion_cleaned"
 
 # Name of the projected group
-projected_group_name = "LG_atypical"
+projected_group_name = "patients"
 
 # Name of the reference group
-reference_group_name = "LG_typical"
+reference_group_name = "controls"
 
-# try to select a sub group directly from the time series
+# select a sub group directly from the time series
 # dictionary
 groups_by_factor, population_df_by_factor, factor_keys = \
     dictionary_operations.groupby_factor_connectivity_matrices(
-        population_data_file='/media/db242421/db242421_data/ConPagnon_data/regression_data/'
-                             'Resting State AVCnn_cohort data2.xlsx', sheetname='Middle Cerebral Artery+controls',
-        subjects_connectivity_matrices_dictionnary=times_series, groupes=['patients_r'], factors=['Lesion',
-                                                                                                  'langage_clinique'],
+        population_data_file='/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/regression_data/'
+                             'regression_data_2.xlsx',
+        sheetname='cohort_functional_data',
+        subjects_connectivity_matrices_dictionnary=times_series,
+        groupes=['patients_r'],
+        factors=['Groupe', 'Lesion'],
         drop_subjects_list=None)
 
-times_series_ = {'reference_group':  groups_by_factor[('G', 'N')],
-                 'group_to_project': groups_by_factor[('G', 'A')]}
+times_series_ = {'reference_group':  times_series['TDC'],
+                 'group_to_project': groups_by_factor[('P', 'G')]}
 
 reference_group = list(times_series_['reference_group'].keys())
 subjects_to_project = list(times_series_['group_to_project'].keys())
@@ -155,7 +159,7 @@ group_to_project_time_series = np.array([times_series_['group_to_project'][s]['t
 
 # Number of bootstrap
 m = 10000
-size_subset_reference_group = 9
+size_subset_reference_group = 15
 alpha = 0.05
 
 
@@ -166,7 +170,7 @@ tangent_space_projection_dict = tangent_space_projection(
     bootstrap_size=size_subset_reference_group,
     output_directory=output_dir,
     verif_null=True,
-    statistic='z',
+    statistic='t',
     correction_method="fdr_bh",
     alpha=alpha)
 
@@ -181,27 +185,17 @@ reference_group_tangent_mean = tangent_space_projection_dict['reference_group_ta
 # output statistic for each projected subject
 group_to_project_stats = tangent_space_projection_dict['group_to_project_stats']
 
-# Count the number of time a node appear across subjects_to_project
-significant_hit_per_nodes = vec_to_sym_matrix(np.sum(p_values_corrected < alpha, axis=0),
-                                              diagonal=np.zeros(n_nodes))
-significant_hit_per_nodes_g = nx.from_numpy_array(significant_hit_per_nodes)
-significant_node_degree = np.array([val for (node, val) in significant_hit_per_nodes_g.degree()])*10
+# Initialize a empty adjacency matrix
 empty_adjacency_matrix = np.zeros(shape=(n_nodes, n_nodes))
-
-plt.figure()
-plot_connectome(adjacency_matrix=empty_adjacency_matrix,
-                node_coords=atlas_nodes,
-                node_color=labels_colors,
-                node_size=significant_node_degree,
-                title='Damaged nodes map across subjects_to_project')
-plt.show()
 
 # Lesions overlay
 lesion_affine = load_img(os.path.join(lesion_dir, os.listdir(lesion_dir)[0])).affine
 overlay_data = np.array([load_img(os.path.join(lesion_dir, lesion_img)).get_data()
                          for lesion_img in os.listdir(lesion_dir)]).sum(axis=0)
 plt.figure()
-plotting.plot_stat_map(nb.Nifti1Image(overlay_data, affine=lesion_affine))
+plotting.plot_stat_map(nb.Nifti1Image(overlay_data, affine=lesion_affine),
+                       output_file=os.path.join(output_dir, "lesions_overlay.pdf"),
+                       title="Lesion overlay")
 plt.show()
 
 
@@ -212,7 +206,7 @@ with backend_pdf.PdfPages(os.path.join(output_dir, report_name)) as pdf:
             # compute node degree for each subject
             # based on the surviving connection
             group_to_project_significant_edges = vec_to_sym_matrix(p_values_corrected[subject, ...] < alpha,
-                                                          diagonal=np.zeros(n_nodes))
+                                                                   diagonal=np.zeros(n_nodes))
             patient_adjacency_matrices = nx.from_numpy_array(group_to_project_significant_edges)
             degrees = np.array([val for (node, val) in patient_adjacency_matrices.degree()])*40
 
@@ -278,36 +272,23 @@ positive_connectivity_difference_from_reference_m = vec_to_sym_matrix(
 negative_connectivity_difference_from_reference_m = vec_to_sym_matrix(
     negative_connectivity_difference_from_reference.sum(axis=0), diagonal=np.zeros(n_nodes))
 
-#### Prediction ####
-sc = StandardScaler()
-absolute_max_distance = np.max(np.abs(group_to_project_tangent_matrices), axis=1)
-X = sm.add_constant(absolute_max_distance)
-y = np.array(behavioral_scores.loc[subjects_to_project]['pc1_language_zscores'])
-dist_tangent = sm.OLS(y, X).fit()
-dist_tangent.summary()
-
 # SVM classification
-labels = np.array([0 if behavioral_scores.loc[s]['Lesion'] == 'G' else 1 for s in subjects_to_project])
+labels = np.array([0 if behavioral_scores.loc[s]['langage_clinique'] == 'N' else 1 for s in subjects_to_project])
 sss = StratifiedShuffleSplit(n_splits=10000)
 accuracy = cross_val_score(estimator=LinearSVC(C=1), X=group_to_project_tangent_matrices, y=labels,
-                           cv=LeaveOneOut(), n_jobs=6)
+                           cv=sss, n_jobs=2)
 print('Accuracy: {} % +- {} %'.format(round(np.array(accuracy).mean(), 2)*100,
                                       round(np.array(accuracy).std(), 2)*100))
 
 atypical = group_to_project_tangent_matrices[np.where(labels == 1)[0], ...]
 typical = group_to_project_tangent_matrices[np.where(labels == 0)[0], ...]
 
-# Prediction of raw NEEL score based on functional connectivity
-list_of_scores = ['uni_deno', 'plu_deno', 'uni_rep', 'plu_rep',
-                  'empan', 'phono', 'elision_i',
-                  'invers', 'ajout', 'elision_f', 'morpho',
-                  'listea', 'listeb', 'topo',
-                  'voc1', 'voc2', 'voc1_ebauche', 'voc2_ebauche',
-                  'abstrait_diff', 'abstrait_pos', 'lex1', 'lex2',
-                  'pc1_language', 'pc2_language']
+# Prediction of language score based on functional connectivity
+list_of_scores = ['parole_zscore', 'lexExp_zscore', 'syntaxExp_zscore',
+                  'lexComp_zscore', 'syntaxComp_zscore']
 
 # Scaled the raw behavioral scores
-sc_score = StandardScaler()
+sc_score = StandardScaler(with_mean=False, with_std=False)
 all_scores_array = np.array(behavioral_scores.loc[subjects_to_project][list_of_scores])
 all_scaled_scores = sc_score.fit_transform(all_scores_array)
 
@@ -316,23 +297,11 @@ sc_features = StandardScaler()
 maxScaler = MaxAbsScaler()
 patients_tangent_matrices_sc = maxScaler.fit_transform(group_to_project_tangent_matrices)
 
-# PCA on connectivity matrices
-pca = decomposition.PCA(n_components=0.95)
-pca.fit(patients_tangent_matrices_sc)
-patients_tangent_matrices_pca = pca.transform(patients_tangent_matrices_sc)
-
-# Select features on raw connectivity matrices, based on a mask
-# computed with the scaled matrices with the maximum
-maximum_features_mask = np.where(np.abs(patients_tangent_matrices_sc) == 1)
-patients_tangent_matrices_masked = \
-    [group_to_project_tangent_matrices[p, np.where(np.abs(patients_tangent_matrices_sc[p, ...]) == 1)]
-     for p in range(len(subjects_to_project))]
-
 # Selection parameter, if alpha equal to 1, all features are selected
 alpha = 1
 r2_scores = dict.fromkeys(list_of_scores)
 # Optimisation of C parameter for each score
-c_grid = [0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 1, 10, 50, 100, 200, 300, 500, 1000, 5000, 10000, 100000, 1000000]
+c_grid = [1]
 alpha_grid = [1, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 600, 700, 800, 1000, 2000, 3000,
               4000, 5000, 8000, 10000, 100000, 1000000]
 # Optimisation of number of features selected by SelectKBest
@@ -340,12 +309,19 @@ k_grid = [10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
           1700, 1800, 1900, 2000, 2100, 2400, 2556]
 
 best_c = dict.fromkeys(list_of_scores)
-save_directory = '/media/db242421/db242421_data/ConPagnon_data/tangent_space/' \
-                 'prediction_evaluation_pipeline_K_best_Ridge'
+save_directory = output_dir
 
 import matplotlib
+from scipy.stats import pearsonr
 colorsList = [(1, 0, 0),(0,0,1)]
 CustomCmap = matplotlib.colors.ListedColormap(colorsList)
+
+from machine_learning import scores_predictions
+importlib.reload(scores_predictions)
+
+# Permutation testing parameters
+n_permutations = 10000
+r2_null_distribution = dict.fromkeys(list_of_scores)
 
 if __name__ == '__main__':
     for score in range(len(list_of_scores)):
@@ -354,12 +330,12 @@ if __name__ == '__main__':
         # Search on a grid, the best K, and the best C parameter minimizing the
         # mean squared error
         K_best = SelectKBest(f_regression)
-        pipeline = Pipeline([('K_best_features', K_best), ('ridge', Ridge())])
+        pipeline = Pipeline([('K_best_features', K_best), ('svr', SVR(kernel='linear'))])
         grid_search = GridSearchCV(pipeline, {'K_best_features__k': k_grid,
-                                              'ridge__alpha': alpha_grid},
+                                              'svr__C': c_grid},
                                    cv=LeaveOneOut(),
                                    scoring='neg_mean_squared_error',
-                                   n_jobs=10,
+                                   n_jobs=4,
                                    verbose=1)
         grid_search.fit(group_to_project_tangent_matrices, all_scaled_scores[..., score])
 
@@ -370,35 +346,73 @@ if __name__ == '__main__':
         patients_tangent_matrices_KBest = K_best_reducer.fit_transform(group_to_project_tangent_matrices,
                                                                        all_scaled_scores[..., score])
         # Select the best C parameters from previous selection
-        best_alpha = grid_search.best_params_['ridge__alpha']
-        best_c[list_of_scores[score]] = {'alpha': best_alpha}
+        best_parameter = grid_search.best_params_['svr__C']
+        best_c[list_of_scores[score]] = {'C': best_parameter}
 
         # score prediction
         r2, score_pred, score_pred_weights, _ = \
             predict_scores(connectivity_matrices=patients_tangent_matrices_KBest,
                            raw_score=all_scores_array[:, score],
                            alpha=alpha,
-                           alpha_ridge=best_c[list_of_scores[score]]['alpha'],
-                           estimator='ridge')
+                           C=best_c[list_of_scores[score]]['C'],
+                           estimator='svr', with_mean=False, with_std=False)
 
         r2_scores[list_of_scores[score]] = {
             'r2': r2,
             'predicted scores': np.array(score_pred),
             'true scores': all_scaled_scores[:, score],
             'features weights': score_pred_weights,
-            'features weights brain space': K_best_reducer.inverse_transform(
-                np.squeeze(np.array(score_pred_weights))),
+            'features weights brain space': K_best_reducer.inverse_transform(np.squeeze(np.array(score_pred_weights))),
             'selected features indices': K_best_reducer.get_support(),
-            'alpha': best_c[list_of_scores[score]]['alpha'],
+            'C': best_c[list_of_scores[score]]['C'],
             'best K': best_K,
             'correlation_score_connectivity': vcorrcoef(X=group_to_project_tangent_matrices.T,
                                                         y=all_scaled_scores[:, score])[0]}
 
         print('Prediction done for {} test'.format(list_of_scores[score]))
 
+        print('Perform permutation testing on r2 for {}'.format(list_of_scores[score]))
+
+        # Permutation testing on the r2
+        permutations = [np.random.choice(np.arange(0, len(subjects_to_project), 1), replace=False,
+                                         size=len(subjects_to_project))
+                        for n in range(n_permutations)]
+        permutations[0] = np.arange(0, len(subjects_to_project), 1)
+
+        prediction_scores_permutation = Parallel(
+            n_jobs=4, verbose=1000)(delayed(predict_scores)(
+                connectivity_matrices=patients_tangent_matrices_KBest,
+                raw_score=behavioral_scores.loc[subjects_to_project][list_of_scores[score]][b],
+                alpha=alpha,
+                C=best_c[list_of_scores[score]]['C'],
+                estimator='svr', with_mean=False, with_std=False) for b in permutations)
+
+        r2_null = np.array([prediction_scores_permutation[n] for n in range(n_permutations)])[1:, 0]
+        true_r2 = prediction_scores_permutation[0][0]
+        true_score_weight = prediction_scores_permutation[0][2]
+        true_score_selected_weight_indices = prediction_scores_permutation[0][3]
+        common_features = set.intersection(*map(set, true_score_selected_weight_indices))
+        r2_null_distribution[list_of_scores[score]] = {
+            'r2_null': r2_null,
+            'p': (np.sum(r2_null > true_r2) + 1) / (n_permutations + 1),
+            'r2': true_r2,
+            'true_score_weights': true_score_weight,
+            'true_score_selected_features_indices': true_score_selected_weight_indices,
+            'common_selected_features_indices': common_features}
+
+        print('Done permutation testing on r2 for {}'.format(list_of_scores[score]))
+
+    # Save the dictionary containing the results of the prediction
+    # for each score
+    folders_and_files_management.save_object(
+        r2_scores,
+        filename='prediction_scores_raw_connectivity_matrices_LinearSVR_K_best_pipeline.pkl',
+        saving_directory=output_dir
+       )
+
     with backend_pdf.PdfPages(os.path.join(
             save_directory,
-            'prediction_scores_raw_matrices_f_regression_Ridge_linear_connectome_V3.pdf')) \
+            'prediction_scores_raw_matrices_K_best_SVR_linear_connectome.pdf')) \
             as pdf:
         for score in range(len(list_of_scores)):
             r2_score = r2_scores[list_of_scores[score]]['r2']
@@ -418,13 +432,13 @@ if __name__ == '__main__':
 
             number_of_connections = r2_scores[list_of_scores[score]]['best K']
 
-            node_size = (0.5*np.sum(np.abs(score_prediction_weights), axis=0))*200
+            node_size = (0.5*np.sum(np.abs(score_prediction_weights), axis=0))*50
             plt.figure()
             plot_connectome(
                 adjacency_matrix=masked_correlation_score_connectivity,
                 node_coords=atlas_nodes, node_color=labels_colors,
                 title='score: {}, r2: {}, K: {}'.format(list_of_scores[score],
-                                                        r2_scores[list_of_scores[score]]['r2'][0],
+                                                        r2_scores[list_of_scores[score]]['r2'],
                                                         number_of_connections),
                 colorbar=True,
                 node_kwargs={'edgecolor': 'black', 'alpha': 1}, edge_cmap=CustomCmap,
@@ -433,72 +447,35 @@ if __name__ == '__main__':
             plt.show()
 
     with backend_pdf.PdfPages(os.path.join(save_directory,
-                                           'prediction_scores_raw_matrices_regression_Ridge_linear_.pdf')) \
+                                           'prediction_scores_raw_matrices_r_pred_vsr_true_LinearSVR_K_best.pdf')) \
             as pdf:
         for score in list_of_scores:
 
             plt.figure()
             plt.plot(np.array(r2_scores[score]['true scores']),
                      np.array(r2_scores[score]['predicted scores']), 'o')
-            plt.title('score: {}, r2: {}'.format(score, r2_scores[score]['r2'][0]))
+            plt.title('score: {}, r2: {}'.format(score, r2_scores[score]['r2']))
             plt.xlabel('True scores')
             plt.ylabel('Predicted scores')
             pdf.savefig()
             plt.show()
-    # Save the dictionary containing the results of the prediction
-    # for each score
-    folders_and_files_management.save_object(
-        r2_scores,
-        os.path.join(save_directory, 'prediction_scores_raw_connectivity_matrices_Ridge_K_best_pipeline.pkl')
-       )
 
-    # TODO permuation testing !!!!!!
-    n_permutations = 10001
-    permutations = [np.random.choice(np.arange(0, len(subjects_to_project), 1), replace=False, size=len(subjects_to_project))
-                    for n in range(n_permutations)]
-    permutations[0] = np.arange(0, len(subjects_to_project), 1)
-    r2_null_distribution = dict.fromkeys(list_of_scores)
-    for score in list_of_scores:
-        print('Prediction for {} test'.format(score))
-        prediction_scores_permutation = Parallel(
-            n_jobs=14, verbose=1000,
-            backend='multiprocessing',
-            temp_folder='/media/db242421/db242421_data/ConPagnon_data/tangent_space/joblib_dir')(delayed(predict_scores)(
-                connectivity_matrices=patients_tangent_matrices_KBest,
-                raw_score=behavioral_scores.loc[subjects_to_project][score][b],
-                scoring='neg_mean_squared_error',
-                c_grid=c_grid,
-                scale_predictors=False,
-                alpha=1,
-                n_jobs=20) for b in permutations)
-
-        r2_null = np.array([prediction_scores_permutation[n][0] for n in range(n_permutations)])[1:, 0]
-        true_r2 = prediction_scores_permutation[0][0]
-        true_score_weight = prediction_scores_permutation[0][2]
-        true_score_selected_weight_indices = prediction_scores_permutation[0][3]
-        common_features = set.intersection(*map(set, true_score_selected_weight_indices))
-        r2_null_distribution[score] = {'r2_null': r2_null,
-                                       'p': np.sum(r2_null > true_r2) / n_permutations,
-                                       'r2': true_r2[0],
-                                       'true_score_weights': true_score_weight,
-                                       'true_score_selected_features_indices': true_score_selected_weight_indices,
-                                       'common_selected_features_indices': common_features}
 
 # Distribution plot for each score
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
-                          'r2_null_dist_pca_svr_non_scaled_features.pdf') as pdf:
+with backend_pdf.PdfPages(os.path.join(output_dir, 'r2_null_Kbest_SVR.pdf')) as pdf:
 
     for score in list_of_scores:
         plt.figure()
         plt.hist(r2_null_distribution[score]['r2_null'], bins='auto', edgecolor='black')
         plt.axvline(x=r2_null_distribution[score]['r2'], color='black')
-        plt.title('R2 null distribution for {} test, p = {}'.format(score, r2_null_distribution[score]['p']))
+        plt.title('R2 null distribution for {} test, r2={}, p = {}'.format(score, r2_null_distribution[score]['r2'],
+                                                                           r2_null_distribution[score]['p']))
         pdf.savefig()
         plt.show()
 
 
 # Illustration , tangent matrices of subjects_to_project
-with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+with backend_pdf.PdfPages('/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/tangent_space/'
                           'patient_matrices_max_abs_scaled.pdf') as pdf:
 
     for subject in range(len(subjects_to_project)):
@@ -513,7 +490,7 @@ with backend_pdf.PdfPages('/media/db242421/db242421_data/ConPagnon_data/tangent_
 
 # Illustration of prediction of scores
 r2_scores_results = folders_and_files_management.load_object(
-    full_path_to_object='/media/db242421/db242421_data/ConPagnon_data/tangent_space/'
+    full_path_to_object='/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/tangent_space/'
                         'predictions_evaluation_f_regression/'
                         'svr_linear_prediction_scores_raw_connectivity_matrices_200_best_features_f_regression.pkl'
 )
@@ -526,7 +503,7 @@ for score in range(len(list_of_scores)):
         adjacency_matrix=r2_score * vec_to_sym_matrix(np.mean(score_prediction_weights, axis=0),
                                                       diagonal=np.zeros(n_nodes)),
         node_coords=atlas_nodes, node_color=labels_colors,
-        title='score: {}, r2: {}'.format(list_of_scores[score], r2_scores_results[list_of_scores[score]]['r2'][0]),
+        title='score: {}, r2: {}'.format(list_of_scores[score], r2_scores_results[list_of_scores[score]]['r2']),
         colorbar=True)
     plt.show()
 

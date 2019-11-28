@@ -31,7 +31,7 @@ Author: Dhaif BEKHA (dhaif.bekha@cea.fr)
 
 # Results directory
 root_analysis_directory = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/' \
-                          'ConPagnon_data/patients_behavior_ACM/syntexp_zscore_081019/regression_analysis'
+                          'ConPagnon_data/patients_behavior_ACM/pc1_language_zscores_all_151119/regression_analysis'
 results_directory = os.path.join(root_analysis_directory, 'tangent')
 summary_results_directory = os.path.join(results_directory, 'summary')
 # models to read
@@ -42,10 +42,10 @@ whole_brain_models = ['mean_connectivity', 'mean_homotopic', 'mean_contralesiona
 # Variable to read
 variable_to_read = ['mean_connectivity', 'lesion_normalized']
 
-#network_name = ['DMN', 'Sensorimotor', 'Language',
- #              'Executive', 'Visuospatial', 'Primary_Visual',
-  #           'Secondary_Visual', 'MTL', 'Salience']
-network_name = ['Auditory', 'Precuneus', 'Basal_Ganglia']
+network_name = ['DMN', 'Sensorimotor', 'Language',
+               'Executive', 'Visuospatial', 'Primary_Visual',
+           'Secondary_Visual', 'MTL', 'Salience']
+#network_name = ['Auditory', 'Precuneus', 'Basal_Ganglia']
 
 kinds = ['correlation', 'partial correlation', 'tangent']
 correction_methods = ['fdr_bh', 'bonferroni']
@@ -59,18 +59,18 @@ regression_analysis_model.joint_models_correction(root_analysis_directory=root_a
                                                   correction_methods=correction_methods,
                                                   networks=None)
 
-regression_analysis_model.joint_models_correction(root_analysis_directory=root_analysis_directory,
-                                                  kinds=kinds,
-                                                  models=['intra', 'intra_homotopic', 'contra_intra',
-                                                          'ipsi_intra'],
-                                                  correction_methods=correction_methods,
-                                                  networks=['DMN', 'Executive', 'Language', 'MTL',
-                                                            'Primary_Visual', 'Salience', 'Secondary_Visual',
-                                                            'Sensorimotor', 'Visuospatial', 'Basal_Ganglia',
-                                                            'Precuneus', 'Auditory'])
+for network_model in network_models:
+    regression_analysis_model.joint_models_correction(root_analysis_directory=root_analysis_directory,
+                                                      kinds=kinds,
+                                                      models=[network_model],
+                                                      correction_methods=correction_methods,
+                                                      networks=['DMN', 'Executive', 'Language', 'MTL',
+                                                                'Primary_Visual', 'Salience', 'Secondary_Visual',
+                                                                'Sensorimotor', 'Visuospatial', 'Basal_Ganglia',
+                                                                'Precuneus', 'Auditory'])
 
 # Network level model
-network_models = ['intra_homotopic']
+network_models = ['contra_intra']
 
 network_dict = dict.fromkeys(network_name)
 
@@ -106,6 +106,7 @@ for network in network_name:
 networks_variable_results =[]
 for network in network_name:
     variable_to_read = ["intra_" + network + "_connectivity"]
+    #variable_to_read = ["lesion_normalized"]
     for model in network_models:
         for variable in variable_to_read:
             networks_variable_results.append(network_dict[network][model][variable])

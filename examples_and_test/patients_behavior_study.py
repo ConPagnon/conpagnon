@@ -90,7 +90,7 @@ individual_confounds_directory = \
 # output csv directory
 output_csv_directory_path = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif' \
                             '/ConPagnon_data/patients_behavior_ACM'
-score = 'syntcomp_zscore_081019'
+score = 'pc1_language_zscores_all_151119'
 output_csv_directory_path_score = os.path.join(output_csv_directory_path, score)
 output_csv_directory = data_management.create_directory(directory=output_csv_directory_path_score,
                                                         erase_previous=True)
@@ -577,8 +577,8 @@ for attribute in factor_keys:
 
 
 # Construct a corresponding ipsilesional and contralesional dictionary for controls
-n_left_tot = len(ipsi_dict['G'])
-n_right_tot = len(ipsi_dict['D'])
+n_left_tot = len(ipsi_dict['G']) if 'G' in ipsi_dict.keys() else 0
+n_right_tot = len(ipsi_dict['D']) if 'D' in ipsi_dict.keys() else 0
 
 # Compute the percentage of right lesion and left lesion
 n_total_patients = n_left_tot + n_right_tot
@@ -590,13 +590,31 @@ percent_right_lesioned = n_right_tot/n_total_patients
 # subjects connectivity matrices dictionary
 
 # First, the two group of patients
-ipsilesional_patients_connectivity_matrices = {
-    'patients': {**ipsi_dict['G'], **ipsi_dict['D']}
+if n_right_tot == 0 and n_left_regions != 0:
+
+    ipsilesional_patients_connectivity_matrices = {
+        'patients': {**ipsi_dict['G']}
+        }
+
+    contralesional_patients_connectivity_matrices = {
+         'patients': {**contra_dict['G']},
+       }
+elif n_left_tot == 0 and n_right_tot != 0:
+    ipsilesional_patients_connectivity_matrices = {
+        'patients': {**ipsi_dict['D']}
     }
 
-contralesional_patients_connectivity_matrices = {
-     'patients': {**contra_dict['G'], **contra_dict['D']},
-   }
+    contralesional_patients_connectivity_matrices = {
+        'patients': {**contra_dict['D']},
+    }
+else:
+    ipsilesional_patients_connectivity_matrices = {
+        'patients': {**ipsi_dict['G'], **ipsi_dict['D']}
+    }
+
+    contralesional_patients_connectivity_matrices = {
+        'patients': {**contra_dict['G'], **contra_dict['D']},
+    }
 
 # Merged overall patients and controls dictionaries
 ipsilesional_subjects_connectivity_matrices = dictionary_operations.merge_dictionary(
@@ -1007,7 +1025,7 @@ models_to_build = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', '
 variables_model = ['lesion_normalized']
 
 # Score of interest
-score_of_interest = 'syntaxComp_zscore'
+score_of_interest = 'pc1_language_zscores'
 
 model_network_list = ['DMN', 'Auditory', 'Executive',
                       'Language', 'Basal_Ganglia', 'MTL',
@@ -1038,150 +1056,13 @@ regression_analysis_model.regression_analysis_network_level_v2(groups=groups_in_
                                                                behavioral_dataframe=behavioral_data,
                                                                correction_method=correction_method)
 
-# Analysis of intra-network mean homotopic connectivity: correction for 12 models.
-regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
-                                                            kinds=kinds_to_model,
-                                                            networks_list=model_network_list,
-                                                            root_analysis_directory=output_csv_directory,
-                                                            network_model=['intra_homotopic'],
-                                                            variables_in_model=variables_model,
-                                                            behavioral_dataframe=behavioral_data,
-                                                            correction_method=correction_method,
-                                                            alpha=0.05)
-# Analysis of mean intra-network connectivity, mean ipsilesional intra-network connectivity,
-# mean contralesional intra-network connectivity. Except for Basal Ganglia, Precuneus,
-# and Auditory because for these network intra-network connectivity is just homotopic
-# connectivity.
-regression_analysis_model.regression_analysis_network_level(groups=groups_in_models,
-                                                            kinds=kinds_to_model,
-                                                            networks_list=ipsi_contra_model_network_list,
-                                                            root_analysis_directory=output_csv_directory,
-                                                            network_model=['ipsi_intra', 'contra_intra',
-                                                                           'intra'],
-                                                            variables_in_model=variables_model,
-                                                            behavioral_dataframe=behavioral_data,
-                                                            correction_method=correction_method,
-                                                            alpha=0.05)
 
-# Display of the results
-# The whole brain measures: whole brain mean connectivity,  mean homotopic, mean ipsilesional,
-# mean contralesional
-output_csv_directory = '/media/dhaif/db242421_data/ConPagnon_data/patients_behavior_ACM/wisc_cube_zscores'
-results_directory = os.path.join(output_csv_directory, 'regression_analysis')
-output_figure_directory = os.path.join(output_csv_directory, 'figures')
-model_to_plot = ['mean_connectivity', 'mean_homotopic', 'mean_ipsilesional', 'mean_contralesional']
-# network: ipsi, contra, intra
-model_network_list_1 = ['DMN', 'Executive',
-                      'Language',  'MTL',
-                      'Salience', 'Sensorimotor', 'Visuospatial',
-                      'Primary_Visual', 'Secondary_Visual']
-# network: whole brain scores
-model_network_list_2 = ['DMN', 'Auditory', 'Executive',
-                         'Language', 'Basal_Ganglia', 'MTL',
-                         'Salience', 'Sensorimotor', 'Visuospatial',
-                         'Primary_Visual', 'Precuneus', 'Secondary_Visual']
-
-model_network_list = model_network_list_2
-
-# Colors of network in the order of model networks list
-atlas_information_colors = atlas_information[['network', 'Color']]
-atlas_information_colors.set_index('network', inplace=True)
-network_colors = [np.array(atlas_information_colors.loc[network]['Color'])[0] for network in
-                  model_network_list]
-
-# Variable of interest
-variables_of_interest = ['wisc_cube_zscores', 'Sexe[T.M]', 'lesion_normalized']
-dict_results_variables = dict.fromkeys(variables_of_interest)
-correction = 'fdr_bh'
-# Global connectivity composite scores
-for variable in variables_of_interest:
-    for kind in kinds:
-        # For each king, fetch t values, and corrected p values
-        t_values = []
-        corrected_p_values = []
-        for model in model_to_plot:
-            # Read parameters file
-            model_result = data_management.read_csv(
-                csv_file=os.path.join(results_directory, kind, model + '_parameters.csv'))
-            # Fetch t values, and corrected p values for the current model
-            variable_t_values = np.array(model_result.loc[model_result['variables'] == variable]['t'])[0]
-            t_values.append(variable_t_values)
-            variable_p_values = np.array(model_result.loc[model_result['variables'] == variable][
-                                             correction + 'corrected_pvalues'])[0]
-            corrected_p_values.append(variable_p_values)
-
-        # Display the barplot for t and p values for each kind and variables
-        with backend_pdf.PdfPages(os.path.join(output_figure_directory, kind, kind + '_' + variable + '_' +
-                                               correction + '_mean_connectivity_ipsi_contra_homotopic.pdf')) as pdf:
-
-            t_and_p_values_barplot(t_values=t_values,
-                                   p_values=corrected_p_values,
-                                   alpha_level=alpha,
-                                   xlabel_color=['black', 'black', 'black', 'black'],
-                                   bar_labels=model_to_plot,
-                                   t_xlabel='',
-                                   t_ylabel='t scores',
-                                   p_xlabel='',
-                                   p_ylabel='{} p values'.format(correction),
-                                   t_title='{} effect for {}. \n ({}, {} corrected)'.format(
-                                       variable,
-                                       groupes[0],
-                                       kind,
-                                       correction),
-                                   p_title='{} effect for {}. \n ({}, {} corrected)'.format(
-                                       variable,
-                                       groupes[0],
-                                       kind,
-                                       correction),
-                                   xlabel_size=2)
-            pdf.savefig()
-            plt.show()
-
-# Network composite scores measures
-network_model = ['intra_homotopic']
-model_network_list = model_network_list_2
-correction = 'bonferroni'
-for tt in network_model:
-    for variable in variables_of_interest:
-        for kind in kinds:
-            # For each kind, fetch t values, and corrected p values
-            t_values = []
-            corrected_p_values = []
-            for network in model_network_list:
-                # Read parameters file
-                model_result = data_management.read_csv(
-                    csv_file=os.path.join(results_directory, kind, network, tt + '_parameters.csv'))
-                # Fetch t values, and corrected p values for the current model
-                variable_t_values = np.array(model_result.loc[model_result['variables'] == variable]['t'])[0]
-                t_values.append(variable_t_values)
-                variable_p_values = np.array(model_result.loc[model_result['variables'] == variable][
-                                                 correction + 'corrected_pvalues'])[0]
-                corrected_p_values.append(variable_p_values)
-
-            # Display the barplot for t and p values for each kind and variables
-            with backend_pdf.PdfPages(os.path.join(output_figure_directory,
-                                                   kind, correction + '_' + variable + '_' + tt + '_pdf')) as pdf:
-                t_and_p_values_barplot(t_values=t_values,
-                                       p_values=corrected_p_values,
-                                       alpha_level=alpha,
-                                       xlabel_color=network_colors,
-                                       bar_labels=model_network_list,
-                                       t_xlabel='',
-                                       t_ylabel='t scores',
-                                       p_xlabel='',
-                                       p_ylabel='FDR corrected p values',
-                                       t_title='{} network : {} effect for \n {} . ({}, {} corrected)'.format(
-                                           tt,
-                                           variable,
-                                           groupes[0],
-                                           kind,
-                                           correction),
-                                       p_title='{} network: {} effect for \n {} . ({}, {} corrected)'.format(
-                                           tt,
-                                           variable,
-                                           groupes[0],
-                                           kind,
-                                           correction),
-                                       xlabel_size=2)
-                pdf.savefig()
-                plt.show()
+regression_analysis_model.regression_analysis_network_level_v2(groups=groups_in_models,
+                                                               kinds=kinds,
+                                                               networks_list=model_network_list,
+                                                               root_analysis_directory=output_csv_directory,
+                                                               network_model=['intra_homotopic'],
+                                                               variables_in_model=variables_model,
+                                                               score_of_interest=score_of_interest,
+                                                               behavioral_dataframe=behavioral_data,
+                                                               correction_method=correction_method)
