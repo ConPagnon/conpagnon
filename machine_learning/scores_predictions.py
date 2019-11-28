@@ -35,10 +35,11 @@ def predict_scores(connectivity_matrices, raw_score,
                    alpha=0.01,
                    C=1,
                    alpha_ridge=1,
-                   estimator='svr'):
+                   estimator='svr',
+                   with_mean=False,
+                   with_std=False):
 
-    # Scale the scores
-    sc = StandardScaler()
+    sc = StandardScaler(with_std=with_std, with_mean=with_mean)
     # Store the score prediction for each subject
     score_pred = []
     # Store the prediction weight
@@ -74,7 +75,7 @@ def predict_scores(connectivity_matrices, raw_score,
             # Fit the model on the whole training set
             svr.fit(X=train_selected_features, y=train_scores.ravel())
             # Predict the score of the left out subjects
-            score_pred.append(svr.predict(X=test_selected_features))
+            score_pred.append(svr.predict(X=test_selected_features)[0])
             # Compute the weight of features of the estimator
             score_pred_weights.append(svr.coef_)
             # Append the indices of selected features
@@ -93,6 +94,6 @@ def predict_scores(connectivity_matrices, raw_score,
 
     # Compute R squared, as the squared correlation coefficient between predicted values, and
     # true scores values.
-    r2 = pearsonr(np.array(score_pred), scores)[0] ** 2
+    r2 = pearsonr(np.array(score_pred), scores[:, 0])[0] ** 2
 
     return r2, score_pred, score_pred_weights, score_selected_features

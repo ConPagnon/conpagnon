@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Update.">
-      <change beforePath="$PROJECT_DIR$/.idea/ConPagnon.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ConPagnon.iml" afterDir="false" />
+    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Perform new connectivity analysis.">
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/dhaif.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine_learning/scores_predictions.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/scores_predictions.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,12 +55,13 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="t_and_p_values_barplot&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python&#10;TEXT" />
-    <property name="last_opened_file_path" value="/neurospin/grip/protocols/MRI/Ines_2018/TBSS_scripts/tbss_compute_statistic.py" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python&#10;Shell Script&#10;TEXT" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.." />
       <recent name="$PROJECT_DIR$/examples_and_test" />
       <recent name="$PROJECT_DIR$/machine_learning/cythonized_version" />
       <recent name="$PROJECT_DIR$/machine_learning" />
@@ -312,14 +317,24 @@
       <workItem from="1558952590534" duration="13638000" />
       <workItem from="1570184832898" duration="248000" />
       <workItem from="1570800495726" duration="10923000" />
-      <workItem from="1570863721501" duration="10080000" />
-    </task>
-    <task id="LOCAL-00183" summary="Put good subject lists nip.">
-      <created>1549989215946</created>
-      <option name="number" value="00183" />
-      <option name="presentableId" value="LOCAL-00183" />
-      <option name="project" value="LOCAL" />
-      <updated>1549989215946</updated>
+      <workItem from="1570863721501" duration="10513000" />
+      <workItem from="1571641968070" duration="3428000" />
+      <workItem from="1571820533497" duration="54000" />
+      <workItem from="1571820596324" duration="7000" />
+      <workItem from="1574078107103" duration="14723000" />
+      <workItem from="1574154664956" duration="19146000" />
+      <workItem from="1574250017007" duration="2882000" />
+      <workItem from="1574334977290" duration="4874000" />
+      <workItem from="1574345573801" duration="879000" />
+      <workItem from="1574671655769" duration="414000" />
+      <workItem from="1574672791479" duration="2355000" />
+      <workItem from="1574675240057" duration="2000" />
+      <workItem from="1574675258500" duration="6129000" />
+      <workItem from="1574689179884" duration="9752000" />
+      <workItem from="1574778722475" duration="599000" />
+      <workItem from="1574783870420" duration="4928000" />
+      <workItem from="1574861838872" duration="1420000" />
+      <workItem from="1574937392504" duration="14481000" />
     </task>
     <task id="LOCAL-00184" summary="Begin process to subject 23">
       <created>1550217872028</created>
@@ -657,7 +672,14 @@
       <option name="project" value="LOCAL" />
       <updated>1557219411650</updated>
     </task>
-    <option name="localTasksCounter" value="232" />
+    <task id="LOCAL-00232" summary="Perform new connectivity analysis.">
+      <created>1570878387756</created>
+      <option name="number" value="00232" />
+      <option name="presentableId" value="LOCAL-00232" />
+      <option name="project" value="LOCAL" />
+      <updated>1570878387756</updated>
+    </task>
+    <option name="localTasksCounter" value="233" />
     <servers />
   </component>
   <component name="TodoView">
@@ -710,7 +732,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="tbss prepare statistic code: prepare the statistical analysis." />
     <MESSAGE value="tbss prepare statistic : bug for antsApplyTransform ..." />
     <MESSAGE value="Multiple updates...." />
     <MESSAGE value="TBSS almost finish...TIRED.&#10;Antoine preprocessing launched." />
@@ -735,7 +756,8 @@
     <MESSAGE value="Update." />
     <MESSAGE value="Update TBSS path for the neurospin network" />
     <MESSAGE value="Swap tbss prestats and display of skeleton in fslview." />
-    <option name="LAST_COMMIT_MESSAGE" value="Swap tbss prestats and display of skeleton in fslview." />
+    <MESSAGE value="Perform new connectivity analysis." />
+    <option name="LAST_COMMIT_MESSAGE" value="Perform new connectivity analysis." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
