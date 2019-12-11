@@ -16,7 +16,7 @@ as follow:
 """
 
 # Path prefix to the external drive containing the data
-prefix_path = "/media/db242421/Samsung_T5"
+prefix_path = "/media/dhaif/Samsung_T5"
 
 # directory path of the groups of images
 root_directory = os.path.join(prefix_path,
@@ -53,8 +53,8 @@ for subject in subjects:
     dwi_image = os.path.join(root_directory, subject, "motion_corrected_data",
                              "distortion_and_eddy_corrected_dti_" + subject + ".nii.gz")
     # Full path to bvec and bvals file
-    bvecs = os.path.join(root_directory, subject, "diffusion/nifti", "dti_" + subject + ".bval")
-    bvals = os.path.join(root_directory, subject, "diffusion/nifti", "dti_" + subject + ".bvec")
+    bvecs = os.path.join(root_directory, subject, "diffusion/nifti", "dti_" + subject + ".bvec")
+    bvals = os.path.join(root_directory, subject, "diffusion/nifti", "dti_" + subject + ".bval")
 
     # Copy and rename all the files into the results directory
     # according DTIinit filename rules:
