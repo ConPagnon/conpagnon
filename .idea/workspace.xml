@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="Perform new connectivity analysis.">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/dhaif.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="123ec223-66d6-46ed-a810-08daa22331c1" name="Default" comment="- Simply diffusion pre-processing&#10;- Clean and test the code: the_power_of_the_tangent_space.py&#10;- Perform other resting state analysis&#10;- Build results table from new resting state analysis&#10;- Correct function from code scores_predictions.py in the machine &#10;learning module.">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/dhaif.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/dhaif.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/build_results_tables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/dti_prepoc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/patients_behavior_study.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/the_power_of_the_tangent_space.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/machine_learning/scores_predictions.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine_learning/scores_predictions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples_and_test/AFQ_directories.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples_and_test/AFQ_directories.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,12 +45,17 @@
   </component>
   <component name="ProjectId" id="1RjeFa66jbyFPbZpjJIqvvrqS0Z" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="t_and_p_values_barplot&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python&#10;Shell Script&#10;TEXT" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../dipy/doc/examples/linear_fascicle_evaluation.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -66,18 +65,6 @@
       <recent name="$PROJECT_DIR$/machine_learning/cythonized_version" />
       <recent name="$PROJECT_DIR$/machine_learning" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Python.tbss_prepare_statistic_2">
     <configuration name="AFQ_tract_profile" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -229,6 +216,18 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -334,14 +333,16 @@
       <workItem from="1574778722475" duration="599000" />
       <workItem from="1574783870420" duration="4928000" />
       <workItem from="1574861838872" duration="1420000" />
-      <workItem from="1574937392504" duration="14481000" />
-    </task>
-    <task id="LOCAL-00184" summary="Begin process to subject 23">
-      <created>1550217872028</created>
-      <option name="number" value="00184" />
-      <option name="presentableId" value="LOCAL-00184" />
-      <option name="project" value="LOCAL" />
-      <updated>1550217872028</updated>
+      <workItem from="1574937392504" duration="17378000" />
+      <workItem from="1575296951208" duration="5548000" />
+      <workItem from="1575303424212" duration="573000" />
+      <workItem from="1575365605402" duration="49000" />
+      <workItem from="1575365663684" duration="4408000" />
+      <workItem from="1575380497381" duration="35000" />
+      <workItem from="1575381221853" duration="1184000" />
+      <workItem from="1575382917739" duration="997000" />
+      <workItem from="1575386761355" duration="3391000" />
+      <workItem from="1576056756871" duration="2070000" />
     </task>
     <task id="LOCAL-00185" summary="Loop over all controls subjects">
       <created>1550575265309</created>
@@ -679,7 +680,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570878387756</updated>
     </task>
-    <option name="localTasksCounter" value="233" />
+    <task id="LOCAL-00233" summary="- Simply diffusion pre-processing&#10;- Clean and test the code: the_power_of_the_tangent_space.py&#10;- Perform other resting state analysis&#10;- Build results table from new resting state analysis&#10;- Correct function from code scores_predictions.py in the machine &#10;learning module.">
+      <created>1574955576207</created>
+      <option name="number" value="00233" />
+      <option name="presentableId" value="LOCAL-00233" />
+      <option name="project" value="LOCAL" />
+      <updated>1574955576208</updated>
+    </task>
+    <option name="localTasksCounter" value="234" />
     <servers />
   </component>
   <component name="TodoView">
@@ -732,7 +740,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="tbss prepare statistic : bug for antsApplyTransform ..." />
     <MESSAGE value="Multiple updates...." />
     <MESSAGE value="TBSS almost finish...TIRED.&#10;Antoine preprocessing launched." />
     <MESSAGE value="Small routine to plot in a simple way results of the TBSS analysis." />
@@ -757,7 +764,30 @@
     <MESSAGE value="Update TBSS path for the neurospin network" />
     <MESSAGE value="Swap tbss prestats and display of skeleton in fslview." />
     <MESSAGE value="Perform new connectivity analysis." />
-    <option name="LAST_COMMIT_MESSAGE" value="Perform new connectivity analysis." />
+    <MESSAGE value="- Simply diffusion pre-processing&#10;- Clean and test the code: the_power_of_the_tangent_space.py&#10;- Perform other resting state analysis&#10;- Build results table from new resting state analysis&#10;- Correct function from code scores_predictions.py in the machine &#10;learning module." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Simply diffusion pre-processing&#10;- Clean and test the code: the_power_of_the_tangent_space.py&#10;- Perform other resting state analysis&#10;- Build results table from new resting state analysis&#10;- Correct function from code scores_predictions.py in the machine &#10;learning module." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="679" y="285" width="624" height="553" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1575365642348">
+      <screen x="67" y="27" width="1853" height="1052" />
+    </state>
+    <state x="679" y="285" width="624" height="553" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/67.27.1853.1052@67.27.1853.1052" timestamp="1575365642348" />
+    <state x="540" y="25" width="902" height="1054" key="CommitChangelistDialog2" timestamp="1576068795716">
+      <screen x="67" y="27" width="1853" height="1052" />
+    </state>
+    <state x="540" y="25" width="902" height="1054" key="CommitChangelistDialog2/67.27.1853.1052@67.27.1853.1052" timestamp="1576068795716" />
+    <state x="779" y="311" width="424" height="493" key="FileChooserDialogImpl" timestamp="1575389156932">
+      <screen x="67" y="27" width="1853" height="1052" />
+    </state>
+    <state x="779" y="311" width="424" height="493" key="FileChooserDialogImpl/67.27.1853.1052@67.27.1853.1052" timestamp="1575389156932" />
+    <state x="653" y="374" key="com.intellij.ide.util.TipDialog" timestamp="1576056757581">
+      <screen x="67" y="27" width="1853" height="1052" />
+    </state>
+    <state x="653" y="374" key="com.intellij.ide.util.TipDialog/67.27.1853.1052@67.27.1853.1052" timestamp="1576056757581" />
+    <state x="656" y="256" width="672" height="678" key="search.everywhere.popup" timestamp="1575389837574">
+      <screen x="67" y="27" width="1853" height="1052" />
+    </state>
+    <state x="656" y="256" width="672" height="678" key="search.everywhere.popup/67.27.1853.1052@67.27.1853.1052" timestamp="1575389837574" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
