@@ -8,9 +8,6 @@ named connectome predictive modelling is adapted from
 predict individual behavior from brain connectivity, Shen et al.
 
 author: Dhaif BEKHA.
-# TODO: Use GLM with both negative and positive values as predictor of behavioral variable
-# TODO: Estimate model efficience with other metrics such as MSE, instead of simple correlation
-# TODO: Estimate p-value of model power with permutations statistic
 """
 import numpy as np
 from pylearn_mulm import mulm
