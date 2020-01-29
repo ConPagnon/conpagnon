@@ -16,3 +16,6 @@ Code Documentation
 .. automodule:: data_handling.dictionary_operations
     :members:
 
+.. automodule:: machine_learning.CPM_method
+    :members:
+

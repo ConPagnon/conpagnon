@@ -95,7 +95,7 @@
 <p>&#64;author: Dhaif BEKHA</p>
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.create_connectivity_mask">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">create_connectivity_mask</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#create_connectivity_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.create_connectivity_mask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">create_connectivity_mask</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#create_connectivity_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.create_connectivity_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create boolean mask for each subjects accounting
 for discarded roi if they exist.</p>
 <dl>
@@ -129,7 +129,7 @@ masked array via the dedicated module in NumPy.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.extract_sub_connectivity_matrices">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">extract_sub_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_connectivity_matrices</em>, <em>kinds</em>, <em>regions_index</em>, <em>vectorize=False</em>, <em>discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#extract_sub_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.extract_sub_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">extract_sub_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">regions_index</em>, <em class="sig-param">vectorize=False</em>, <em class="sig-param">discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#extract_sub_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.extract_sub_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract sub matrices given region index.</p>
 <dl class="simple">
 <dt>subjects_connectivity_matrices: dict</dt><dd><p>The dictionnary containing for each subjects, for each group and kind, the
@@ -158,7 +158,7 @@ the extract sub-matrice, and the corresponding boolean mask.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.group_mean_connectivity">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">group_mean_connectivity</code><span class="sig-paren">(</span><em>subjects_connectivity_matrices</em>, <em>kinds</em>, <em>axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#group_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.group_mean_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">group_mean_connectivity</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#group_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.group_mean_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the mean connectivity matrices for each kind accounting for masked rois.</p>
 <p>Read the notes for the tangent space !</p>
 <dl>
@@ -214,7 +214,7 @@ This point is the geometric mean for the POOLED groups if multiple group are stu
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.individual_connectivity_matrices">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">individual_connectivity_matrices</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>kinds</em>, <em>covariance_estimator</em>, <em>vectorize=False</em>, <em>discarding_diagonal=False</em>, <em>z_fisher_transform=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#individual_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.individual_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">individual_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">covariance_estimator</em>, <em class="sig-param">vectorize=False</em>, <em class="sig-param">discarding_diagonal=False</em>, <em class="sig-param">z_fisher_transform=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#individual_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.individual_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the connectivity matrices for groups of subjects</p>
 <p>This function computes connectivity matrices for different metrics.</p>
 <dl>
@@ -303,7 +303,7 @@ nilearn.connectome.ConnectivityMeasure</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">inter_network_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionnary</em>, <em>groupes</em>, <em>kinds</em>, <em>atlas_file</em>, <em>sheetname</em>, <em>network_column_name</em>, <em>roi_indices_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#inter_network_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">inter_network_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">atlas_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">roi_indices_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#inter_network_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute for each subjects, the inter network connectivity matrices</p>
 <dl class="simple">
 <dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity matrices dictionnary for each groupes, and kind in the study.</p>
@@ -346,7 +346,7 @@ cognitive impairment”, Nature Publishing Group, 2015.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.intra_network_functional_connectivity">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">intra_network_functional_connectivity</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionnary</em>, <em>groupes</em>, <em>kinds</em>, <em>atlas_file</em>, <em>network_column_name</em>, <em>sheetname</em>, <em>roi_indices_column_name</em>, <em>color_of_network_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#intra_network_functional_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.intra_network_functional_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">intra_network_functional_connectivity</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">atlas_file</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">roi_indices_column_name</em>, <em class="sig-param">color_of_network_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#intra_network_functional_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.intra_network_functional_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute for each subjects, the intra network connectivity for each network in the study.</p>
 <dl class="simple">
 <dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
@@ -400,7 +400,7 @@ cognitive impairment”, Nature Publishing Group, 2015.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">mean_of_flatten_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionary</em>, <em>groupes</em>, <em>kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#mean_of_flatten_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">mean_of_flatten_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#mean_of_flatten_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the flat mean connectivity for each subjects.</p>
 <dl class="simple">
 <dt>subjects_individual_matrices_dictionary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
@@ -425,7 +425,7 @@ be (n_features, n_features).</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.pooled_groups_connectivity">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">pooled_groups_connectivity</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>kinds</em>, <em>covariance_estimator</em>, <em>vectorize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_connectivity</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">covariance_estimator</em>, <em class="sig-param">vectorize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute connectivity matrices of pooled groups.</p>
 <p>This function simply stack the all the times series of each group in one pooled groups and compute 
 the connectivity matrices  on the whole group. When computing the tangent kind this function is
@@ -478,7 +478,7 @@ choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.pooled_groups_tangent_mean">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">pooled_groups_tangent_mean</code><span class="sig-paren">(</span><em>time_series_dictionary</em>, <em>covariance_estimator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_tangent_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_tangent_mean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_tangent_mean</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">covariance_estimator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_tangent_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_tangent_mean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the geometric mean of covariances connectivity matrices for the tangent kind.</p>
 <p>The geometric mean is the point in the symmetric manifold matrices spaces 
 where the tangent space is defined. Therefore it’s make sense for the pooled
@@ -518,7 +518,7 @@ geometric mean.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.subjects_mean_connectivity_">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">subjects_mean_connectivity_</code><span class="sig-paren">(</span><em>subjects_individual_matrices_dictionnary</em>, <em>connectivity_coefficient_position</em>, <em>kinds</em>, <em>groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#subjects_mean_connectivity_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.subjects_mean_connectivity_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">subjects_mean_connectivity_</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">connectivity_coefficient_position</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#subjects_mean_connectivity_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.subjects_mean_connectivity_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute for each subjects, the mean connectivity for some connectivity coefficient in the general subjects
 connectivity matrices.</p>
 <dl class="simple">
@@ -546,8 +546,15 @@ be (n_features, n_features).</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="computing.compute_connectivity_matrices.tangent_space_projection">
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">tangent_space_projection</code><span class="sig-paren">(</span><em class="sig-param">reference_group</em>, <em class="sig-param">group_to_project</em>, <em class="sig-param">bootstrap_number</em>, <em class="sig-param">bootstrap_size</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">verif_null=True</em>, <em class="sig-param">correction_method='bonferroni'</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">statistic='t'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#tangent_space_projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.tangent_space_projection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project a group of time series to a space tangent to a reference connectivity matrix.
+The reference matrix is derived from a reference times series group.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="computing.compute_connectivity_matrices.time_series_extraction">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">time_series_extraction</code><span class="sig-paren">(</span><em>root_fmri_data_directory</em>, <em>groupes</em>, <em>subjects_id_data_path</em>, <em>reference_atlas</em>, <em>group_data</em>, <em>repetition_time</em>, <em>low_pass_filtering=None</em>, <em>high_pass_filtering=None</em>, <em>detrend_signal=True</em>, <em>standardize_signal=True</em>, <em>smooth_signal=None</em>, <em>resampling_target='data'</em>, <em>memory_level=1</em>, <em>nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">reference_atlas</em>, <em class="sig-param">group_data</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">low_pass_filtering=None</em>, <em class="sig-param">high_pass_filtering=None</em>, <em class="sig-param">detrend_signal=True</em>, <em class="sig-param">standardize_signal=True</em>, <em class="sig-param">smooth_signal=None</em>, <em class="sig-param">resampling_target='data'</em>, <em class="sig-param">memory_level=1</em>, <em class="sig-param">nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Times series extractions for each subjects on a common atlas.</p>
 <p>This function extract time series for each subjects according predefined regions on one common atlas.</p>
 <dl>
@@ -639,7 +646,7 @@ It’s should have a row column of ID for each subjects.</p>
 
 <dl class="function">
 <dt id="computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases">
-<code class="descclassname">computing.compute_connectivity_matrices.</code><code class="descname">time_series_extraction_with_individual_atlases</code><span class="sig-paren">(</span><em>root_fmri_data_directory</em>, <em>groupes</em>, <em>subjects_id_data_path</em>, <em>group_data</em>, <em>repetition_time</em>, <em>low_pass_filtering=None</em>, <em>high_pass_filtering=None</em>, <em>detrend_signal=True</em>, <em>standardize_signal=True</em>, <em>smooth_signal=None</em>, <em>resampling_target='data'</em>, <em>memory_level=1</em>, <em>nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction_with_individual_atlases</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">group_data</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">low_pass_filtering=None</em>, <em class="sig-param">high_pass_filtering=None</em>, <em class="sig-param">detrend_signal=True</em>, <em class="sig-param">standardize_signal=True</em>, <em class="sig-param">smooth_signal=None</em>, <em class="sig-param">resampling_target='data'</em>, <em class="sig-param">memory_level=1</em>, <em class="sig-param">nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Times series extractions for each subjects with an individual atlas.</p>
 <p>This function extract time series for each subjects according predefined regions in individual atlases.</p>
 <dl>
@@ -733,7 +740,7 @@ which must be declared as ‘void’ in the subject atlas labels files.</p>
 
 <span class="target" id="module-connectivity_statistics.non_parametric_tests"></span><span class="target" id="module-data_handling.atlas"></span><dl class="class">
 <dt id="data_handling.atlas.Atlas">
-<em class="property">class </em><code class="descclassname">data_handling.atlas.</code><code class="descname">Atlas</code><span class="sig-paren">(</span><em>path</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">Atlas</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class Atlas for computing useful information when dealing with
 atlases.</p>
 <dl class="simple">
@@ -754,7 +761,7 @@ labels for display purpose.</p>
 </dl>
 <dl class="method">
 <dt id="data_handling.atlas.Atlas.GetLabels">
-<code class="descname">GetLabels</code><span class="sig-paren">(</span><em>labelsFile</em>, <em>colname='labels'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.GetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.GetLabels" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">GetLabels</code><span class="sig-paren">(</span><em class="sig-param">labelsFile</em>, <em class="sig-param">colname='labels'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.GetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.GetLabels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the labels text file of the atlas</p>
 <dl class="simple">
 <dt>labelsFile<span class="classifier">str</span></dt><dd><p>The full path to the label file of the atlas. Supported
@@ -774,13 +781,13 @@ If no header, leave None.</p>
 
 <dl class="method">
 <dt id="data_handling.atlas.Atlas.fetch_atlas">
-<code class="descname">fetch_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the complete path to the atlas file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="data_handling.atlas.Atlas.get_center_of_mass">
-<code class="descname">get_center_of_mass</code><span class="sig-paren">(</span><em>asanarray=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.get_center_of_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.get_center_of_mass" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_center_of_mass</code><span class="sig-paren">(</span><em class="sig-param">asanarray=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.get_center_of_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.get_center_of_mass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute centers of mass of the different atlas regions.</p>
 <dl class="simple">
 <dt>asanarray<span class="classifier">bool, optional</span></dt><dd><p>If True, then the array are return if numpy.array of 
@@ -796,20 +803,20 @@ of the atlas.</p>
 
 <dl class="method">
 <dt id="data_handling.atlas.Atlas.get_region_numbers">
-<code class="descname">get_region_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.get_region_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.get_region_numbers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_region_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.get_region_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.get_region_numbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of regions of the atlas</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="data_handling.atlas.Atlas.load_atlas">
-<code class="descname">load_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.load_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.load_atlas" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.load_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.load_atlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the atlas image and return the corresponding
 4D numpy array.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="data_handling.atlas.Atlas.user_labels_colors">
-<code class="descname">user_labels_colors</code><span class="sig-paren">(</span><em>networks</em>, <em>colors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.user_labels_colors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.user_labels_colors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">user_labels_colors</code><span class="sig-paren">(</span><em class="sig-param">networks</em>, <em class="sig-param">colors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.user_labels_colors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.user_labels_colors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates user defined labels colors for each label of the atlas.</p>
 <dl class="simple">
 <dt>networks<span class="classifier">list</span></dt><dd><p>The list containing the numbers of regions for each networks.</p>
@@ -831,13 +838,13 @@ you just have divided the values of this array by 255.</p>
 
 <dl class="function">
 <dt id="data_handling.atlas.fetch_atlas">
-<code class="descclassname">data_handling.atlas.</code><code class="descname">fetch_atlas</code><span class="sig-paren">(</span><em>atlas_folder</em>, <em>atlas_name</em>, <em>colors_labels='auto'</em>, <em>network_regions_number='auto'</em>, <em>labels='auto'</em>, <em>normalize_colors=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><em class="sig-param">atlas_folder</em>, <em class="sig-param">atlas_name</em>, <em class="sig-param">colors_labels='auto'</em>, <em class="sig-param">network_regions_number='auto'</em>, <em class="sig-param">labels='auto'</em>, <em class="sig-param">normalize_colors=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return important information from an atlas file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.atlas.fetch_atlas_functional_network">
-<code class="descclassname">data_handling.atlas.</code><code class="descname">fetch_atlas_functional_network</code><span class="sig-paren">(</span><em>atlas_excel_file</em>, <em>sheetname</em>, <em>network_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#fetch_atlas_functional_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.fetch_atlas_functional_network" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">fetch_atlas_functional_network</code><span class="sig-paren">(</span><em class="sig-param">atlas_excel_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">network_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#fetch_atlas_functional_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.fetch_atlas_functional_network" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Return a dictionary containing information for all functional networks.</dt><dd><p>Information for all network is simply fetch in the excel file.</p>
 </dd>
@@ -859,19 +866,19 @@ of roi for each networks as values.</p>
 
 <dl class="function">
 <dt id="data_handling.atlas.generate_3d_img_network">
-<code class="descclassname">data_handling.atlas.</code><code class="descname">generate_3d_img_network</code><span class="sig-paren">(</span><em>reference_4datlas</em>, <em>atlas_information_xlsx_file</em>, <em>network_column_name</em>, <em>sheetname</em>, <em>atlas4d_index_keys</em>, <em>atlas3d_label_key</em>, <em>save_network_img_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#generate_3d_img_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.generate_3d_img_network" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">generate_3d_img_network</code><span class="sig-paren">(</span><em class="sig-param">reference_4datlas</em>, <em class="sig-param">atlas_information_xlsx_file</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">atlas4d_index_keys</em>, <em class="sig-param">atlas3d_label_key</em>, <em class="sig-param">save_network_img_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#generate_3d_img_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.generate_3d_img_network" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function generate a 3D NifTi file for each defined functional network in a 4D atlas.</p>
 </dd></dl>
 
 <span class="target" id="module-data_handling.data_management"></span><dl class="function">
 <dt id="data_handling.data_management.concatenate_dataframes">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">concatenate_dataframes</code><span class="sig-paren">(</span><em>list_of_dataframes</em>, <em>axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#concatenate_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.concatenate_dataframes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">concatenate_dataframes</code><span class="sig-paren">(</span><em class="sig-param">list_of_dataframes</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#concatenate_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.concatenate_dataframes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of pandas DataFrame</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.csv_from_dictionary">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">csv_from_dictionary</code><span class="sig-paren">(</span><em>subjects_dictionary</em>, <em>groupes</em>, <em>kinds</em>, <em>field_to_write</em>, <em>header</em>, <em>csv_filename</em>, <em>output_directory</em>, <em>delimiter='</em>, <em>'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#csv_from_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.csv_from_dictionary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">csv_from_dictionary</code><span class="sig-paren">(</span><em class="sig-param">subjects_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">field_to_write</em>, <em class="sig-param">header</em>, <em class="sig-param">csv_filename</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#csv_from_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.csv_from_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a csv file from a subjects dictionary.</p>
 <dl class="simple">
 <dt>subjects_dictionary: dict</dt><dd><p>A dictionnary with the same structure as a
@@ -900,25 +907,25 @@ Default is a comma.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.csv_from_intra_network_dictionary">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">csv_from_intra_network_dictionary</code><span class="sig-paren">(</span><em>subjects_dictionary</em>, <em>groupes</em>, <em>kinds</em>, <em>network_labels_list</em>, <em>field_to_write</em>, <em>output_directory</em>, <em>csv_prefix</em>, <em>delimiter='</em>, <em>'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#csv_from_intra_network_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.csv_from_intra_network_dictionary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">csv_from_intra_network_dictionary</code><span class="sig-paren">(</span><em class="sig-param">subjects_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">network_labels_list</em>, <em class="sig-param">field_to_write</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">csv_prefix</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#csv_from_intra_network_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.csv_from_intra_network_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write csv file from the intra-network connectivity dictionary structure.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.dataframe_to_csv">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">dataframe_to_csv</code><span class="sig-paren">(</span><em>dataframe</em>, <em>path</em>, <em>delimiter='</em>, <em>'</em>, <em>index=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#dataframe_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.dataframe_to_csv" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">dataframe_to_csv</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">path</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em>, <em class="sig-param">index=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#dataframe_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.dataframe_to_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and write a CSV file from a DataFrame</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.dictionary_to_csv">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">dictionary_to_csv</code><span class="sig-paren">(</span><em>dictionary</em>, <em>output_dir</em>, <em>output_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#dictionary_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.dictionary_to_csv" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">dictionary_to_csv</code><span class="sig-paren">(</span><em class="sig-param">dictionary</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">output_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#dictionary_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.dictionary_to_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write dictionary couple (key, value) in a CSV file</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.flatten">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">flatten</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.flatten" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">flatten</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten a list of numpy ND-array</p>
 <dl class="simple">
 <dt>values: list</dt><dd><p>A list of numpy array, with same or different dimensions.</p>
@@ -933,7 +940,7 @@ the values in the same order of the list of array.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.group_by_factors">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">group_by_factors</code><span class="sig-paren">(</span><em>dataframe</em>, <em>list_of_factors</em>, <em>return_type='list_of_dataframe'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#group_by_factors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.group_by_factors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">group_by_factors</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">list_of_factors</em>, <em class="sig-param">return_type='list_of_dataframe'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#group_by_factors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.group_by_factors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Group by factors present in a dataframe</p>
 <dl class="simple">
 <dt>dataframe: pandas.DataFrame</dt><dd><p>A pandas dataframe.</p>
@@ -956,7 +963,7 @@ Default is <cite>list_of_dataframe</cite>.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.merge_by_index">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">merge_by_index</code><span class="sig-paren">(</span><em>dataframe1</em>, <em>dataframe2</em>, <em>left_index=True</em>, <em>right_index=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#merge_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.merge_by_index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">merge_by_index</code><span class="sig-paren">(</span><em class="sig-param">dataframe1</em>, <em class="sig-param">dataframe2</em>, <em class="sig-param">left_index=True</em>, <em class="sig-param">right_index=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#merge_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.merge_by_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge two dataframes based on the index concordances</p>
 <dl class="simple">
 <dt>dataframe1: pandas.DataFrame</dt><dd><p>A panda dataframe</p>
@@ -980,13 +987,13 @@ the final dataframe.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.merge_list_dataframes">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">merge_list_dataframes</code><span class="sig-paren">(</span><em>list_dataframes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#merge_list_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.merge_list_dataframes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">merge_list_dataframes</code><span class="sig-paren">(</span><em class="sig-param">list_dataframes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#merge_list_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.merge_list_dataframes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge a list of dataframes</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.read_csv">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">read_csv</code><span class="sig-paren">(</span><em>csv_file</em>, <em>delimiter='</em>, <em>'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.read_csv" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">read_csv</code><span class="sig-paren">(</span><em class="sig-param">csv_file</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.read_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a CSV file and return a panda.DataFrame</p>
 <dl class="simple">
 <dt>csv_file: str</dt><dd><p>The full path to the CSV file to read</p>
@@ -998,30 +1005,32 @@ the final dataframe.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.read_excel_file">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">read_excel_file</code><span class="sig-paren">(</span><em>excel_file_path</em>, <em>sheetname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#read_excel_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.read_excel_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">read_excel_file</code><span class="sig-paren">(</span><em class="sig-param">excel_file_path</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">subjects_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#read_excel_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.read_excel_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a excel document</p>
 <dl class="simple">
 <dt>excel_file_path: str</dt><dd><p>Full path to the excel document</p>
 </dd>
 <dt>sheetname: str</dt><dd><p>The sheetname to read in the excel document</p>
 </dd>
+<dt>subjects_column_name: str</dt><dd><p>The column name containing the subjects identifiers.</p>
+</dd>
 </dl>
 <dl class="simple">
-<dt>output: pandas.DataFrame</dt><dd><p>A panda DataFrame</p>
+<dt>output: pandas.DataFrame</dt><dd><p>A panda DataFrame, indexed by subject name.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.remove_duplicate">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">remove_duplicate</code><span class="sig-paren">(</span><em>seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#remove_duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.remove_duplicate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">remove_duplicate</code><span class="sig-paren">(</span><em class="sig-param">seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#remove_duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.remove_duplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove duplicate in a sequence of items while keeping
 the order.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.data_management.shift_index_column">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">shift_index_column</code><span class="sig-paren">(</span><em>panda_dataframe</em>, <em>columns_to_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#shift_index_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.shift_index_column" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">shift_index_column</code><span class="sig-paren">(</span><em class="sig-param">panda_dataframe</em>, <em class="sig-param">columns_to_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#shift_index_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.shift_index_column" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shift the index column of a pandas DataFrame</p>
 <dl class="simple">
 <dt>panda_dataframe: pandas.DataFrame</dt><dd><p>A pandas dataframe.</p>
@@ -1037,7 +1046,7 @@ the order.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.unflatten">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">unflatten</code><span class="sig-paren">(</span><em>flat_values</em>, <em>prototype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#unflatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.unflatten" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">unflatten</code><span class="sig-paren">(</span><em class="sig-param">flat_values</em>, <em class="sig-param">prototype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#unflatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.unflatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unflatten a one dimension array of values to the
 original list of array.</p>
 <dl class="simple">
@@ -1054,19 +1063,23 @@ original list of array.</p>
 
 <dl class="function">
 <dt id="data_handling.data_management.write_ols_results">
-<code class="descclassname">data_handling.data_management.</code><code class="descname">write_ols_results</code><span class="sig-paren">(</span><em>ols_fit</em>, <em>design_matrix</em>, <em>response_variable</em>, <em>output_dir</em>, <em>model_name</em>, <em>design_matrix_index_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#write_ols_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.write_ols_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">write_ols_results</code><span class="sig-paren">(</span><em class="sig-param">ols_fit</em>, <em class="sig-param">design_matrix</em>, <em class="sig-param">response_variable</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">model_name</em>, <em class="sig-param">design_matrix_index_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#write_ols_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.write_ols_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write OLS result, along with the design matrix and the variable to explain.</p>
 </dd></dl>
 
 <span class="target" id="module-data_handling.dictionary_operations"></span><dl class="function">
 <dt id="data_handling.dictionary_operations.groupby_factor_connectivity_matrices">
-<code class="descclassname">data_handling.dictionary_operations.</code><code class="descname">groupby_factor_connectivity_matrices</code><span class="sig-paren">(</span><em>population_data_file</em>, <em>sheetname</em>, <em>subjects_connectivity_matrices_dictionnary</em>, <em>groupes</em>, <em>factors</em>, <em>drop_subjects_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#groupby_factor_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.groupby_factor_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Group by attribute the subjects connectivity matrices.</p>
+<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">groupby_factor_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">population_data_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">subjects_connectivity_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">factors</em>, <em class="sig-param">drop_subjects_list=None</em>, <em class="sig-param">index_col=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#groupby_factor_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.groupby_factor_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group by attribute the subjects connectivity matrices.
+# TODO: 18/09/2019: I added index_col to precise the index of the column
+# TODO: to be considered as the index of the whole dataframe.
+# TODO: Side Note: this function work with a time series dictionary too. !!
+# TODO: Refractoring of subjects_connectivity_matrices_dictionary to subjects_dictionary.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="data_handling.dictionary_operations.merge_dictionary">
-<code class="descclassname">data_handling.dictionary_operations.</code><code class="descname">merge_dictionary</code><span class="sig-paren">(</span><em>dict_list</em>, <em>new_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#merge_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.merge_dictionary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">merge_dictionary</code><span class="sig-paren">(</span><em class="sig-param">dict_list</em>, <em class="sig-param">new_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#merge_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.merge_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge a list of dictionary</p>
 <dl class="simple">
 <dt>new_key: str, optional</dt><dd><p>The key of the new merged dictionary. If None, the
@@ -1087,7 +1100,7 @@ different keys.</p>
 
 <dl class="function">
 <dt id="data_handling.dictionary_operations.random_draw_of_connectivity_matrices">
-<code class="descclassname">data_handling.dictionary_operations.</code><code class="descname">random_draw_of_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_connectivity_dictionary</em>, <em>groupe</em>, <em>n_matrices</em>, <em>subjects_id_list=None</em>, <em>random_state=None</em>, <em>extract_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#random_draw_of_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.random_draw_of_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">random_draw_of_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupe</em>, <em class="sig-param">n_matrices</em>, <em class="sig-param">subjects_id_list=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">extract_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#random_draw_of_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.random_draw_of_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly pick N connectivity matrices from a subjects connectivity dictionnary.</p>
 <dl class="simple">
 <dt>subjects_connectivity_dictionary: dict</dt><dd><p>The subjects dictionnary containing connectivity matrices</p>
@@ -1122,7 +1135,7 @@ randomly.</p>
 
 <dl class="function">
 <dt id="data_handling.dictionary_operations.rebuild_subject_connectivity_matrices">
-<code class="descclassname">data_handling.dictionary_operations.</code><code class="descname">rebuild_subject_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_connectivity_dictionary</em>, <em>groupes</em>, <em>kinds</em>, <em>diagonal_were_kept=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#rebuild_subject_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.rebuild_subject_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">rebuild_subject_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">diagonal_were_kept=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#rebuild_subject_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.rebuild_subject_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the subject connectivity dictionary, the matrix are rebuild from the vectorized
 one.</p>
 <dl class="simple">
@@ -1155,7 +1168,7 @@ error will be raises otherwise.</p>
 
 <dl class="function">
 <dt id="data_handling.dictionary_operations.stack_subjects_connectivity_matrices">
-<code class="descclassname">data_handling.dictionary_operations.</code><code class="descname">stack_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em>subjects_connectivity_dictionary</em>, <em>groupes</em>, <em>kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#stack_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.stack_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">stack_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#stack_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.stack_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Re-arrange the subjects connectivity dictionary to return a stack version per group
 and kind.</p>
 <dl class="field-list simple">
@@ -1170,6 +1183,81 @@ and kind.</p>
 <dd class="field-even"><p></p>
 </dd>
 </dl>
+</dd></dl>
+
+<span class="target" id="module-machine_learning.CPM_method"></span><p>This module is designed to study the link between
+functional connectivity and behaviour. The algorithm
+named connectome predictive modelling is adapted from
+[1].</p>
+<dl class="footnote brackets">
+<dt class="label" id="id6"><span class="brackets">1</span></dt>
+<dd><p>Using connectome-based predictive modeling to</p>
+</dd>
+</dl>
+<p>predict individual behavior from brain connectivity, Shen et al.</p>
+<p>author: Dhaif BEKHA.</p>
+<dl class="function">
+<dt id="machine_learning.CPM_method.fit_model_on_training_set">
+<code class="sig-prename descclassname">machine_learning.CPM_method.</code><code class="sig-name descname">fit_model_on_training_set</code><span class="sig-paren">(</span><em class="sig-param">negative_edges_summary_values</em>, <em class="sig-param">positive_edges_summary_values</em>, <em class="sig-param">training_set_behavioral_score</em>, <em class="sig-param">add_predictive_variables=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/machine_learning/CPM_method.html#fit_model_on_training_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#machine_learning.CPM_method.fit_model_on_training_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a linear model on the training set for positive and negative model, with behavioral score
+as variable.</p>
+<dl class="simple">
+<dt>negative_edges_summary_values: numpy.array, shape(n_subjects_in_training_set, )</dt><dd><p>The sum of predictors for each subject in the training set
+having a negative correlation with the behavioral scores.</p>
+</dd>
+<dt>positive_edges_summary_values: numpy.array, shape(n_subjects_in_training_set, )</dt><dd><p>The sum of predictors for each subject in the training set
+having a positive correlation with the behavioral scores.</p>
+</dd>
+<dt>training_set_behavioral_score: numpy.array, shape (n_subjects_in_training_set, 1)</dt><dd><p>The behavioral scores of the training set.</p>
+</dd>
+<dt>add_predictive_variables: pandas.DataFrame, optional</dt><dd><p>If not None, a pandas DataFrame of shape (n_subjects_in_training_set, n_variables) should
+be given. The variables wil be used in the predictive model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="machine_learning.CPM_method.predict_behavior">
+<code class="sig-prename descclassname">machine_learning.CPM_method.</code><code class="sig-name descname">predict_behavior</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">behavioral_scores</em>, <em class="sig-param">selection_predictor_method='correlation'</em>, <em class="sig-param">significance_selection_threshold=0.01</em>, <em class="sig-param">confounding_variables_matrix=None</em>, <em class="sig-param">add_predictive_variables=None</em>, <em class="sig-param">verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/machine_learning/CPM_method.html#predict_behavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#machine_learning.CPM_method.predict_behavior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict behavior from matrix connectivity with a simple linear model.</p>
+<dl class="simple">
+<dt>vectorized_connectivity_matrices: numpy.array, shape (n_sample, n_features)</dt><dd><p>The subjects connectivity matrices in a vectorized form, i.e, you must
+give a array of shape (n_subjects, 0.5*n_features*(n_features-1)).</p>
+</dd>
+<dt>behavioral_scores: pandas.DataFrame or numpy.array of shape(n_subjects, 1)</dt><dd><p>The behavioral scores in a pandas DataFrame or numpy array form. Off course
+the behavioral scores should ordered in the same order of subjects matrices.</p>
+</dd>
+<dt>selection_predictor_method: str, optional</dt><dd><p>The selection method of predictors. When relate behavior and functional connectivity
+multiple choices are possible: simple correlation, partial correlation or linear_model.
+Default is correlation. Note that partial correlation or linear model should give
+the same results.</p>
+</dd>
+<dt>significance_selection_threshold: float, optional</dt><dd><p>The threshold level for the p-value resulting of the selection of predictors
+step. Default is 0.01.</p>
+</dd>
+<dt>confounding_variables_matrix: pandas.DataFrame of shape (n_subjects, n_variables), optional</dt><dd><p>A dataframe  of shape (n_subjects, n_variables) containing the confounding/controlling
+variable which might be used in the selection predictors step when selection method is
+partial correlation/linear regression. Defaults is None.</p>
+</dd>
+<dt>add_predictive_variables: pandas.DataFrame shape (n_subjects_in_training_set, n_variables) or None, optional</dt><dd><p>If not None, additional variables will be fitted in the predictive model, besides negative
+and positive summary features.</p>
+</dd>
+<dt>verbose: int, optional</dt><dd><p>If verbose equal to 0 nothing is printed.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>output 1: float</dt><dd><p>The correlation coefficient for the positive features model.</p>
+</dd>
+<dt>output 2: float</dt><dd><p>The correlation coefficient for the negative features model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="machine_learning.CPM_method.predictors_selection_linear_model">
+<code class="sig-prename descclassname">machine_learning.CPM_method.</code><code class="sig-name descname">predictors_selection_linear_model</code><span class="sig-paren">(</span><em class="sig-param">training_connectivity_matrices</em>, <em class="sig-param">training_confound_variable_matrix</em>, <em class="sig-param">training_set_behavioral_score</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/machine_learning/CPM_method.html#predictors_selection_linear_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#machine_learning.CPM_method.predictors_selection_linear_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relate each edges of subjects connectivity matrices in the training set
+with a behavioral scores using a linear model</p>
 </dd></dl>
 
 </div>

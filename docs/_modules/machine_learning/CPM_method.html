@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>machine_learning.CPM_method &#8212; Python  documentation</title>
+    <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Python  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar">
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../../index.html">Docs</a></li>
+              
+                <li><a href="../index.html">Module code</a></li>
+              
+              <li>machine_learning.CPM_method</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <h1>Source code for machine_learning.CPM_method</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module is designed to study the link between</span>
+<span class="sd">functional connectivity and behaviour. The algorithm</span>
+<span class="sd">named connectome predictive modelling is adapted from</span>
+<span class="sd">[1].</span>
+
+<span class="sd">.. [1] Using connectome-based predictive modeling to</span>
+<span class="sd">predict individual behavior from brain connectivity, Shen et al.</span>
+
+<span class="sd">author: Dhaif BEKHA.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pylearn_mulm</span> <span class="k">import</span> <span class="n">mulm</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">t</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">connectivity_statistics.parametric_tests</span> <span class="k">import</span> <span class="n">partial_corr</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">LeaveOneOut</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contain useful function for the connectome predictive modelling algorithm.</span>
+
+
+<span class="sd">Author: Dhaif BEKHA.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="predictors_selection_linear_model"><a class="viewcode-back" href="../../code.html#machine_learning.CPM_method.predictors_selection_linear_model">[docs]</a><span class="k">def</span> <span class="nf">predictors_selection_linear_model</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="p">,</span>
+                                      <span class="n">training_confound_variable_matrix</span><span class="p">,</span>
+                                      <span class="n">training_set_behavioral_score</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Relate each edges of subjects connectivity matrices in the training set</span>
+<span class="sd">    with a behavioral scores using a linear model</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fit linear model at each edge</span>
+    <span class="n">n_edge</span> <span class="o">=</span> <span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">t_stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edge</span><span class="p">)</span>
+    <span class="n">p_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edge</span><span class="p">)</span>
+    <span class="n">df_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edge</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_edge</span><span class="p">):</span>
+        <span class="n">X_train_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                             <span class="n">training_connectivity_matrices</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">training_confound_variable_matrix</span><span class="p">)]</span>
+        <span class="c1"># Fit a linear model</span>
+        <span class="n">training_set_model</span> <span class="o">=</span> <span class="n">mulm</span><span class="o">.</span><span class="n">MUOLS</span><span class="p">(</span><span class="n">training_set_behavioral_score</span><span class="p">,</span> <span class="n">X_train_edge</span><span class="p">)</span>
+        <span class="n">contrasts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">X_train_edge</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">t_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">training_set_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">t_test</span><span class="p">(</span><span class="n">contrasts</span><span class="p">,</span> <span class="n">pval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">two_tailed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Append t value for the principal predictor of interest, i.e the connectivity coefficient</span>
+        <span class="n">t_stats</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t_value</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">p_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_value</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="c1"># For each edges convert the t statistic of the linear model in correlation</span>
+    <span class="c1"># coefficient value</span>
+    <span class="n">R_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">t_stats</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">t_stats</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">df_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">t_stats</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">P_mat</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_stats</span><span class="p">),</span> <span class="n">df_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span></div>
+
+
+<span class="k">def</span> <span class="nf">predictors_selection_correlation</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="p">,</span> 
+                                     <span class="n">training_set_behavioral_scores</span><span class="p">):</span>
+    <span class="n">R_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">P_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="c1"># Simple correlation between each edges and behavior</span>
+        <span class="n">R_mat</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">P_mat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">training_set_behavioral_scores</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                            <span class="n">y</span><span class="o">=</span><span class="n">training_connectivity_matrices</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span>
+
+
+<span class="k">def</span> <span class="nf">predictor_selection_pcorrelation</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="p">,</span>
+                                     <span class="n">training_set_behavioral_scores</span><span class="p">,</span>
+                                     <span class="n">training_set_confounding_variables</span><span class="p">):</span>
+    <span class="c1"># Matrix which will contain the correlation of each edge to behavior, and the corresponding</span>
+    <span class="c1"># p values</span>
+    <span class="n">R_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Construct temporary array to contain the connectivity, behavior and</span>
+    <span class="c1"># other variable to regress</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">R_</span> <span class="o">=</span> <span class="n">partial_corr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">training_connectivity_matrices</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span>
+                                <span class="n">training_set_behavioral_scores</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                <span class="n">training_set_confounding_variables</span><span class="p">])</span>
+        <span class="n">R_mat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">R_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">training_set_confounding_variables</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Compute p values manually: convert R values in t statistic</span>
+    <span class="n">t_mat</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R_mat</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">R_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">R_mat</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="c1"># Compute two tailed p value</span>
+    <span class="n">P_mat</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_mat</span><span class="p">),</span> <span class="n">df</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span>
+
+
+<span class="k">def</span> <span class="nf">compute_summary_subjects_summary_values</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="p">,</span>
+                                            <span class="n">significance_selection_threshold</span><span class="p">,</span>
+                                            <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span><span class="p">):</span>
+    <span class="c1"># Positive and Negative correlation indices, under the selection threshold</span>
+    <span class="n">negative_edges_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">((</span><span class="n">R_mat</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">P_mat</span> <span class="o">&lt;</span> <span class="n">significance_selection_threshold</span><span class="p">))</span>
+    <span class="n">positives_edges_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">((</span><span class="n">R_mat</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">P_mat</span> <span class="o">&lt;</span> <span class="n">significance_selection_threshold</span><span class="p">))</span>
+
+    <span class="n">negative_edges_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">positive_edges_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Fill the corresponding indices with 1 if indices exist, zero elsewhere</span>
+    <span class="n">negative_edges_mask</span><span class="p">[</span><span class="n">negative_edges_indices</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">positive_edges_mask</span><span class="p">[</span><span class="n">positives_edges_indices</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># Get the sum off all edges in the mask</span>
+    <span class="n">negative_edges_summary_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">positive_edges_summary_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">negative_edges_summary_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">negative_edges_mask</span><span class="p">,</span>
+                                                              <span class="n">training_connectivity_matrices</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]))</span>
+        <span class="n">positive_edges_summary_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">positive_edges_mask</span><span class="p">,</span>
+                                                              <span class="n">training_connectivity_matrices</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">negative_edges_mask</span><span class="p">,</span> <span class="n">positive_edges_mask</span><span class="p">,</span> <span class="n">negative_edges_summary_values</span><span class="p">,</span> \
+           <span class="n">positive_edges_summary_values</span>
+
+
+<div class="viewcode-block" id="fit_model_on_training_set"><a class="viewcode-back" href="../../code.html#machine_learning.CPM_method.fit_model_on_training_set">[docs]</a><span class="k">def</span> <span class="nf">fit_model_on_training_set</span><span class="p">(</span><span class="n">negative_edges_summary_values</span><span class="p">,</span> <span class="n">positive_edges_summary_values</span><span class="p">,</span>
+                              <span class="n">training_set_behavioral_score</span><span class="p">,</span> <span class="n">add_predictive_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fit a linear model on the training set for positive and negative model, with behavioral score</span>
+<span class="sd">    as variable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    negative_edges_summary_values: numpy.array, shape(n_subjects_in_training_set, )</span>
+<span class="sd">        The sum of predictors for each subject in the training set</span>
+<span class="sd">        having a negative correlation with the behavioral scores.</span>
+<span class="sd">    positive_edges_summary_values: numpy.array, shape(n_subjects_in_training_set, )</span>
+<span class="sd">        The sum of predictors for each subject in the training set</span>
+<span class="sd">        having a positive correlation with the behavioral scores.</span>
+<span class="sd">    training_set_behavioral_score: numpy.array, shape (n_subjects_in_training_set, 1)</span>
+<span class="sd">        The behavioral scores of the training set.</span>
+<span class="sd">    add_predictive_variables: pandas.DataFrame, optional</span>
+<span class="sd">        If not None, a pandas DataFrame of shape (n_subjects_in_training_set, n_variables) should</span>
+<span class="sd">        be given. The variables wil be used in the predictive model.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fit a linear model on the training set, for negative and positive edges summary values</span>
+    <span class="n">design_matrix_negative_edges</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">negative_edges_summary_values</span><span class="p">)</span>
+
+    <span class="n">design_matrix_positive_edges</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">positive_edges_summary_values</span><span class="p">)</span>
+
+    <span class="c1"># if the user add additional to the predictive model we concatenate</span>
+    <span class="c1"># the additional variables matrix to the existing one containing the intercept</span>
+    <span class="c1"># and negatives/positive edges summary values.</span>
+    <span class="k">if</span> <span class="n">add_predictive_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">design_matrix_negative_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">design_matrix_negative_edges</span><span class="p">,</span> <span class="n">add_predictive_variables</span><span class="p">]</span>
+        <span class="n">design_matrix_positive_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">design_matrix_positive_edges</span><span class="p">,</span> <span class="n">add_predictive_variables</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">design_matrix_negative_edges</span> <span class="o">=</span> <span class="n">design_matrix_negative_edges</span>
+        <span class="n">design_matrix_positive_edges</span> <span class="o">=</span> <span class="n">design_matrix_positive_edges</span>
+
+    <span class="c1"># Fit positive edges model</span>
+    <span class="n">positive_edges_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">training_set_behavioral_score</span><span class="p">,</span> <span class="n">design_matrix_positive_edges</span><span class="p">)</span>
+    <span class="n">positive_edge_model_fit</span> <span class="o">=</span> <span class="n">positive_edges_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="c1"># Fit negative edges model</span>
+    <span class="n">negative_edges_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">training_set_behavioral_score</span><span class="p">,</span> <span class="n">design_matrix_negative_edges</span><span class="p">)</span>
+    <span class="n">negative_edge_model_fit</span> <span class="o">=</span> <span class="n">negative_edges_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">positive_edge_model_fit</span><span class="p">,</span> <span class="n">negative_edge_model_fit</span></div>
+
+
+<div class="viewcode-block" id="predict_behavior"><a class="viewcode-back" href="../../code.html#machine_learning.CPM_method.predict_behavior">[docs]</a><span class="k">def</span> <span class="nf">predict_behavior</span><span class="p">(</span><span class="n">vectorized_connectivity_matrices</span><span class="p">,</span> <span class="n">behavioral_scores</span><span class="p">,</span>
+                     <span class="n">selection_predictor_method</span><span class="o">=</span><span class="s1">&#39;correlation&#39;</span><span class="p">,</span>
+                     <span class="n">significance_selection_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                     <span class="n">confounding_variables_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">add_predictive_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Predict behavior from matrix connectivity with a simple linear model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vectorized_connectivity_matrices: numpy.array, shape (n_sample, n_features)</span>
+<span class="sd">        The subjects connectivity matrices in a vectorized form, i.e, you must</span>
+<span class="sd">        give a array of shape (n_subjects, 0.5*n_features*(n_features-1)).</span>
+<span class="sd">    behavioral_scores: pandas.DataFrame or numpy.array of shape(n_subjects, 1)</span>
+<span class="sd">        The behavioral scores in a pandas DataFrame or numpy array form. Off course</span>
+<span class="sd">        the behavioral scores should ordered in the same order of subjects matrices.</span>
+<span class="sd">    selection_predictor_method: str, optional</span>
+<span class="sd">        The selection method of predictors. When relate behavior and functional connectivity</span>
+<span class="sd">        multiple choices are possible: simple correlation, partial correlation or linear_model.</span>
+<span class="sd">        Default is correlation. Note that partial correlation or linear model should give</span>
+<span class="sd">        the same results.</span>
+<span class="sd">    significance_selection_threshold: float, optional</span>
+<span class="sd">        The threshold level for the p-value resulting of the selection of predictors</span>
+<span class="sd">        step. Default is 0.01.</span>
+<span class="sd">    confounding_variables_matrix: pandas.DataFrame of shape (n_subjects, n_variables), optional</span>
+<span class="sd">        A dataframe  of shape (n_subjects, n_variables) containing the confounding/controlling</span>
+<span class="sd">        variable which might be used in the selection predictors step when selection method is</span>
+<span class="sd">        partial correlation/linear regression. Defaults is None.</span>
+<span class="sd">    add_predictive_variables: pandas.DataFrame shape (n_subjects_in_training_set, n_variables) or None, optional</span>
+<span class="sd">        If not None, additional variables will be fitted in the predictive model, besides negative</span>
+<span class="sd">        and positive summary features.</span>
+<span class="sd">    verbose: int, optional</span>
+<span class="sd">        If verbose equal to 0 nothing is printed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output 1: float</span>
+<span class="sd">        The correlation coefficient for the positive features model.</span>
+<span class="sd">    output 2: float</span>
+<span class="sd">        The correlation coefficient for the negative features model.</span>
+
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize leave one out object</span>
+    <span class="n">leave_one_out_generator</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
+
+    <span class="c1"># Initialization of behavior prediction vector</span>
+    <span class="n">behavior_prediction_positive_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vectorized_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">behavior_prediction_negative_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vectorized_connectivity_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">all_selected_positive_features</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_selected_negative_features</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">leave_one_out_generator</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">vectorized_connectivity_matrices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Train on subjects # </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">train_index</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test on subject # </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_index</span><span class="p">))</span>
+        <span class="c1"># For each iteration, split the patients matrices array in train and</span>
+        <span class="c1"># test set using leave one out cross validation</span>
+        <span class="n">patients_train_set</span><span class="p">,</span> <span class="n">leave_one_out_patients</span> <span class="o">=</span> \
+            <span class="n">vectorized_connectivity_matrices</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">vectorized_connectivity_matrices</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+
+        <span class="c1"># Training set behavioral scores</span>
+        <span class="n">training_set_behavioral_score_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">patients_train_set</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">training_set_behavioral_score_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">behavioral_scores</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span>
+
+        <span class="c1"># The confounding variables, stored in an array for the training set</span>
+        <span class="k">if</span> <span class="n">confounding_variables_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">training_confound_variable_matrix</span> <span class="o">=</span> <span class="n">confounding_variables_matrix</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">training_confound_variable_matrix</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># The additional variable for the predictive model</span>
+        <span class="k">if</span> <span class="n">add_predictive_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">training_additional_predictive_variables</span> <span class="o">=</span> <span class="n">add_predictive_variables</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span>
+            <span class="n">test_subject_additional_predictive_variables</span> <span class="o">=</span> <span class="n">add_predictive_variables</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">training_additional_predictive_variables</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">test_subject_additional_predictive_variables</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">selection_predictor_method</span> <span class="o">==</span> <span class="s1">&#39;linear_model&#39;</span><span class="p">:</span>
+
+            <span class="c1"># Correlation of each edge to the behavioral score for training set</span>
+            <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span> <span class="o">=</span> <span class="n">predictors_selection_linear_model</span><span class="p">(</span>
+                <span class="n">training_connectivity_matrices</span><span class="o">=</span><span class="n">patients_train_set</span><span class="p">,</span>
+                <span class="n">training_confound_variable_matrix</span><span class="o">=</span><span class="n">training_confound_variable_matrix</span><span class="p">,</span>
+                <span class="n">training_set_behavioral_score</span><span class="o">=</span><span class="n">training_set_behavioral_score_</span><span class="p">)</span>
+
+            <span class="c1"># Compute summary values for both positive and negative edges model</span>
+            <span class="n">negative_edges_mask</span><span class="p">,</span> <span class="n">positive_edges_mask</span><span class="p">,</span> <span class="n">negative_edges_summary_values</span><span class="p">,</span> <span class="n">positive_edges_summary_values</span> <span class="o">=</span> \
+                <span class="n">compute_summary_subjects_summary_values</span><span class="p">(</span>
+                    <span class="n">training_connectivity_matrices</span><span class="o">=</span><span class="n">patients_train_set</span><span class="p">,</span>
+                    <span class="n">significance_selection_threshold</span><span class="o">=</span><span class="n">significance_selection_threshold</span><span class="p">,</span>
+                    <span class="n">R_mat</span><span class="o">=</span><span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span><span class="o">=</span><span class="n">P_mat</span><span class="p">)</span>
+
+            <span class="n">all_selected_negative_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">negative_edges_mask</span><span class="p">)</span>
+            <span class="n">all_selected_positive_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">positive_edges_mask</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">selection_predictor_method</span> <span class="o">==</span> <span class="s1">&#39;correlation&#39;</span><span class="p">:</span>
+
+            <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span> <span class="o">=</span> \
+                <span class="n">predictors_selection_correlation</span><span class="p">(</span><span class="n">training_connectivity_matrices</span><span class="o">=</span><span class="n">patients_train_set</span><span class="p">,</span>
+                                                 <span class="n">training_set_behavioral_scores</span><span class="o">=</span><span class="n">training_set_behavioral_score_</span><span class="p">)</span>
+
+            <span class="n">negative_edges_mask</span><span class="p">,</span> <span class="n">positive_edges_mask</span><span class="p">,</span> <span class="n">negative_edges_summary_values</span><span class="p">,</span> <span class="n">positive_edges_summary_values</span> <span class="o">=</span> \
+                <span class="n">compute_summary_subjects_summary_values</span><span class="p">(</span>
+                    <span class="n">training_connectivity_matrices</span><span class="o">=</span><span class="n">patients_train_set</span><span class="p">,</span>
+                    <span class="n">significance_selection_threshold</span><span class="o">=</span><span class="n">significance_selection_threshold</span><span class="p">,</span>
+                    <span class="n">R_mat</span><span class="o">=</span><span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span><span class="o">=</span><span class="n">P_mat</span><span class="p">)</span>
+
+            <span class="n">all_selected_negative_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">negative_edges_mask</span><span class="p">)</span>
+            <span class="n">all_selected_positive_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">positive_edges_mask</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">selection_predictor_method</span> <span class="o">==</span> <span class="s1">&#39;partial correlation&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">confounding_variables_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Confound variables is empty !&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span> <span class="o">=</span> <span class="n">predictor_selection_pcorrelation</span><span class="p">(</span>
+                    <span class="n">training_connectivity_matrices</span><span class="o">=</span><span class="n">patients_train_set</span><span class="p">,</span>
+                    <span class="n">training_set_behavioral_scores</span><span class="o">=</span><span class="n">training_set_behavioral_score_</span><span class="p">,</span>
+                    <span class="n">training_set_confounding_variables</span><span class="o">=</span><span class="n">training_confound_variable_matrix</span><span class="p">)</span>
+
+                <span class="n">negative_edges_mask</span><span class="p">,</span> <span class="n">positive_edges_mask</span><span class="p">,</span> <span class="n">negative_edges_summary_values</span><span class="p">,</span> \
+                    <span class="n">positive_edges_summary_values</span> <span class="o">=</span> \
+                    <span class="n">compute_summary_subjects_summary_values</span><span class="p">(</span>
+                        <span class="n">training_connectivity_matrices</span><span class="o">=</span><span class="n">patients_train_set</span><span class="p">,</span>
+                        <span class="n">significance_selection_threshold</span><span class="o">=</span><span class="n">significance_selection_threshold</span><span class="p">,</span>
+                        <span class="n">R_mat</span><span class="o">=</span><span class="n">R_mat</span><span class="p">,</span> <span class="n">P_mat</span><span class="o">=</span><span class="n">P_mat</span><span class="p">)</span>
+
+                <span class="n">all_selected_negative_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">negative_edges_mask</span><span class="p">)</span>
+                <span class="n">all_selected_positive_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">positive_edges_mask</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Selection method not understood&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Fit a linear model on the training set</span>
+        <span class="n">positive_edge_model_fit</span><span class="p">,</span> <span class="n">negative_edge_model_fit</span> <span class="o">=</span> <span class="n">fit_model_on_training_set</span><span class="p">(</span>
+            <span class="n">negative_edges_summary_values</span><span class="o">=</span><span class="n">negative_edges_summary_values</span><span class="p">,</span>
+            <span class="n">positive_edges_summary_values</span><span class="o">=</span><span class="n">positive_edges_summary_values</span><span class="p">,</span>
+            <span class="n">training_set_behavioral_score</span><span class="o">=</span><span class="n">training_set_behavioral_score_</span><span class="p">,</span>
+            <span class="n">add_predictive_variables</span><span class="o">=</span><span class="n">training_additional_predictive_variables</span><span class="p">)</span>
+
+        <span class="c1"># Compute summary statistic for the left out subject</span>
+        <span class="n">test_subject_positive_edges_summary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">leave_one_out_patients</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+                                                                 <span class="n">positive_edges_mask</span><span class="p">))</span>
+        <span class="n">test_subject_negative_edges_summary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">leave_one_out_patients</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+                                                                 <span class="n">negative_edges_mask</span><span class="p">))</span>
+
+        <span class="c1"># Add additional predictive variables for the test subject</span>
+        <span class="k">if</span> <span class="n">add_predictive_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">test_subject_variable_positive_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">test_subject_positive_edges_summary</span><span class="p">,</span>
+                                                         <span class="n">test_subject_additional_predictive_variables</span><span class="p">]</span>
+            <span class="n">test_subject_variable_negative_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">test_subject_negative_edges_summary</span><span class="p">,</span>
+                                                         <span class="n">test_subject_additional_predictive_variables</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">test_subject_variable_positive_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">test_subject_positive_edges_summary</span><span class="p">]</span>
+            <span class="n">test_subject_variable_negative_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">test_subject_negative_edges_summary</span><span class="p">]</span>
+
+        <span class="c1"># Fit the model of on the left out subject</span>
+        <span class="n">behavior_prediction_negative_edges</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">negative_edge_model_fit</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_subject_variable_negative_edges</span><span class="p">)</span>
+
+        <span class="n">behavior_prediction_positive_edges</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">positive_edge_model_fit</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_subject_variable_positive_edges</span><span class="p">)</span>
+
+    <span class="c1"># Compare prediction and true behavioral score</span>
+    <span class="n">R_predict_negative_model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+        <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">behavior_prediction_negative_edges</span><span class="p">,</span>
+                       <span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">behavioral_scores</span><span class="p">))</span>
+
+    <span class="n">R_predict_positive_model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+        <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">behavioral_scores</span><span class="p">),</span>
+                       <span class="n">y</span><span class="o">=</span><span class="n">behavior_prediction_positive_edges</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">R_predict_positive_model</span><span class="p">,</span> <span class="n">R_predict_negative_model</span><span class="p">,</span> <span class="n">all_selected_positive_features</span><span class="p">,</span>
+            <span class="n">all_selected_negative_features</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+            
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Python  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright . Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>
