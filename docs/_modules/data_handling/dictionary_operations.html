@@ -96,12 +96,16 @@
 <div class="viewcode-block" id="groupby_factor_connectivity_matrices"><a class="viewcode-back" href="../../code.html#data_handling.dictionary_operations.groupby_factor_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">groupby_factor_connectivity_matrices</span><span class="p">(</span><span class="n">population_data_file</span><span class="p">,</span> <span class="n">sheetname</span><span class="p">,</span>
                                          <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">,</span>
                                          <span class="n">groupes</span><span class="p">,</span> <span class="n">factors</span><span class="p">,</span>
-                                         <span class="n">drop_subjects_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                         <span class="n">drop_subjects_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                         <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Group by attribute the subjects connectivity matrices.</span>
-
+<span class="sd">    # TODO: 18/09/2019: I added index_col to precise the index of the column</span>
+<span class="sd">    # TODO: to be considered as the index of the whole dataframe.</span>
+<span class="sd">    # TODO: Side Note: this function work with a time series dictionary too. !!</span>
+<span class="sd">    # TODO: Refractoring of subjects_connectivity_matrices_dictionary to subjects_dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Read the excel containing information of interest</span>
-    <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">population_data_file</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
+    <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">population_data_file</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">)</span>
 
     <span class="c1"># Drop subjects if needed</span>
     <span class="k">if</span> <span class="n">drop_subjects_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

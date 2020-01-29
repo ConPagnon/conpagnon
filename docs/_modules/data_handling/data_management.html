@@ -191,7 +191,8 @@
     <span class="n">dataframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">delimiter</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="read_excel_file"><a class="viewcode-back" href="../../code.html#data_handling.data_management.read_excel_file">[docs]</a><span class="k">def</span> <span class="nf">read_excel_file</span><span class="p">(</span><span class="n">excel_file_path</span><span class="p">,</span> <span class="n">sheetname</span><span class="p">):</span>
+<div class="viewcode-block" id="read_excel_file"><a class="viewcode-back" href="../../code.html#data_handling.data_management.read_excel_file">[docs]</a><span class="k">def</span> <span class="nf">read_excel_file</span><span class="p">(</span><span class="n">excel_file_path</span><span class="p">,</span> <span class="n">sheetname</span><span class="p">,</span>
+                    <span class="n">subjects_column_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read a excel document</span>
 
 <span class="sd">    Parameters</span>
@@ -200,13 +201,18 @@
 <span class="sd">        Full path to the excel document</span>
 <span class="sd">    sheetname: str</span>
 <span class="sd">        The sheetname to read in the excel document</span>
+<span class="sd">    subjects_column_name: str</span>
+<span class="sd">        The column name containing the subjects identifiers.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    output: pandas.DataFrame</span>
-<span class="sd">        A panda DataFrame</span>
+<span class="sd">        A panda DataFrame, indexed by subject name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">io</span><span class="o">=</span><span class="n">excel_file_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
+    <span class="c1"># Shift the index</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">subjects_column_name</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">data</span></div>
 

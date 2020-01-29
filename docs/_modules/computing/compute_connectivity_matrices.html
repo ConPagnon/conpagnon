@@ -100,7 +100,12 @@
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
 <span class="kn">from</span> <span class="nn">data_handling.data_management</span> <span class="k">import</span> <span class="n">remove_duplicate</span>
-
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">zmap</span><span class="p">,</span> <span class="n">ttest_1samp</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="k">import</span> <span class="n">PdfPages</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">utils.folders_and_files_management</span> <span class="k">import</span> <span class="n">save_object</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.multitest</span> <span class="k">import</span> <span class="n">multipletests</span>
 
 <div class="viewcode-block" id="create_connectivity_mask"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.create_connectivity_mask">[docs]</a><span class="k">def</span> <span class="nf">create_connectivity_mask</span><span class="p">(</span><span class="n">time_series_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create boolean mask for each subjects accounting</span>
@@ -1358,6 +1363,142 @@
                     <span class="s1">&#39;mean connectivity&#39;</span><span class="p">:</span> <span class="n">flat_mean_subject_connectivity</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">connectivity_of_interest</span></div>
+
+
+<div class="viewcode-block" id="tangent_space_projection"><a class="viewcode-back" href="../../code.html#computing.compute_connectivity_matrices.tangent_space_projection">[docs]</a><span class="k">def</span> <span class="nf">tangent_space_projection</span><span class="p">(</span><span class="n">reference_group</span><span class="p">,</span> <span class="n">group_to_project</span><span class="p">,</span> <span class="n">bootstrap_number</span><span class="p">,</span>
+                             <span class="n">bootstrap_size</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">,</span> <span class="n">verif_null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">correction_method</span><span class="o">=</span><span class="s2">&quot;bonferroni&quot;</span><span class="p">,</span>
+                             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">statistic</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Project a group of time series to a space tangent to a reference connectivity matrix.</span>
+<span class="sd">    The reference matrix is derived from a reference times series group.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize a list containing the null distribution</span>
+    <span class="n">null_distribution</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Generate a bootstrap matrix of indices</span>
+    <span class="c1"># before the loop.</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">reference_group</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bootstrap_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+        <span class="n">indices</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="n">bootstrap_size</span><span class="p">,</span>
+        <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bootstrap_number</span><span class="p">)])</span>
+
+    <span class="c1"># Loop over the bootstrap indices</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bootstrap_number</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bootstrap # </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">bootstrap_reference_group</span> <span class="o">=</span> <span class="n">bootstrap_matrix</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="c1"># We chose one subject of the reference group</span>
+        <span class="c1"># among the bootstrap sample</span>
+        <span class="n">left_out_subject</span> <span class="o">=</span> <span class="n">bootstrap_reference_group</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">subset_reference_group</span> <span class="o">=</span> <span class="n">bootstrap_reference_group</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="c1"># Compute mean matrices, and connectivity matrices</span>
+        <span class="c1"># in the tangent on the subset of subject from the</span>
+        <span class="c1"># reference group without the leftout subject.</span>
+        <span class="n">connectivity_measure</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;tangent&#39;</span><span class="p">,</span>
+                                                   <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                   <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">reference_group_subset_matrices</span> <span class="o">=</span> \
+            <span class="n">connectivity_measure</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">reference_group</span><span class="p">[</span><span class="n">subset_reference_group</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+        <span class="n">reference_group_subset_mean</span> <span class="o">=</span> <span class="n">connectivity_measure</span><span class="o">.</span><span class="n">mean_</span>
+        <span class="c1"># Project at the previously computed mean</span>
+        <span class="c1"># the leftout control subject</span>
+        <span class="n">leftout_subject</span> <span class="o">=</span> \
+            <span class="n">connectivity_measure</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="p">[</span><span class="n">reference_group</span><span class="p">[</span><span class="n">left_out_subject</span><span class="p">,</span> <span class="o">...</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Compute a z-score between the left out controls tangent connectivity</span>
+        <span class="c1"># and the resampled controls group</span>
+        <span class="k">if</span> <span class="n">statistic</span> <span class="o">==</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span>
+
+            <span class="n">stat_null</span> <span class="o">=</span> <span class="n">zmap</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="n">leftout_subject</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="n">reference_group_subset_matrices</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">statistic</span> <span class="o">==</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span>
+
+            <span class="c1"># Another statistic: one sample t test, controls - the left out controls</span>
+            <span class="c1"># as contrast</span>
+            <span class="n">stat_null</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">ttest_1samp</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">reference_group_subset_matrices</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="n">leftout_subject</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Statistic type unknown. Type are z or t statistic, &quot;</span>
+                             <span class="s2">&quot;you entered </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">statistic</span><span class="p">))</span>
+
+        <span class="c1"># Store the results of the test, as null distribution</span>
+        <span class="n">null_distribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat_null</span><span class="p">)</span>
+
+    <span class="n">null_distribution_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">null_distribution</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verif_null</span><span class="p">:</span>
+        <span class="c1"># plot of some null distribution randomly chosen</span>
+        <span class="n">n_rois</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">random_roi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">null_distribution_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                                      <span class="n">size</span><span class="o">=</span><span class="n">n_rois</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_directory</span><span class="p">,</span> <span class="s2">&quot;null_distribution_random_roi.pdf&quot;</span><span class="p">))</span> \
+                <span class="k">as</span> <span class="n">pdf</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rois</span><span class="p">):</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">null_distribution_array</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">random_roi</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">bins</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;# </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">random_roi</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=.</span><span class="mi">01</span><span class="p">)</span>
+            <span class="n">pdf</span><span class="o">.</span><span class="n">savefig</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1"># Compute tangent connectivity matrices on the whole</span>
+    <span class="c1"># reference group</span>
+    <span class="n">reference_group_connectivity</span> <span class="o">=</span> <span class="n">ConnectivityMeasure</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;tangent&#39;</span><span class="p">,</span>
+                                                       <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                       <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">reference_group_tangent_matrices</span> <span class="o">=</span> <span class="n">reference_group_connectivity</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">reference_group</span><span class="p">)</span>
+    <span class="c1"># Compute the tangent mean for the controls group</span>
+    <span class="n">reference_group_tangent_mean</span> <span class="o">=</span> <span class="n">reference_group_connectivity</span><span class="o">.</span><span class="n">mean_</span>
+
+    <span class="c1"># Project each subject&#39;s matrices belonging to</span>
+    <span class="c1"># group to project in the tangent space</span>
+    <span class="n">group_to_project_tangent_matrices</span> <span class="o">=</span> <span class="n">reference_group_connectivity</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">group_to_project</span><span class="p">)</span>
+    <span class="n">save_object</span><span class="p">(</span>
+        <span class="n">object_to_save</span><span class="o">=</span><span class="n">group_to_project_tangent_matrices</span><span class="p">,</span>
+        <span class="n">saving_directory</span><span class="o">=</span><span class="n">output_directory</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;projected_group_connectivity_matrices&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Test for each projected subject, and for each brain connection</span>
+    <span class="c1"># if there exist a significant connectivity difference between the</span>
+    <span class="c1"># a subject and the reference group.</span>
+    <span class="k">if</span> <span class="n">statistic</span> <span class="o">==</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span>
+        <span class="c1"># Z-statistic between a projected subject and the whole</span>
+        <span class="c1"># reference group</span>
+        <span class="n">group_to_project_scores</span> <span class="o">=</span> <span class="n">zmap</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="n">group_to_project_tangent_matrices</span><span class="p">,</span>
+                                       <span class="n">compare</span><span class="o">=</span><span class="n">reference_group_tangent_matrices</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">statistic</span> <span class="o">==</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span>
+        <span class="c1"># A one sample t-test between the reference group and a projected subject</span>
+        <span class="n">group_to_project_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">ttest_1samp</span><span class="p">(</span>
+            <span class="n">a</span><span class="o">=</span><span class="n">reference_group_tangent_matrices</span><span class="p">,</span> <span class="n">popmean</span><span class="o">=</span><span class="n">group_to_project_tangent_matrices</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="o">...</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                                            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">group_to_project_tangent_matrices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Statistic type unknown. Type are z or t statistic, &quot;</span>
+                         <span class="s2">&quot;you entered </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">statistic</span><span class="p">))</span>
+
+    <span class="c1"># Compute the raw p value based on the previously</span>
+    <span class="c1"># computed null distribution, for each subject.</span>
+    <span class="n">p_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">group_to_project_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">group_to_project_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">group_to_project_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="c1"># with the z-score, or the t-score</span>
+            <span class="n">p_values</span><span class="p">[</span><span class="n">subject</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">null_distribution_array</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">group_to_project_scores</span><span class="p">[</span><span class="n">subject</span><span class="p">,</span> <span class="n">i</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> \
+                <span class="p">(</span><span class="n">bootstrap_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># correct the p values for each subject</span>
+    <span class="c1"># in the group to project</span>
+    <span class="n">p_values_corrected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">group_to_project_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">group_to_project_scores</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">p_values_corrected</span><span class="p">[</span><span class="n">subject</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">p_values</span><span class="p">[</span><span class="n">subject</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                                                         <span class="n">method</span><span class="o">=</span><span class="n">correction_method</span><span class="p">,</span>
+                                                         <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;null_distribution&quot;</span><span class="p">:</span> <span class="n">null_distribution_array</span><span class="p">,</span> <span class="s2">&quot;p_values_corrected&quot;</span><span class="p">:</span> <span class="n">p_values_corrected</span><span class="p">,</span>
+            <span class="s2">&quot;reference_group_tangent_mean&quot;</span><span class="p">:</span> <span class="n">reference_group_tangent_mean</span><span class="p">,</span>
+            <span class="s2">&quot;reference_group_tangent_matrices&quot;</span><span class="p">:</span> <span class="n">reference_group_tangent_matrices</span><span class="p">,</span>
+            <span class="s2">&quot;group_to_project_tangent_matrices&quot;</span><span class="p">:</span> <span class="n">group_to_project_tangent_matrices</span><span class="p">,</span>
+            <span class="s2">&quot;group_to_project_stats&quot;</span><span class="p">:</span> <span class="n">group_to_project_scores</span><span class="p">}</span></div>
 </pre></div>
 
           </div>
