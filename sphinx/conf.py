@@ -12,22 +12,47 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../'))
 import sphinx_material
 
-# -- General configuration ---------------------------------------------------
-# Add any paths that contain templates here, relative to this directory.
-html_theme = 'sphinx_material'
-# Get the them path
-html_theme_path = sphinx_material.html_theme_path()
-# Register the required helpers for the html context
-html_context = sphinx_material.get_html_context()
+# -- General configuration -----------------------------------------------------
 
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+# If your documentation needs a minimal Sphinx version, state it here.
 
+# Add any Sphinx extension module names here, as strings. They can be
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+extensions = ['sphinx.ext.autodoc',
+              # numpydoc or sphinx.ext.napoleon, but not both
+              'numpydoc',
+              'sphinx.ext.doctest',
+              'sphinx.ext.extlinks',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.todo',
+              'sphinx.ext.autosectionlabel',
+              # One of mathjax or imgmath
+              'nbsphinx',
+              'sphinx.ext.mathjax',
+              'sphinx.ext.viewcode',
+              # 'sphinx.ext.autosummary',
+              'sphinx.ext.inheritance_diagram',
+              'matplotlib.sphinxext.plot_directive',
+              'IPython.sphinxext.ipython_console_highlighting',
+              'IPython.sphinxext.ipython_directive',
+              ]
+
+try:
+    import sphinxcontrib.spelling  # noqa: F401
+except ImportError as err:  # noqa: F841
+    pass
+else:
+    extensions.append('sphinxcontrib.spelling')
+
+# nbsphinx options
+nbsphinx_allow_errors = True
+# sphinxcontrib-spelling options
+spelling_word_list_filename = ['spelling_wordlist.txt', 'names_wordlist.txt']
+spelling_ignore_pypi_package_names = True
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -40,9 +65,59 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
 
+# The suffix of source filenames.
+source_suffix = '.rst'
 
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc']
+# The master toctree document.
+master_doc = 'index'
+
+# General information about the project.
+project = u'ConPagnon 2.0'
+version = u'2.0'
+copyright = u'2O18-2020, Dhaif BEKHA '
+autosummary_generate = True
+autoclass_content = 'class'
+
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+exclude_patterns = ['_build', '**.ipynb_checkpoints', '*/autosummary/*.rst',
+                    'Thumbs.db', '.DS_Store']
+
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'default'
+
+
+# Options for HTML output
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
 extensions.append('sphinx_material')
+html_theme_path = sphinx_material.html_theme_path()
+html_context = sphinx_material.get_html_context()
+html_theme = 'sphinx_material'
+html_title = project
+html_short_title = project
+
+# material theme options (see theme.conf for more information)
+base_url = 'https://conpagnon.github.io/conpagnon/'
+html_theme_options = {
+    'base_url': base_url,
+    'repo_url': 'https://github.com/ConPagnon/conpagnon',
+    'repo_name': 'ConPagnon',
+    'globaltoc_depth': 3,
+    'globaltoc_collapse': True,
+    'globaltoc_includehidden': True,
+    'color_primary': 'indigo',
+    'color_accent': 'blue',
+    'nav_title': 'ConPagnon {0}'.format(version),
+    'master_doc': False,
+    'nav_links': [],
+    'heroes': {'index': 'Easy resting state analysis in Python ',
+               'examples/index': 'examples and tutorials to get started with '
+                                 'statsmodels'},
+    "version_dropdown": True,
+    "version_json": "_static/versions.json",
+}
+
+language = 'en'
+html_last_updated_fmt = ''
