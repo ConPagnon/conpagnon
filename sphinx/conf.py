@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
-import guzzle_sphinx_theme
+import sphinx_material
 
 # -- Project information -----------------------------------------------------
 
@@ -27,7 +27,11 @@ import guzzle_sphinx_theme
 
 # -- General configuration ---------------------------------------------------
 # Add any paths that contain templates here, relative to this directory.
-html_theme_path = guzzle_sphinx_theme.html_theme_path()
+html_theme = 'sphinx_material'
+# Get the them path
+html_theme_path = sphinx_material.html_theme_path()
+# Register the required helpers for the html context
+html_context = sphinx_material.get_html_context()
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
