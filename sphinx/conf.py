@@ -107,7 +107,7 @@ html_theme_options = {
     'globaltoc_depth': 3,
     'globaltoc_collapse': True,
     'globaltoc_includehidden': True,
-    'color_primary': 'indigo',
+    'color_primary': 'red',
     'color_accent': 'blue',
     'nav_title': 'ConPagnon {0}'.format(version),
     'master_doc': False,
