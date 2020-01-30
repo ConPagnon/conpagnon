@@ -15,16 +15,6 @@ import sys
 sys.path.insert(0, os.path.abspath('../'))
 import sphinx_material
 
-# -- Project information -----------------------------------------------------
-
-#project = 'ConPagnon'
-#copyright = '2016 - 2019, Dhaif BEKHA'
-#author = 'Dhaif BEKHA'
-
-# The full version, including alpha/beta/rc tags
-#release = '2.0.0'
-
-
 # -- General configuration ---------------------------------------------------
 # Add any paths that contain templates here, relative to this directory.
 html_theme = 'sphinx_material'
@@ -55,9 +45,4 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc']
-
-# Guzzle theme options (see theme.conf for more information)
-html_theme_options = {
-    # Set the name of the project to appear in the left sidebar.
-    "project_nav_name": 'ConPagnon',
-}
+extensions.append('sphinx_material')
