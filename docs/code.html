@@ -1,1305 +1,493 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
   
-  <!-- Licensed under the Apache 2.0 License -->
-  <link rel="stylesheet" type="text/css" href="_static/fonts/open-sans/stylesheet.css" />
-  <!-- Licensed under the SIL Open Font License -->
-  <link rel="stylesheet" type="text/css" href="_static/fonts/source-serif-pro/source-serif-pro.css" />
-  <link rel="stylesheet" type="text/css" href="_static/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="_static/css/bootstrap-theme.min.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
   
-    <title>Code Documentation &#8212; Python  documentation</title>
-    <link rel="stylesheet" href="_static/guzzle.css" type="text/css" />
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Code Documentation &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Project description" href="projectDescription.html" />
   
    
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="projectDescription.html" title="Project description"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Python  documentation</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="container-wrapper">
 
-      <div id="mobile-toggle">
-        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+  </head>
+  <body dir=ltr
+        data-md-color-primary=indigo data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#code" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
       </div>
-  <div id="left-column">
-    <div class="sphinxsidebar">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="projectDescription.html"
-                        title="previous chapter">Project description</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/code.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <div id="main-search">
-      <form class="form-inline" action="search.html" method="GET" role="form">
-        <div class="input-group">
-          <input name="q" type="text" class="form-control" placeholder="Search...">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Code Documentation </span>
         </div>
-        <input type="hidden" name="check_keywords" value="yes" />
-        <input type="hidden" name="area" value="default" />
-      </form>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
       
     </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
   </div>
-        <div id="right-column">
-          
-          <div role="navigation" aria-label="breadcrumbs navigation">
-            <ol class="breadcrumb">
-              <li><a href="index.html">Docs</a></li>
-              
-              <li>Code Documentation</li>
-            </ol>
+</a>
+    </div>
+  
+  
+
+</nav>
+              </div>
+            </div>
           </div>
-          
-          <div class="document clearer body">
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/code.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
             
-  <div class="section" id="module-computing.compute_connectivity_matrices">
-<span id="code-documentation"></span><h1>Code Documentation<a class="headerlink" href="#module-computing.compute_connectivity_matrices" title="Permalink to this headline">¶</a></h1>
-<p>Created on Tue Sep 19 17:02:19 2017</p>
-<p>ComPagnon 2.0</p>
-<p>&#64;author: Dhaif BEKHA</p>
+  
+<span id="code-documentation"></span><h1 id="code--page-root">Code Documentation<a class="headerlink" href="#code--page-root" title="Permalink to this headline">¶</a></h1>
+<p>Display functions</p>
+<p>Author: Dhaif BEKHA</p>
 <dl class="function">
-<dt id="computing.compute_connectivity_matrices.create_connectivity_mask">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">create_connectivity_mask</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#create_connectivity_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.create_connectivity_mask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create boolean mask for each subjects accounting
-for discarded roi if they exist.</p>
-<dl>
-<dt>time_series_dictionary: dict</dt><dd><dl>
-<dt>The time series dictionary structured as follow:</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groupes.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
-</ul>
-<p>subject time series in an array of shape (number of regions, number of time points)
-A key ‘discarded_rois’ containing an array of the index of ROIs
-where the corresponding labels is ‘void’. If no void labels is detected,
-then the array is empty.</p>
-</dd>
-</dl>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of groups in the study.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>The same time series dictionary with a field called ‘masked_array’ for
-each subjects. A masked array is a boolean mask accounting for discarded
-rois, True for a discarded rois, and False elsewhere.</p>
-</dd>
-</dl>
-<p>If ‘discarded_rois’ is empty the mask is False at every position
-in the array.
-Almost all the operation in ConPagnon accounts for discarded rois with
-masked array via the dedicated module in NumPy.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.extract_sub_connectivity_matrices">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">extract_sub_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">regions_index</em>, <em class="sig-param">vectorize=False</em>, <em class="sig-param">discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#extract_sub_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.extract_sub_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract sub matrices given region index.</p>
-<dl class="simple">
-<dt>subjects_connectivity_matrices: dict</dt><dd><p>The dictionnary containing for each subjects, for each group and kind, the
-connectivity matrices, of shape (n_features, n_features), and also
-the boolean mask array indicating the discarded roi.</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kinds.</p>
-</dd>
-<dt>regions_index: list, or 1D numpy.array of shape (number of indices, )</dt><dd><p>The list of index of regions you want to extract the connectivity. The
-region index also correspond to the index of ROIs in the 4D reference
-atlas of the study.</p>
-</dd>
-<dt>vectorize: bool, optional</dt><dd><p>If True, the extracted sub-matrices are vectorized, keeping
-the diagonal of the matrix, and the corresponding boolean
-mask.</p>
-</dd>
-<dt>discard_diagonal: bool, optional</dt><dd><p>If True, the diagonal is discard when the extracted connectivity matrices are vectorized.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>A dictionnary containing for each group and kinds, for each subject
-the extract sub-matrice, and the corresponding boolean mask.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.group_mean_connectivity">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">group_mean_connectivity</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#group_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.group_mean_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the mean connectivity matrices for each kind accounting for masked rois.</p>
-<p>Read the notes for the tangent space !</p>
-<dl>
-<dt>subjects_connectivity_matrices<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary organised as follow :</dt><dd><blockquote>
-<div><ul class="simple">
-<li><p>The first keys levels is the different groupes in the study.</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is the different kind matrices</p></li>
-</ul>
-<p>for each subjects, a ‘discarded_rois’ key for the
-discarded rois array index, a ‘masked_array’ key containing
-the array of Boolean of True for the discarded_rois index, and False
-elsewhere.</p>
-</dd>
-</dl>
-</dd>
-<dt>kinds<span class="classifier">list</span></dt><dd><p>List of kinds you want the mean connectivity. Choices
-are ‘correlation’, ‘tangent’, ‘covariances’, ‘precision’, ‘partial 
-correlation’. Off course, the kind should be in the subjects_connectivity_matrices
-dictionnary.</p>
-</dd>
-<dt>axis<span class="classifier">int, optional</span></dt><dd><p>The axis you want to compute the mean, the subjects axis. Default is 0.</p>
-</dd>
-</dl>
-<dl>
-<dt>output<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groups in the study.</p></li>
-<li><p>The second keys levels is the mean connectivity matrices for</p></li>
-</ul>
-<p>the different kinds. They are array of shape (number of regions , number of regions)
-if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>individual_connectivity_matrices : These function returned a organised
-dictionnary containing the connectivity matrices for different kinds. This is
-simply the argument <cite>subjects_connectivity_matrices</cite></p>
-<p>When computing the mean, we account for the ‘discarded_rois’ entries. That mean 
-when the value is True in the masked_array, we discard the rois for the corresponding
-subject in the derivation of the mean.</p>
-<p>When I compute the mean in the tangent space, it’s a arithmetic mean. This
-mean matrix is in the tangent space, that is NOT in the same space as correlation or partial correlation matrix.
-Be careful with the interpretation !!</p>
-<p>That said, the tangent space is defined at ONE point in the manifold of symmetric matrices.
-This point is the geometric mean for the POOLED groups if multiple group are studied !</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.individual_connectivity_matrices">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">individual_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">covariance_estimator</em>, <em class="sig-param">vectorize=False</em>, <em class="sig-param">discarding_diagonal=False</em>, <em class="sig-param">z_fisher_transform=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#individual_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.individual_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the connectivity matrices for groups of subjects</p>
-<p>This function computes connectivity matrices for different metrics.</p>
-<dl>
-<dt>time_series_dictionary<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groupes in the study.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
-</ul>
-<p>subject time series in an array of shape (number of regions, number of time points) 
-A key ‘discarded_rois’ containing an array of the index of ROIs 
-where the corresponding labels is ‘void’. If no void labels is detected,
-then the array should be empty.</p>
-</dd>
-</dl>
-</dd>
-<dt>kinds<span class="classifier">list</span></dt><dd><p>List of the different metrics you want to compute the 
-connectivity matrices. Choices are ‘tangent’, ‘correlation’,
-‘partial correlation’, ‘covariance’, ‘precision’.</p>
-</dd>
-<dt>covariance_estimator<span class="classifier">estimator object</span></dt><dd><p>All the kinds  are based on derivation of covariances matrices. You need
-to precise the estimator, see Notes.</p>
-</dd>
-<dt>vectorize<span class="classifier">bool, optional</span></dt><dd><p>If True, the connectivity matrices are reshape into 1D arrays of 
-the vectorized lower part of the matrices. Useful for classification,
-regression…
-Default is False.</p>
-</dd>
-<dt>z_fisher_transform: bool, optional</dt><dd><p>If True, the z fisher transform is apply to all
-the connectivity matrices. Default is False</p>
-</dd>
-<dt>discarding_diagonal: bool, optional</dt><dd><p>If True, the diagonal is discarded in
-the vectorization process. Default is False.</p>
-</dd>
-</dl>
-<dl>
-<dt>output<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groupes in the study.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels contain multiple keys : multiple</p></li>
-</ul>
-<p>kind keys containing the corresponding kind matrix.
-a ‘discarded_rois’ key containing the index of discarded
-rois.
-Finally you should find a ‘masked_array’ key : This key 
-contains a array of Boolean, shape (numbers of regions, numbers of regions)
-where the value are True for the index in ‘discarded_rois’ array, and False
-elsewhere. See Note for further details. The diagonal of the
-matrix are saved for each kind too in a dedicated field.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="simple">
-<dt>time_series_extraction, time_series_extraction_with_individual_atlases :</dt><dd><p>These are the functions which extract the time series according atlas
-regions and returned a structured dictionnary. 
-This is simply the argument <cite>time_series_dictionary</cite>.</p>
-</dd>
-</dl>
-<p>Covariances estimator are estimators compute in the scikit-learn library.
-Multiple estimator can be found in the module sklearn.covariance, popular
-choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
-<p>In the output dictionnary, each subjects have a masked array of boolean. The
-masked will be useful when computing the mean connectivity matrices, we will
-account the discarded rois in the derivation. For the statistical test you might
-want perform, it will be useful too, to discarded those rois. A True value is
-a masked roi, False elsewhere.</p>
-<p>For the tangent kind, the derivation of individual matrices need to be
-made on the POOLED GROUPS which is performed here.</p>
-<p>The derivation of connectivity matrices are based on Nilearn functions. I
-encourage the user to read the following docstring of important functions :
-nilearn.connectome.ConnectivityMeasure</p>
-<dl>
-<dt>For the use of tangent :</dt><dd><dl class="footnote brackets">
-<dt class="label" id="id1"><span class="brackets">1</span></dt>
-<dd><ol class="upperalpha simple" start="7">
-<li><p>Varoquaux et al. “Detection of brain functional-connectivity</p></li>
-</ol>
-</dd>
-</dl>
-<p>difference in post-stroke patients using group-level covariance modeling”, MICCAI 2010</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">inter_network_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">atlas_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">roi_indices_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#inter_network_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute for each subjects, the inter network connectivity matrices</p>
-<dl class="simple">
-<dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity matrices dictionnary for each groupes, and kind in the study.</p>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of groups in the study</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kinds in the study</p>
-</dd>
-<dt>atlas_file: string</dt><dd><p>The full path to an excel file containing information on the atlas</p>
-</dd>
-<dt>network_column_name: string</dt><dd><p>The name of the column in the excel file containing the network label for each roi</p>
-</dd>
-<dt>roi_indices_column_name</dt><dd><p>The name of the column in the excel file containing the index of each ROI in the 4D atlas file.</p>
-</dd>
-<dt>sheetname: string</dt><dd><p>The name of the active sheet in the excel file</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>The subjects inter network connectivity matrices dictionnary, for each group and kinds. Each matrices
-should have shape (number of network, number of network).</p>
-</dd>
-</dl>
-<p>The inter-network connectivity is simply defined as the mean of all possible
-connection between a network pair. We also account for the possible discarded rois
-in one or both the network by computing the mean on a masked array structure, that is,
-the inter-network coefficient of interest, along with the corresponding value of the masked
-array.</p>
-<p>This inter-network composite score is used in the following references :</p>
-<dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets">1</span></dt>
-<dd><p>M. Brier, “Loss of Intranetwork and Internetwork Resting State Functional Connections with Alzheimer’s
-Disease Progression” The Journal of Neuroscience, 2012.</p>
-</dd>
-<dt class="label" id="id3"><span class="brackets">2</span></dt>
-<dd><p>P. Wang, “Aberrant intra- and inter-network connectivity architectures in Alzheimer’s disease and mild
-cognitive impairment”, Nature Publishing Group, 2015.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.intra_network_functional_connectivity">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">intra_network_functional_connectivity</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">atlas_file</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">roi_indices_column_name</em>, <em class="sig-param">color_of_network_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#intra_network_functional_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.intra_network_functional_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute for each subjects, the intra network connectivity for each network in the study.</p>
-<dl class="simple">
-<dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
-and corresponding mask array for discarded rois, for each group.</p>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of groups in the study</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kinds in the study</p>
-</dd>
-<dt>atlas_file: string</dt><dd><p>The full path to an excel file containing information on the atlas</p>
-</dd>
-<dt>network_column_name: string</dt><dd><p>The name of the column in the excel file containing the network label for each roi</p>
-</dd>
-<dt>roi_indices_column_name: string</dt><dd><p>The name of the column in the excel file containing the index of each ROI in the 4D atlas file.</p>
-</dd>
-<dt>sheetname: string</dt><dd><p>The name of the active sheet in the excel file</p>
-</dd>
-<dt>color_of_network_column: string</dt><dd><p>The name of the columns containing for each roi, the corresponding network color.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output 1: dict</dt><dd><p>A dictionnary structure containing for each subject and for each network: the network connectivity,
-the vectorized array of coefficients of the network without the diagonal, the corresponding vectorized
-mask array accounting for discarded rois, the diagonal of the mask array, the masked array structure
-of the network, and finally the number of rois in the network.</p>
-</dd>
-<dt>output 2: dict</dt><dd><p>A dictionnary network, containing information fetch from the atlas excel file of the atlas.</p>
-</dd>
-<dt>output 3: list</dt><dd><p>The network label list.</p>
-</dd>
-<dt>output 4: array of shape (number of network, 3)</dt><dd><p>The array containing the color in the normalized RGB space, in the order of the network label list.</p>
-</dd>
-</dl>
-<p>The intra connectivity is simply defined as the mean, for each network,
-of the coefficient belonging to the network. Because connectivity metrics are symmetric,
-we only taking the vectorize part of the network connectivity matrices. We account for discarded roi,
-as we compute the mean on a numpy masked array structure, that is the vectorized array
-along with the vectorized boolean mask for the current network.</p>
-<p>This intra-network composite scores is used in the following references:</p>
-<dl class="footnote brackets">
-<dt class="label" id="id4"><span class="brackets">1</span></dt>
-<dd><p>M. Brier, “Loss of Intranetwork and Internetwork Resting State Functional Connections with Alzheimer’s
-Disease Progression” The Journal of Neuroscience, 2012.</p>
-</dd>
-<dt class="label" id="id5"><span class="brackets">2</span></dt>
-<dd><p>P. Wang, “Aberrant intra- and inter-network connectivity architectures in Alzheimer’s disease and mild
-cognitive impairment”, Nature Publishing Group, 2015.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">mean_of_flatten_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#mean_of_flatten_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the flat mean connectivity for each subjects.</p>
-<dl class="simple">
-<dt>subjects_individual_matrices_dictionary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
-and corresponding mask array for discarded rois, for each group.</p>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of groupes in the study</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kinds in the study</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>A dictionnary containing for each subject in group, a masked array structure containing
-the numerical array of the connectivity coefficient of interest, along with the boolean
-mask accounting for discarded rois. The second key, contain the mean of the extracted
-connectivity coefficient for each subject, also accounting for discarded rois it they
-exist.</p>
-</dd>
-</dl>
-<p>The subjects connectivity matrices shouldn’t be vectorized, the shape should
-be (n_features, n_features).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.pooled_groups_connectivity">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_connectivity</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">covariance_estimator</em>, <em class="sig-param">vectorize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute connectivity matrices of pooled groups.</p>
-<p>This function simply stack the all the times series of each group in one pooled groups and compute 
-the connectivity matrices  on the whole group. When computing the tangent kind this function is
-called.</p>
-<p>time_series_dictionary : dict
-A multi-levels dictionnary organised as follow :</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>The first keys levels is the different groupes in the study.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
-</ul>
-<p>subject time series in an array of shape (number of regions, number of time points) 
-A key ‘discarded_rois’ containing an array of the index of ROIs 
-where the corresponding labels is ‘void’. If no void labels is detected,
-then the array should be empty.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>kinds<span class="classifier">list</span></dt><dd><p>List of the different metrics you want to compute the 
-connectivity matrices. Choices are ‘tangent’, ‘correlation’,
-‘partial correlation’, ‘covariance’, ‘precision’.</p>
-</dd>
-<dt>covariance_estimator<span class="classifier">estimator object</span></dt><dd><p>All the kinds  are based on derivation of covariances matrices. You need
-to precise the estimator, see Notes.</p>
-</dd>
-<dt>vectorize<span class="classifier">bool</span></dt><dd><p>If True, the connectivity matrices are reshape into 1D arrays of 
-the vectorized lower part of the matrices. Useful for classification,
-regression…
-Diagonal are discarded.</p>
-</dd>
-</dl>
-<dl>
-<dt>output 1<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
-<li><p>The first level keys is the different kinds</p></li>
-<li><p>The second levels is simply a ndimensional array of connectivity</p></li>
-</ul>
-<p>matrices of shape (number of subjects, number of regions, number of regions)
-if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else</p>
-</dd>
-</dl>
-</dd>
-<dt>output 2<span class="classifier">list</span></dt><dd><p>The list of subject IDs, in the order of time series computation.</p>
-</dd>
-</dl>
-<p>Covariances estimator are estimators compute in the scikit-learn library.
-Multiple estimator can be found in the module sklearn.covariance, popular
-choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.pooled_groups_tangent_mean">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_tangent_mean</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">covariance_estimator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#pooled_groups_tangent_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.pooled_groups_tangent_mean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the geometric mean of covariances connectivity matrices for the tangent kind.</p>
-<p>The geometric mean is the point in the symmetric manifold matrices spaces 
-where the tangent space is defined. Therefore it’s make sense for the pooled
-groups only.</p>
-<dl>
-<dt>time_series_dictionary<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary organised as follow :</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groupes in the study.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
-</ul>
-<p>subject time series in an array of shape (number of regions, number of time points) 
-A key ‘discarded_rois’ containing an array of the index of ROIs 
-where the corresponding labels is ‘void’. If no void labels is detected,
-then the array should be empty.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>covariance_estimator : estimator object
-All the kinds  are based on derivation of covariances matrices. You need
-to precise the estimator, see Notes.</p>
-<dl class="simple">
-<dt>output<span class="classifier">numpy.array of shape (n_features, n_features)</span></dt><dd><p>The geometric mean a the pooled group.</p>
-</dd>
-</dl>
-<p>time_series_extraction, time_series_extraction_with_individual_atlases :
-These are the functions which extract the time series according atlas
-regions and returned a structured dictionnary. This is simply the argument
-<cite>time_series_dictionary</cite>.</p>
-<p>Covariances estimator are estimators compute in the scikit-learn library.
-Multiple estimator can be found in the module sklearn.covariance, popular
-choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
-<p>For now, we doesnt account for discarded rois for the derivation of the
-geometric mean.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.subjects_mean_connectivity_">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">subjects_mean_connectivity_</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">connectivity_coefficient_position</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#subjects_mean_connectivity_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.subjects_mean_connectivity_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute for each subjects, the mean connectivity for some connectivity coefficient in the general subjects
-connectivity matrices.</p>
-<dl class="simple">
-<dt>subjects_individual_matrices_dictionnary: dict</dt><dd><p>The subjects connectivity dictionnary containing connectivity matrices
-and corresponding mask array for discarded rois, for each group.</p>
-</dd>
-<dt>connectivity_coefficient_position: numpy.array of shape (number of rois, row_index, column_index)</dt><dd><p>The array containing the position in the connectivity matrices of the rois you want
-to extract the connectivity coefficients.</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kinds.</p>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of the two group in the study.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>A dictionnary containing for each subject in group, a masked array structure containing
-the numerical array of the connectivity coefficient of interest, along with the boolean
-mask accounting for discarded rois. The second key, contain the mean of the extracted
-connectivity coefficient for each subject, also accounting for discarded rois it they
-exist.</p>
-</dd>
-</dl>
-<p>The subjects connectivity matrices shouldn’t be vectorized, the shape should
-be (n_features, n_features).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.tangent_space_projection">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">tangent_space_projection</code><span class="sig-paren">(</span><em class="sig-param">reference_group</em>, <em class="sig-param">group_to_project</em>, <em class="sig-param">bootstrap_number</em>, <em class="sig-param">bootstrap_size</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">verif_null=True</em>, <em class="sig-param">correction_method='bonferroni'</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">statistic='t'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#tangent_space_projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.tangent_space_projection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Project a group of time series to a space tangent to a reference connectivity matrix.
-The reference matrix is derived from a reference times series group.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.time_series_extraction">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">reference_atlas</em>, <em class="sig-param">group_data</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">low_pass_filtering=None</em>, <em class="sig-param">high_pass_filtering=None</em>, <em class="sig-param">detrend_signal=True</em>, <em class="sig-param">standardize_signal=True</em>, <em class="sig-param">smooth_signal=None</em>, <em class="sig-param">resampling_target='data'</em>, <em class="sig-param">memory_level=1</em>, <em class="sig-param">nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Times series extractions for each subjects on a common atlas.</p>
-<p>This function extract time series for each subjects according predefined regions on one common atlas.</p>
-<dl>
-<dt>root_fmri_data_directory<span class="classifier">str</span></dt><dd><p>The full path of a root directory containing one or numerous
-sub-directories where functional images are.</p>
-</dd>
-<dt>groupes<span class="classifier">list</span></dt><dd><p>The list of groups of interest, i.e the name of the
-sub-directories containing the functional images you want 
-to study.</p>
-</dd>
-<dt>subjects_id_data_path<span class="classifier">str</span></dt><dd><p>The full path to the data file containing the subjects IDs.</p>
-</dd>
-<dt>group_data<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionnary structured as follow :</dt><dd><ul class="simple">
-<li><p>The first keys level is the different groups</p></li>
-</ul>
-<p>to study.
-- The second level keys is the subjects IDs for
-all subjects in each groupes.
-- The third level keys contain multiple field : 
-‘functional_file’ contain the full path to the subject
-fmri file, ‘atlas_file’ contain the full path to the 
-subject atlas, ‘label_file’ the full path to the subject
-atlas label, ‘confounds_file’ the full path to the subject
-confounds file if they exist, a empty list if not.</p>
-</dd>
-</dl>
-</dd>
-<dt>reference_atlas<span class="classifier">str</span></dt><dd><p>The full path to the reference atlas which will be used
-to extract signals from regions.</p>
-</dd>
-<dt>repetition_time<span class="classifier">float</span></dt><dd><p>The repetition time in second, i.e the time between two volumes
-in a fmri image.</p>
-</dd>
-<dt>low_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The low pass frequency in Hz cut-off for filtering the times series.
-Default is None.</p>
-</dd>
-<dt>high_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The high pass frequency in Hz cut-off for filtering the time series.
-Default is None</p>
-</dd>
-<dt>detrend_signal<span class="classifier">bool, optional</span></dt><dd><p>Detrend the time series removing the first order moment to the
-time series, i.e removing the mean signals to each time series.
-Default if True.</p>
-</dd>
-<dt>standardize_signal<span class="classifier">bool, optional</span></dt><dd><p>Set the times series to unit variance
-Default is True.</p>
-</dd>
-<dt>smooth_signal<span class="classifier">float or None, optional</span></dt><dd><p>The full-width half maximum in millimeters of a Gaussian
-spatial smoothing to apply to the time series.
-Default is None.</p>
-</dd>
-<dt>resampling_target<span class="classifier">str</span></dt><dd><p>Gives the reference image which the source image image
-will be resample. 
-Choices are  : {“mask”, “maps”, “data”, None}. 
-Default is ‘data’.</p>
-</dd>
-<dt>memory_level<span class="classifier">int, optional</span></dt><dd><p>Caching parameters of functions. Default is 1.</p>
-</dd>
-<dt>nilearn_cache_directory<span class="classifier">str or None</span></dt><dd><p>The full path which will contain the folder used to cache
-the regions extractions. If None, no cache is performing.
-Default is None.</p>
-</dd>
-</dl>
-<dl>
-<dt>output<span class="classifier">dict</span></dt><dd><dl>
-<dt>A dictionnary structured as follow :</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groupes.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
-</ul>
-<p>subject time series in an array of shape (number of regions, number of time points)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>data_architecture.fetch_data : This function
-returned the organised dictionnary with all the information needed for the
-time series extraction on a common atlas. This is 
-simply the argument <cite>group_data</cite>.</p>
-<p>The times series extraction is based on functions contain is the Nilearn
-packages. I encourage the users to consult the docstring of the following
-function for the detailed mechanism of signal extraction : nilearn.signal.clean,
-nilearn.input_data.NiftiMapsMasker.</p>
-<p>The subjects IDs file, whatever the format, should not contain any header.
-It’s should have a row column of ID for each subjects.</p>
-<p>The Nilearn official documentation on Github :
-[1] <a class="reference external" href="http://nilearn.github.io/index.html">http://nilearn.github.io/index.html</a></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases">
-<code class="sig-prename descclassname">computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction_with_individual_atlases</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">group_data</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">low_pass_filtering=None</em>, <em class="sig-param">high_pass_filtering=None</em>, <em class="sig-param">detrend_signal=True</em>, <em class="sig-param">standardize_signal=True</em>, <em class="sig-param">smooth_signal=None</em>, <em class="sig-param">resampling_target='data'</em>, <em class="sig-param">memory_level=1</em>, <em class="sig-param">nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/computing/compute_connectivity_matrices.html#time_series_extraction_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
-<dd><p>Times series extractions for each subjects with an individual atlas.</p>
-<p>This function extract time series for each subjects according predefined regions in individual atlases.</p>
-<dl>
-<dt>root_fmri_data_directory<span class="classifier">str</span></dt><dd><p>The full path of a root directory containing one or numerous
-sub-directories where functional images are.</p>
-</dd>
-<dt>groupes<span class="classifier">list</span></dt><dd><p>The list of groups of interest, i.e the name of the
-sub-directories containing the functional images you want 
-to study.</p>
-</dd>
-<dt>subjects_id_data_path<span class="classifier">str</span></dt><dd><p>The full path to the data file containing the subjects IDs.</p>
-</dd>
-<dt>group_data<span class="classifier">dict</span></dt><dd><dl>
-<dt>A multi-levels dictionary structured as follow :</dt><dd><ul class="simple">
-<li><p>The first keys level is the different groups</p></li>
-</ul>
-<p>to study.
-- The second level keys is the subjects IDs for
-all subjects in each groupes.
-- The third level keys contain multiple field : 
-‘functional_file’ contain the full path to the subject
-fmri file, ‘atlas_file’ contain the full path to the 
-subject atlas, ‘label_file’ the full path to the subject
-atlas label, ‘confounds_file’ the full path to the subject
-confounds file if they exist, a empty list if not.</p>
-</dd>
-</dl>
-</dd>
-<dt>repetition_time<span class="classifier">float</span></dt><dd><p>The repetition time in second, i.e the time between two volumes
-in a fmri image.</p>
-</dd>
-<dt>low_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The low pass frequency in Hz cut-off for filtering the times series.
-Default is None.</p>
-</dd>
-<dt>high_pass_filtering<span class="classifier">float or None, optional</span></dt><dd><p>The high pass frequency in Hz cut-off for filtering the time series.
-Default is None</p>
-</dd>
-<dt>detrend_signal<span class="classifier">bool, optional</span></dt><dd><p>Detrend the time series removing the first order moment to the
-time series, i.e removing the mean signals to each time series.
-Default if True.</p>
-</dd>
-<dt>standardize_signal<span class="classifier">bool, optional</span></dt><dd><p>Set the times series to unit variance
-Default is True.</p>
-</dd>
-<dt>smooth_signal<span class="classifier">float or None, optional</span></dt><dd><p>The full-width half maximum in millimeters of a Gaussian
-spatial smoothing to apply to the time series.
-Default is None.</p>
-</dd>
-<dt>resampling_target<span class="classifier">str</span></dt><dd><p>Gives the reference image which the source image image
-will be resample. 
-Choices are  : {“mask”, “maps”, “data”, None}. 
-Default is ‘data’.</p>
-</dd>
-<dt>memory_level<span class="classifier">int, optional</span></dt><dd><p>Caching parameters of functions. Default is 1.</p>
-</dd>
-<dt>nilearn_cache_directory<span class="classifier">str or None</span></dt><dd><p>The full path which will contain the folder used to cache
-the regions extractions. If None, no cache is performing.
-Default is None.</p>
-</dd>
-</dl>
-<dl>
-<dt>output<span class="classifier">dict</span></dt><dd><dl>
-<dt>A dictionnary structured as follow :</dt><dd><ul class="simple">
-<li><p>The first keys levels is the different groupes.</p></li>
-<li><p>The second keys levels is the subjects IDs</p></li>
-<li><p>The third levels is two keys : ‘time_series’ containing the</p></li>
-</ul>
-<p>subject time series in an array of shape (number of regions, number of time points) 
-A key ‘discarded_rois’ containing an array of the index of ROIs 
-where the corresponding labels is ‘void’. If no void labels is detected,
-then the array is empty.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>data_architecture.fetch_data_with_individual_atlases : This function
-returned the organised dictionnary with all the information needed for the
-time series extraction with individual atlases. This is 
-simply the argument <cite>group_data</cite>.</p>
-<p>The times series extraction is based on functions contain is the Nilearn
-packages. I encourage the users to consult the docstring of the following
-function for the detailed mechanism of signal extraction : nilearn.signal.clean,
-nilearn.input_data.NiftiMapsMasker.</p>
-<p>The subjects IDs file, whatever the format, should not contain any header.
-It’s should have a row column of ID for each subjects.</p>
-<p>Remembers that the discarded rois are defined according to their labels
-which must be declared as ‘void’ in the subject atlas labels files.</p>
-<p>The Nilearn official documentation on Github :
-[1] <a class="reference external" href="http://nilearn.github.io/index.html">http://nilearn.github.io/index.html</a></p>
-</dd></dl>
-
-<span class="target" id="module-connectivity_statistics.non_parametric_tests"></span><span class="target" id="module-data_handling.atlas"></span><dl class="class">
-<dt id="data_handling.atlas.Atlas">
-<em class="property">class </em><code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">Atlas</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class Atlas for computing useful information when dealing with
-atlases.</p>
-<dl class="simple">
-<dt>fetch_atlas</dt><dd><p>Return the complete path to the atlas.</p>
-</dd>
-<dt>loadAtlas</dt><dd><p>Load the atlas images and return a 4D numpy array.</p>
-</dd>
-<dt>GetRegionNumbers</dt><dd><p>Return the numbers of regions in the Atlas.</p>
-</dd>
-<dt>GetLabels</dt><dd><p>Return the list of the labels of the atlas.</p>
-</dd>
-<dt>GetCenterOfMass</dt><dd><p>Return tha array of coordinates of center of mass to
-each atlas regions.</p>
-</dd>
-<dt>UserLabelsColors</dt><dd><p>Generate an array of users defined colors to the 
-labels for display purpose.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="data_handling.atlas.Atlas.GetLabels">
-<code class="sig-name descname">GetLabels</code><span class="sig-paren">(</span><em class="sig-param">labelsFile</em>, <em class="sig-param">colname='labels'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.GetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.GetLabels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the labels text file of the atlas</p>
-<dl class="simple">
-<dt>labelsFile<span class="classifier">str</span></dt><dd><p>The full path to the label file of the atlas. Supported
-extension are : .csv, .txt, .xlsx or .xls. By default,
-the header of the labels file is the column labels name 
-entitled ‘labels’.</p>
-</dd>
-<dt>colname<span class="classifier">str, optional</span></dt><dd><p>The columns name containing the labels. Default is labels.
-If no header, leave None.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output<span class="classifier">list</span></dt><dd><p>The list of the labels.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="data_handling.atlas.Atlas.fetch_atlas">
-<code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the complete path to the atlas file.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data_handling.atlas.Atlas.get_center_of_mass">
-<code class="sig-name descname">get_center_of_mass</code><span class="sig-paren">(</span><em class="sig-param">asanarray=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.get_center_of_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.get_center_of_mass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute centers of mass of the different atlas regions.</p>
-<dl class="simple">
-<dt>asanarray<span class="classifier">bool, optional</span></dt><dd><p>If True, then the array are return if numpy.array of 
-shape (number of regions, 3).</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output<span class="classifier">list or numpy.array</span></dt><dd><p>The coordinates of the centers of mass for each regions 
-of the atlas.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="data_handling.atlas.Atlas.get_region_numbers">
-<code class="sig-name descname">get_region_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.get_region_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.get_region_numbers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of regions of the atlas</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data_handling.atlas.Atlas.load_atlas">
-<code class="sig-name descname">load_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.load_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.load_atlas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the atlas image and return the corresponding
-4D numpy array.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="data_handling.atlas.Atlas.user_labels_colors">
-<code class="sig-name descname">user_labels_colors</code><span class="sig-paren">(</span><em class="sig-param">networks</em>, <em class="sig-param">colors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#Atlas.user_labels_colors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.Atlas.user_labels_colors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates user defined labels colors for each label of the atlas.</p>
-<dl class="simple">
-<dt>networks<span class="classifier">list</span></dt><dd><p>The list containing the numbers of regions for each networks.</p>
-</dd>
-<dt>colors<span class="classifier">list</span></dt><dd><p>The list of colors for each networks.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output<span class="classifier">numpy.array, shape(number of regions, 3)</span></dt><dd><p>The array containing the numerical values for the RGB space
-for the given colors entered in colors. For the normalized RGB space, 
-you just have divided the values of this array by 255.</p>
-</dd>
-</dl>
-<p>Please find all possible colors at
-[1] <a class="reference external" href="https://matplotlib.org/examples/color/named_colors.html">https://matplotlib.org/examples/color/named_colors.html</a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.atlas.fetch_atlas">
-<code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><em class="sig-param">atlas_folder</em>, <em class="sig-param">atlas_name</em>, <em class="sig-param">colors_labels='auto'</em>, <em class="sig-param">network_regions_number='auto'</em>, <em class="sig-param">labels='auto'</em>, <em class="sig-param">normalize_colors=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return important information from an atlas file.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.atlas.fetch_atlas_functional_network">
-<code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">fetch_atlas_functional_network</code><span class="sig-paren">(</span><em class="sig-param">atlas_excel_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">network_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#fetch_atlas_functional_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.fetch_atlas_functional_network" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Return a dictionary containing information for all functional networks.</dt><dd><p>Information for all network is simply fetch in the excel file.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>atlas_excel_file: str</dt><dd><p>The full path to the excel file containing all the information on your atlas.</p>
-</dd>
-<dt>sheetname: str</dt><dd><p>The active sheet name in the atlas excel file.</p>
-</dd>
-<dt>network_column_name: str</dt><dd><p>The name of columns containing the label for all the functional networks.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>A dictionnary with the networks name as keys, and the sub-dataframe and the number
-of roi for each networks as values.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.atlas.generate_3d_img_network">
-<code class="sig-prename descclassname">data_handling.atlas.</code><code class="sig-name descname">generate_3d_img_network</code><span class="sig-paren">(</span><em class="sig-param">reference_4datlas</em>, <em class="sig-param">atlas_information_xlsx_file</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">atlas4d_index_keys</em>, <em class="sig-param">atlas3d_label_key</em>, <em class="sig-param">save_network_img_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/atlas.html#generate_3d_img_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.atlas.generate_3d_img_network" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function generate a 3D NifTi file for each defined functional network in a 4D atlas.</p>
-</dd></dl>
-
-<span class="target" id="module-data_handling.data_management"></span><dl class="function">
-<dt id="data_handling.data_management.concatenate_dataframes">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">concatenate_dataframes</code><span class="sig-paren">(</span><em class="sig-param">list_of_dataframes</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#concatenate_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.concatenate_dataframes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Concatenate a list of pandas DataFrame</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.csv_from_dictionary">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">csv_from_dictionary</code><span class="sig-paren">(</span><em class="sig-param">subjects_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">field_to_write</em>, <em class="sig-param">header</em>, <em class="sig-param">csv_filename</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#csv_from_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.csv_from_dictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a csv file from a subjects dictionary.</p>
-<dl class="simple">
-<dt>subjects_dictionary: dict</dt><dd><p>A dictionnary with the same structure as a
-subjects connectivity matrices dictionary</p>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of groups to write</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kind to write</p>
-</dd>
-<dt>field_to_write: str</dt><dd><p>The field containing the value to write
-for each subject.</p>
-</dd>
-<dt>header: list</dt><dd><p>The header of the CSV file, in a list of
-column name</p>
-</dd>
-<dt>csv_filename: str</dt><dd><p>The end of CSV filename with the extension</p>
-</dd>
-<dt>output_directory: str</dt><dd><p>The full path to a directory for saving
-the CSV file.</p>
-</dd>
-<dt>delimiter: str, optional</dt><dd><p>The delimiter between columns.
-Default is a comma.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.csv_from_intra_network_dictionary">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">csv_from_intra_network_dictionary</code><span class="sig-paren">(</span><em class="sig-param">subjects_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">network_labels_list</em>, <em class="sig-param">field_to_write</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">csv_prefix</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#csv_from_intra_network_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.csv_from_intra_network_dictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write csv file from the intra-network connectivity dictionary structure.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.dataframe_to_csv">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">dataframe_to_csv</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">path</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em>, <em class="sig-param">index=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#dataframe_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.dataframe_to_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create and write a CSV file from a DataFrame</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.dictionary_to_csv">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">dictionary_to_csv</code><span class="sig-paren">(</span><em class="sig-param">dictionary</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">output_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#dictionary_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.dictionary_to_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write dictionary couple (key, value) in a CSV file</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.flatten">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">flatten</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.flatten" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flatten a list of numpy ND-array</p>
-<dl class="simple">
-<dt>values: list</dt><dd><p>A list of numpy array, with same or different dimensions.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: numpy.array</dt><dd><p>A flat array (one dimensional array) containing all
-the values in the same order of the list of array.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.group_by_factors">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">group_by_factors</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">list_of_factors</em>, <em class="sig-param">return_type='list_of_dataframe'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#group_by_factors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.group_by_factors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Group by factors present in a dataframe</p>
-<dl class="simple">
-<dt>dataframe: pandas.DataFrame</dt><dd><p>A pandas dataframe.</p>
-</dd>
-<dt>list_of_factors: list</dt><dd><p>The list of factors, i.e columns name in the dataframe,
-you want to group by.</p>
-</dd>
-<dt>return_type: str</dt><dd><p>The output format, choices are <cite>list_of_dataframe</cite> or
-<cite>dictionary</cite>. If the former, a list of dataframe is returned
-of length equal to the number of groups, if the latter a dictionary
-with groups name as keys and corresponding dataframe as values is returned.
-Default is <cite>list_of_dataframe</cite>.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output:</dt><dd><p>A list or dictionary of the corresponding dataframe group by attribute.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.merge_by_index">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">merge_by_index</code><span class="sig-paren">(</span><em class="sig-param">dataframe1</em>, <em class="sig-param">dataframe2</em>, <em class="sig-param">left_index=True</em>, <em class="sig-param">right_index=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#merge_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.merge_by_index" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge two dataframes based on the index concordances</p>
-<dl class="simple">
-<dt>dataframe1: pandas.DataFrame</dt><dd><p>A panda dataframe</p>
-</dd>
-<dt>dataframe2: pandas.DataFrame</dt><dd><p>A panda dataframe</p>
-</dd>
-<dt>left_index: bool, optional</dt><dd><p>If True, the merge operation is based on the left index</p>
-</dd>
-<dt>right_index: bool, optional</dt><dd><p>If True, the merge operation is based on the right index</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: pandas.DataFrame</dt><dd><p>The merged dataframe.</p>
-</dd>
-</dl>
-<p>If <cite>left_index</cite> and <cite>right_index</cite> are both True
-the merge  is based on the intersection of both dataframe,
-i.e a missing index in one of the dataframe will be deleted in
-the final dataframe.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.merge_list_dataframes">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">merge_list_dataframes</code><span class="sig-paren">(</span><em class="sig-param">list_dataframes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#merge_list_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.merge_list_dataframes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge a list of dataframes</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.read_csv">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">read_csv</code><span class="sig-paren">(</span><em class="sig-param">csv_file</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.read_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a CSV file and return a panda.DataFrame</p>
-<dl class="simple">
-<dt>csv_file: str</dt><dd><p>The full path to the CSV file to read</p>
-</dd>
-<dt>delimiter: str</dt><dd><p>The separator use in the CSV file</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.read_excel_file">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">read_excel_file</code><span class="sig-paren">(</span><em class="sig-param">excel_file_path</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">subjects_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#read_excel_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.read_excel_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a excel document</p>
-<dl class="simple">
-<dt>excel_file_path: str</dt><dd><p>Full path to the excel document</p>
-</dd>
-<dt>sheetname: str</dt><dd><p>The sheetname to read in the excel document</p>
-</dd>
-<dt>subjects_column_name: str</dt><dd><p>The column name containing the subjects identifiers.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: pandas.DataFrame</dt><dd><p>A panda DataFrame, indexed by subject name.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.remove_duplicate">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">remove_duplicate</code><span class="sig-paren">(</span><em class="sig-param">seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#remove_duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.remove_duplicate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove duplicate in a sequence of items while keeping
-the order.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.shift_index_column">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">shift_index_column</code><span class="sig-paren">(</span><em class="sig-param">panda_dataframe</em>, <em class="sig-param">columns_to_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#shift_index_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.shift_index_column" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shift the index column of a pandas DataFrame</p>
-<dl class="simple">
-<dt>panda_dataframe: pandas.DataFrame</dt><dd><p>A pandas dataframe.</p>
-</dd>
-<dt>columns_to_index: list</dt><dd><p>Column label or list of column labels / arrays</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: pandas.DataFrame</dt><dd><p>A new pandas DataFrame with the shifted columns as index.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.unflatten">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">unflatten</code><span class="sig-paren">(</span><em class="sig-param">flat_values</em>, <em class="sig-param">prototype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#unflatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.unflatten" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unflatten a one dimension array of values to the
-original list of array.</p>
-<dl class="simple">
-<dt>flat_values: numpy.ndarray</dt><dd><p>The numpy array containing the values.</p>
-</dd>
-<dt>prototype: list</dt><dd><p>The original list of numpy array.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: list</dt><dd><p>A list of array with the same structure as prototype.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.data_management.write_ols_results">
-<code class="sig-prename descclassname">data_handling.data_management.</code><code class="sig-name descname">write_ols_results</code><span class="sig-paren">(</span><em class="sig-param">ols_fit</em>, <em class="sig-param">design_matrix</em>, <em class="sig-param">response_variable</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">model_name</em>, <em class="sig-param">design_matrix_index_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/data_management.html#write_ols_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.data_management.write_ols_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write OLS result, along with the design matrix and the variable to explain.</p>
-</dd></dl>
-
-<span class="target" id="module-data_handling.dictionary_operations"></span><dl class="function">
-<dt id="data_handling.dictionary_operations.groupby_factor_connectivity_matrices">
-<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">groupby_factor_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">population_data_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">subjects_connectivity_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">factors</em>, <em class="sig-param">drop_subjects_list=None</em>, <em class="sig-param">index_col=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#groupby_factor_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.groupby_factor_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Group by attribute the subjects connectivity matrices.
-# TODO: 18/09/2019: I added index_col to precise the index of the column
-# TODO: to be considered as the index of the whole dataframe.
-# TODO: Side Note: this function work with a time series dictionary too. !!
-# TODO: Refractoring of subjects_connectivity_matrices_dictionary to subjects_dictionary.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.dictionary_operations.merge_dictionary">
-<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">merge_dictionary</code><span class="sig-paren">(</span><em class="sig-param">dict_list</em>, <em class="sig-param">new_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#merge_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.merge_dictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge a list of dictionary</p>
-<dl class="simple">
-<dt>new_key: str, optional</dt><dd><p>The key of the new merged dictionary. If None, the
-dictionaries in the list are simply merged together.
-Default is None</p>
-</dd>
-<dt>dict_list: list</dt><dd><p>A list of the dictionary to be merged</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output: dict</dt><dd><p>A dictionnary with one key, and merged dictionary
-as value.</p>
-</dd>
-</dl>
-<p>Note that all the dictionnary you want to merge must have
-different keys.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.dictionary_operations.random_draw_of_connectivity_matrices">
-<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">random_draw_of_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupe</em>, <em class="sig-param">n_matrices</em>, <em class="sig-param">subjects_id_list=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">extract_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#random_draw_of_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.random_draw_of_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Randomly pick N connectivity matrices from a subjects connectivity dictionnary.</p>
-<dl class="simple">
-<dt>subjects_connectivity_dictionary: dict</dt><dd><p>The subjects dictionnary containing connectivity matrices</p>
-</dd>
-<dt>groupe: str</dt><dd><p>The group in which you want pick the matrices</p>
-</dd>
-<dt>n_matrices: int</dt><dd><p>The number of connectivity matrices you want
-to randomly choose</p>
-</dd>
-<dt>subjects_id_list: list, optional</dt><dd><p>The subjects identifiers list in which you
-want to choose matrices. If None, random matrices
-are picked in the entire group. Default is None.</p>
-</dd>
-<dt>random_state: int, optional</dt><dd><p>The seed of the pseudo random number generator to use when shuffling
-the data. If int, random_state is the seed used by the random number
-generator; If RandomState instance, random_state is the random number
-generator; If None, the random number generator is the RandomState
-instance used by <cite>np.random</cite>.</p>
-</dd>
-<dt>extract_kwargs: dict, optional</dt><dd><p>A dictionnary of argument passed to extract_sub_connectivity_matrices
-function. Default is None</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output 1: dict</dt><dd><p>The connectivity matrices dictionary, with subjects chosen
-randomly.</p>
-</dd>
-<dt>output 2: list</dt><dd><p>The  list of randomly chosen subjects identifier.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.dictionary_operations.rebuild_subject_connectivity_matrices">
-<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">rebuild_subject_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">diagonal_were_kept=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#rebuild_subject_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.rebuild_subject_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given the subject connectivity dictionary, the matrix are rebuild from the vectorized
-one.</p>
-<dl class="simple">
-<dt>subjects_connectivity_dictionary: dict</dt><dd><p>The subjects connectivity dictionary</p>
-</dd>
-<dt>groupes: list</dt><dd><p>The list of groups to rebuild the subjects matrices.</p>
-</dd>
-<dt>kinds: list</dt><dd><p>The list of kinds to rebuild.</p>
-</dd>
-<dt>diagonal_were_kept: bool, optional</dt><dd><p>If True, the reconstructed matrix, will have
-the diagonal store in the kind diagonal field of
-the dictionary, and the mask diagonal field for
-the mask.
-If False, the reconstructed matrix will have
-a zeros diagonal, and a True diagonal for the
-mask.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output 1: dict</dt><dd><p>The reconstructed subjects connectivity
-matrices. All the matrices have now
-shape (number_of_regions, number_of_regions).</p>
-</dd>
-</dl>
-<p>If in the input dictionary, the matrices and corresponding
-mask where vectorized with the diagonal kept, the argument
-<cite>diagonal_is_there</cite> must be set to False. A dimension
-error will be raises otherwise.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="data_handling.dictionary_operations.stack_subjects_connectivity_matrices">
-<code class="sig-prename descclassname">data_handling.dictionary_operations.</code><code class="sig-name descname">stack_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data_handling/dictionary_operations.html#stack_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data_handling.dictionary_operations.stack_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Re-arrange the subjects connectivity dictionary to return a stack version per group
-and kind.</p>
+<dt id="plotting.display.display_gaussian_connectivity_fit">
+<code class="sig-prename descclassname">plotting.display.</code><code class="sig-name descname">display_gaussian_connectivity_fit</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity</em>, <em class="sig-param">estimate_mean</em>, <em class="sig-param">estimate_std</em>, <em class="sig-param">raw_data_colors='blue'</em>, <em class="sig-param">line_width=2</em>, <em class="sig-param">alpha=0.5</em>, <em class="sig-param">normed=True</em>, <em class="sig-param">bins='auto'</em>, <em class="sig-param">fitted_distribution_color='black'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">xtitle=None</em>, <em class="sig-param">ytitle=None</em>, <em class="sig-param">legend_fitted='Fitted Gaussian Distribution'</em>, <em class="sig-param">legend_data=None</em>, <em class="sig-param">display_fit='yes'</em>, <em class="sig-param">ms=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plotting/display.html#display_gaussian_connectivity_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotting.display.display_gaussian_connectivity_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a vectorized connectivity matrices histogram, along with a Gaussian
+fit with an estimated mean, and standard deviation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>subjects_connectivity_dictionary</strong> – </p></li>
-<li><p><strong>groupes</strong> – </p></li>
-<li><p><strong>kinds</strong> – </p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>vectorized_connectivity: numpy.array, shape 0.5*n_features*(n_features + 1)</strong></dt><dd><p>A array of connectivity coefficient.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dt><strong>estimate_mean: float</strong></dt><dd><p>The estimated mean of the connectivity coefficient distribution.</p>
+</dd>
+<dt><strong>estimate_std: float</strong></dt><dd><p>The estimated standard deviation of the connectivity coefficient distribution.</p>
+</dd>
+<dt><strong>raw_data_colors: string, optional</strong></dt><dd><p>The colors of the histogram for the connectivity coefficient distribution.
+Default is blue.</p>
+</dd>
+<dt><strong>line_width: int, optional</strong></dt><dd><p>The width of line for the fit of the data. Default is 2.</p>
+</dd>
+<dt><strong>alpha: float, optional</strong></dt><dd><p>The opacity coefficient for histogram, between 0 and 1. Default is 0.5.</p>
+</dd>
+<dt><strong>normed: bool, optional</strong></dt><dd><p>Normalized the histogram. This is mandatory for displaying
+the gaussian fit over the data, since it represent a probability density function.</p>
+</dd>
+<dt><strong>bins: string, optional</strong></dt><dd><p>How the bins edges of the histogram are computed, choices among different estimators
+{‘fd’, ‘doane’, ‘scott’, ‘rice’, ‘sturges’}
+Default is ‘auto’, the maximum of the sturges and fd estimators are taken.</p>
+</dd>
+<dt><strong>fitted_distribution_color: string, optional</strong></dt><dd><p>The color of the curves representing the Gaussian fit. Default is black.</p>
+</dd>
+<dt><strong>title: string, optional</strong></dt><dd><p>The overall title of the figure. Default is None.</p>
+</dd>
+<dt><strong>xtitle: string, optional</strong></dt><dd><p>The legend of the x-axis. Default is None.</p>
+</dd>
+<dt><strong>ytitle: string, optional</strong></dt><dd><p>The legend of the y-axis. Default is None.</p>
+</dd>
+<dt><strong>legend_fitted: string, optional</strong></dt><dd><p>The legend for the Gaussian fit. Default is ‘Fitted Gaussian Distribution’.</p>
+</dd>
+<dt><strong>legend_data: string, optional</strong></dt><dd><p>The legend for the histogram of the data. Default is None.</p>
+</dd>
+<dt><strong>display_fit: bool, optional</strong></dt><dd><p>If True, the gaussian fit of the data is displayed over the normalized histogram.</p>
+</dd>
+<dt><strong>ms: float, optional</strong></dt><dd><p>The size of the dot on the graph, default is 5.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<span class="target" id="module-machine_learning.CPM_method"></span><p>This module is designed to study the link between
-functional connectivity and behaviour. The algorithm
-named connectome predictive modelling is adapted from
-[1].</p>
-<dl class="footnote brackets">
-<dt class="label" id="id6"><span class="brackets">1</span></dt>
-<dd><p>Using connectome-based predictive modeling to</p>
 </dd>
 </dl>
-<p>predict individual behavior from brain connectivity, Shen et al.</p>
-<p>author: Dhaif BEKHA.</p>
-<dl class="function">
-<dt id="machine_learning.CPM_method.fit_model_on_training_set">
-<code class="sig-prename descclassname">machine_learning.CPM_method.</code><code class="sig-name descname">fit_model_on_training_set</code><span class="sig-paren">(</span><em class="sig-param">negative_edges_summary_values</em>, <em class="sig-param">positive_edges_summary_values</em>, <em class="sig-param">training_set_behavioral_score</em>, <em class="sig-param">add_predictive_variables=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/machine_learning/CPM_method.html#fit_model_on_training_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#machine_learning.CPM_method.fit_model_on_training_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit a linear model on the training set for positive and negative model, with behavioral score
-as variable.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
 <dl class="simple">
-<dt>negative_edges_summary_values: numpy.array, shape(n_subjects_in_training_set, )</dt><dd><p>The sum of predictors for each subject in the training set
-having a negative correlation with the behavioral scores.</p>
-</dd>
-<dt>positive_edges_summary_values: numpy.array, shape(n_subjects_in_training_set, )</dt><dd><p>The sum of predictors for each subject in the training set
-having a positive correlation with the behavioral scores.</p>
-</dd>
-<dt>training_set_behavioral_score: numpy.array, shape (n_subjects_in_training_set, 1)</dt><dd><p>The behavioral scores of the training set.</p>
-</dd>
-<dt>add_predictive_variables: pandas.DataFrame, optional</dt><dd><p>If not None, a pandas DataFrame of shape (n_subjects_in_training_set, n_variables) should
-be given. The variables wil be used in the predictive model.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.hist</span></code></dt><dd><p>This function, used here, compute and display the histogram of the data.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="machine_learning.CPM_method.predict_behavior">
-<code class="sig-prename descclassname">machine_learning.CPM_method.</code><code class="sig-name descname">predict_behavior</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">behavioral_scores</em>, <em class="sig-param">selection_predictor_method='correlation'</em>, <em class="sig-param">significance_selection_threshold=0.01</em>, <em class="sig-param">confounding_variables_matrix=None</em>, <em class="sig-param">add_predictive_variables=None</em>, <em class="sig-param">verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/machine_learning/CPM_method.html#predict_behavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#machine_learning.CPM_method.predict_behavior" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict behavior from matrix connectivity with a simple linear model.</p>
-<dl class="simple">
-<dt>vectorized_connectivity_matrices: numpy.array, shape (n_sample, n_features)</dt><dd><p>The subjects connectivity matrices in a vectorized form, i.e, you must
-give a array of shape (n_subjects, 0.5*n_features*(n_features-1)).</p>
-</dd>
-<dt>behavioral_scores: pandas.DataFrame or numpy.array of shape(n_subjects, 1)</dt><dd><p>The behavioral scores in a pandas DataFrame or numpy array form. Off course
-the behavioral scores should ordered in the same order of subjects matrices.</p>
-</dd>
-<dt>selection_predictor_method: str, optional</dt><dd><p>The selection method of predictors. When relate behavior and functional connectivity
-multiple choices are possible: simple correlation, partial correlation or linear_model.
-Default is correlation. Note that partial correlation or linear model should give
-the same results.</p>
-</dd>
-<dt>significance_selection_threshold: float, optional</dt><dd><p>The threshold level for the p-value resulting of the selection of predictors
-step. Default is 0.01.</p>
-</dd>
-<dt>confounding_variables_matrix: pandas.DataFrame of shape (n_subjects, n_variables), optional</dt><dd><p>A dataframe  of shape (n_subjects, n_variables) containing the confounding/controlling
-variable which might be used in the selection predictors step when selection method is
-partial correlation/linear regression. Defaults is None.</p>
-</dd>
-<dt>add_predictive_variables: pandas.DataFrame shape (n_subjects_in_training_set, n_variables) or None, optional</dt><dd><p>If not None, additional variables will be fitted in the predictive model, besides negative
-and positive summary features.</p>
-</dd>
-<dt>verbose: int, optional</dt><dd><p>If verbose equal to 0 nothing is printed.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>output 1: float</dt><dd><p>The correlation coefficient for the positive features model.</p>
-</dd>
-<dt>output 2: float</dt><dd><p>The correlation coefficient for the negative features model.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="machine_learning.CPM_method.predictors_selection_linear_model">
-<code class="sig-prename descclassname">machine_learning.CPM_method.</code><code class="sig-name descname">predictors_selection_linear_model</code><span class="sig-paren">(</span><em class="sig-param">training_connectivity_matrices</em>, <em class="sig-param">training_confound_variable_matrix</em>, <em class="sig-param">training_set_behavioral_score</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/machine_learning/CPM_method.html#predictors_selection_linear_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#machine_learning.CPM_method.predictors_selection_linear_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Relate each edges of subjects connectivity matrices in the training set
-with a behavioral scores using a linear model</p>
-</dd></dl>
-
 </div>
+</dd></dl>
+<dl class="function">
+<dt id="plotting.display.plot_matrix">
+<code class="sig-prename descclassname">plotting.display.</code><code class="sig-name descname">plot_matrix</code><span class="sig-paren">(</span><em class="sig-param">matrix</em>, <em class="sig-param">labels_colors='auto'</em>, <em class="sig-param">mpart='lower'</em>, <em class="sig-param">k=0</em>, <em class="sig-param">colormap='RdBu_r'</em>, <em class="sig-param">colorbar_params={'shrink': 0.5}</em>, <em class="sig-param">center=0</em>, <em class="sig-param">vmin=None</em>, <em class="sig-param">vmax=None</em>, <em class="sig-param">labels_size=8</em>, <em class="sig-param">horizontal_labels='auto'</em>, <em class="sig-param">vertical_labels='auto'</em>, <em class="sig-param">linewidths=0.5</em>, <em class="sig-param">linecolor='white'</em>, <em class="sig-param">title='Untitled'</em>, <em class="sig-param">figure_size=(12</em>, <em class="sig-param">9)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plotting/display.html#plot_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotting.display.plot_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a entire matrix, or it’s lower part with a chosen heatmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>matrix</strong><span class="classifier">numpy.array shape(numbers of regions, numbers of regions)</span></dt><dd><p>The numerical array you want to plot.</p>
+</dd>
+<dt><strong>labels_colors</strong><span class="classifier">str, or numpy.ndarray shape(number of regions, 3)</span></dt><dd><p>The color in the RGB normalized space, that is each
+color are represented by triplet of float ranging between
+0 and 1. Default is ‘auto’, random colors are automatically
+generated.</p>
+</dd>
+<dt><strong>mpart</strong><span class="classifier">str</span></dt><dd><p>The part of the array you want to plot, that is 
+the entire matrix or just it’s lower part.</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">int</span></dt><dd><p>The position from the main diagonal you want 
+to cut. Default is 0.</p>
+</dd>
+<dt><strong>colormap</strong><span class="classifier">str</span></dt><dd><p>The seaborn colormap you want to apply on the matrix
+when displaying it. Default is ‘RdBu_r’.</p>
+</dd>
+<dt><strong>colorbar_params</strong><span class="classifier">dict, optional</span></dt><dd><p>Additional parameters concerning the parameters
+of the colorbar : position, size…
+Keyword arguments for <cite>fig.colorbar</cite>.</p>
+</dd>
+<dt><strong>vmin, vmax</strong><span class="classifier">float, optional</span></dt><dd><p>The extrema of the colormap. all display values
+are threshold according too those values. If None,
+these values are inferred from the matrix.
+Default is ‘None’.</p>
+</dd>
+<dt><strong>labels_size</strong><span class="classifier">int, optional</span></dt><dd><p>The font size of the labels.
+Default is 8.</p>
+</dd>
+<dt><strong>horizontal_labels</strong><span class="classifier">str or list; optional</span></dt><dd><p>The labels list of each rows. If ‘auto’, labels
+are replaced by the row index.</p>
+</dd>
+<dt><strong>vertical_labels</strong><span class="classifier">str or list, optional</span></dt><dd><p>The labels list of each columns. If ‘auto’, labels
+are replaced by the column index.</p>
+</dd>
+<dt><strong>linewidths</strong><span class="classifier">float, optional</span></dt><dd><p>The width that divide each cell. Default
+is 0.5.</p>
+</dd>
+<dt><strong>linecolor</strong><span class="classifier">str, optional</span></dt><dd><p>The color of the lines that divide each cell. Default
+is ‘white’.</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">str, optional</span></dt><dd><p>The figure title. Default is ‘untitled’.</p>
+</dd>
+<dt><strong>figure_size</strong><span class="classifier">tuple, optional</span></dt><dd><p>Figure size in a tuple format (height, width).
+Default is (12, 9).</p>
+</dd>
+<dt><strong>center: float, optional</strong></dt><dd><p>The center of the colormap, for divergent data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">sns.heatmap</span></code></dt><dd><p>See the docstring of this function for a deeper insight of plotting function of a numerical array using seaborn.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+<dl class="function">
+<dt id="plotting.display.plot_ttest_results">
+<code class="sig-prename descclassname">plotting.display.</code><code class="sig-name descname">plot_ttest_results</code><span class="sig-paren">(</span><em class="sig-param">t_test_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">contrast</em>, <em class="sig-param">node_coords</em>, <em class="sig-param">node_color</em>, <em class="sig-param">output_pdf</em>, <em class="sig-param">node_size=50</em>, <em class="sig-param">colormap='bwr'</em>, <em class="sig-param">colorbar=False</em>, <em class="sig-param">annotate=True</em>, <em class="sig-param">display_mode='ortho'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plotting/display.html#plot_ttest_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotting.display.plot_ttest_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot on a glass brain the significant mean effect resulting of a
+two samples t-test and save resulting figures in a PDF files.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>t_test_dictionnary</strong><span class="classifier">dict</span></dt><dd><dl>
+<dt>A dictionnary containing multiple keys :</dt><dd><ul class="simple">
+<li><p>‘tstatistic’ : The raw statistic t-map for the choosen contrast</p></li>
+</ul>
+<p>2D numpy array of shape (number of regions, number of regions).</p>
+<ul class="simple">
+<li><p>‘uncorrected pvalues’ : The raw pvalues, 2D numpy array of shape</p></li>
+</ul>
+<p>(number of regions, number of regions).</p>
+<ul class="simple">
+<li><p>‘corrected pvalues’ : The corrected pvalues with the chosen methods.</p></li>
+</ul>
+<p>2D numpy array of shape (number of regions, number of regions).</p>
+<ul class="simple">
+<li><p>‘significant edges’ : The significant t-values after masking</p></li>
+</ul>
+<p>for the non significant pvalues at alpha level. 2D numpy array of shape 
+(number of regions, number of regions).</p>
+<ul class="simple">
+<li><p>‘significant pvalues’ : The significant pvalues at level alpha.</p></li>
+</ul>
+<p>2D numpy array of shape (number of regions, number of regions)</p>
+<ul class="simple">
+<li><p>‘significant mean effect’ : The differences of mean connectivity</p></li>
+</ul>
+<p>between the two groups according to the chosen contrast, and non-significant
+connexion are mask at alpha level. 2D numpy array of shape 
+(number of regions, number of regions).</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>groupes</strong><span class="classifier">list</span></dt><dd><p>The list of groupes involved in the computed
+contrast.</p>
+</dd>
+<dt><strong>contrast</strong><span class="classifier">list</span></dt><dd><p>The contrast vector used in the two samples t-test.</p>
+</dd>
+<dt><strong>colormap: str, optional</strong></dt><dd><p>The colormap to use for the matrix heatmap.
+Default is ‘bwr’.</p>
+</dd>
+<dt><strong>node_coords</strong><span class="classifier">list</span></dt><dd><p>The list of centroids coordinates of each regions
+in the atlas used for regions signals extraction.</p>
+</dd>
+<dt><strong>node_color</strong><span class="classifier">numpy.ndarray shape(number of regions, 3)</span></dt><dd><p>The color in the RGB normalized space, that is each
+color are represented by triplet of float ranging between
+0 and 1.</p>
+</dd>
+<dt><strong>output_pdf</strong><span class="classifier">str</span></dt><dd><p>The full path including .pdf extension to the a pdf file
+for saving the glass brain projection plot.</p>
+</dd>
+<dt><strong>node_size</strong><span class="classifier">int, optional</span></dt><dd><p>The node size. Default is 50.</p>
+</dd>
+<dt><strong>colorbar</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the colorbar of the chosen colormap
+is displayed alongside the glass brain plot.
+Default is False.</p>
+</dd>
+<dt><strong>annotate</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, letters at the top of the glass brain
+indicates the left or right hemisphere location.
+Default is True.</p>
+</dd>
+<dt><strong>display_mode</strong><span class="classifier">str, optional</span></dt><dd><p>The slice configuration you want to display
+Possible values are: ‘ortho’,’x’, ‘y’, ‘z’, ‘xz’ 
+‘yx’, ‘yz’, ‘l’, ‘r’, ‘lr’, ‘lzr’, ‘lyr’,’lzry’, ‘lyrz’.
+Default if ‘ortho’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">parametric_tests.two_sample_t_test</span></code></dt><dd><p>This function return a dictionnary resulting of the comparison of two groupe using a t-test. This the input of this display function.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">nilearn.plotting.plot_connectome</span></code></dt><dd><p>This function in the Nilearn packages is used here for the plot of the glass brain. I encourage the user to read the corresponding docstring in the Nilearn git repo.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The variables <cite>groupes</cite> and <cite>contrast</cite> are needed only
+the title. You shoul have already used this variables when
+you compute the two sample t-test between you’re two groups.</p>
+</dd></dl>
+<dl class="function">
+<dt id="plotting.display.t_and_p_values_barplot">
+<code class="sig-prename descclassname">plotting.display.</code><code class="sig-name descname">t_and_p_values_barplot</code><span class="sig-paren">(</span><em class="sig-param">t_values</em>, <em class="sig-param">p_values</em>, <em class="sig-param">alpha_level</em>, <em class="sig-param">xlabel_color</em>, <em class="sig-param">bar_labels</em>, <em class="sig-param">t_xlabel</em>, <em class="sig-param">t_ylabel</em>, <em class="sig-param">p_xlabel</em>, <em class="sig-param">p_ylabel</em>, <em class="sig-param">t_title</em>, <em class="sig-param">p_title</em>, <em class="sig-param">xlabel_size=10</em>, <em class="sig-param">ylabel_size=10</em>, <em class="sig-param">size_label=8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/plotting/display.html#t_and_p_values_barplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#plotting.display.t_and_p_values_barplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a barplot representation of t and p values resulting
+of a two sample Student t-test in two separates figure.</p>
+</dd></dl>
 
 
-          </div>
-            
-  <div class="footer-relations">
-    
-      <div class="pull-left">
-        <a class="btn btn-default" href="projectDescription.html" title="previous chapter (use the left arrow)">Project description</a>
-      </div>
-    
-    </div>
-    <div class="clearer"></div>
-  
+
+          </article>
         </div>
-        <div class="clearfix"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="projectDescription.html" title="Project description"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Python  documentation</a> &#187;</li> 
-      </ul>
-    </div>
-<script type="text/javascript">
-  $("#mobile-toggle a").click(function () {
-    $("#left-column").toggle();
-  });
-</script>
-<script type="text/javascript" src="_static/js/bootstrap.js"></script>
-  <div class="footer">
-    &copy; Copyright . Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+      </div>
+    </main>
   </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="projectDescription.html" title="Material"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Project description </span>
+              </div>
+            </a>
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              
+          </div>
+            Last updated on
+              Jan 30, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
   </body>
 </html>
