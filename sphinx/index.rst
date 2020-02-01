@@ -6,6 +6,12 @@
 Welcome to ConPagnon !
 =====================================
 
+.. image:: images/logo/conpagnon_logo_horizontal_all_layers_flatten_png.png
+   :width: 50%
+   :alt: conpagnon2.0
+   :align: left
+
+
 This is the documentation of ConPagnon, a python
 package for resting state fmri analysis.
 
