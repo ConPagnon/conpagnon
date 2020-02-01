@@ -121,3 +121,5 @@ html_theme_options = {
 
 language = 'en'
 html_last_updated_fmt = ''
+
+html_logo = 'images/logo/logo_conpagnon_small_header.png'
