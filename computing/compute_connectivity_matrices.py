@@ -27,6 +27,7 @@ from utils.folders_and_files_management import save_object
 import os
 from statsmodels.stats.multitest import multipletests
 
+
 def create_connectivity_mask(time_series_dictionary, groupes):
     """Create boolean mask for each subjects accounting
     for discarded roi if they exist.
@@ -483,7 +484,7 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
     References
     ----------
     For the use of tangent :
-        .. [1]  G. Varoquaux et al. “Detection of brain functional-connectivity
+        .. [1] G. Varoquaux et al. “Detection of brain functional-connectivity
         difference in post-stroke patients using group-level covariance modeling", MICCAI 2010
     """
 
@@ -1290,7 +1291,75 @@ def tangent_space_projection(reference_group, group_to_project, bootstrap_number
                              correction_method="bonferroni",
                              alpha=0.05, statistic="t"):
     """Project a group of time series to a space tangent to a reference connectivity matrix.
-    The reference matrix is derived from a reference times series group.
+    The reference matrix is derived from a reference times series group. Then, each edges of
+    the projected matrices is tested regarding the reference group through a one sample t-test
+    or a simple z-score. The null distribution of edges is derived with bootstrap.
+    Please, take a look to the reference paper for further a deeper understanding of the
+    method.
+
+    Parameters
+    ----------
+    reference_group: numpy.array
+        The stack of the vectorized connectivity matrices of shape
+        (n_subjects, n_features). This is the reference point where
+        the tangent space will be computed. All tangent connectivity
+        matrices will be derived regarding this reference set of matrices.
+    group_to_project: numpy.array
+        The stack of the vectorized connectivity matrices of shape
+        (n_subjects, n_features). Each connectivity matrices will be
+        projected in the tangent space, at the reference matrix of the
+        reference group.
+    bootstrap_number: int
+        The null distribution of each edges is derived trough bootstrapping
+        of the reference set of matrices. Usually around 500.
+    bootstrap_size: int
+        The size of the bootstrapped sample, i.e the number of
+        subjects to pick from the reference set.
+    output_directory: str
+        The full path of the directory for saving the results
+    verif_null: bool, optional
+        If True, generate a report choosing a set of 20 random
+        rois and plot the null distributions in those rois. True
+        by defaults
+    correction_method: str, optional
+        The correction method used for to correct for
+        multiple comparison. The default is the classical
+        bonferroni method. You can choose among all the correction
+        proposed by the statsmodels library.
+    alpha: float, optional
+        The type I error rate used for the multiple comparison
+        correction. Set to .05 by defaults.
+    statistic: str, optional
+        The statistic used, a one sample t-test by default. Other choices
+        are: z, for a simple z-score.
+
+    Returns
+    -------
+    output: dict
+        A dictionary with the following fields:
+            - null_distribution: The array containing
+            the estimated null distribution for each edges.
+            - p_values_corrected: The p values, adjusted
+            after the multiple comparison correction
+            - reference_group_tangent_mean: The reference
+            matrix, derived from the mean of the matrices
+            from the reference group. This is the point
+            where all matrices are projected.
+            - reference_group_tangent_matrices: The connectivity
+            matrices in the tangent space for the reference
+            group.
+            - group_to_project_tangent_matrices: The
+            connectivity matrices in the tangent space
+            for the projected group
+            - group_to_project_stats: The chosen
+            statistic for each subject, each edges
+            in the projected set of subjects.
+
+    References
+    ----------
+
+    .. [1] G. Varoquaux et al. “Detection of brain functional-connectivity
+        difference in post-stroke patients using group-level covariance modeling", MICCAI 2010
     """
     # Initialize a list containing the null distribution
     null_distribution = []

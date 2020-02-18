@@ -310,6 +310,48 @@ def fetch_atlas(atlas_folder, atlas_name,
                 normalize_colors = False):
     """Return important information from an atlas file.
 
+    Parameters
+    ----------
+        atlas_folder: str
+            The full path to the directory containing the atlas
+        atlas_name: str
+            The filename of the atlas file.
+        colors_labels: str, or list. Optional
+            If set to 'auto', the labels of the
+            ROI name will get a random colors. Else,
+            if a list of colors is provided, ROIs belonging
+            to a network will get the desired colors. The colors
+            should be in the same order of the network in the atlas
+            file. The length of the list should match the number of
+            network in the atlas.
+        network_regions_number: list, Optional.
+            If set to 'auto', random colors will be chosen.
+            If a list of the number of regions in each network
+            is provided, the corresponding color, in the color list
+            will be applied to the corresponding number in the list.
+        labels: list, optional
+            The list of the ROI labels. If not provided,
+            the ROI name is simply it's position in the atlas
+            file.
+        normalize_colors: bool, optional
+            If True, all triplets in the RGB space are
+            divided by the maximum 255.
+
+    Returns
+    -------
+    output 1: numpy.array
+        The coordinates of the center of mass of
+        each ROI in the atlas. An array of shape (n_rois, 3).
+    output 2: list
+        The name of each ROIs in the atlas. A list
+        of length (n_rois, ).
+    output 3: numpy.array
+        The array containing the colors in the
+        RGB space of each ROIs. An Array of shape
+        (n_rois, 3).
+    output_4: int
+        The number of ROIs in the atlas.
+
     """
 
     atlas_ = Atlas(path=atlas_folder,
