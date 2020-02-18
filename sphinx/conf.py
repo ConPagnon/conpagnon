@@ -113,8 +113,7 @@ html_theme_options = {
     'master_doc': False,
     'nav_links': [],
     'heroes': {'index': 'Easy resting state analysis in Python ',
-               'examples/index': 'examples and tutorials to get started with '
-                                 'statsmodels'},
+               'examples/index': 'A series of examples to get you started with ConPagnon'},
     "version_dropdown": True,
     "version_json": "_static/versions.json",
 }

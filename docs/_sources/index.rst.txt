@@ -12,21 +12,26 @@ Welcome to ConPagnon !
    :align: left
 
 
-This is the documentation of ConPagnon, a python
-package for resting state fmri analysis.
+ConPagnon is python library designed to facilitate the analysis of Resting State data. ConPagnon
+is mainly build around `Nilearn`_ and `Scikit-learn`_. We provide not only useful wrapper around
+commonly used statistical method, but new algorithm build around state of the art metric, and
+machine learning methods.
+
+.. _Nilearn: https://nilearn.github.io/
+.. _Scikit-learn: https://scikit-learn.org/stable/
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
 
-   projectDescription
-   code
+   install
+   gettingstarted
+   user-guide
+   examples/index
 
+Index
+=====
 
+:ref:`genindex`
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
+:ref:`modindex`
 
