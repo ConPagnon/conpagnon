@@ -33,10 +33,7 @@ The required dependencies to use the software are:
 * Webcolors
 * Seaborn
 * Pandas
-* Shutil
-* Pickle
 * Statsmodels
-* Importlib
 
 Install
 =======
