@@ -1,5 +1,5 @@
 """
-Modules to perform connectivity analysis at te network
+Modules to perform connectivity analysis at the network
 level
 
 Author: Dhaif BEKHA.
@@ -133,18 +133,59 @@ def regression_analysis_network_level_v2(groups, kinds, networks_list, root_anal
                                          alpha=0.05):
 
     """Perform linear regression between a behavioral score and a functional connectivity "score".
+    The connectivity score is usually a simple mean between the connectivity coefficient
+    of a single network. ConPagnon has some function to compute those kind of score from
+    a atlas, where at least a few network are identified from the user.
 
+    Parameters
+    ----------
+    groups: list
+        The list of string of the name of the
+        group involved in the analysis. Usually,
+        it's simply the entries of the subjects
+        connectivity dictionary.
+    kinds: list
+        Repeat the statistical analysis for the
+        all the connectivity metrics present
+        in the list.
+    networks_list: list
+        Repeat the statistical analysis for
+        all the network in the list. The network
+        name should match the keys of the network
+        dictionary containing the connectivity score.
+    root_analysis_directory: str
+        The full path to the text file containing
+        all the text data to read and feed to the
+        linear model.
+    network_model: list
+        A list containing the name of the model,
+        matching the prefix of the corresponding
+        text data to read.
+    variables_in_model: list
+        A list of the variables to put
+        in the linear model. The variables
+        name should match the columns name
+        present in the text data.
+    score_of_interest: str
+        The behavioral score to analyze, it's
+        simply the Y variable in the classical
+        linear model: Y = X*Beta
+    behavioral_dataframe: pandas.DataFrame
+        The dataframe containing all the behavioral
+        variables for each subjects.
+    correction_method: list, optional
+        A list containing all the desired correction method.
+        Be careful, we do not stack all the models before
+        the correction. By default, it's the Bonferonni
+        method.
+    alpha: float, optional
+        The type I error rate, set to 0.05 by default.
 
-    :param groups:
-    :param kinds:
-    :param networks_list:
-    :param root_analysis_directory:
-    :param network_model:
-    :param variables_in_model:
-    :param behavioral_dataframe:
-    :param correction_method:
-    :param alpha:
-    :return:
+    See Also
+    --------
+    compute_connectivity_matrices.intra_network_functional_connectivity :
+        This function compute a intra-network connectivity score, by computing
+        the mean of all connectivity coefficient inside a single network.
     """
 
     # The design matrix is the same for all model

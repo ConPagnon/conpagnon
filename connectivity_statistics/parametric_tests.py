@@ -250,7 +250,7 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
         significant_mean_effect = np.multiply(mean_effect, reject_boolean_matrix)
         uncorrected_mean_effect = np.multiply(mean_effect, pvalues_uncorrected_matrix < alpha)
 
-        # Save the t_stats_matrix, the uncorrected p values matrix, the corrected pvalues matrix in the dictionnary.
+        # Save the t_stats_matrix, the uncorrected p values matrix, the corrected pvalues matrix in the dictionary.
         t_test_dictionnary[kind] = {'tstatistic': t_stats_matrix,
                                     'uncorrected pvalues': pvalues_uncorrected_matrix,
                                     'corrected pvalues': pvalues_corrected_matrix,
@@ -442,24 +442,19 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         # Construction of masked raw t values according to corrected p values
         # under alpha threshold
         significant_tvals_m = np.multiply(raw_tvals_m, reject_m_)
-        
-    
-        
+
         for i in range(len(X_df.columns)):
             regression_results[covariable_name[i]] = \
                 {'raw pvalues': raw_pvals_m[i, :, :],
                  'raw tvalues': raw_tvals_m[i, :, :],
                  'corrected pvalues': corrected_pvals_m[i, :, :],
                  'significant tvalues': significant_tvals_m[i, :, :]}
-                
-    
-                
+
         correction_method_regression_results[corr_method] = {'results': regression_results}
     
         if corr_method == 'maxT':    
             correction_method_regression_results['maximum T null distribution'] = null_distribution
-    
-    
+
     # saving the dictionnary
     if save_regression_directory is not None:
         folders_and_files_management.save_object(correction_method_regression_results,
@@ -476,7 +471,8 @@ def functional_connectivity_distribution_estimation(functional_connectivity_esti
 
     Parameters
     ----------
-    functional_connectivity_estimate: numpy.array, shape(n_features, n_features) or shape 0.5*n_features*(n_features + 1)
+    functional_connectivity_estimate: numpy.array, shape(n_features, n_features)
+    or shape 0.5*n_features*(n_features + 1)
         A functional connectivity matrices, if a 2D array is provided it will vectorized discarding the diagonal.
 
     Returns
@@ -522,7 +518,8 @@ def functional_connectivity_distribution_estimation(functional_connectivity_esti
 
 
 def mean_functional_connectivity_distribution_estimation(mean_groups_connectivity_matrices):
-    """Estimates for the mean connectivity matrices for each group, the mean and standard deviation assuming gaussian distribution
+    """Estimates for the mean connectivity matrices for each group, the mean and standard deviation
+    assuming gaussian distribution
 
     Parameters
     ----------
@@ -537,8 +534,8 @@ def mean_functional_connectivity_distribution_estimation(mean_groups_connectivit
         A dictionnary organised as follow:
             - The first keys levels is the different groups in the study.
             - The second keys levels is the kinds present in the provided dictionnary.
-            - The third levels keys contain the estimated mean, the estimated standard deviation, and the vectorized array
-            of connectivity coefficients.
+            - The third levels keys contain the estimated mean, the estimated standard deviation,
+            and the vectorized array of connectivity coefficients.
 
     Notes
     -----
@@ -856,7 +853,8 @@ def two_sample_t_test_(connectivity_dictionnary_, groupes, kinds, field, contras
                        assume_equal_var=True,
                        nan_policy='omit',
                        paired=False):
-    """Perform a simple two sample t test.
+    """Perform a simple two sample t test between two sets
+    of connectivity matrices.
 
     Parameters
     ---------
