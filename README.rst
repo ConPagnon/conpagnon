@@ -34,6 +34,9 @@ The required dependencies to use the software are:
 * Seaborn
 * Pandas
 * Statsmodels
+* Psutil
+* Networkx
+* Patsy
 
 Install
 =======
