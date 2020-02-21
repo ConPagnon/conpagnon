@@ -1,6 +1,6 @@
 /conpagnon/sphinx/_build
 .idea/
-*pyc
+#*pyc
 __pycache__/
 
 # Distribution / packaging
