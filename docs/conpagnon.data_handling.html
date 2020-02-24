@@ -1,0 +1,1042 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>conpagnon.data_handling package &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  
+   
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#conpagnon.data_handling" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> conpagnon.data_handling package </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="user-guide.html" class="md-nav__link">User Guide</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#conpagnon-data-handling--page-root" class="md-nav__link">conpagnon.data_handling package</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#submodules" class="md-nav__link">Submodules</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.data_handling.atlas" class="md-nav__link">conpagnon.data_handling.atlas module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.data_handling.data_architecture" class="md-nav__link">conpagnon.data_handling.data_architecture module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.data_handling.data_management" class="md-nav__link">conpagnon.data_handling.data_management module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.data_handling.dictionary_operations" class="md-nav__link">conpagnon.data_handling.dictionary_operations module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.data_handling" class="md-nav__link">Module contents</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/conpagnon.data_handling.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  
+<h1 id="conpagnon-data-handling--page-root">conpagnon.data_handling package<a class="headerlink" href="#conpagnon-data-handling--page-root" title="Permalink to this headline">¶</a></h1>
+
+<h2 id="submodules">Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+
+
+<span id="conpagnon-data-handling-atlas-module"></span><h2 id="module-conpagnon.data_handling.atlas">conpagnon.data_handling.atlas module<a class="headerlink" href="#module-conpagnon.data_handling.atlas" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="conpagnon.data_handling.atlas.Atlas">
+<em class="property">class </em><code class="sig-prename descclassname">conpagnon.data_handling.atlas.</code><code class="sig-name descname">Atlas</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class Atlas for computing useful information when dealing with
+atlases.</p>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.fetch_atlas">
+<code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complete path to the atlas.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.loadAtlas">
+<code class="sig-name descname">loadAtlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.loadAtlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the atlas images and return a 4D numpy array.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.GetRegionNumbers">
+<code class="sig-name descname">GetRegionNumbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.GetRegionNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the numbers of regions in the Atlas.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.GetLabels">
+<code class="sig-name descname">GetLabels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.GetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.GetLabels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of the labels of the atlas.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.GetCenterOfMass">
+<code class="sig-name descname">GetCenterOfMass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.GetCenterOfMass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return tha array of coordinates of center of mass to
+each atlas regions.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.UserLabelsColors">
+<code class="sig-name descname">UserLabelsColors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.UserLabelsColors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an array of users defined colors to the
+labels for display purpose.</p>
+</dd></dl>
+<dl class="method">
+<dt>
+<code class="sig-name descname">GetLabels</code><span class="sig-paren">(</span><em class="sig-param">labelsFile</em>, <em class="sig-param">colname='labels'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.GetLabels"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Read the labels text file of the atlas</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labelsFile</strong> (<em>str</em>) – The full path to the label file of the atlas. Supported
+extension are : .csv, .txt, .xlsx or .xls. By default,
+the header of the labels file is the column labels name
+entitled ‘labels’.</p></li>
+<li><p><strong>colname</strong> (<em>str</em><em>, </em><em>optional</em>) – The columns name containing the labels. Default is labels.
+If no header, leave None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – The list of the labels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="method">
+<dt>
+<code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.fetch_atlas"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Fetch the complete path to the atlas file.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.get_center_of_mass">
+<code class="sig-name descname">get_center_of_mass</code><span class="sig-paren">(</span><em class="sig-param">asanarray=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.get_center_of_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.get_center_of_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute centers of mass of the different atlas regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>asanarray</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then the array are return if numpy.array of
+shape (number of regions, 3).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – The coordinates of the centers of mass for each regions
+of the atlas.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list or numpy.array</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.get_region_numbers">
+<code class="sig-name descname">get_region_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.get_region_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.get_region_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of regions of the atlas</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.load_atlas">
+<code class="sig-name descname">load_atlas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.load_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.load_atlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the atlas image and return the corresponding
+4D numpy array.</p>
+</dd></dl>
+<dl class="method">
+<dt id="conpagnon.data_handling.atlas.Atlas.user_labels_colors">
+<code class="sig-name descname">user_labels_colors</code><span class="sig-paren">(</span><em class="sig-param">networks</em>, <em class="sig-param">colors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#Atlas.user_labels_colors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.Atlas.user_labels_colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates user defined labels colors for each label of the atlas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>networks</strong> (<em>list</em>) – The list containing the numbers of regions for each networks.</p></li>
+<li><p><strong>colors</strong> (<em>list</em>) – The list of colors for each networks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – The array containing the numerical values for the RGB space
+for the given colors entered in colors. For the normalized RGB space,
+you just have divided the values of this array by 255.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.array, shape(number of regions, 3)</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Please find all possible colors at
+[1] <a class="reference external" href="https://matplotlib.org/examples/color/named_colors.html">https://matplotlib.org/examples/color/named_colors.html</a></p>
+</dd></dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.atlas.closest_colour">
+<code class="sig-prename descclassname">conpagnon.data_handling.atlas.</code><code class="sig-name descname">closest_colour</code><span class="sig-paren">(</span><em class="sig-param">requested_colour</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#closest_colour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.closest_colour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.atlas.fetch_atlas">
+<code class="sig-prename descclassname">conpagnon.data_handling.atlas.</code><code class="sig-name descname">fetch_atlas</code><span class="sig-paren">(</span><em class="sig-param">atlas_folder</em>, <em class="sig-param">atlas_name</em>, <em class="sig-param">colors_labels='auto'</em>, <em class="sig-param">network_regions_number='auto'</em>, <em class="sig-param">labels='auto'</em>, <em class="sig-param">normalize_colors=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#fetch_atlas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.fetch_atlas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return important information from an atlas file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atlas_folder</strong> (<em>str</em>) – The full path to the directory containing the atlas</p></li>
+<li><p><strong>atlas_name</strong> (<em>str</em>) – The filename of the atlas file.</p></li>
+<li><p><strong>colors_labels</strong> (<em>str</em><em>, or </em><em>list. Optional</em>) – If set to ‘auto’, the labels of the
+ROI name will get a random colors. Else,
+if a list of colors is provided, ROIs belonging
+to a network will get the desired colors. The colors
+should be in the same order of the network in the atlas
+file. The length of the list should match the number of
+network in the atlas.</p></li>
+<li><p><strong>network_regions_number</strong> (<em>list</em><em>, </em><em>Optional.</em>) – If set to ‘auto’, random colors will be chosen.
+If a list of the number of regions in each network
+is provided, the corresponding color, in the color list
+will be applied to the corresponding number in the list.</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em>, </em><em>optional</em>) – The list of the ROI labels. If not provided,
+the ROI name is simply it’s position in the atlas
+file.</p></li>
+<li><p><strong>normalize_colors</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, all triplets in the RGB space are
+divided by the maximum 255.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>output 1</strong> (<em>numpy.array</em>) – The coordinates of the center of mass of
+each ROI in the atlas. An array of shape (n_rois, 3).</p></li>
+<li><p><strong>output 2</strong> (<em>list</em>) – The name of each ROIs in the atlas. A list
+of length (n_rois, ).</p></li>
+<li><p><strong>output 3</strong> (<em>numpy.array</em>) – The array containing the colors in the
+RGB space of each ROIs. An Array of shape
+(n_rois, 3).</p></li>
+<li><p><strong>output_4</strong> (<em>int</em>) – The number of ROIs in the atlas.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.atlas.fetch_atlas_functional_network">
+<code class="sig-prename descclassname">conpagnon.data_handling.atlas.</code><code class="sig-name descname">fetch_atlas_functional_network</code><span class="sig-paren">(</span><em class="sig-param">atlas_excel_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">network_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#fetch_atlas_functional_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.fetch_atlas_functional_network" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Return a dictionary containing information for all functional networks.</dt><dd><p>Information for all network is simply fetch in the excel file.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atlas_excel_file</strong> (<em>str</em>) – The full path to the excel file containing all the information on your atlas.</p></li>
+<li><p><strong>sheetname</strong> (<em>str</em>) – The active sheet name in the atlas excel file.</p></li>
+<li><p><strong>network_column_name</strong> (<em>str</em>) – The name of columns containing the label for all the functional networks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A dictionnary with the networks name as keys, and the sub-dataframe and the number
+of roi for each networks as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.atlas.generate_3d_img_network">
+<code class="sig-prename descclassname">conpagnon.data_handling.atlas.</code><code class="sig-name descname">generate_3d_img_network</code><span class="sig-paren">(</span><em class="sig-param">reference_4datlas</em>, <em class="sig-param">atlas_information_xlsx_file</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">atlas4d_index_keys</em>, <em class="sig-param">atlas3d_label_key</em>, <em class="sig-param">save_network_img_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#generate_3d_img_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.generate_3d_img_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generate a 3D NifTi file for each defined functional network in a 4D atlas.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.atlas.get_colour_name">
+<code class="sig-prename descclassname">conpagnon.data_handling.atlas.</code><code class="sig-name descname">get_colour_name</code><span class="sig-paren">(</span><em class="sig-param">requested_colour</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/atlas.html#get_colour_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.atlas.get_colour_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+
+<span id="conpagnon-data-handling-data-architecture-module"></span><h2 id="module-conpagnon.data_handling.data_architecture">conpagnon.data_handling.data_architecture module<a class="headerlink" href="#module-conpagnon.data_handling.data_architecture" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Sep 18 17:32:38 2017</p>
+<p>@author: Dhaif BEKHA</p>
+<p>ComPagnon version 2.0</p>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_architecture.create_group_dictionnary">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_architecture.</code><code class="sig-name descname">create_group_dictionnary</code><span class="sig-paren">(</span><em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_architecture.html#create_group_dictionnary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_architecture.create_group_dictionnary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise a dictionnary containing groups as keys and subjects IDs as values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_id_data_path</strong> (<em>str</em>) – The full path to the data file containing the subjects IDs.</p></li>
+<li><p><strong>root_fmri_data_directory</strong> (<em>str</em>) – The full path of a root directory containing one or numerous
+sub-directories where functional images are</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – List of sub-directories names containing fmri files you want.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A dictionnary groupes as keys and subjects IDs as values for each
+groups</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#conpagnon.data_handling.data_architecture.list_fmri_data" title="conpagnon.data_handling.data_architecture.list_fmri_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_fmri_data()</span></code></a></dt><dd><p>Fetch functional images in all sub-directories.</p>
+</dd>
+<dt><a class="reference internal" href="#conpagnon.data_handling.data_architecture.read_text_data_file" title="conpagnon.data_handling.data_architecture.read_text_data_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_text_data_file()</span></code></a></dt><dd><p>read a text data file.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Whatever the format for the subjects IDs datafile, it should not
+contains any header. it should consist of one raw columns of subject
+IDs.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_architecture.fetch_data">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_architecture.</code><code class="sig-name descname">fetch_data</code><span class="sig-paren">(</span><em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">individual_counfounds_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_architecture.html#fetch_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_architecture.fetch_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a complete organised structure for a groups study on a common
+atlas for all subjects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_id_data_path</strong> (<em>str</em>) – The full path to the data file containing the subjects IDs.</p></li>
+<li><p><strong>root_fmri_data_directory</strong> (<em>str</em>) – The full path of a root directory containing one or numerous
+sub-directories where functional images are</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – List of sub-directories names containing fmri files you want.</p></li>
+<li><p><strong>individual_counfounds_directory</strong> (<em>None</em><em> or </em><em>str</em>) – Full path to counfounds files for all subjects.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A multi level dictionnary containing all the data.
+The first level is the groups keys. The second levels is the subjects
+IDs. The last level, is all the relevant file for one subjects: fmri image,
+and confound file if required.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#conpagnon.data_handling.data_architecture.fetch_data_with_individual_atlases" title="conpagnon.data_handling.data_architecture.fetch_data_with_individual_atlases"><code class="xref py py-func docutils literal notranslate"><span class="pre">fetch_data_with_individual_atlases()</span></code></a></dt><dd><p>Fetch a complete organised</p>
+</dd>
+</dl>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">structure()</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<p>Whatever the format for the subjects IDs datafile, it should not
+contains any header. it should consist of one raw columns of subject
+IDs.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_architecture.fetch_data_with_individual_atlases">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_architecture.</code><code class="sig-name descname">fetch_data_with_individual_atlases</code><span class="sig-paren">(</span><em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">individual_atlases_directory</em>, <em class="sig-param">individual_atlases_labels_directory</em>, <em class="sig-param">individual_atlas_file_extension</em>, <em class="sig-param">individual_atlas_labels_extension</em>, <em class="sig-param">individual_counfounds_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_architecture.html#fetch_data_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_architecture.fetch_data_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a complete organised structure for a groups study require the use
+of individual atlases</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_id_data_path</strong> (<em>str</em>) – The full path to the data file containing the subjects IDs.</p></li>
+<li><p><strong>root_fmri_data_directory</strong> (<em>str</em>) – The full path of a root directory containing one or numerous
+sub-directories where functional images are</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – List of sub-directories names containing fmri files you want.</p></li>
+<li><p><strong>individual_atlases_directory</strong> (<em>str</em>) – Full path to individual atlases directory for all subjects.</p></li>
+<li><p><strong>individual_atlases_labels_directory</strong> (<em>str</em>) – Full path to individual atlases labels directory for all subjects.</p></li>
+<li><p><strong>individual_atlas_file_extension</strong> (<em>str</em>) – Extension of individuals atlases images for all subjects.</p></li>
+<li><p><strong>individual_atlas_labels_extension</strong> (<em>str</em>) – Extension of text data containing individual atlases labels file for
+all subjects.</p></li>
+<li><p><strong>individual_counfounds_directory</strong> (<em>None</em><em> or </em><em>str</em>) – Full path to counfounds files for all subjects.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A multi level dictionnary containing all the data.
+The first level is the groups keys. The second levels is the subjects
+IDs. The last level, is all the relevant file for one subjects: fmri image,
+subject atlas, subject atlas labels file, and confound file if required.
+A keys called ‘discarded_rois’ contain the excluded rois, see Notes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#conpagnon.data_handling.data_architecture.fetch_data" title="conpagnon.data_handling.data_architecture.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">fetch_data()</span></code></a></dt><dd><p>Fetch a complete organised structure for a groups study</p>
+</dd>
+</dl>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">on()</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<p>Whatever the format for the subjects IDs datafile, it should not
+contains any header. it should consist of one raw columns of subject
+IDs.</p>
+<p>A discarded_rois is a subject atlas ROI where the corresponding
+labels is ‘void’. This ROIS can be a empty ROIs, a ROI you doesnt need
+for the analysis. The discarded rois will be discarded (!) in the
+connectivity analysis when computing t-test for example.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_architecture.fetch_fmri_data">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_architecture.</code><code class="sig-name descname">fetch_fmri_data</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_architecture.html#fetch_fmri_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_architecture.fetch_fmri_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch functional images found in a list of
+sub-directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_fmri_data_directory</strong> (<em>str</em>) – The full path of a root directory containing one or numerous
+sub-directories where functional images are.</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – List of sub-directories names containing fmri files you want.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A dictionnary with sub-directories names as keys and full path
+to functional images as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#conpagnon.data_handling.data_architecture.list_fmri_data" title="conpagnon.data_handling.data_architecture.list_fmri_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_fmri_data()</span></code></a></dt><dd><p>Fetch functional images in all sub-directories.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_architecture.list_fmri_data">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_architecture.</code><code class="sig-name descname">list_fmri_data</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_architecture.html#list_fmri_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_architecture.list_fmri_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all functional images found in sub-directories
+at a root directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>root_fmri_data_directory</strong> (<em>str</em>) – The full path of a root directory containing one or numerous
+sub-directories where functional images are.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A dictionnary with sub-directories names as keys and full path
+to functional images as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_architecture.read_text_data_file">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_architecture.</code><code class="sig-name descname">read_text_data_file</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">colname=None</em>, <em class="sig-param">header=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_architecture.html#read_text_data_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_architecture.read_text_data_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a data file</p>
+<p>The data file can be a .csv, .txt, .xlsx or .xls file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – Full path to the file to read.</p></li>
+<li><p><strong>colname</strong> (<em>None</em><em> or </em><em>str</em>) – The column name to extract.</p></li>
+<li><p><strong>header</strong> (<em>None of int</em>) – Row number to use as the column names, and the start of the data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – The extracted column if form of a panda dataframe.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.core.frame.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+
+<span id="conpagnon-data-handling-data-management-module"></span><h2 id="module-conpagnon.data_handling.data_management">conpagnon.data_handling.data_management module<a class="headerlink" href="#module-conpagnon.data_handling.data_management" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.concatenate_dataframes">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">concatenate_dataframes</code><span class="sig-paren">(</span><em class="sig-param">list_of_dataframes</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#concatenate_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.concatenate_dataframes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate a list of pandas DataFrame</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.csv_from_dictionary">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">csv_from_dictionary</code><span class="sig-paren">(</span><em class="sig-param">subjects_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">field_to_write</em>, <em class="sig-param">header</em>, <em class="sig-param">csv_filename</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#csv_from_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.csv_from_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a csv file from a subjects dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_dictionary</strong> (<em>dict</em>) – A dictionnary with the same structure as a
+subjects connectivity matrices dictionary</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – The list of groups to write</p></li>
+<li><p><strong>kinds</strong> (<em>list</em>) – The list of kind to write</p></li>
+<li><p><strong>field_to_write</strong> (<em>str</em>) – The field containing the value to write
+for each subject.</p></li>
+<li><p><strong>header</strong> (<em>list</em>) – The header of the CSV file, in a list of
+column name</p></li>
+<li><p><strong>csv_filename</strong> (<em>str</em>) – The end of CSV filename with the extension</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – The full path to a directory for saving
+the CSV file.</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em><em>, </em><em>optional</em>) – The delimiter between columns.
+Default is a comma.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.csv_from_intra_network_dictionary">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">csv_from_intra_network_dictionary</code><span class="sig-paren">(</span><em class="sig-param">subjects_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">network_labels_list</em>, <em class="sig-param">field_to_write</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">csv_prefix</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#csv_from_intra_network_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.csv_from_intra_network_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write csv file from the intra-network connectivity dictionary structure.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.dataframe_to_csv">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">dataframe_to_csv</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">path</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em>, <em class="sig-param">index=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#dataframe_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.dataframe_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and write a CSV file from a DataFrame</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.dictionary_to_csv">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">dictionary_to_csv</code><span class="sig-paren">(</span><em class="sig-param">dictionary</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">output_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#dictionary_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.dictionary_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write dictionary couple (key, value) in a CSV file</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.flatten">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">flatten</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flatten a list of numpy ND-array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>list</em>) – A list of numpy array, with same or different dimensions.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A flat array (one dimensional array) containing all
+the values in the same order of the list of array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.array</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.group_by_factors">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">group_by_factors</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">list_of_factors</em>, <em class="sig-param">return_type='list_of_dataframe'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#group_by_factors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.group_by_factors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group by factors present in a dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.DataFrame</em>) – A pandas dataframe.</p></li>
+<li><p><strong>list_of_factors</strong> (<em>list</em>) – The list of factors, i.e columns name in the dataframe,
+you want to group by.</p></li>
+<li><p><strong>return_type</strong> (<em>str</em>) – The output format, choices are <cite>list_of_dataframe</cite> or
+<cite>dictionary</cite>. If the former, a list of dataframe is returned
+of length equal to the number of groups, if the latter a dictionary
+with groups name as keys and corresponding dataframe as values is returned.
+Default is <cite>list_of_dataframe</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list or dictionary of the corresponding dataframe group by attribute.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>output</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.merge_by_index">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">merge_by_index</code><span class="sig-paren">(</span><em class="sig-param">dataframe1</em>, <em class="sig-param">dataframe2</em>, <em class="sig-param">left_index=True</em>, <em class="sig-param">right_index=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#merge_by_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.merge_by_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge two dataframes based on the index concordances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe1</strong> (<em>pandas.DataFrame</em>) – A panda dataframe</p></li>
+<li><p><strong>dataframe2</strong> (<em>pandas.DataFrame</em>) – A panda dataframe</p></li>
+<li><p><strong>left_index</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the merge operation is based on the left index</p></li>
+<li><p><strong>right_index</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the merge operation is based on the right index</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – The merged dataframe.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If <cite>left_index</cite> and <cite>right_index</cite> are both True
+the merge  is based on the intersection of both dataframe,
+i.e a missing index in one of the dataframe will be deleted in
+the final dataframe.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.merge_list_dataframes">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">merge_list_dataframes</code><span class="sig-paren">(</span><em class="sig-param">list_dataframes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#merge_list_dataframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.merge_list_dataframes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge a list of dataframes</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.read_csv">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">read_csv</code><span class="sig-paren">(</span><em class="sig-param">csv_file</em>, <em class="sig-param">delimiter='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.read_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a CSV file and return a panda.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_file</strong> (<em>str</em>) – The full path to the CSV file to read</p></li>
+<li><p><strong>delimiter</strong> (<em>str</em>) – The separator use in the CSV file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.read_excel_file">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">read_excel_file</code><span class="sig-paren">(</span><em class="sig-param">excel_file_path</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">subjects_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#read_excel_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.read_excel_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a excel document</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>excel_file_path</strong> (<em>str</em>) – Full path to the excel document</p></li>
+<li><p><strong>sheetname</strong> (<em>str</em>) – The sheetname to read in the excel document</p></li>
+<li><p><strong>subjects_column_name</strong> (<em>str</em>) – The column name containing the subjects identifiers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A panda DataFrame, indexed by subject name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.remove_duplicate">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">remove_duplicate</code><span class="sig-paren">(</span><em class="sig-param">seq</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#remove_duplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.remove_duplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove duplicate in a sequence of items while keeping
+the order.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.shift_index_column">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">shift_index_column</code><span class="sig-paren">(</span><em class="sig-param">panda_dataframe</em>, <em class="sig-param">columns_to_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#shift_index_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.shift_index_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift the index column of a pandas DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>panda_dataframe</strong> (<em>pandas.DataFrame</em>) – A pandas dataframe.</p></li>
+<li><p><strong>columns_to_index</strong> (<em>list</em>) – Column label or list of column labels / arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A new pandas DataFrame with the shifted columns as index.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.unflatten">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">unflatten</code><span class="sig-paren">(</span><em class="sig-param">flat_values</em>, <em class="sig-param">prototype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#unflatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.unflatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unflatten a one dimension array of values to the
+original list of array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flat_values</strong> (<em>numpy.ndarray</em>) – The numpy array containing the values.</p></li>
+<li><p><strong>prototype</strong> (<em>list</em>) – The original list of numpy array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A list of array with the same structure as prototype.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.data_management.write_ols_results">
+<code class="sig-prename descclassname">conpagnon.data_handling.data_management.</code><code class="sig-name descname">write_ols_results</code><span class="sig-paren">(</span><em class="sig-param">ols_fit</em>, <em class="sig-param">design_matrix</em>, <em class="sig-param">response_variable</em>, <em class="sig-param">output_dir</em>, <em class="sig-param">model_name</em>, <em class="sig-param">design_matrix_index_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/data_management.html#write_ols_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.data_management.write_ols_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write OLS result, along with the design matrix and the variable to explain.</p>
+</dd></dl>
+
+
+<span id="conpagnon-data-handling-dictionary-operations-module"></span><h2 id="module-conpagnon.data_handling.dictionary_operations">conpagnon.data_handling.dictionary_operations module<a class="headerlink" href="#module-conpagnon.data_handling.dictionary_operations" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="conpagnon.data_handling.dictionary_operations.groupby_factor_connectivity_matrices">
+<code class="sig-prename descclassname">conpagnon.data_handling.dictionary_operations.</code><code class="sig-name descname">groupby_factor_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">population_data_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">subjects_connectivity_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">factors</em>, <em class="sig-param">drop_subjects_list=None</em>, <em class="sig-param">index_col=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/dictionary_operations.html#groupby_factor_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.dictionary_operations.groupby_factor_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group by attribute the subjects connectivity matrices.
+# TODO: 18/09/2019: I added index_col to precise the index of the column
+# TODO: to be considered as the index of the whole dataframe.
+# TODO: Side Note: this function work with a time series dictionary too. !!
+# TODO: Refractoring of subjects_connectivity_matrices_dictionary to subjects_dictionary.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.dictionary_operations.merge_dictionary">
+<code class="sig-prename descclassname">conpagnon.data_handling.dictionary_operations.</code><code class="sig-name descname">merge_dictionary</code><span class="sig-paren">(</span><em class="sig-param">dict_list</em>, <em class="sig-param">new_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/dictionary_operations.html#merge_dictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.dictionary_operations.merge_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge a list of dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_key</strong> (<em>str</em><em>, </em><em>optional</em>) – The key of the new merged dictionary. If None, the
+dictionaries in the list are simply merged together.
+Default is None</p></li>
+<li><p><strong>dict_list</strong> (<em>list</em>) – A list of the dictionary to be merged</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong> – A dictionnary with one key, and merged dictionary
+as value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Note that all the dictionnary you want to merge must have
+different keys.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.dictionary_operations.random_draw_of_connectivity_matrices">
+<code class="sig-prename descclassname">conpagnon.data_handling.dictionary_operations.</code><code class="sig-name descname">random_draw_of_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupe</em>, <em class="sig-param">n_matrices</em>, <em class="sig-param">subjects_id_list=None</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">extract_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/dictionary_operations.html#random_draw_of_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.dictionary_operations.random_draw_of_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly pick N connectivity matrices from a subjects connectivity dictionnary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_connectivity_dictionary</strong> (<em>dict</em>) – The subjects dictionnary containing connectivity matrices</p></li>
+<li><p><strong>groupe</strong> (<em>str</em>) – The group in which you want pick the matrices</p></li>
+<li><p><strong>n_matrices</strong> (<em>int</em>) – The number of connectivity matrices you want
+to randomly choose</p></li>
+<li><p><strong>subjects_id_list</strong> (<em>list</em><em>, </em><em>optional</em>) – The subjects identifiers list in which you
+want to choose matrices. If None, random matrices
+are picked in the entire group. Default is None.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em>, </em><em>optional</em>) – The seed of the pseudo random number generator to use when shuffling
+the data. If int, random_state is the seed used by the random number
+generator; If RandomState instance, random_state is the random number
+generator; If None, the random number generator is the RandomState
+instance used by <cite>np.random</cite>.</p></li>
+<li><p><strong>extract_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionnary of argument passed to extract_sub_connectivity_matrices
+function. Default is None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>output 1</strong> (<em>dict</em>) – The connectivity matrices dictionary, with subjects chosen
+randomly.</p></li>
+<li><p><strong>output 2</strong> (<em>list</em>) – The  list of randomly chosen subjects identifier.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.dictionary_operations.rebuild_subject_connectivity_matrices">
+<code class="sig-prename descclassname">conpagnon.data_handling.dictionary_operations.</code><code class="sig-name descname">rebuild_subject_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">diagonal_were_kept=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/dictionary_operations.html#rebuild_subject_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.dictionary_operations.rebuild_subject_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the subject connectivity dictionary, the matrix are rebuild from the vectorized
+one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_connectivity_dictionary</strong> (<em>dict</em>) – The subjects connectivity dictionary</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – The list of groups to rebuild the subjects matrices.</p></li>
+<li><p><strong>kinds</strong> (<em>list</em>) – The list of kinds to rebuild.</p></li>
+<li><p><strong>diagonal_were_kept</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the reconstructed matrix, will have
+the diagonal store in the kind diagonal field of
+the dictionary, and the mask diagonal field for
+the mask.
+If False, the reconstructed matrix will have
+a zeros diagonal, and a True diagonal for the
+mask.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output 1</strong> – The reconstructed subjects connectivity
+matrices. All the matrices have now
+shape (number_of_regions, number_of_regions).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If in the input dictionary, the matrices and corresponding
+mask where vectorized with the diagonal kept, the argument
+<cite>diagonal_is_there</cite> must be set to False. A dimension
+error will be raises otherwise.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.data_handling.dictionary_operations.stack_subjects_connectivity_matrices">
+<code class="sig-prename descclassname">conpagnon.data_handling.dictionary_operations.</code><code class="sig-name descname">stack_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/data_handling/dictionary_operations.html#stack_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.data_handling.dictionary_operations.stack_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-arrange the subjects connectivity dictionary to return a stack version per group
+and kind.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects_connectivity_dictionary</strong> – </p></li>
+<li><p><strong>groupes</strong> – </p></li>
+<li><p><strong>kinds</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+
+<span id="module-contents"></span><h2 id="module-conpagnon.data_handling">Module contents<a class="headerlink" href="#module-conpagnon.data_handling" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Sep 18 16:38:48 2017</p>
+<p>@author: db242421</p>
+<p>Le module data_handling fournit des fonctions commode pour stocker les differentes informations relatives au fichiers
+utiles (irmf, atlas individuels…) dans une structure facilement utilisable de dictionnaire.</p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              
+          </div>
+            Last updated on
+              Feb 24, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

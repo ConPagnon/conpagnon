@@ -3,6 +3,7 @@
 # This file only contains a selection of the most common options. For a full
 # list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
+# Created by Dhaif BEKHA (dhaif@dhaifbekha.com)
 
 # -- Path setup --------------------------------------------------------------
 
@@ -12,8 +13,7 @@
 #
 import os
 import sys
-
-sys.path.insert(0, os.path.abspath('../../../'))
+sys.path.insert(0, os.path.abspath('../../'))
 import sphinx_material
 
 # -- General configuration -----------------------------------------------------
@@ -24,7 +24,8 @@ import sphinx_material
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
               # numpydoc or sphinx.ext.napoleon, but not both
-              'numpydoc',
+              'sphinx.ext.napoleon',
+             # 'numpydoc',
               'sphinx.ext.doctest',
               'sphinx.ext.extlinks',
               'sphinx.ext.intersphinx',
@@ -86,7 +87,6 @@ exclude_patterns = ['_build', '**.ipynb_checkpoints', '*/autosummary/*.rst',
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'default'
 
-
 # Options for HTML output
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -121,4 +121,18 @@ html_theme_options = {
 language = 'en'
 html_last_updated_fmt = ''
 
+# ConPagnon Logo
 html_logo = 'images/logo/logo_conpagnon_small_header.png'
+
+# Custom sidebar templates, maps document names to template names.
+html_sidebars = {
+    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+}
+
+# If false, no module index is generated.
+html_domain_indices = True
+
+# Create xrefs
+numpydoc_use_autodoc_signature = True
+numpydoc_xref_param_type = True
+numpydoc_class_members_toctree = False

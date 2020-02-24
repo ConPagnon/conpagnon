@@ -357,7 +357,6 @@ def time_series_extraction(root_fmri_data_directory, groupes, subjects_id_data_p
     ----------
     The Nilearn official documentation on Github :
     [1] http://nilearn.github.io/index.html
-
     """
 
     # Dictionnary initialisation for time series, for each group, and for each subjects.
@@ -405,7 +404,6 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
 
     Parameters
     ----------
-    
     time_series_dictionary : dict
         A multi-levels dictionnary organised as follow :
             - The first keys levels is the different groupes in the study. 
@@ -415,26 +413,21 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
             A key 'discarded_rois' containing an array of the index of ROIs 
             where the corresponding labels is 'void'. If no void labels is detected,
             then the array should be empty.
-            
     kinds : list
         List of the different metrics you want to compute the 
         connectivity matrices. Choices are 'tangent', 'correlation',
         'partial correlation', 'covariance', 'precision'.
-        
     covariance_estimator : estimator object
         All the kinds  are based on derivation of covariances matrices. You need
         to precise the estimator, see Notes.
-        
     vectorize : bool, optional
         If True, the connectivity matrices are reshape into 1D arrays of 
         the vectorized lower part of the matrices. Useful for classification,
         regression...
         Default is False.
-
     z_fisher_transform: bool, optional
         If True, the z fisher transform is apply to all
         the connectivity matrices. Default is False
-
     discarding_diagonal: bool, optional
         If True, the diagonal is discarded in
         the vectorization process. Default is False.
@@ -467,16 +460,13 @@ def individual_connectivity_matrices(time_series_dictionary, kinds, covariance_e
     Covariances estimator are estimators compute in the scikit-learn library.
     Multiple estimator can be found in the module sklearn.covariance, popular
     choices are the Ledoit-Wolf estimator, or the OAS estimator.
-    
     In the output dictionnary, each subjects have a masked array of boolean. The
     masked will be useful when computing the mean connectivity matrices, we will
     account the discarded rois in the derivation. For the statistical test you might
     want perform, it will be useful too, to discarded those rois. A True value is
     a masked roi, False elsewhere.
-    
     For the tangent kind, the derivation of individual matrices need to be
-    made on the POOLED GROUPS which is performed here. 
-    
+    made on the POOLED GROUPS which is performed here.
     The derivation of connectivity matrices are based on Nilearn functions. I
     encourage the user to read the following docstring of important functions :
     nilearn.connectome.ConnectivityMeasure
@@ -631,7 +621,6 @@ def pooled_groups_tangent_mean(time_series_dictionary, covariance_estimator):
             A key 'discarded_rois' containing an array of the index of ROIs 
             where the corresponding labels is 'void'. If no void labels is detected,
             then the array should be empty.
-    
     covariance_estimator : estimator object
     All the kinds  are based on derivation of covariances matrices. You need
     to precise the estimator, see Notes.
@@ -653,10 +642,8 @@ def pooled_groups_tangent_mean(time_series_dictionary, covariance_estimator):
     Covariances estimator are estimators compute in the scikit-learn library.
     Multiple estimator can be found in the module sklearn.covariance, popular
     choices are the Ledoit-Wolf estimator, or the OAS estimator.
-    
     For now, we doesnt account for discarded rois for the derivation of the
     geometric mean.
-
     """
 
     tangent_measure = ConnectivityMeasure(kind='tangent', cov_estimator=covariance_estimator)
@@ -677,8 +664,7 @@ def pooled_groups_tangent_mean(time_series_dictionary, covariance_estimator):
 
 def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
     """Compute the mean connectivity matrices for each kind accounting for masked rois.
-    
-    Read the notes for the tangent space !
+        Read the notes for the tangent space !
     
     Parameters
     ----------
@@ -691,13 +677,11 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
             discarded rois array index, a 'masked_array' key containing
             the array of Boolean of True for the discarded_rois index, and False
             elsewhere.
-    
     kinds : list
         List of kinds you want the mean connectivity. Choices
         are 'correlation', 'tangent', 'covariances', 'precision', 'partial 
         correlation'. Off course, the kind should be in the subjects_connectivity_matrices
         dictionnary.
-        
     axis : int, optional
         The axis you want to compute the mean, the subjects axis. Default is 0.
     
@@ -718,18 +702,14 @@ def group_mean_connectivity(subjects_connectivity_matrices, kinds, axis=0):
     
     Notes
     -----
-    
     When computing the mean, we account for the 'discarded_rois' entries. That mean 
     when the value is True in the masked_array, we discard the rois for the corresponding
     subject in the derivation of the mean.
-    
     When I compute the mean in the tangent space, it's a arithmetic mean. This
     mean matrix is in the tangent space, that is NOT in the same space as correlation or partial correlation matrix.
     Be careful with the interpretation !!
-    
     That said, the tangent space is defined at ONE point in the manifold of symmetric matrices.
     This point is the geometric mean for the POOLED groups if multiple group are studied !
-
     """
 
     group_mean_connectivity_matrices = dict.fromkeys(list(subjects_connectivity_matrices.keys()))
@@ -763,7 +743,6 @@ def pooled_groups_connectivity(time_series_dictionary, kinds, covariance_estimat
     
     Parameters 
     ----------
-    
     time_series_dictionary : dict
     A multi-levels dictionnary organised as follow :
         - The first keys levels is the different groupes in the study. 
@@ -773,16 +752,13 @@ def pooled_groups_connectivity(time_series_dictionary, kinds, covariance_estimat
         A key 'discarded_rois' containing an array of the index of ROIs 
         where the corresponding labels is 'void'. If no void labels is detected,
         then the array should be empty.
-
     kinds : list
         List of the different metrics you want to compute the 
         connectivity matrices. Choices are 'tangent', 'correlation',
         'partial correlation', 'covariance', 'precision'.
-    
     covariance_estimator : estimator object
         All the kinds  are based on derivation of covariances matrices. You need
         to precise the estimator, see Notes.
-        
     vectorize : bool
         If True, the connectivity matrices are reshape into 1D arrays of 
         the vectorized lower part of the matrices. Useful for classification,
@@ -791,25 +767,20 @@ def pooled_groups_connectivity(time_series_dictionary, kinds, covariance_estimat
     
     Returns
     -------
-    
     output 1 : dict
         A multi-levels dictionnary organised as follow :
             - The first level keys is the different kinds
             - The second levels is simply a ndimensional array of connectivity
             matrices of shape (number of subjects, number of regions, number of regions)
             if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else
-            
     output 2 : list
         The list of subject IDs, in the order of time series computation.
     
     Notes
     -----
-   
     Covariances estimator are estimators compute in the scikit-learn library.
     Multiple estimator can be found in the module sklearn.covariance, popular
     choices are the Ledoit-Wolf estimator, or the OAS estimator.
-    
-    
     """
     group_stacked_time_series = []
     for groupe in time_series_dictionary.keys():
@@ -863,8 +834,8 @@ def extract_sub_connectivity_matrices(subjects_connectivity_matrices, kinds,
     output: dict
         A dictionnary containing for each group and kinds, for each subject
         the extract sub-matrice, and the corresponding boolean mask.
-
     """
+
     # Copy of the subjects connectivity matrices dictionnary
     subjects_connectivity_matrices_copy = deepcopy(subjects_connectivity_matrices)
 
@@ -906,14 +877,11 @@ def subjects_mean_connectivity_(subjects_individual_matrices_dictionnary,
     subjects_individual_matrices_dictionnary: dict
         The subjects connectivity dictionnary containing connectivity matrices
         and corresponding mask array for discarded rois, for each group.
-
     connectivity_coefficient_position: numpy.array of shape (number of rois, row_index, column_index)
         The array containing the position in the connectivity matrices of the rois you want
         to extract the connectivity coefficients.
-
     kinds: list
         The list of kinds.
-
     groupes: list
         The list of the two group in the study.
 
@@ -930,7 +898,6 @@ def subjects_mean_connectivity_(subjects_individual_matrices_dictionnary,
     -----
     The subjects connectivity matrices shouldn't be vectorized, the shape should
     be (n_features, n_features).
-
     """
     
     # Indices of the connectivity coefficient in terms of row and column index.

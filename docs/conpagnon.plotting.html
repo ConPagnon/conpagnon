@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>conpagnon.plotting package &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  
+   
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#conpagnon.plotting" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> conpagnon.plotting package </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="user-guide.html" class="md-nav__link">User Guide</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#conpagnon-plotting--page-root" class="md-nav__link">conpagnon.plotting package</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#submodules" class="md-nav__link">Submodules</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.plotting.display" class="md-nav__link">conpagnon.plotting.display module</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-conpagnon.plotting" class="md-nav__link">Module contents</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/conpagnon.plotting.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  
+<h1 id="conpagnon-plotting--page-root">conpagnon.plotting package<a class="headerlink" href="#conpagnon-plotting--page-root" title="Permalink to this headline">¶</a></h1>
+
+<h2 id="submodules">Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+
+
+<span id="conpagnon-plotting-display-module"></span><h2 id="module-conpagnon.plotting.display">conpagnon.plotting.display module<a class="headerlink" href="#module-conpagnon.plotting.display" title="Permalink to this headline">¶</a></h2>
+<p>Display functions</p>
+<p>Author: Dhaif BEKHA</p>
+<dl class="function">
+<dt id="conpagnon.plotting.display.display_gaussian_connectivity_fit">
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">display_gaussian_connectivity_fit</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity</em>, <em class="sig-param">estimate_mean</em>, <em class="sig-param">estimate_std</em>, <em class="sig-param">raw_data_colors='blue'</em>, <em class="sig-param">line_width=2</em>, <em class="sig-param">alpha=0.5</em>, <em class="sig-param">normed=True</em>, <em class="sig-param">bins='auto'</em>, <em class="sig-param">fitted_distribution_color='black'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">xtitle=None</em>, <em class="sig-param">ytitle=None</em>, <em class="sig-param">legend_fitted='Fitted Gaussian Distribution'</em>, <em class="sig-param">legend_data=None</em>, <em class="sig-param">display_fit='yes'</em>, <em class="sig-param">ms=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#display_gaussian_connectivity_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.display_gaussian_connectivity_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a vectorized connectivity matrices histogram, along with a Gaussian
+fit with an estimated mean, and standard deviation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vectorized_connectivity</strong> (<em>numpy.array</em><em>, </em><em>shape 0.5*n_features*</em><em>(</em><em>n_features + 1</em><em>)</em>) – A array of connectivity coefficient.</p></li>
+<li><p><strong>estimate_mean</strong> (<em>float</em>) – The estimated mean of the connectivity coefficient distribution.</p></li>
+<li><p><strong>estimate_std</strong> (<em>float</em>) – The estimated standard deviation of the connectivity coefficient distribution.</p></li>
+<li><p><strong>raw_data_colors</strong> (<em>string</em><em>, </em><em>optional</em>) – The colors of the histogram for the connectivity coefficient distribution.
+Default is blue.</p></li>
+<li><p><strong>line_width</strong> (<em>int</em><em>, </em><em>optional</em>) – The width of line for the fit of the data. Default is 2.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em>, </em><em>optional</em>) – The opacity coefficient for histogram, between 0 and 1. Default is 0.5.</p></li>
+<li><p><strong>normed</strong> (<em>bool</em><em>, </em><em>optional</em>) – Normalized the histogram. This is mandatory for displaying
+the gaussian fit over the data, since it represent a probability density function.</p></li>
+<li><p><strong>bins</strong> (<em>string</em><em>, </em><em>optional</em>) – How the bins edges of the histogram are computed, choices among different estimators
+{‘fd’, ‘doane’, ‘scott’, ‘rice’, ‘sturges’}
+Default is ‘auto’, the maximum of the sturges and fd estimators are taken.</p></li>
+<li><p><strong>fitted_distribution_color</strong> (<em>string</em><em>, </em><em>optional</em>) – The color of the curves representing the Gaussian fit. Default is black.</p></li>
+<li><p><strong>title</strong> (<em>string</em><em>, </em><em>optional</em>) – The overall title of the figure. Default is None.</p></li>
+<li><p><strong>xtitle</strong> (<em>string</em><em>, </em><em>optional</em>) – The legend of the x-axis. Default is None.</p></li>
+<li><p><strong>ytitle</strong> (<em>string</em><em>, </em><em>optional</em>) – The legend of the y-axis. Default is None.</p></li>
+<li><p><strong>legend_fitted</strong> (<em>string</em><em>, </em><em>optional</em>) – The legend for the Gaussian fit. Default is ‘Fitted Gaussian Distribution’.</p></li>
+<li><p><strong>legend_data</strong> (<em>string</em><em>, </em><em>optional</em>) – The legend for the histogram of the data. Default is None.</p></li>
+<li><p><strong>display_fit</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the gaussian fit of the data is displayed over the normalized histogram.</p></li>
+<li><p><strong>ms</strong> (<em>float</em><em>, </em><em>optional</em>) – The size of the dot on the graph, default is 5.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.hist()</span></code></dt><dd><p>This function, used here, compute and display the histogram of the data.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.plotting.display.plot_matrix">
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">plot_matrix</code><span class="sig-paren">(</span><em class="sig-param">matrix</em>, <em class="sig-param">labels_colors='auto'</em>, <em class="sig-param">mpart='lower'</em>, <em class="sig-param">k=0</em>, <em class="sig-param">colormap='RdBu_r'</em>, <em class="sig-param">colorbar_params={'shrink': 0.5}</em>, <em class="sig-param">center=0</em>, <em class="sig-param">vmin=None</em>, <em class="sig-param">vmax=None</em>, <em class="sig-param">labels_size=8</em>, <em class="sig-param">horizontal_labels='auto'</em>, <em class="sig-param">vertical_labels='auto'</em>, <em class="sig-param">linewidths=0.5</em>, <em class="sig-param">linecolor='white'</em>, <em class="sig-param">title='Untitled'</em>, <em class="sig-param">figure_size=(12</em>, <em class="sig-param">9)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#plot_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.plot_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a entire matrix, or it’s lower part with a chosen heatmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<em>numpy.array shape</em><em>(</em><em>numbers of regions</em><em>, </em><em>numbers of regions</em><em>)</em>) – The numerical array you want to plot.</p></li>
+<li><p><strong>labels_colors</strong> (<em>str</em><em>, or </em><em>numpy.ndarray shape</em><em>(</em><em>number of regions</em><em>, </em><em>3</em><em>)</em>) – The color in the RGB normalized space, that is each
+color are represented by triplet of float ranging between
+0 and 1. Default is ‘auto’, random colors are automatically
+generated.</p></li>
+<li><p><strong>mpart</strong> (<em>str</em>) – The part of the array you want to plot, that is
+the entire matrix or just it’s lower part.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The position from the main diagonal you want
+to cut. Default is 0.</p></li>
+<li><p><strong>colormap</strong> (<em>str</em>) – The seaborn colormap you want to apply on the matrix
+when displaying it. Default is ‘RdBu_r’.</p></li>
+<li><p><strong>colorbar_params</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional parameters concerning the parameters
+of the colorbar : position, size…
+Keyword arguments for <cite>fig.colorbar</cite>.</p></li>
+<li><p><strong>vmax</strong> (<em>vmin</em><em>,</em>) – The extrema of the colormap. all display values
+are threshold according too those values. If None,
+these values are inferred from the matrix.
+Default is ‘None’.</p></li>
+<li><p><strong>labels_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The font size of the labels.
+Default is 8.</p></li>
+<li><p><strong>horizontal_labels</strong> (<em>str</em><em> or </em><em>list; optional</em>) – The labels list of each rows. If ‘auto’, labels
+are replaced by the row index.</p></li>
+<li><p><strong>vertical_labels</strong> (<em>str</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The labels list of each columns. If ‘auto’, labels
+are replaced by the column index.</p></li>
+<li><p><strong>linewidths</strong> (<em>float</em><em>, </em><em>optional</em>) – The width that divide each cell. Default
+is 0.5.</p></li>
+<li><p><strong>linecolor</strong> (<em>str</em><em>, </em><em>optional</em>) – The color of the lines that divide each cell. Default
+is ‘white’.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – The figure title. Default is ‘untitled’.</p></li>
+<li><p><strong>figure_size</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size in a tuple format (height, width).
+Default is (12, 9).</p></li>
+<li><p><strong>center</strong> (<em>float</em><em>, </em><em>optional</em>) – The center of the colormap, for divergent data.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">sns.heatmap()</span></code></dt><dd><p>See the docstring of this function for a deeper insight of plotting function of a numerical array using seaborn.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.plotting.display.plot_ttest_results">
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">plot_ttest_results</code><span class="sig-paren">(</span><em class="sig-param">t_test_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">contrast</em>, <em class="sig-param">node_coords</em>, <em class="sig-param">node_color</em>, <em class="sig-param">output_pdf</em>, <em class="sig-param">node_size=50</em>, <em class="sig-param">colormap='bwr'</em>, <em class="sig-param">colorbar=False</em>, <em class="sig-param">annotate=True</em>, <em class="sig-param">display_mode='ortho'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#plot_ttest_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.plot_ttest_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot on a glass brain the significant mean effect resulting of a
+two samples t-test and save resulting figures in a PDF files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_test_dictionnary</strong> (<em>dict</em>) – <dl>
+<dt>A dictionnary containing multiple keys :</dt><dd><ul>
+<li><p>’tstatistic’ : The raw statistic t-map for the choosen contrast</p></li>
+</ul>
+<p>2D numpy array of shape (number of regions, number of regions).</p>
+<ul>
+<li><p>’uncorrected pvalues’ : The raw pvalues, 2D numpy array of shape</p></li>
+</ul>
+<p>(number of regions, number of regions).</p>
+<ul>
+<li><p>’corrected pvalues’ : The corrected pvalues with the chosen methods.</p></li>
+</ul>
+<p>2D numpy array of shape (number of regions, number of regions).</p>
+<ul>
+<li><p>’significant edges’ : The significant t-values after masking</p></li>
+</ul>
+<p>for the non significant pvalues at alpha level. 2D numpy array of shape
+(number of regions, number of regions).</p>
+<ul>
+<li><p>’significant pvalues’ : The significant pvalues at level alpha.</p></li>
+</ul>
+<p>2D numpy array of shape (number of regions, number of regions)</p>
+<ul>
+<li><p>’significant mean effect’ : The differences of mean connectivity</p></li>
+</ul>
+<p>between the two groups according to the chosen contrast, and non-significant
+connexion are mask at alpha level. 2D numpy array of shape
+(number of regions, number of regions).</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>groupes</strong> (<em>list</em>) – The list of groupes involved in the computed
+contrast.</p></li>
+<li><p><strong>contrast</strong> (<em>list</em>) – The contrast vector used in the two samples t-test.</p></li>
+<li><p><strong>colormap</strong> (<em>str</em><em>, </em><em>optional</em>) – The colormap to use for the matrix heatmap.
+Default is ‘bwr’.</p></li>
+<li><p><strong>node_coords</strong> (<em>list</em>) – The list of centroids coordinates of each regions
+in the atlas used for regions signals extraction.</p></li>
+<li><p><strong>node_color</strong> (<em>numpy.ndarray shape</em><em>(</em><em>number of regions</em><em>, </em><em>3</em><em>)</em>) – The color in the RGB normalized space, that is each
+color are represented by triplet of float ranging between
+0 and 1.</p></li>
+<li><p><strong>output_pdf</strong> (<em>str</em>) – The full path including .pdf extension to the a pdf file
+for saving the glass brain projection plot.</p></li>
+<li><p><strong>node_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The node size. Default is 50.</p></li>
+<li><p><strong>colorbar</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the colorbar of the chosen colormap
+is displayed alongside the glass brain plot.
+Default is False.</p></li>
+<li><p><strong>annotate</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, letters at the top of the glass brain
+indicates the left or right hemisphere location.
+Default is True.</p></li>
+<li><p><strong>display_mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The slice configuration you want to display
+Possible values are: ‘ortho’,’x’, ‘y’, ‘z’, ‘xz’
+‘yx’, ‘yz’, ‘l’, ‘r’, ‘lr’, ‘lzr’, ‘lyr’,’lzry’, ‘lyrz’.
+Default if ‘ortho’.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">parametric_tests.two_sample_t_test()</span></code></dt><dd><p>This function return a dictionnary resulting of the comparison of two groupe using a t-test. This the input of this display function.</p>
+</dd>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.plotting.plot_connectome()</span></code></dt><dd><p>This function in the Nilearn packages is used here for the plot of the glass brain. I encourage the user to read the corresponding docstring in the Nilearn git repo.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The variables <cite>groupes</cite> and <cite>contrast</cite> are needed only
+the title. You shoul have already used this variables when
+you compute the two sample t-test between you’re two groups.</p>
+</dd></dl>
+<dl class="function">
+<dt id="conpagnon.plotting.display.seaborn_scatterplot">
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">seaborn_scatterplot</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">data</em>, <em class="sig-param">figure_title</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#seaborn_scatterplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.seaborn_scatterplot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="function">
+<dt id="conpagnon.plotting.display.t_and_p_values_barplot">
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">t_and_p_values_barplot</code><span class="sig-paren">(</span><em class="sig-param">t_values</em>, <em class="sig-param">p_values</em>, <em class="sig-param">alpha_level</em>, <em class="sig-param">xlabel_color</em>, <em class="sig-param">bar_labels</em>, <em class="sig-param">t_xlabel</em>, <em class="sig-param">t_ylabel</em>, <em class="sig-param">p_xlabel</em>, <em class="sig-param">p_ylabel</em>, <em class="sig-param">t_title</em>, <em class="sig-param">p_title</em>, <em class="sig-param">xlabel_size=10</em>, <em class="sig-param">ylabel_size=10</em>, <em class="sig-param">size_label=8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#t_and_p_values_barplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.t_and_p_values_barplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a barplot representation of t and p values resulting
+of a two sample Student t-test in two separates figure.</p>
+</dd></dl>
+
+
+<span id="module-contents"></span><h2 id="module-conpagnon.plotting">Module contents<a class="headerlink" href="#module-conpagnon.plotting" title="Permalink to this headline">¶</a></h2>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              
+          </div>
+            Last updated on
+              Feb 24, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>
