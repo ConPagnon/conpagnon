@@ -1,0 +1,1428 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>conpagnon.connectivity_statistics.parametric_tests &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  
+   
+  
+  <script src="../../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../../_static/versions.json",
+        target_loc = "../../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#_modules/conpagnon/connectivity_statistics/parametric_tests" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> conpagnon.connectivity_statistics.parametric_tests </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">Module code</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../../gettingstarted.html" class="md-nav__link">Getting Started</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../../user-guide.html" class="md-nav__link">User Guide</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../../examples/index.html" class="md-nav__link">Examples</a>
+      
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <h1 id="modules-conpagnon-connectivity-statistics-parametric-tests--page-root">Source code for conpagnon.connectivity_statistics.parametric_tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils</span> <span class="k">import</span> <span class="n">pre_preprocessing</span><span class="p">,</span> <span class="n">folders_and_files_management</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils</span> <span class="k">import</span> <span class="n">array_operation</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.array_operation</span> <span class="k">import</span> <span class="n">vectorizer</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">mstats</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_rel</span>
+<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="k">import</span> <span class="n">sym_matrix_to_vec</span><span class="p">,</span> <span class="n">vec_to_sym_matrix</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">statsmodels.sandbox.stats.multicomp</span> <span class="k">import</span> <span class="n">multipletests</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">conpagnon.computing</span> <span class="k">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
+<span class="kn">from</span> <span class="nn">patsy</span> <span class="k">import</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">dmatrices</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">conpagnon.pylearn_mulm</span> <span class="k">import</span> <span class="n">mulm</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">linalg</span>
+<span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">pre_preprocessing</span><span class="p">)</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">array_operation</span><span class="p">)</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">ccm</span><span class="p">)</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">mulm</span><span class="p">)</span>
+
+<span class="c1"># !/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">"""</span>
+<span class="sd">Created on Mon Oct  9 16:17:21 2017</span>
+<span class="sd">@author: db242421 (dhaif.bekha@cea.fr)</span>
+<span class="sd">Parametric test used in a resting state group connectivity analysis.</span>
+<span class="sd">"""</span>
+
+
+<div class="viewcode-block" id="two_samples_t_test"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.two_samples_t_test">[docs]</a><span class="k">def</span> <span class="nf">two_samples_t_test</span><span class="p">(</span><span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">contrast</span><span class="p">,</span>
+                       <span class="n">preprocessing_method</span><span class="o">=</span><span class="s1">'fisher'</span><span class="p">,</span>
+                       <span class="n">alpha</span><span class="o">=.</span><span class="mi">05</span><span class="p">,</span> <span class="n">multicomp_method</span><span class="o">=</span><span class="s1">'fdr_bh'</span><span class="p">):</span>
+    <span class="sd">"""Perform two samples t-test on connectivity matrices to detect group differences in connectivity</span>
+<span class="sd">    using different kinds.</span>
+
+<span class="sd">    The t-test account for discarded rois you might want to exclude in the analysis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_connectivity_matrices_dictionnary : dict</span>
+<span class="sd">        A multi-levels dictionnary organised as follow :</span>
+<span class="sd">            - The first keys levels is the different groupes in the study.</span>
+<span class="sd">            - The second keys levels is the subjects IDs</span>
+<span class="sd">            - The third levels is the different kind matrices</span>
+<span class="sd">            for each subjects, a 'discarded_rois' key for the</span>
+<span class="sd">            discarded rois array index, a 'masked_array' key containing</span>
+<span class="sd">            the array of Boolean of True for the discarded_rois index, and False</span>
+<span class="sd">            elsewhere.</span>
+
+<span class="sd">    groupes : list</span>
+<span class="sd">        The list of the two groups to detect group differences.</span>
+
+<span class="sd">    kinds : list</span>
+<span class="sd">        The list of metrics you want to perform the group comparison.</span>
+<span class="sd">        Choices are : 'correlation', 'covariances', 'tangent', 'partial correlation',</span>
+<span class="sd">        'precision'.</span>
+<span class="sd">    preprocessing_method : string, optional</span>
+<span class="sd">        The type of preprocessing methods to apply of connectivity coefficients</span>
+<span class="sd">        of type 'correlation', 'partial correlation', 'covariances', 'precision'.</span>
+<span class="sd">        Choices are : 'fisher'.</span>
+<span class="sd">    contrast : list, optional</span>
+<span class="sd">        The contrast you want to compute in the t-test. Default is [1.0, -1.0]</span>
+<span class="sd">        to compute mean(groupes[0]) - mean(groupes[1]).</span>
+<span class="sd">        The other contrast is [-1.0, 1.0] for mean(groupes[1]) - mean(groupes[0]).</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        The false positive proportion, commonly named the alpha level.</span>
+<span class="sd">        Default is 0.05.</span>
+<span class="sd">    multicomp_method : str, optional</span>
+<span class="sd">        The inference method for accounting the multiple comparison problems.</span>
+<span class="sd">        Default is the classic False Discovery Rate (FDR) proposed by</span>
+<span class="sd">        Benjamini &amp; Hochberg, see Notes.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output : dict</span>
+<span class="sd">        A dictionnary containing multiple keys :</span>
+<span class="sd">            - 'tstatistic' : The raw statistic t-map for the chosen contrast</span>
+<span class="sd">            2D numpy array of shape (number of regions, number of regions).</span>
+
+<span class="sd">            - 'uncorrected pvalues' : The raw pvalues, 2D numpy array of shape</span>
+<span class="sd">            (number of regions, number of regions).</span>
+
+<span class="sd">            - 'corrected pvalues' : The corrected pvalues with the chosen methods.</span>
+<span class="sd">            2D numpy array of shape (number of regions, number of regions).</span>
+
+<span class="sd">            - 'significant edges' : The significant t-values after masking</span>
+<span class="sd">            for the non significant pvalues at alpha level. 2D numpy array of shape</span>
+<span class="sd">            (number of regions, number of regions).</span>
+
+<span class="sd">            - 'significant pvalues' : The significant pvalues at level alpha.</span>
+<span class="sd">            2D numpy array of shape (number of regions, number of regions)</span>
+
+<span class="sd">            - 'significant mean effect' : The differences of mean connectivity</span>
+<span class="sd">            between the two groups according to the chosen contrast, and non-significant</span>
+<span class="sd">            connexion are mask at alpha level. 2D numpy array of shape</span>
+<span class="sd">            (number of regions, number of regions).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError : If the number in groupes is strictly less than 2 raise</span>
+<span class="sd">    a ValueError, print a warning and take the two first groupes in the list</span>
+<span class="sd">    else.</span>
+
+<span class="sd">    ValueError : If the contrast is an unrecognized contrast is entered.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    compute_connectivity_matrices.individual_connectivity_matrices :</span>
+<span class="sd">        This is the function which compute the connectivity matrices for</span>
+<span class="sd">        the chosen kinds, and return a structured dictionnary with can be used</span>
+<span class="sd">        for the argument `subjects_connectivity_matrices_dictionnary`.</span>
+
+<span class="sd">    pre_preprocessing.fisher_transform :</span>
+<span class="sd">        Compute the Fisher Transform of connectivity coefficient</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The two sample t-test I perform here account for masked array using</span>
+<span class="sd">    statistical test for masked array in the Scipy packages. That is,</span>
+<span class="sd">    if in the subjects masked_array, some regions are masked, they will be</span>
+<span class="sd">    discarded when performing the t-test. If the mask contain only False</span>
+<span class="sd">    value, no region are discarded.</span>
+
+<span class="sd">    All the metric are symmetric, therefore I only compute the t-test</span>
+<span class="sd">    for the lower part of the matrices of shape n_columns * (n_columns + 1) /2</span>
+
+<span class="sd">    The correction for the multiple comparison is applied to the resulting</span>
+<span class="sd">    t-values, and entire matrices are reconstructed after and resulting shape</span>
+<span class="sd">    is (number of regions, number of regions)</span>
+
+<span class="sd">    Different method for accounting the multiple comparison problems exist,</span>
+<span class="sd">    please refers to the corresponding function in the statsmodels library :</span>
+<span class="sd">    statsmodels.sandbox.stats.multicomp.multipletests.</span>
+
+<span class="sd">    For the tangent kinds, keep in mind that the mean effect is computed</span>
+<span class="sd">    in the tangent space only, that is, not in the same space as classical</span>
+<span class="sd">    metrics like covariances, correlation of partial correlation.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">stacked_matrices</span> <span class="o">=</span> <span class="n">pre_preprocessing</span><span class="o">.</span><span class="n">stacked_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="o">=</span>
+                                                                       <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">,</span>
+                                                                       <span class="n">kinds</span><span class="o">=</span><span class="n">kinds</span><span class="p">)</span>
+
+    <span class="c1"># Initialise a dictionnary for saving the t_statistic, and the uncorrected and corrected p-value</span>
+    <span class="n">t_test_dictionnary</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+
+    <span class="c1"># Check if they are at least two samples:</span>
+    <span class="n">n_groupes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">groupes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_groupes</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Two samples t-test requires at '</span>
+                         <span class="s1">'least two samples...only found </span><span class="si">{}</span><span class="s1"> group'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_groupes</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">n_groupes</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> groups was found ! Only the first two groups will be use '</span>
+                      <span class="s1">'for the two sample t-test: </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_groupes</span><span class="p">,</span>
+                                                                    <span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                                    <span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Computing two sample t-test for kinds </span><span class="si">{}</span><span class="s1"> and contrast </span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kinds</span><span class="p">,</span> <span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Computing two sample t-test for kinds </span><span class="si">{}</span><span class="s1"> and contrast </span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kinds</span><span class="p">,</span> <span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized contrast, only [1.0,1.0] or [-1.0,-1.0] are accepted. '</span>
+                         <span class="s1">'You enter </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">contrast</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="s1">'tangent'</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'I think using a two sample t-test in this fashion on tangent '</span>
+                      <span class="s1">'space should be interpreted carefully !'</span><span class="p">)</span>
+
+    <span class="c1"># Fisher transform coefficients</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">preprocessing_method</span> <span class="o">==</span> <span class="s1">'fisher'</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">!=</span> <span class="s1">'tangent'</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">pre_preprocessing</span><span class="o">.</span><span class="n">fisher_transform</span><span class="p">(</span><span class="n">symmetric_array</span><span class="o">=</span><span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">])</span>
+                <span class="n">Y</span> <span class="o">=</span> <span class="n">pre_preprocessing</span><span class="o">.</span><span class="n">fisher_transform</span><span class="p">(</span><span class="n">symmetric_array</span><span class="o">=</span><span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">'tangent'</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span>
+                <span class="n">Y</span> <span class="o">=</span> <span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">preprocessing_method</span> <span class="o">==</span> <span class="s1">'already_preprocessed'</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized pre-processing method'</span><span class="p">)</span>
+
+        <span class="c1"># Vectorize the connectivity matrices, discarding the diagonal</span>
+        <span class="n">X_vectorize</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span><span class="n">symmetric</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">Y_vectorize</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span><span class="n">symmetric</span><span class="o">=</span><span class="n">Y</span><span class="p">)</span>
+        <span class="c1"># Vectorize the corresponding boolean array</span>
+        <span class="n">vec_X_mask</span> <span class="o">=</span> <span class="n">array_operation</span><span class="o">.</span><span class="n">vectorize_boolean_mask</span><span class="p">(</span>
+            <span class="n">symmetric_boolean_mask</span><span class="o">=</span><span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">'masked_array'</span><span class="p">])</span>
+        <span class="n">vec_Y_mask</span> <span class="o">=</span> <span class="n">array_operation</span><span class="o">.</span><span class="n">vectorize_boolean_mask</span><span class="p">(</span>
+            <span class="n">symmetric_boolean_mask</span><span class="o">=</span><span class="n">stacked_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s1">'masked_array'</span><span class="p">])</span>
+
+        <span class="c1"># Create a numpy masked array structure for the two sample</span>
+        <span class="n">X_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">X_vectorize</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">vec_X_mask</span><span class="p">)</span>
+        <span class="n">Y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">Y_vectorize</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">vec_Y_mask</span><span class="p">)</span>
+
+        <span class="c1"># Finally perform a two sample t-test for masked array along the first</span>
+        <span class="c1"># dimension according contrast, accounting for discarded rois</span>
+        <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">t_stats_vec</span><span class="p">,</span> <span class="n">pvalues_vec</span> <span class="o">=</span> <span class="n">mstats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">X_</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">Y_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">t_stats_vec</span><span class="p">,</span> <span class="n">pvalues_vec</span> <span class="o">=</span> <span class="n">mstats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">Y_</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">X_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Replace nan values in pvalues_vec by 1 to avoid failure in correction method</span>
+        <span class="n">pvalues_vec</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pvalues_vec</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="c1"># Correction of pvalues, reject of null hypotheses below alpha level.</span>
+        <span class="n">reject_</span><span class="p">,</span> <span class="n">pvalues_vec_corrected</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">pvalues_vec</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                                             <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                                                             <span class="n">method</span><span class="o">=</span><span class="n">multicomp_method</span><span class="p">)</span>
+
+        <span class="c1"># Computing the effect: difference between mean according to the contrast vector:</span>
+        <span class="n">groupes_mean_matrices</span> <span class="o">=</span> <span class="n">ccm</span><span class="o">.</span><span class="n">group_mean_connectivity</span><span class="p">(</span>
+            <span class="n">subjects_connectivity_matrices</span><span class="o">=</span><span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">,</span>
+            <span class="n">kinds</span><span class="o">=</span><span class="n">kinds</span><span class="p">)</span>
+
+        <span class="n">mean_X</span> <span class="o">=</span> <span class="n">groupes_mean_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span>
+        <span class="n">mean_Y</span> <span class="o">=</span> <span class="n">groupes_mean_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">mean_effect</span> <span class="o">=</span> <span class="n">mean_X</span> <span class="o">-</span> <span class="n">mean_Y</span>
+        <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+
+            <span class="n">mean_effect</span> <span class="o">=</span> <span class="n">mean_Y</span> <span class="o">-</span> <span class="n">mean_X</span>
+
+        <span class="c1"># Reconstruction of statistic for each kind</span>
+        <span class="n">t_stats_matrix</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">vec</span><span class="o">=</span><span class="n">t_stats_vec</span><span class="p">)</span>
+        <span class="n">pvalues_uncorrected_matrix</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">vec</span><span class="o">=</span><span class="n">pvalues_vec</span><span class="p">)</span>
+        <span class="n">pvalues_corrected_matrix</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">vec</span><span class="o">=</span><span class="n">pvalues_vec_corrected</span><span class="p">)</span>
+
+        <span class="c1"># Fill diagonal with p = 1 for corrected pvalues</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">pvalues_corrected_matrix</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Reconstruction of significant brain connection and significant pvalues</span>
+        <span class="n">reject_boolean_matrix</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">vec</span><span class="o">=</span><span class="n">reject_</span><span class="p">)</span>
+        <span class="c1"># Fill diagonal with 0 in the reconstructed numerical rejection array</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">reject_boolean_matrix</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">significant_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">t_stats_matrix</span><span class="p">,</span> <span class="n">reject_boolean_matrix</span><span class="p">)</span>
+        <span class="n">significant_pvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">pvalues_corrected_matrix</span><span class="p">,</span> <span class="n">reject_boolean_matrix</span><span class="p">)</span>
+        <span class="n">significant_mean_effect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">mean_effect</span><span class="p">,</span> <span class="n">reject_boolean_matrix</span><span class="p">)</span>
+        <span class="n">uncorrected_mean_effect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">mean_effect</span><span class="p">,</span> <span class="n">pvalues_uncorrected_matrix</span> <span class="o">&lt;</span> <span class="n">alpha</span><span class="p">)</span>
+
+        <span class="c1"># Save the t_stats_matrix, the uncorrected p values matrix, the corrected pvalues matrix in the dictionary.</span>
+        <span class="n">t_test_dictionnary</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'tstatistic'</span><span class="p">:</span> <span class="n">t_stats_matrix</span><span class="p">,</span>
+                                    <span class="s1">'uncorrected pvalues'</span><span class="p">:</span> <span class="n">pvalues_uncorrected_matrix</span><span class="p">,</span>
+                                    <span class="s1">'corrected pvalues'</span><span class="p">:</span> <span class="n">pvalues_corrected_matrix</span><span class="p">,</span>
+                                    <span class="s1">'significant edges'</span><span class="p">:</span> <span class="n">significant_edges</span><span class="p">,</span>
+                                    <span class="s1">'significant pvalues'</span><span class="p">:</span> <span class="n">significant_pvalues</span><span class="p">,</span>
+                                    <span class="s1">'significant mean effect'</span><span class="p">:</span> <span class="n">significant_mean_effect</span><span class="p">,</span>
+                                    <span class="s1">'total mean effect'</span><span class="p">:</span> <span class="n">mean_effect</span><span class="p">,</span>
+                                    <span class="s1">'uncorrected mean effect'</span><span class="p">:</span> <span class="n">uncorrected_mean_effect</span><span class="p">,</span>
+                                    <span class="s1">'tested_contrast'</span><span class="p">:</span> <span class="n">contrast</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">t_test_dictionnary</span></div>
+
+
+<div class="viewcode-block" id="linear_regression"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.linear_regression">[docs]</a><span class="k">def</span> <span class="nf">linear_regression</span><span class="p">(</span><span class="n">connectivity_data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">NA_action</span><span class="p">,</span>
+                      <span class="n">kind</span><span class="p">,</span> <span class="n">subjects_to_drop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">save_regression_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">contrasts</span><span class="o">=</span><span class="s1">'Id'</span><span class="p">,</span> <span class="n">compute_pvalues</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pvalues_tail</span><span class="o">=</span><span class="s1">'two_tailed'</span><span class="p">,</span>
+                      <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">pvals_correction_method</span><span class="o">=</span><span class="p">[</span><span class="s1">'fdr_bh'</span><span class="p">],</span> <span class="n">nperms_maxT</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                      <span class="n">vectorize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># TODO: add a way to select column containing the subjects ID, and</span>
+    <span class="c1"># TODO: shift it to be the index of the DataFrame</span>
+    <span class="sd">"""Fit a linear model on connectivity coefficients across subjects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    connectivity_data: dict</span>
+<span class="sd">        The connectivity matrix organised in a dictionnary. The subject identifier</span>
+<span class="sd">        as keys, and metric as values, i.e the matrix which contain the connectivity coefficient.</span>
+<span class="sd">        As metric are symmetric, matrix as to be vectorize in a 1D array of shape n_features.</span>
+<span class="sd">    formula: string</span>
+<span class="sd">        The model, in a R fashion.</span>
+<span class="sd">    data: string</span>
+<span class="sd">        The full path to the xlsx data file, containing all the dependant variables</span>
+<span class="sd">        in the model you want to estimate.</span>
+<span class="sd">    NA_action: string</span>
+<span class="sd">        Directive for handling missing data in the xlsx file. Choices are :</span>
+<span class="sd">        'drop': subject will discarded in the analysis, 'raise': raise an</span>
+<span class="sd">        error if missing data is present.</span>
+<span class="sd">    sheetname: string</span>
+<span class="sd">        The name of the sheet containing the useful data.</span>
+<span class="sd">    subjects_to_drop: list, optional</span>
+<span class="sd">        List of subjects you want to discard in the analysis. If None, all the</span>
+<span class="sd">        row in the dataframe are kept. Default is None.</span>
+<span class="sd">    kind: string</span>
+<span class="sd">        The metric, present in the provided connectivity data you want to perform analysis.</span>
+<span class="sd">    save_regression_directory: string</span>
+<span class="sd">        The full path to a directory for saving the regression results</span>
+<span class="sd">    contrasts: string or numpy.array of shape (n_features,n_features) optional</span>
+<span class="sd">        The contrast vector for infering the regression coefficients.</span>
+<span class="sd">        Default is 'Id', all regressors are tested.</span>
+<span class="sd">    compute_pvalues: bool, optional</span>
+<span class="sd">        If True pvalues are computed. Default is True</span>
+<span class="sd">    pvalues_tail: string, optional</span>
+<span class="sd">        If 'two_tailed', a two-sided t-test is computed. If 'one_tailed' a one</span>
+<span class="sd">        tailed t-test is computed.</span>
+<span class="sd">    alpha: float, optional</span>
+<span class="sd">        The Type error rate. Corrected p-values above alpha will be discarded.</span>
+<span class="sd">        Default is 0.05.</span>
+<span class="sd">    pvals_correction_method: string, optional</span>
+<span class="sd">        The method for accounting for the multiple comparison problems.</span>
+<span class="sd">        Choices are among the statsmodels library : {'bonferroni', 'sidak', 'holm-sidak', 'holm',</span>
+<span class="sd">        'simes-hochberg', 'hommel', 'fdr_bh', 'fdr_by', 'fdr_tsbh', 'fdr_tsbky'}, and the</span>
+<span class="sd">        'maxT' method in the mulm library. Default is 'fdr_bh'.</span>
+<span class="sd">    nperms_maxT: int, optional</span>
+<span class="sd">        If maximum statistic correction is chosen, the number of permutations. Default is 10000.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output 1: dict</span>
+<span class="sd">        The regression results, with the regressors variable as keys, and</span>
+<span class="sd">        corrected and corrected p-values matrix, significant t-values matrix,</span>
+<span class="sd">        t-values matrix under the alpha uncorrected threshold.</span>
+<span class="sd">    output 2: numpy.array of shape (n_samples, n_features)</span>
+<span class="sd">        The design matrix of the analysis.</span>
+<span class="sd">    output 3: numpy.array of shape (n_samples, q), q: number of model to fit.</span>
+<span class="sd">        The independent variable matrix with all the multiple outcome to fit.</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># Reading the data</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
+    
+    <span class="c1"># Drop the subjects we want to discard :</span>
+    <span class="n">df_c</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">subjects_to_drop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df_c</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">subjects_to_drop</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df_c</span>
+    
+    <span class="c1"># Build the design matrix according the dataframe and regression model.</span>
+    <span class="n">X_df</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="n">formula_like</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">'dataframe'</span><span class="p">,</span>
+                   <span class="n">NA_action</span><span class="o">=</span><span class="n">NA_action</span><span class="p">)</span>
+    
+    <span class="c1"># Stacked vectorized connectivity matrices in the same order of subjects</span>
+    <span class="c1"># index list of the DESIGN MATRIX, because of missing data, not all subjects</span>
+    <span class="c1"># will be in the analysis.</span>
+    <span class="c1"># All the subjects present in the excel file</span>
+    <span class="n">general_regression_subjects_list</span> <span class="o">=</span> <span class="n">X_df</span><span class="o">.</span><span class="n">index</span>
+    <span class="c1"># Intersection of subjects to perform regression and the general list because</span>
+    <span class="c1"># of possible dropped NA values.</span>
+    <span class="n">regression_subjects_list</span> <span class="o">=</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">connectivity_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">general_regression_subjects_list</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">connectivity_data</span><span class="p">[</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">regression_subjects_list</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="n">vectorize</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">discard_diagonal</span><span class="o">=</span><span class="n">discard_diagonal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+    
+    <span class="c1"># Conversion of X_df into a classic numpy array</span>
+    <span class="n">X_df</span> <span class="o">=</span> <span class="n">X_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">regression_subjects_list</span><span class="p">]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">regression_subjects_list</span><span class="p">])</span>
+    
+    <span class="c1"># Setting the contrast vector</span>
+    <span class="k">if</span> <span class="n">contrasts</span> <span class="o">==</span> <span class="s1">'Id'</span><span class="p">:</span>
+        <span class="n">contrasts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">contrasts</span> <span class="o">=</span> <span class="n">contrasts</span>
+    
+    <span class="c1"># Mass univariate testing using MUOLS library</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">mulm</span><span class="o">.</span><span class="n">MUOLS</span><span class="p">(</span><span class="n">Y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">raw_tvals</span><span class="p">,</span> <span class="n">raw_pvals</span><span class="p">,</span> <span class="n">dfree</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">t_test</span><span class="p">(</span><span class="n">contrasts</span><span class="o">=</span><span class="n">contrasts</span><span class="p">,</span>
+                                             <span class="n">pval</span><span class="o">=</span><span class="n">compute_pvalues</span><span class="p">,</span>
+                                             <span class="n">two_tailed</span><span class="o">=</span><span class="n">pvalues_tail</span><span class="p">)</span>
+    
+    <span class="c1"># Compute prediction of the models</span>
+    <span class="n">y_prediction</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+    
+    <span class="c1"># Replace nan values in pvalues_vec by 1 to avoid failure in correction method</span>
+    <span class="n">raw_pvals</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">raw_pvals</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.</span>
+    
+    <span class="c1"># Initialize boolean mask for rejected H0 hypothesis, i.e for corrected pvalues &lt; alpha.</span>
+    <span class="n">reject_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">raw_pvals</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'bool'</span><span class="p">)</span>
+    <span class="c1"># Initialize array to save corrected pvalues</span>
+    <span class="n">pvalues_vec_corrected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">raw_pvals</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="c1"># Save the results dictionary per correction method</span>
+    <span class="n">correction_method_regression_results</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">pvals_correction_method</span><span class="p">)</span>
+    
+    <span class="c1"># Saving the results of the regression</span>
+    <span class="c1"># Creation of the directory containing the regression results</span>
+    <span class="k">if</span> <span class="n">save_regression_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_regression_directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+                <span class="k">raise</span>
+        
+    <span class="c1"># Choose multiple comparison correction method among the statsmodels library</span>
+    <span class="k">for</span> <span class="n">corr_method</span> <span class="ow">in</span> <span class="n">pvals_correction_method</span><span class="p">:</span>
+        
+        <span class="c1"># Listing the dependent variable, in the order of the output of</span>
+        <span class="c1"># the regression analysis</span>
+        <span class="n">covariable_name</span> <span class="o">=</span> <span class="n">X_df</span><span class="o">.</span><span class="n">columns</span>
+        <span class="c1"># Save a dictionnary with the principal</span>
+        <span class="n">regression_results</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">covariable_name</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">corr_method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'fdr_bh'</span><span class="p">,</span> <span class="s1">'bonferroni'</span><span class="p">]:</span>
+            
+            <span class="c1"># Flatten the array of raw p-values</span>
+            <span class="n">raw_p_shape</span> <span class="o">=</span> <span class="n">raw_pvals</span><span class="o">.</span><span class="n">shape</span>
+            <span class="c1"># Call fdr correction, and reshape the results to (n_variable, n_features)</span>
+            <span class="n">pvalues_vec_corrected</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">raw_pvals</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                                                   <span class="n">method</span><span class="o">=</span><span class="n">corr_method</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">raw_p_shape</span><span class="p">)</span>
+            
+            <span class="n">reject_</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">raw_pvals</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                                                   <span class="n">method</span><span class="o">=</span><span class="n">corr_method</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">raw_p_shape</span><span class="p">)</span>
+        
+        <span class="k">elif</span> <span class="n">corr_method</span> <span class="o">==</span> <span class="s1">'maxT'</span><span class="p">:</span>
+            <span class="c1"># Inference with the maximum statistic method :</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">pvalues_vec_corrected</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">null_distribution</span> <span class="o">=</span> \
+            <span class="n">mod</span><span class="o">.</span><span class="n">t_test_maxT</span><span class="p">(</span><span class="n">contrasts</span><span class="o">=</span><span class="n">contrasts</span><span class="p">,</span>
+                            <span class="n">nperms</span><span class="o">=</span><span class="n">nperms_maxT</span><span class="p">)</span>
+            <span class="c1"># Manual construction for the reject_ mask:</span>
+            <span class="n">reject_</span> <span class="o">=</span> <span class="n">pvalues_vec_corrected</span> <span class="o">&lt;</span> <span class="n">alpha</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized correction method ! </span><span class="se">\n</span><span class="s1">'</span>
+                             <span class="s1">'Please refer to the docstring function.'</span><span class="p">)</span>
+        
+        <span class="c1"># Reconstruction in a matrix structure of the different output</span>
+        
+        <span class="c1"># Reconstruction of boolean reject_ mask : it's a binary mask</span>
+        <span class="n">reject_m_</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">reject_</span><span class="p">)</span>
+        <span class="c1"># Reconstruction of raw t values</span>
+        <span class="n">raw_tvals_m</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">raw_tvals</span><span class="p">)</span>
+        <span class="c1"># Reconstruction of raw p values</span>
+        <span class="n">raw_pvals_m</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">raw_pvals</span><span class="p">)</span>
+        <span class="c1"># Reconstruction of corrected p values</span>
+        <span class="n">corrected_pvals_m</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">pvalues_vec_corrected</span><span class="p">)</span>
+        <span class="c1"># Construction of masked raw t values according to corrected p values</span>
+        <span class="c1"># under alpha threshold</span>
+        <span class="n">significant_tvals_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">raw_tvals_m</span><span class="p">,</span> <span class="n">reject_m_</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="n">regression_results</span><span class="p">[</span><span class="n">covariable_name</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> \
+                <span class="p">{</span><span class="s1">'raw pvalues'</span><span class="p">:</span> <span class="n">raw_pvals_m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                 <span class="s1">'raw tvalues'</span><span class="p">:</span> <span class="n">raw_tvals_m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                 <span class="s1">'corrected pvalues'</span><span class="p">:</span> <span class="n">corrected_pvals_m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                 <span class="s1">'significant tvalues'</span><span class="p">:</span> <span class="n">significant_tvals_m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]}</span>
+
+        <span class="n">correction_method_regression_results</span><span class="p">[</span><span class="n">corr_method</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'results'</span><span class="p">:</span> <span class="n">regression_results</span><span class="p">}</span>
+    
+        <span class="k">if</span> <span class="n">corr_method</span> <span class="o">==</span> <span class="s1">'maxT'</span><span class="p">:</span>    
+            <span class="n">correction_method_regression_results</span><span class="p">[</span><span class="s1">'maximum T null distribution'</span><span class="p">]</span> <span class="o">=</span> <span class="n">null_distribution</span>
+
+    <span class="c1"># saving the dictionnary</span>
+    <span class="k">if</span> <span class="n">save_regression_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">folders_and_files_management</span><span class="o">.</span><span class="n">save_object</span><span class="p">(</span><span class="n">correction_method_regression_results</span><span class="p">,</span>
+                                                 <span class="n">save_regression_directory</span><span class="p">,</span>
+                                                 <span class="s1">'regression_results.pkl'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">correction_method_regression_results</span><span class="p">,</span> <span class="n">X_df</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_prediction</span><span class="p">,</span> <span class="n">regression_subjects_list</span></div>
+
+
+<div class="viewcode-block" id="functional_connectivity_distribution_estimation"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.functional_connectivity_distribution_estimation">[docs]</a><span class="k">def</span> <span class="nf">functional_connectivity_distribution_estimation</span><span class="p">(</span><span class="n">functional_connectivity_estimate</span><span class="p">):</span>
+    <span class="c1"># TODO : When functional_connectivity_estimate contain nan, the estimation fail,</span>
+    <span class="c1"># TODO: I have to add a case for data contain non finite value</span>
+    <span class="sd">"""Estimates the mean and standard deviation of functional connectivity distribution assuming a Gaussian behavior.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    functional_connectivity_estimate: numpy.array, shape(n_features, n_features)</span>
+<span class="sd">    or shape 0.5*n_features*(n_features + 1)</span>
+<span class="sd">        A functional connectivity matrices, if a 2D array is provided it will vectorized discarding the diagonal.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output 1: numpy.array shape 0.5*n_features*(n_features + 1)</span>
+<span class="sd">        The vectorized functional connectivity array.</span>
+<span class="sd">    output 2: float</span>
+<span class="sd">        The estimated mean of the data.</span>
+<span class="sd">    output 2: float</span>
+<span class="sd">        The estimated standard deviation of the data.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    scipy.stats.norm :</span>
+<span class="sd">        This function from the scipy library is used here,</span>
+<span class="sd">        to estimate the mean and the standard deviation of the data.</span>
+<span class="sd">    pre_preprocessing.fisher_transform :</span>
+<span class="sd">        To ensure a normal behavior of the connectivity coefficient,</span>
+<span class="sd">        this function apply a classical Fisher transform to the data.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    We assume here that the functional connectivity your're dealing with have a **Gaussian** behavior,</span>
+<span class="sd">    and therefore can be describe properly with two parameters: the mean and the standard deviation.</span>
+<span class="sd">    To ensure a Gaussian behavior transformation of the connectivity coefficient should be used like</span>
+<span class="sd">    Fisher transform for correlation or partial correlation for example.</span>
+
+<span class="sd">    """</span>
+
+    <span class="c1"># Check the dimension of the passed functional matrices</span>
+    <span class="n">functional_connectivity_shape</span> <span class="o">=</span> <span class="n">functional_connectivity_estimate</span><span class="o">.</span><span class="n">shape</span>
+    <span class="c1"># If it is a 2D matrix we vectorize it, discarding the diagonal to have a 1D distribution array</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">functional_connectivity_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">vectorized_functional_connectivity_estimate</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span><span class="n">functional_connectivity_estimate</span><span class="p">,</span>
+                                                                        <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">vectorized_functional_connectivity_estimate</span> <span class="o">=</span> <span class="n">functional_connectivity_estimate</span>
+
+    <span class="c1"># We estimate the parameters of the distribution assuming it is Gaussian</span>
+    <span class="n">mean_data</span><span class="p">,</span> <span class="n">std_data</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">vectorized_functional_connectivity_estimate</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">vectorized_functional_connectivity_estimate</span><span class="p">,</span> <span class="n">mean_data</span><span class="p">,</span> <span class="n">std_data</span></div>
+
+
+<div class="viewcode-block" id="mean_functional_connectivity_distribution_estimation"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.mean_functional_connectivity_distribution_estimation">[docs]</a><span class="k">def</span> <span class="nf">mean_functional_connectivity_distribution_estimation</span><span class="p">(</span><span class="n">mean_groups_connectivity_matrices</span><span class="p">):</span>
+    <span class="sd">"""Estimates for the mean connectivity matrices for each group, the mean and standard deviation</span>
+<span class="sd">    assuming gaussian distribution</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A multi-levels dictionnary organised as follow :</span>
+<span class="sd">        - The first keys levels is the different groups in the study.</span>
+<span class="sd">        - The second keys levels is the mean connectivity matrices for</span>
+<span class="sd">        the different kinds. They are array of shape (number of regions , number of regions).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output : dict</span>
+<span class="sd">        A dictionnary organised as follow:</span>
+<span class="sd">            - The first keys levels is the different groups in the study.</span>
+<span class="sd">            - The second keys levels is the kinds present in the provided dictionnary.</span>
+<span class="sd">            - The third levels keys contain the estimated mean, the estimated standard deviation,</span>
+<span class="sd">            and the vectorized array of connectivity coefficients.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Apply a Z-fisher transformation to the input matrices can be useful to improve and ensure a normal</span>
+<span class="sd">    behavior of the data.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">parameters_functional_connectivity_estimation</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">mean_groups_connectivity_matrices</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">mean_groups_connectivity_matrices</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">parameters_functional_connectivity_estimation</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">mean_groups_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">mean_groups_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">mean_kind_matrices</span> <span class="o">=</span> <span class="n">mean_groups_connectivity_matrices</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span>
+            <span class="c1"># Estimating the mean and standard deviation for the distribution</span>
+            <span class="n">vectorized_kind_matrices</span><span class="p">,</span> <span class="n">kind_mean_data</span><span class="p">,</span> <span class="n">kind_std_data</span> <span class="o">=</span> <span class="n">functional_connectivity_distribution_estimation</span><span class="p">(</span><span class="n">mean_kind_matrices</span><span class="p">)</span>
+            <span class="c1"># Fill the dictionnary saving the mean and standard deviation for each kind, and the vectorized connectivity matrices</span>
+            <span class="n">parameters_functional_connectivity_estimation</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'mean'</span><span class="p">:</span> <span class="n">kind_mean_data</span><span class="p">,</span> <span class="s1">'std'</span><span class="p">:</span> <span class="n">kind_std_data</span><span class="p">,</span>
+                                                                           <span class="s1">'vectorized connectivity'</span><span class="p">:</span> <span class="n">vectorized_kind_matrices</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">parameters_functional_connectivity_estimation</span></div>
+
+
+<div class="viewcode-block" id="two_sample_t_test_on_mean_connectivity"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_on_mean_connectivity">[docs]</a><span class="k">def</span> <span class="nf">two_sample_t_test_on_mean_connectivity</span><span class="p">(</span><span class="n">mean_matrix_for_each_subjects</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">contrast</span><span class="p">):</span>
+    <span class="sd">"""Performs a two sample t-test between the two groupes in the study on the mean matrix of each subjects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mean_matrix_for_each_subjects: dict</span>
+<span class="sd">        A dictionnary containing, at the first level, the groups as keys, and the kinds as values.</span>
+<span class="sd">        Inside each each kind, a dictionnary containing the subjects identifier as values, and</span>
+<span class="sd">        the mean functional connectivity of that subject as values.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds to test.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of the two groupes in the study.</span>
+<span class="sd">    contrast: list of int.</span>
+<span class="sd">        A list of int, to precise the contrast between the two group. If contrast</span>
+<span class="sd">        is set to the vector [1.0, -1.0], the computed t values is base on the contrast</span>
+<span class="sd">        groupes[0] - groupes[1], and if contrast is [-1.0, 1.0], it's the contrary.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary containing each kinds as keys, and the t-statistic and p-values as</span>
+<span class="sd">        values for each kinds.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The p-values is based on a two-sided statistic.</span>
+
+
+<span class="sd">    """</span>
+
+    <span class="n">t_test_dictionnary_functional_score</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+
+        <span class="c1"># Stacked the functional score of the first group, the first in the list of groupes</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mean_matrix_for_each_subjects</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">mean_matrix_for_each_subjects</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="c1"># Stack the functional score of the second group, the second in the list of groupes</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mean_matrix_for_each_subjects</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">mean_matrix_for_each_subjects</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+        <span class="c1"># Depending on the contrast</span>
+        <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">t_stat_</span><span class="p">,</span> <span class="n">uncorrected_pvalues</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">t_stat_</span><span class="p">,</span> <span class="n">uncorrected_pvalues</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized contrast !'</span><span class="p">)</span>
+
+        <span class="c1"># Fill a dictionnary with the t-statistic and the p-values</span>
+        <span class="n">t_test_dictionnary_functional_score</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'tstatistic'</span><span class="p">:</span> <span class="n">t_stat_</span><span class="p">,</span> <span class="s1">'uncorrected pvalues'</span><span class="p">:</span> <span class="n">uncorrected_pvalues</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">t_test_dictionnary_functional_score</span></div>
+
+
+<div class="viewcode-block" id="distribution_estimation_mean_subjects_connectivity"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.distribution_estimation_mean_subjects_connectivity">[docs]</a><span class="k">def</span> <span class="nf">distribution_estimation_mean_subjects_connectivity</span><span class="p">(</span><span class="n">mean_matrix_for_each_subjects</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">):</span>
+    <span class="sd">"""Provides an estimation of mean and standard deviation of the distribution for the two groupes</span>
+<span class="sd">    under study, of the mean matrix of each subjects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mean_matrix_for_each_subjects: dict</span>
+<span class="sd">        A dictionnary containing, at the first level, the groups as keys, and the kinds as values.</span>
+<span class="sd">        Inside each each kind, a dictionnary containing the subjects identifier as values, and</span>
+<span class="sd">        the mean functional connectivity of that subject as values.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds to test.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of the two groupes in the study.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary with the groupes as keys, and for each group the estimated standard deviation,</span>
+<span class="sd">        the estimated mean of the distribution, and the array of shape (n_subject, )</span>
+<span class="sd">        of the mean matrix of each subjects.</span>
+
+
+<span class="sd">    """</span>
+    <span class="c1"># Gaussian estimation of the distribution of mean connectivity for each subjects</span>
+    <span class="n">estimation_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">groupes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="n">estimation_dict</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+            <span class="c1"># Fetch the mean connectivity for each subject in one numerical array</span>
+            <span class="n">mean_connectivity_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">mean_matrix_for_each_subjects</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">s</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">mean_matrix_for_each_subjects</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="c1"># Estimate the mean and standard deviation of the data with a Gaussian assumption</span>
+            <span class="c1"># Fill the dictionnary with the parameters estimate for the current group and kind</span>
+            <span class="n">estimation_dict</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">'std'</span><span class="p">:</span> <span class="n">functional_connectivity_distribution_estimation</span><span class="p">(</span><span class="n">mean_connectivity_vec</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="s1">'mean'</span><span class="p">:</span> <span class="n">functional_connectivity_distribution_estimation</span><span class="p">(</span><span class="n">mean_connectivity_vec</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s1">'mean connectivity'</span><span class="p">:</span> <span class="n">mean_connectivity_vec</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">estimation_dict</span></div>
+
+
+<div class="viewcode-block" id="intra_network_two_samples_t_test"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.intra_network_two_samples_t_test">[docs]</a><span class="k">def</span> <span class="nf">intra_network_two_samples_t_test</span><span class="p">(</span><span class="n">intra_network_connectivity_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span>
+                                     <span class="n">contrast</span><span class="p">,</span> <span class="n">network_labels_list</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">05</span><span class="p">,</span>
+                                     <span class="n">p_value_correction_method</span><span class="o">=</span><span class="s1">'fdr_bh'</span><span class="p">,</span> <span class="n">assume_equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">nan_policy</span><span class="o">=</span><span class="s1">'omit'</span><span class="p">,</span> <span class="n">paired</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">"""Test the difference of intra network connectivity between the groups under the study.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    intra_network_connectivity_dictionary: dict</span>
+<span class="sd">        A subjects connectivity dictionnary, with groupes in the study as the first levels of keys,</span>
+<span class="sd">        the kinds in the study as the second levels of keys, and the intra network connectivity for each</span>
+<span class="sd">        network in the study.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of the groups under the study.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds in the study.</span>
+<span class="sd">    contrast: list</span>
+<span class="sd">        The contrast vector use for the t-test. Choices are [1.0, -1.0], or [-1.0, 1.0].</span>
+<span class="sd">    network_labels_list: list</span>
+<span class="sd">        The list of the name of the different network.</span>
+<span class="sd">    alpha: float, optional</span>
+<span class="sd">        The type I error rate threshold. For p-value under alpha, the null hypothesis can be rejected.</span>
+<span class="sd">        Default os 0.05.</span>
+<span class="sd">    p_value_correction_method: string, optional</span>
+<span class="sd">        The correction method accounting for the multiple comparison problem.</span>
+<span class="sd">        Default is 'fdr_bh', the traditional False Discovery Rate correction from Benjamini &amp; Hochberg.</span>
+<span class="sd">    assume_equal_var: bool, optional</span>
+<span class="sd">        If False, the Welch t-test is perform accounting for different variances between the tested sample.</span>
+<span class="sd">    nan_policy: string, optional</span>
+<span class="sd">        Behavior regarding possible missing data (nan values). Default is 'omit'.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary structure containing the t-test result for each network : the t statistic value, the corrected and</span>
+<span class="sd">        uncorrected p values, the intra network connectivity array of shape (number of subject, ) for</span>
+<span class="sd">        each group, and the contrast vector.</span>
+<span class="sd">        .</span>
+<span class="sd">    # TODO: add an argument to precise the field name in the dictionnary containing the network strength.</span>
+<span class="sd">    """</span>
+    <span class="n">intra_network_strength_t_test</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+    <span class="c1"># For some network, like Auditory network in subject 40 in patients, the strength is a masked value which will we</span>
+    <span class="c1"># convert to nan. So we force to omit nan value in the t-test function call.</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+
+        <span class="n">intra_network_strength_t_test</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">network_labels_list</span><span class="p">)</span>
+        <span class="c1"># List to stack the uncorrected p value for each network</span>
+        <span class="n">all_network_uncorrected_p_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">network_labels_list</span><span class="p">:</span>
+            <span class="c1"># Fetch the intra-network strength for each subject in the first group</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">intra_network_connectivity_dictionary</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">network</span><span class="p">][</span><span class="s1">'network connectivity strength'</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">intra_network_connectivity_dictionary</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="c1"># Fetch the intra-network strength for each subject in the second group</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">intra_network_connectivity_dictionary</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">network</span><span class="p">][</span><span class="s1">'network connectivity strength'</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">intra_network_connectivity_dictionary</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="c1"># Perform two sample t-test according to contrast vector</span>
+            <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">paired</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">network_t_statistic</span><span class="p">,</span> <span class="n">network_p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                                                                  <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">,</span>
+                                                                                  <span class="n">equal_var</span><span class="o">=</span><span class="n">assume_equal_var</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">network_t_statistic</span><span class="p">,</span> <span class="n">network_p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_rel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                                                                  <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">,</span>
+                                                                                  <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">paired</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">network_t_statistic</span><span class="p">,</span> <span class="n">network_p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                                                                                  <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">,</span>
+                                                                                  <span class="n">equal_var</span><span class="o">=</span><span class="n">assume_equal_var</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">network_t_statistic</span><span class="p">,</span> <span class="n">network_p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_rel</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span>
+                                                                                  <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">,</span>
+                                                                                  <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized contrast !'</span><span class="p">)</span>
+
+            <span class="c1"># Fill the dictionary to save the result</span>
+            <span class="n">intra_network_strength_t_test</span><span class="p">[</span><span class="n">kind</span><span class="p">][</span><span class="n">network</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'t statistic'</span><span class="p">:</span> <span class="n">network_t_statistic</span><span class="p">,</span>
+                                                            <span class="s1">'uncorrected p values'</span><span class="p">:</span> <span class="n">network_p_values_uncorrected</span><span class="p">,</span>
+                                                            <span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">x</span><span class="p">,</span>
+                                                            <span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">y</span><span class="p">,</span>
+                                                            <span class="s1">'contrast'</span><span class="p">:</span> <span class="n">contrast</span><span class="p">,</span>
+                                                            <span class="p">}</span>
+            <span class="c1"># Stack the uncorrected network p value in the order of network_labels_list</span>
+            <span class="n">all_network_uncorrected_p_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">network_p_values_uncorrected</span><span class="p">)</span>
+
+        <span class="c1"># Correction of p-values, for each kinds correct for the number of test i.e the number of network</span>
+        <span class="n">all_network_p_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_network_uncorrected_p_values</span><span class="p">)</span>
+        <span class="c1"># Correct the p value with the chosen method</span>
+        <span class="n">reject_boolean_mask</span><span class="p">,</span> <span class="n">corrected_pvalues</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+            <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">all_network_p_values</span><span class="p">,</span>
+                          <span class="n">method</span><span class="o">=</span><span class="n">p_value_correction_method</span><span class="p">,</span>
+                          <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+
+        <span class="c1"># Fill the dictionnary, appending a new key containing the corrected p values</span>
+        <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">network_labels_list</span><span class="p">:</span>
+            <span class="n">intra_network_strength_t_test</span><span class="p">[</span><span class="n">kind</span><span class="p">][</span><span class="n">network</span><span class="p">][</span><span class="s1">'corrected pvalues'</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">corrected_pvalues</span><span class="p">[</span><span class="n">network_labels_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">network</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">intra_network_strength_t_test</span></div>
+
+
+<div class="viewcode-block" id="inter_network_two_sample_t_test"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.inter_network_two_sample_t_test">[docs]</a><span class="k">def</span> <span class="nf">inter_network_two_sample_t_test</span><span class="p">(</span><span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span>
+                                    <span class="n">kinds</span><span class="p">,</span> <span class="n">contrast</span><span class="p">,</span>
+                                    <span class="n">network_label_list</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">05</span><span class="p">,</span>
+                                    <span class="n">p_value_correction_method</span><span class="o">=</span><span class="s1">'fdr_bh'</span><span class="p">,</span>
+                                    <span class="n">assuming_equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">nan_policy</span><span class="o">=</span><span class="s1">'omit'</span><span class="p">):</span>
+    <span class="sd">"""Test the difference of connectivity between network performing a two sample t test.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subjects_inter_network_connectivity_matrices: dict</span>
+<span class="sd">        A subjects connectivity dictionnary, with groupes in the study as the first levels of keys,</span>
+<span class="sd">        the kinds in the study as the second levels of keys, and the inter network connectivity</span>
+<span class="sd">        matrices as values, of shape (number of networks, number of networks)</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of the groups under the study.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds in the study.</span>
+<span class="sd">    contrast: list</span>
+<span class="sd">        The contrast vector use for the t-test. Choices are [1.0, -1.0], or [-1.0, 1.0].</span>
+<span class="sd">    network_label_list: list</span>
+<span class="sd">        The list of the name of the different network.</span>
+<span class="sd">    alpha: float, optional</span>
+<span class="sd">        The type I error rate threshold. For p-value under alpha, the null hypothesis can be rejected.</span>
+<span class="sd">        Default is 0.05.</span>
+<span class="sd">    p_value_correction_method: string, optional</span>
+<span class="sd">        The correction method accounting for the multiple comparison problem.</span>
+<span class="sd">        Default is 'fdr_bh', the traditional False Discovery Rate correction from</span>
+<span class="sd">        Benjamini &amp; Hochberg.</span>
+<span class="sd">    assuming_equal_var: bool, optional</span>
+<span class="sd">        If False, the Welch t-test is perform accounting for different variances between</span>
+<span class="sd">        the tested sample.</span>
+<span class="sd">    nan_policy: string, optional</span>
+<span class="sd">        Behavior regarding possible missing data (nan values). Default is 'omit'.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary structure containing the t-test result : the raw t statistic array, the corrected and</span>
+<span class="sd">        uncorrected p values array, the masked t statistic array for corrected p values under</span>
+<span class="sd">        the alpha threshold.</span>
+
+<span class="sd">    """</span>
+    <span class="n">inter_network_t_test_result</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+
+    <span class="n">n_network</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">network_label_list</span><span class="p">)</span>
+
+    <span class="c1"># Fetch the group connectivity, and compute a t-test for each kind.</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="c1"># Fetch and vectorize the subjects connectivity matrices</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">s</span><span class="p">][</span><span class="n">kind</span><span class="p">],</span>
+                                 <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">numpy_array</span><span class="o">=</span><span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">s</span><span class="p">][</span><span class="n">kind</span><span class="p">],</span>
+                                 <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_inter_network_connectivity_matrices</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="n">assuming_equal_var</span><span class="p">,</span>
+                                                          <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+            <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="n">assuming_equal_var</span><span class="p">,</span>
+                                                          <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized contrast !'</span><span class="p">)</span>
+
+        <span class="c1"># Correction of p values</span>
+        <span class="n">vec_reject_mask</span><span class="p">,</span> <span class="n">vec_corrected_p_values</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">pvals</span><span class="o">=</span><span class="n">p_values_uncorrected</span><span class="p">,</span>
+                                                                       <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                                                                       <span class="n">method</span><span class="o">=</span><span class="n">p_value_correction_method</span><span class="p">)</span>
+
+        <span class="c1"># Reconstruction of boolean reject_ mask : it's a binary mask</span>
+        <span class="n">reject_m_</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">vec_reject_mask</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_network</span><span class="p">)))</span>
+        <span class="c1"># Reconstruction of raw t values</span>
+        <span class="n">raw_tvals_m</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">t_statistic</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_network</span><span class="p">))</span>
+        <span class="c1"># Reconstruction of raw p values</span>
+        <span class="n">raw_pvals_m</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">p_values_uncorrected</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_network</span><span class="p">))</span>
+        <span class="c1"># Reconstruction of corrected p values</span>
+        <span class="n">corrected_pvals_m</span> <span class="o">=</span> <span class="n">vec_to_sym_matrix</span><span class="p">(</span><span class="n">vec_corrected_p_values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_network</span><span class="p">))</span>
+        <span class="c1"># Construction of masked raw t values according to corrected p values under alpha threshold</span>
+        <span class="n">significant_tvals_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">raw_tvals_m</span><span class="p">,</span> <span class="n">reject_m_</span><span class="p">)</span>
+
+        <span class="n">inter_network_t_test_result</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'raw t statistic'</span><span class="p">:</span> <span class="n">raw_tvals_m</span><span class="p">,</span>
+                                             <span class="s1">'uncorrected p values'</span><span class="p">:</span> <span class="n">raw_pvals_m</span><span class="p">,</span>
+                                             <span class="s1">'corrected p values'</span><span class="p">:</span> <span class="n">corrected_pvals_m</span><span class="p">,</span>
+                                             <span class="s1">'significant t values'</span><span class="p">:</span> <span class="n">significant_tvals_m</span><span class="p">,</span>
+                                             <span class="s1">'contrast'</span><span class="p">:</span> <span class="n">contrast</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">inter_network_t_test_result</span></div>
+
+
+<div class="viewcode-block" id="two_sample_t_test_"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_">[docs]</a><span class="k">def</span> <span class="nf">two_sample_t_test_</span><span class="p">(</span><span class="n">connectivity_dictionnary_</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">contrast</span><span class="p">,</span>
+                       <span class="n">assume_equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">nan_policy</span><span class="o">=</span><span class="s1">'omit'</span><span class="p">,</span>
+                       <span class="n">paired</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">"""Perform a simple two sample t test between two sets</span>
+<span class="sd">    of connectivity matrices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ---------</span>
+<span class="sd">    connectivity_dictionnary_: dict</span>
+<span class="sd">        A dictionnary which contain some connectivity of interest, and associated measure,</span>
+<span class="sd">        in a ConPagnon subjects connectivity matrices like.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of groupes under in the study.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kinds in the study</span>
+<span class="sd">    field: string</span>
+<span class="sd">        The field name in the dictionary containing the connectivity coefficient array.</span>
+<span class="sd">        It should be a 1D vector of shape (number of subject, ).</span>
+<span class="sd">    contrast: list</span>
+<span class="sd">        The contrast vector. Choices are [1.0, -1.0], or [-1.0, 1.0].</span>
+<span class="sd">    assume_equal_var: bool, optional</span>
+<span class="sd">        If False, a Welch t-test assuming different variances between the two group.</span>
+<span class="sd">    nan_policy: string, optional</span>
+<span class="sd">        Behavior regarding the missing value in the tested data. Default is 'omit'</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: dict</span>
+<span class="sd">        A dictionnary with the raw t statistic, the used contrast vector,</span>
+<span class="sd">        and the **uncorrected** p values.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">t_test_result</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span>
+    <span class="c1"># Fetch the group connectivity, and compute a t-test for each kind.</span>
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">connectivity_dictionnary_</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">kind</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">connectivity_dictionnary_</span><span class="p">[</span><span class="n">groupes</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">kind</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">paired</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+
+                <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="n">assume_equal_var</span><span class="p">,</span>
+                                                              <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_rel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">contrast</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">paired</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+
+                <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="n">assume_equal_var</span><span class="p">,</span>
+                                                              <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t_statistic</span><span class="p">,</span> <span class="n">p_values_uncorrected</span> <span class="o">=</span> <span class="n">ttest_rel</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unrecognized contrast !'</span><span class="p">)</span>
+        <span class="n">t_test_result</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'t_statistic'</span><span class="p">:</span> <span class="n">t_statistic</span><span class="p">,</span>
+                               <span class="s1">'uncorrected p value'</span><span class="p">:</span> <span class="n">p_values_uncorrected</span><span class="p">,</span>
+                               <span class="s1">'contrast'</span><span class="p">:</span> <span class="n">contrast</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">t_test_result</span></div>
+
+
+<div class="viewcode-block" id="regress_confounds"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.regress_confounds">[docs]</a><span class="k">def</span> <span class="nf">regress_confounds</span><span class="p">(</span><span class="n">vectorize_subjects_connectivity</span><span class="p">,</span> <span class="n">confound_dictionary</span><span class="p">,</span> <span class="n">groupes</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span>
+                      <span class="n">data</span><span class="p">,</span>
+                      <span class="n">sheetname</span><span class="p">,</span>
+                      <span class="n">NA_action</span><span class="o">=</span><span class="s1">'drop'</span><span class="p">):</span>
+    <span class="c1"># TODO: add a way to select column containing the subjects ID, and</span>
+    <span class="c1"># TODO: shift it to be the index of the DataFrame</span>
+    <span class="sd">"""Regress confound on connectivity matrices</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vectorize_subjects_connectivity: dict</span>
+<span class="sd">        The subject connectivity matrices dictionary, with vectorized matrices,</span>
+<span class="sd">        WITHOUT the diagonal.</span>
+<span class="sd">    confound_dictionary: dict</span>
+<span class="sd">        The nested dictionary containing for each group and kind: a field</span>
+<span class="sd">        named 'confounds' containing a list of confounds. A second field named</span>
+<span class="sd">        'subjects to drop' containing a list of subjects identifier to drop, None</span>
+<span class="sd">        if you want to pick all of the subjects.</span>
+<span class="sd">    groupes: list</span>
+<span class="sd">        The list of group on which you want to regress confounds.</span>
+<span class="sd">    kinds: list</span>
+<span class="sd">        The list of kind</span>
+<span class="sd">    data: str</span>
+<span class="sd">        The full path, including extension to the excel file containing</span>
+<span class="sd">        the confound for each subjects. This will be read by pandas.</span>
+<span class="sd">        Note that the index of the resulting dataframe must be the</span>
+<span class="sd">        subjects identifiers.</span>
+<span class="sd">    sheetname: str</span>
+<span class="sd">        The sheet name if the excel file containing the confound for each</span>
+<span class="sd">        subjects of each groups.</span>
+<span class="sd">    NA_action: str, optional</span>
+<span class="sd">        Behavior regarding the missing values. If 'drop', the entire</span>
+<span class="sd">        row is deleted from the design matrix.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Reading the data excel file</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
+
+    <span class="c1"># Copy of the vectorized connectivity matrices dictionary</span>
+    <span class="c1"># to override the matrices</span>
+    <span class="n">regressed_subjects_connectivity_dictionary</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">vectorize_subjects_connectivity</span><span class="p">)</span>
+    <span class="n">regression_by_kind</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">groupes</span><span class="p">,</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">kinds</span><span class="p">))</span>
+    <span class="c1"># Save the design matrix, and the stack of matrices before and after</span>
+    <span class="c1"># regressing</span>
+    <span class="n">regression_data_dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">groupes</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
+        <span class="c1"># Read the confound and subject to drop for</span>
+        <span class="c1"># each group</span>
+        <span class="c1"># List of confounds</span>
+        <span class="n">group_confounds</span> <span class="o">=</span> <span class="n">confound_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="s1">'confounds'</span><span class="p">]</span>
+        <span class="c1"># List of subject to drop</span>
+        <span class="n">group_subjects_to_drop</span> <span class="o">=</span> <span class="n">confound_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="s1">'subjects to drop'</span><span class="p">]</span>
+        <span class="c1"># List of subjects present in the group dictionary</span>
+        <span class="n">group_subjects_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vectorize_subjects_connectivity</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="c1"># Copy of original dataframe to avoid</span>
+        <span class="c1"># side effect :</span>
+        <span class="n">df_c</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># Fetch the sub-dataframe containing the subjects</span>
+        <span class="c1"># in the dictionary</span>
+        <span class="n">df_group</span> <span class="o">=</span> <span class="n">df_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">group_subjects_list</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">group_subjects_to_drop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df_group</span> <span class="o">=</span> <span class="n">df_group</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">group_subjects_to_drop</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df_group</span> <span class="o">=</span> <span class="n">df_group</span>
+
+        <span class="c1"># Build the formula: regress the confound without</span>
+        <span class="c1"># Intercept term</span>
+        <span class="n">group_formula</span> <span class="o">=</span> <span class="s1">'+'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">group_confounds</span><span class="p">)</span>
+
+        <span class="c1"># Build the design matrix according the dataframe and regression model.</span>
+        <span class="n">X_df</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="n">formula_like</span><span class="o">=</span><span class="n">group_formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df_group</span><span class="p">,</span>
+                       <span class="n">return_type</span><span class="o">=</span><span class="s1">'dataframe'</span><span class="p">,</span>
+                       <span class="n">NA_action</span><span class="o">=</span><span class="n">NA_action</span><span class="p">)</span>
+        <span class="c1"># Drop intercept</span>
+        <span class="n">X_df</span> <span class="o">=</span> <span class="n">X_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'Intercept'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Conversion of design dataframe into numpy array</span>
+        <span class="c1"># for QR decomposition</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_df</span><span class="p">)</span>
+
+        <span class="n">regression_data_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'design matrix'</span><span class="p">:</span> <span class="n">X_df</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+            <span class="c1"># stack the vectorized array into a numpy array of shape (n_subjects, n_features)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">vectorize_subjects_connectivity</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">group_subjects_list</span><span class="p">])</span>
+
+            <span class="c1"># check first dimension of X and y, it should be the same</span>
+            <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Matrices are not aligned ! First '</span>
+                                 <span class="s1">'dimension of y is </span><span class="si">{}</span><span class="s1"> and first dimension of X is </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                                                              <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+            <span class="c1"># QR decomposition of X matrix</span>
+            <span class="n">Q</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'economic'</span><span class="p">,</span> <span class="n">pivoting</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># Improve numerical stability</span>
+            <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">R</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mf">100.</span><span class="p">]</span>
+
+            <span class="c1"># Regress the confounds in X on y</span>
+            <span class="n">y_regressed</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">Q</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+            <span class="c1"># Override the connectivity matrices for the current group and kind</span>
+            <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">group_subjects_list</span><span class="p">:</span>
+                <span class="n">regressed_subjects_connectivity_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">y_regressed</span><span class="p">[</span><span class="n">group_subjects_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">subject</span><span class="p">),</span> <span class="o">...</span><span class="p">]</span>
+
+            <span class="n">regression_by_kind</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">kind</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'original matrices'</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">'after regression'</span><span class="p">:</span> <span class="n">y_regressed</span><span class="p">}</span>
+
+        <span class="n">regression_data_dictionary</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">regression_by_kind</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">regressed_subjects_connectivity_dictionary</span><span class="p">,</span> <span class="n">regression_data_dictionary</span></div>
+
+
+<div class="viewcode-block" id="design_matrix_builder"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.design_matrix_builder">[docs]</a><span class="k">def</span> <span class="nf">design_matrix_builder</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">'dataframe'</span><span class="p">):</span>
+    <span class="sd">"""Build a design matrix based on a dataframe</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe: pandas.DataFrame</span>
+<span class="sd">        A pandas dataframe containing the data.</span>
+<span class="sd">    formula: str</span>
+<span class="sd">        The formula written in R style, with the variable</span>
+<span class="sd">        to explain in the left side of the ~, and the explanatory</span>
+<span class="sd">        variables in the right side.</span>
+<span class="sd">    return_type: str, optional</span>
+<span class="sd">        Return type of the response variable, and design matrix.</span>
+<span class="sd">        Default is dataframe. Other choices are: matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output1: pandas.DataFrame</span>
+<span class="sd">        A dataframe, of shape (n_observations, ). This is</span>
+<span class="sd">        the variable to explain</span>
+<span class="sd">    output2: pandas.DataFrame</span>
+<span class="sd">        The design matrix, of shape (n_observation, n_explanatory_variables +1)</span>
+<span class="sd">    """</span>
+    <span class="c1"># Build the design matrix and return the response variable</span>
+    <span class="c1"># and design matrix</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">dmatrices</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="n">return_type</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span></div>
+
+
+<div class="viewcode-block" id="ols_regression"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.ols_regression">[docs]</a><span class="k">def</span> <span class="nf">ols_regression</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="sd">"""Fit a linear model with ordinary least square regression</span>
+<span class="sd">    from statmodels library</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y: array-like</span>
+<span class="sd">        The variable to explain of shape (n_observations, )</span>
+<span class="sd">    X: array-like</span>
+<span class="sd">        The design matrix, of shape (n_obervations, n_regressors) or</span>
+<span class="sd">        (n_obervations + 1, n_regressors) if intercept is added in the model.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output: statsmodels.regression.linear_model.RegressionResultsWrapper</span>
+<span class="sd">        A statsmodels regression object containing the fit of the model.</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># Model initialization with OLS method</span>
+    <span class="n">ols_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">endog</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">exog</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+    <span class="c1"># Fit of the model</span>
+    <span class="n">ols_model_fit</span> <span class="o">=</span> <span class="n">ols_model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">ols_model_fit</span></div>
+
+
+<div class="viewcode-block" id="ols_regression_formula"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.ols_regression_formula">[docs]</a><span class="k">def</span> <span class="nf">ols_regression_formula</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">"""Fit a linear model with a formula API in R style.</span>
+
+<span class="sd">    :param formula:</span>
+<span class="sd">    :param data:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    """</span>
+    <span class="n">ols_model_fit</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">ols_model_fit</span></div>
+
+
+<div class="viewcode-block" id="partial_corr"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.partial_corr">[docs]</a><span class="k">def</span> <span class="nf">partial_corr</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Returns the sample linear partial correlation coefficients between pairs of variables in C, controlling</span>
+<span class="sd">    for the remaining variables in C.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    C : array-like, shape (n, p)</span>
+<span class="sd">        Array with the different variables. Each column of C is taken as a variable</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    P : array-like, shape (p, p)</span>
+<span class="sd">        P[i, j] contains the partial correlation of C[:, i] and C[:, j] controlling</span>
+<span class="sd">        for the remaining variables in C.</span>
+<span class="sd">    """</span>
+
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+    <span class="c1"># Add a columns of one to have the same behavior of matlab partialcorr function</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">C</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">P_corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="n">P_corr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+            <span class="n">idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">idx</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">beta_i</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">C</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">C</span><span class="p">[:,</span> <span class="n">j</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">beta_j</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">C</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">],</span> <span class="n">C</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">res_j</span> <span class="o">=</span> <span class="n">C</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">beta_i</span><span class="p">)</span>
+            <span class="n">res_i</span> <span class="o">=</span> <span class="n">C</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">beta_j</span><span class="p">)</span>
+
+            <span class="n">corr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">res_i</span><span class="p">,</span> <span class="n">res_j</span><span class="p">)</span>
+            <span class="n">P_corr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">corr</span>
+            <span class="n">P_corr</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">corr</span>
+
+    <span class="k">return</span> <span class="n">P_corr</span></div>
+</pre></div>
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              
+          </div>
+            Last updated on
+              Feb 24, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>
