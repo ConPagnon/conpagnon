@@ -9,8 +9,8 @@ MAINTAINER = 'Dhaif BEKHA'
 MAINTAINER_EMAIL = 'dhaif@dhaifbekha.com'
 URL = 'https://conpagnon.github.io/conpagnon/'
 LICENSE = 'new BSD'
-DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.7.tar.gz'
-VERSION = 'v2.0.7'
+DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.8.tar.gz'
+VERSION = 'v2.0.8'
 
 
 if __name__ == "__main__":
@@ -40,12 +40,12 @@ if __name__ == "__main__":
               'Programming Language :: Python :: 3.7',
           ],
           packages=find_packages(),
-          install_requires=['numpy',
+          install_requires=['numpy>==1.16.4',
                             'joblib',
                             'matplotlib',
                             'nibabel',
-                            'pandas',
-                            'scipy',
+                            'pandas>==1.0.0',
+                            'scipy>==1.4.1',
                             'statsmodels',
                             'seaborn',
                             'webcolors',
