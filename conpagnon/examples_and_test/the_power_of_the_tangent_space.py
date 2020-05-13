@@ -79,7 +79,7 @@ organised_data = data_architecture.fetch_data(
     subjects_id_data_path=subjects_ID_data_path,
     root_fmri_data_directory=root_fmri_data_directory,
     groupes=groups,
-    individual_counfounds_directory=None
+    individual_confounds_directory=None
 )
 
 # kinds
@@ -217,7 +217,6 @@ with backend_pdf.PdfPages(os.path.join(output_dir, report_name)) as pdf:
                 pdf.savefig()
                 plt.show()
             else:
-
                 plt.figure()
                 plot_connectome(
 

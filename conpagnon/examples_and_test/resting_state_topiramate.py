@@ -95,7 +95,7 @@ organised_data = data_architecture.fetch_data(
     root_fmri_data_directory=root_fmri_data_directory,
     subjects_id_data_path=subjects_ID_data_path,
     groupes=groups,
-    individual_counfounds_directory=None)
+    individual_confounds_directory=None)
 
 # Nilearn cache directory
 nilearn_cache_directory = '/media/db242421/db242421_data/ConPagnon/nilearn_cache'

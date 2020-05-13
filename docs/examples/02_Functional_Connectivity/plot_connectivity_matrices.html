@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Build the connectivity matrices &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Two groups classification" href="../03_Basic_Statistical_Analyses/plot_two_groups_classification.html" />
+    <link rel="prev" title="Extracting brain signals" href="plot_times_series_extraction.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/02_Functional_Connectivity/plot_connectivity_matrices" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Build the connectivity matrices </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="plot_times_series_extraction.html" class="md-nav__link">Extracting brain signals</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Build the connectivity matrices </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Build the connectivity matrices</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-02-functional-connectivity-plot-connectivity-matrices--page-root" class="md-nav__link">Build the connectivity matrices</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-data" class="md-nav__link">Retrieve the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-the-time-series-dictionary" class="md-nav__link">Load the time series dictionary</a>
+        </li>
+        <li class="md-nav__item"><a href="#compute-the-connectivity-matrices" class="md-nav__link">Compute the connectivity matrices</a>
+        </li>
+        <li class="md-nav__item"><a href="#simple-plot-of-connectivity-matrices" class="md-nav__link">Simple plot of connectivity matrices</a>
+        </li>
+        <li class="md-nav__item"><a href="#a-more-complete-plot-of-connectivity-matrices" class="md-nav__link">A more complete plot of connectivity matrices</a>
+        </li>
+        <li class="md-nav__item"><a href="#save-the-connectivity-matrices-dictionary" class="md-nav__link">Save the connectivity matrices dictionary</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/02_Functional_Connectivity/plot_connectivity_matrices.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-02-functional-connectivity-plot-connectivity-matrices--page-root" class="md-nav__link">Build the connectivity matrices</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-data" class="md-nav__link">Retrieve the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-the-time-series-dictionary" class="md-nav__link">Load the time series dictionary</a>
+        </li>
+        <li class="md-nav__item"><a href="#compute-the-connectivity-matrices" class="md-nav__link">Compute the connectivity matrices</a>
+        </li>
+        <li class="md-nav__item"><a href="#simple-plot-of-connectivity-matrices" class="md-nav__link">Simple plot of connectivity matrices</a>
+        </li>
+        <li class="md-nav__item"><a href="#a-more-complete-plot-of-connectivity-matrices" class="md-nav__link">A more complete plot of connectivity matrices</a>
+        </li>
+        <li class="md-nav__item"><a href="#save-the-connectivity-matrices-dictionary" class="md-nav__link">Save the connectivity matrices dictionary</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/02_Functional_Connectivity/plot_connectivity_matrices.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-02-functional-connectivity-plot-connectivity-matrices-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-02-functional-connectivity-plot-connectivity-matrices-py"></span><h1 id="examples-02-functional-connectivity-plot-connectivity-matrices--page-root">Build the connectivity matrices<a class="headerlink" href="#examples-02-functional-connectivity-plot-connectivity-matrices--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Compute the connectivity matrices
+for different metrics.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-data">Retrieve the data<a class="headerlink" href="#retrieve-the-data" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial is directly the next steps of the previous tutorial,
+in which we learn how to extract brain signals. In the end, we saved
+the dictionary containing those brain signals, in your home directory.
+If you didn’t followed this tutorials, you can download directly the
+<a class="reference external" href="https://www.dropbox.com/s/eq0vy62vw9sbxnf/time_series_dictionary.pkl?dl=1">time series dictionary</a>,
+and put it in home directory. Optionally, you will need an atlas for plotting
+purpose. We will use in this section, the atlas we already manipulate in the
+first section. You can download the <a class="reference external" href="https://www.dropbox.com/s/wwmg0a4g3cjnfvv/atlas.nii?dl=1">atlas</a>,
+and the corresponding <a class="reference external" href="https://www.dropbox.com/s/3wuzwn14l7nksvy/atlas_labels.csv?dl=1">labels</a>
+for each regions.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>As usual ,we will work in the user home directory.</p>
+</div>
+
+
+<h2 id="modules-import">Modules import<a class="headerlink" href="#modules-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">conpagnon.computing</span> <span class="kn">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">load_object</span><span class="p">,</span> <span class="n">save_object</span>
+<span class="kn">from</span> <span class="nn">conpagnon.plotting.display</span> <span class="kn">import</span> <span class="n">plot_matrix</span>
+<span class="kn">from</span> <span class="nn">conpagnon.data_handling</span> <span class="kn">import</span> <span class="n">atlas</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="n">LedoitWolf</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+
+
+<h2 id="load-the-time-series-dictionary">Load the time series dictionary<a class="headerlink" href="#load-the-time-series-dictionary" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+<span class="c1"># Load the times series dictionary in your</span>
+<span class="c1"># home directory</span>
+<span class="n">times_series_dictionary</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span>
+    <span class="n">full_path_to_object</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'time_series_dictionary.pkl'</span><span class="p">))</span>
+
+<span class="c1"># Retrieve the groups in the study: it's</span>
+<span class="c1"># simply the keys of the dictionary</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">times_series_dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+
+
+<h2 id="compute-the-connectivity-matrices">Compute the connectivity matrices<a class="headerlink" href="#compute-the-connectivity-matrices" title="Permalink to this headline">¶</a></h2>
+<p><strong>Connectivity matrices</strong> are simply a way of representing interactions
+between different part of the brain. They are the start of all statistical
+algorithms in ConPagnon. The most common metric use in functional connectivity
+analysis is <strong>correlation</strong>. Numerous other metric exist, depending on the type
+of analysis you conduct, some are better suited than other.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The first step is to choose a estimator for the covariance matrix,</span>
+<span class="c1"># the base matrix before computing other type:</span>
+<span class="n">covariance_estimator</span> <span class="o">=</span> <span class="n">LedoitWolf</span><span class="p">()</span>
+
+<span class="c1"># We can compute connectivity matrices</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'correlation'</span><span class="p">,</span> <span class="s1">'partial correlation'</span><span class="p">,</span> <span class="s1">'tangent'</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this example, we choose to compute three different
+connectivity metrics. You can view the list of
+available metrics in the <code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code> class.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">connectivity_matrices</span> <span class="o">=</span> <span class="n">ccm</span><span class="o">.</span><span class="n">individual_connectivity_matrices</span><span class="p">(</span>
+    <span class="n">time_series_dictionary</span><span class="o">=</span><span class="n">times_series_dictionary</span><span class="p">,</span>
+    <span class="n">kinds</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+    <span class="n">covariance_estimator</span><span class="o">=</span><span class="n">covariance_estimator</span><span class="p">,</span>
+    <span class="n">z_fisher_transform</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>connectivity_matrices</strong> is also a dictionary, with the same base structure
+as the times series dictionary. But this time, for each subject, you will
+find a new dictionary with as many keys as connectivity you wanted, each
+containing a 2D numpy array of shape (number_of_regions, number_of_regions).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let's take a look at the first correlation connectivity matrix</span>
+<span class="c1"># of the first region</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">connectivity_matrices</span><span class="p">[</span><span class="s1">'group_1'</span><span class="p">][</span><span class="s1">'subject_1'</span><span class="p">][</span><span class="s1">'correlation'</span><span class="p">])</span>
+<span class="c1"># The shape of the matrices is naturally a square matrix</span>
+<span class="c1"># with the dimension equal to the number of region of</span>
+<span class="c1"># the atlas you used</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">connectivity_matrices</span><span class="p">[</span><span class="s1">'group_1'</span><span class="p">][</span><span class="s1">'subject_1'</span><span class="p">][</span><span class="s1">'correlation'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[1.         0.72069234 0.3405592  ... 0.25338185 0.1639033  0.17538719]
+ [0.72069234 1.         0.34021821 ... 0.32740576 0.21538048 0.25657289]
+ [0.3405592  0.34021821 1.         ... 0.25710523 0.20943029 0.22350429]
+ ...
+ [0.25338185 0.32740576 0.25710523 ... 1.         0.24261256 0.35668496]
+ [0.1639033  0.21538048 0.20943029 ... 0.24261256 1.         0.69336102]
+ [0.17538719 0.25657289 0.22350429 ... 0.35668496 0.69336102 1.        ]]
+(72, 72)
+</pre></div>
+</div>
+
+
+<h2 id="simple-plot-of-connectivity-matrices">Simple plot of connectivity matrices<a class="headerlink" href="#simple-plot-of-connectivity-matrices" title="Permalink to this headline">¶</a></h2>
+<p>We often represent connectivity matrices with a 2D plot, a heatmap,
+with a colormap that cover the entire range of variation of the
+connectivity coefficients. It’s a very intuitive way of visualizing
+those king of matrices. First, we wil plot the entire matrices, without
+the regions labels/color:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will take the correlation matrix of the first</span>
+<span class="c1"># subject</span>
+<span class="n">subject_1_correlation</span> <span class="o">=</span> <span class="n">connectivity_matrices</span><span class="p">[</span><span class="s1">'group_1'</span><span class="p">][</span><span class="s1">'subject_1'</span><span class="p">][</span><span class="s1">'correlation'</span><span class="p">]</span>
+<span class="n">plot_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="o">=</span><span class="n">subject_1_correlation</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">"The correlation matrix of the first subject."</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_connectivity_matrices_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_connectivity_matrices_001.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/02_Functional_Connectivity/plot_connectivity_matrices.py:120: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, the <code class="xref py py-func docutils literal notranslate"><span class="pre">plot_matrix()</span></code> function, will only plot
+the <strong>lower</strong> triangle of the matrix, for the simple reason that
+by construction, connectivity matrices are symmetric. If you want to plot
+the full matrix, you must set the argument <strong>mpart</strong> to ‘all’.</p>
+</div>
+
+
+<h2 id="a-more-complete-plot-of-connectivity-matrices">A more complete plot of connectivity matrices<a class="headerlink" href="#a-more-complete-plot-of-connectivity-matrices" title="Permalink to this headline">¶</a></h2>
+<p>We can add to the previous matrix plot, a little more information. For
+example we can add the atlas regions labels for the x-axis, and y-axis.
+We can also color the label with the network colors they are belonging to.
+In the following example, we will use the atlas used in the first section of
+this tutorial :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># We load the atlas, attributing a color</span>
+<span class="c1"># to each network (user defined).</span>
+
+<span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+<span class="c1"># Filename of the atlas file.</span>
+<span class="n">atlas_file_name</span> <span class="o">=</span> <span class="s1">'atlas.nii'</span>
+<span class="c1"># Full path to atlas labels file</span>
+<span class="n">atlas_label_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'atlas_labels.csv'</span><span class="p">)</span>
+<span class="c1"># Set the colors of the twelves network in the atlas</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'navy'</span><span class="p">,</span> <span class="s1">'sienna'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'orchid'</span><span class="p">,</span> <span class="s1">'indianred'</span><span class="p">,</span> <span class="s1">'olive'</span><span class="p">,</span>
+          <span class="s1">'goldenrod'</span><span class="p">,</span> <span class="s1">'turquoise'</span><span class="p">,</span> <span class="s1">'darkslategray'</span><span class="p">,</span> <span class="s1">'limegreen'</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span>
+          <span class="s1">'lightpink'</span><span class="p">]</span>
+<span class="c1"># Number of regions in each of the network</span>
+<span class="n">networks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="c1"># We can call fetch_atlas to retrieve useful information about the atlas</span>
+<span class="n">atlas_nodes</span><span class="p">,</span> <span class="n">labels_regions</span><span class="p">,</span> <span class="n">labels_colors</span><span class="p">,</span> <span class="n">n_nodes</span> <span class="o">=</span> <span class="n">atlas</span><span class="o">.</span><span class="n">fetch_atlas</span><span class="p">(</span>
+    <span class="n">atlas_folder</span><span class="o">=</span><span class="n">home_directory</span><span class="p">,</span>
+    <span class="n">atlas_name</span><span class="o">=</span><span class="n">atlas_file_name</span><span class="p">,</span>
+    <span class="n">network_regions_number</span><span class="o">=</span><span class="n">networks</span><span class="p">,</span>
+    <span class="n">colors_labels</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">atlas_label_file</span><span class="p">,</span>
+    <span class="n">normalize_colors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can call the <code class="xref py py-func docutils literal notranslate"><span class="pre">plot_matrix()</span></code> function again,
+but this time, we will put the atlas label regions, on the
+side, and we will color them according to the network.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot of the full correlation matrix for the first subject</span>
+<span class="n">plot_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="o">=</span><span class="n">subject_1_correlation</span><span class="p">,</span> <span class="n">mpart</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span>
+            <span class="n">horizontal_labels</span><span class="o">=</span><span class="n">labels_regions</span><span class="p">,</span> <span class="n">vertical_labels</span><span class="o">=</span><span class="n">labels_regions</span><span class="p">,</span>
+            <span class="n">labels_colors</span><span class="o">=</span><span class="n">labels_colors</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=.</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">"The correlation matrix of the first subject."</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_connectivity_matrices_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_connectivity_matrices_002.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/02_Functional_Connectivity/plot_connectivity_matrices.py:173: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+
+
+<h2 id="save-the-connectivity-matrices-dictionary">Save the connectivity matrices dictionary<a class="headerlink" href="#save-the-connectivity-matrices-dictionary" title="Permalink to this headline">¶</a></h2>
+<p>Finally, you can save the dictionary containing the connectivity
+matrices to avoid re-computing it, and reuse it easily for your
+statistical analysis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the subject connectivity matrices</span>
+<span class="n">save_object</span><span class="p">(</span><span class="n">object_to_save</span><span class="o">=</span><span class="n">connectivity_matrices</span><span class="p">,</span>
+            <span class="n">saving_directory</span><span class="o">=</span><span class="n">home_directory</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'subjects_connectivity_matrices.pkl'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.459 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-02-functional-connectivity-plot-connectivity-matrices-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/b05a3d94772dfb4b26a9d99def3b8c31/plot_connectivity_matrices.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_connectivity_matrices.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/f187ec7cabad0ed07771934f0dee0c2f/plot_connectivity_matrices.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_connectivity_matrices.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="plot_times_series_extraction.html" title="Extracting brain signals"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Extracting brain signals </span>
+              </div>
+            </a>
+          
+          
+            <a href="../03_Basic_Statistical_Analyses/plot_two_groups_classification.html" title="Two groups classification"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Two groups classification </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

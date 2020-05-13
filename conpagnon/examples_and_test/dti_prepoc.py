@@ -10,6 +10,7 @@ import nibabel as nb
 import re
 import shutil
 import json
+from seaborn import regplot
 """
 This script performs the pre-processing of DTI 
 data. It follows several step:

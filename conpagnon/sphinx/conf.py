@@ -40,6 +40,7 @@ extensions = ['sphinx.ext.autodoc',
               'matplotlib.sphinxext.plot_directive',
               'IPython.sphinxext.ipython_console_highlighting',
               'IPython.sphinxext.ipython_directive',
+              'sphinx_gallery.gen_gallery'
               ]
 
 try:
@@ -75,7 +76,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'ConPagnon 2.0'
 version = u'2.0'
-copyright = u'2O18-2020, Dhaif BEKHA '
+copyright = u'2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com)'
 autosummary_generate = True
 autoclass_content = 'class'
 
@@ -136,3 +137,10 @@ html_domain_indices = True
 numpydoc_use_autodoc_signature = True
 numpydoc_xref_param_type = True
 numpydoc_class_members_toctree = False
+
+# Configuration of Sphinx Gallery paths: those
+# paths are relative to the sphinx folder.
+sphinx_gallery_conf = {
+     'examples_dirs': '../../examples',   # path to your example scripts
+     'gallery_dirs': './examples',  # path to where to save gallery generated output
+}

@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="../../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   
    
-  
-  <script src="../../../_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "../../../_static/versions.json",
-        target_loc = "../../../../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="../../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../../_static/versions.json",
+        target_loc = "../../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -206,6 +209,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -214,17 +218,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="../../../gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="../../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="../../../user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="../../../examples/index.html" class="md-nav__link">Examples</a>
+      <a href="../../../examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -238,6 +237,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
   <ul class="md-nav__list" data-md-scrollfix="">
     
@@ -255,23 +255,23 @@
             
   <h1 id="modules-conpagnon-connectivity-statistics-parametric-tests--page-root">Source code for conpagnon.connectivity_statistics.parametric_tests</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">from</span> <span class="nn">conpagnon.utils</span> <span class="k">import</span> <span class="n">pre_preprocessing</span><span class="p">,</span> <span class="n">folders_and_files_management</span>
-<span class="kn">from</span> <span class="nn">conpagnon.utils</span> <span class="k">import</span> <span class="n">array_operation</span>
-<span class="kn">from</span> <span class="nn">conpagnon.utils.array_operation</span> <span class="k">import</span> <span class="n">vectorizer</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">mstats</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_rel</span>
-<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="k">import</span> <span class="n">sym_matrix_to_vec</span><span class="p">,</span> <span class="n">vec_to_sym_matrix</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils</span> <span class="kn">import</span> <span class="n">pre_preprocessing</span><span class="p">,</span> <span class="n">folders_and_files_management</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils</span> <span class="kn">import</span> <span class="n">array_operation</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.array_operation</span> <span class="kn">import</span> <span class="n">vectorizer</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">mstats</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_rel</span>
+<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">sym_matrix_to_vec</span><span class="p">,</span> <span class="n">vec_to_sym_matrix</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">statsmodels.sandbox.stats.multicomp</span> <span class="k">import</span> <span class="n">multipletests</span>
+<span class="kn">from</span> <span class="nn">statsmodels.sandbox.stats.multicomp</span> <span class="kn">import</span> <span class="n">multipletests</span>
 <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">conpagnon.computing</span> <span class="k">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
-<span class="kn">from</span> <span class="nn">patsy</span> <span class="k">import</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">dmatrices</span>
+<span class="kn">from</span> <span class="nn">conpagnon.computing</span> <span class="kn">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
+<span class="kn">from</span> <span class="nn">patsy</span> <span class="kn">import</span> <span class="n">dmatrix</span><span class="p">,</span> <span class="n">dmatrices</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">conpagnon.pylearn_mulm</span> <span class="k">import</span> <span class="n">mulm</span>
+<span class="kn">from</span> <span class="nn">conpagnon.pylearn_mulm</span> <span class="kn">import</span> <span class="n">mulm</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">errno</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">linalg</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">linalg</span>
 <span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">pre_preprocessing</span><span class="p">)</span>
 <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">array_operation</span><span class="p">)</span>
@@ -522,7 +522,7 @@
 
 
 <div class="viewcode-block" id="linear_regression"><a class="viewcode-back" href="../../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.linear_regression">[docs]</a><span class="k">def</span> <span class="nf">linear_regression</span><span class="p">(</span><span class="n">connectivity_data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">NA_action</span><span class="p">,</span>
-                      <span class="n">kind</span><span class="p">,</span> <span class="n">subjects_to_drop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">save_regression_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">kind</span><span class="p">,</span> <span class="n">subjects_to_drop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">save_regression_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">contrasts</span><span class="o">=</span><span class="s1">'Id'</span><span class="p">,</span> <span class="n">compute_pvalues</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pvalues_tail</span><span class="o">=</span><span class="s1">'two_tailed'</span><span class="p">,</span>
                       <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">pvals_correction_method</span><span class="o">=</span><span class="p">[</span><span class="s1">'fdr_bh'</span><span class="p">],</span> <span class="n">nperms_maxT</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
                       <span class="n">vectorize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -533,7 +533,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    connectivity_data: dict</span>
-<span class="sd">        The connectivity matrix organised in a dictionnary. The subject identifier</span>
+<span class="sd">        The connectivity matrix organised in a dictionary. The subject identifier</span>
 <span class="sd">        as keys, and metric as values, i.e the matrix which contain the connectivity coefficient.</span>
 <span class="sd">        As metric are symmetric, matrix as to be vectorize in a 1D array of shape n_features.</span>
 <span class="sd">    formula: string</span>
@@ -545,8 +545,8 @@
 <span class="sd">        Directive for handling missing data in the xlsx file. Choices are :</span>
 <span class="sd">        'drop': subject will discarded in the analysis, 'raise': raise an</span>
 <span class="sd">        error if missing data is present.</span>
-<span class="sd">    sheetname: string</span>
-<span class="sd">        The name of the sheet containing the useful data.</span>
+<span class="sd">    sheetname: int</span>
+<span class="sd">        The position in your excel file of the sheet of interest.</span>
 <span class="sd">    subjects_to_drop: list, optional</span>
 <span class="sd">        List of subjects you want to discard in the analysis. If None, all the</span>
 <span class="sd">        row in the dataframe are kept. Default is None.</span>
@@ -587,6 +587,8 @@
 <span class="sd">    """</span>
     <span class="c1"># Reading the data</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">)</span>
+    <span class="c1"># Set the index to the subjects identifier column</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">'subjects'</span><span class="p">])</span>
     
     <span class="c1"># Drop the subjects we want to discard :</span>
     <span class="n">df_c</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -598,7 +600,7 @@
     <span class="c1"># Build the design matrix according the dataframe and regression model.</span>
     <span class="n">X_df</span> <span class="o">=</span> <span class="n">dmatrix</span><span class="p">(</span><span class="n">formula_like</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">'dataframe'</span><span class="p">,</span>
                    <span class="n">NA_action</span><span class="o">=</span><span class="n">NA_action</span><span class="p">)</span>
-    
+
     <span class="c1"># Stacked vectorized connectivity matrices in the same order of subjects</span>
     <span class="c1"># index list of the DESIGN MATRIX, because of missing data, not all subjects</span>
     <span class="c1"># will be in the analysis.</span>
@@ -712,7 +714,7 @@
         <span class="k">if</span> <span class="n">corr_method</span> <span class="o">==</span> <span class="s1">'maxT'</span><span class="p">:</span>    
             <span class="n">correction_method_regression_results</span><span class="p">[</span><span class="s1">'maximum T null distribution'</span><span class="p">]</span> <span class="o">=</span> <span class="n">null_distribution</span>
 
-    <span class="c1"># saving the dictionnary</span>
+    <span class="c1"># saving the dictionary</span>
     <span class="k">if</span> <span class="n">save_regression_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">folders_and_files_management</span><span class="o">.</span><span class="n">save_object</span><span class="p">(</span><span class="n">correction_method_regression_results</span><span class="p">,</span>
                                                  <span class="n">save_regression_directory</span><span class="p">,</span>
@@ -1407,14 +1409,14 @@
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

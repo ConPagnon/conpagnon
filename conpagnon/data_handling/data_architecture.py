@@ -336,7 +336,7 @@ def fetch_data_with_individual_atlases(subjects_id_data_path, root_fmri_data_dir
 
 
 def fetch_data(subjects_id_data_path, root_fmri_data_directory, groupes,
-               individual_counfounds_directory=None):
+               individual_confounds_directory=None):
     """Fetch a complete organised structure for a groups study on a common
     atlas for all subjects
     
@@ -353,8 +353,8 @@ def fetch_data(subjects_id_data_path, root_fmri_data_directory, groupes,
     groupes : list
         List of sub-directories names containing fmri files you want.
         
-    individual_counfounds_directory : None or str
-        Full path to counfounds files for all subjects.
+    individual_confounds_directory : None or str
+        Full path to confounds files for all subjects.
 
 
     Returns
@@ -384,8 +384,8 @@ def fetch_data(subjects_id_data_path, root_fmri_data_directory, groupes,
     subjects_ID = read_text_data_file(file_path=subjects_id_data_path,
                                       colname=None, header=None)
     
-    if individual_counfounds_directory != None:
-        individual_confounds_files = glob.glob(os.path.join(individual_counfounds_directory, '*'))
+    if individual_confounds_directory != None:
+        individual_confounds_files = glob.glob(os.path.join(individual_confounds_directory, '*'))
     else:
         individual_confounds_files = False
 

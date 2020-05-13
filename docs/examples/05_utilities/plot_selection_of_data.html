@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Manipulation of the data dictionary &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Connectome Predictive Modelling" href="../04_Advanced_Statistical_Analyses/plot_connectome_predictive_modelling.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/05_utilities/plot_selection_of_data" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Manipulation of the data dictionary </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Manipulation of the data dictionary </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Manipulation of the data dictionary</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-05-utilities-plot-selection-of-data--page-root" class="md-nav__link">Manipulation of the data dictionary</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-the-data" class="md-nav__link">Load the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#selecting-a-subset-of-data" class="md-nav__link">Selecting a subset of data</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/05_utilities/plot_selection_of_data.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li></ul>
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-05-utilities-plot-selection-of-data--page-root" class="md-nav__link">Manipulation of the data dictionary</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-the-data" class="md-nav__link">Load the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#selecting-a-subset-of-data" class="md-nav__link">Selecting a subset of data</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/05_utilities/plot_selection_of_data.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-05-utilities-plot-selection-of-data-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-05-utilities-plot-selection-of-data-py"></span><h1 id="examples-05-utilities-plot-selection-of-data--page-root">Manipulation of the data dictionary<a class="headerlink" href="#examples-05-utilities-plot-selection-of-data--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Learn to quickly manipulate the subjects
+connectivity dictionary, selecting sub-sets of connectivity
+matrices regarding behavioral group or variables.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-example-dataset">Retrieve the example dataset<a class="headerlink" href="#retrieve-the-example-dataset" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will work directly on a pre-computed dictionary,
+that contain two set of connectivity matrices, from two different groups.
+The first group, called <em>controls</em> is a set of connectivity matrices from healthy
+seven years old children, and the second group called <em>patients</em>, is a set of
+connectivity matrices from seven years old children who have suffered a stroke.
+You can download the dictionary use in this example
+<a class="reference external" href="https://www.dropbox.com/s/60ehxt3fohnea2j/raw_subjects_connectivity_matrices.pkl?dl=1">here</a>.
+You will also need, the data table containing a set of continuous or categorical behavioral
+variable regarding all the subjects in the dictionary. You can download the table
+<a class="reference external" href="https://www.dropbox.com/s/4fhexvm4ci9d6nz/data_table.xlsx?dl=1">here</a>. When
+downloaded, all the files must be stored in your <strong>home directory</strong>.</p>
+
+
+<h2 id="modules-import">Modules import<a class="headerlink" href="#modules-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">conpagnon.data_handling</span> <span class="kn">import</span> <span class="n">dictionary_operations</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">data_management</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">load_object</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/dhaif/anaconda3/envs/conpagnon/lib/python3.7/site-packages/sklearn/externals/joblib/__init__.py:15: DeprecationWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
+  warnings.warn(msg, category=DeprecationWarning)
+</pre></div>
+</div>
+
+
+<h2 id="load-the-data">Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h2>
+<p>We will first load the subjects connectivity dictionary, storing
+for each groups and subject, the connectivity matrices for
+different connectivity metric. We will also the corresponding
+data table.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+<span class="c1"># Load the dictionary containing the connectivity matrices</span>
+<span class="n">subjects_connectivity_matrices</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span>
+    <span class="n">full_path_to_object</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'raw_subjects_connectivity_matrices.pkl'</span><span class="p">))</span>
+
+<span class="c1"># load the data table</span>
+<span class="n">data_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'data_table.xlsx'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_table</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">())</span>
+
+<span class="c1"># For convenience, we shift the index</span>
+<span class="c1"># of the dataframe to the subjects</span>
+<span class="c1"># identifiers column</span>
+<span class="n">data_table</span> <span class="o">=</span> <span class="n">data_table</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">'subjects'</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>|    | subjects       | Group   | Sex   | Lesion   |      score |
+|---:|:---------------|:--------|:------|:---------|-----------:|
+|  0 | sub04_rc110343 | P       | M     | G        |   1.00484  |
+|  1 | sub06_ml110125 | P       | M     | G        |   3.83867  |
+|  2 | sub07_lc110496 | P       | M     | G        |  -0.907201 |
+|  3 | sub08_jl110342 | P       | M     | G        |  -4.26892  |
+|  4 | sub10_dl120547 | P       | M     | G        |  -0.957913 |
+|  5 | sub12_ab110489 | P       | F     | G        |   3.21885  |
+|  6 | sub13_vl110480 | P       | M     | G        |  -0.331407 |
+|  7 | sub14_rs120006 | P       | M     | G        |  -1.05699  |
+|  8 | sub17_eb120007 | P       | F     | G        |   2.88928  |
+|  9 | sub20_hd120032 | P       | F     | D        |  -5.33207  |
+| 10 | sub21_yg120001 | P       | M     | D        |  -1.56495  |
+| 11 | sub23_lf120459 | P       | M     | D        |   3.80515  |
+| 12 | sub24_ed110159 | P       | M     | D        | -10.4086   |
+| 13 | sub25_ec110149 | P       | F     | D        |   1.78148  |
+| 14 | sub26_as110192 | P       | M     | D        |  -3.93445  |
+| 15 | sub30_zp130008 | P       | F     | G        |   1.42485  |
+| 16 | sub32_mp130025 | P       | F     | G        |  -1.2626   |
+| 17 | sub34_jc130100 | P       | M     | G        |   1.37514  |
+| 18 | sub35_gc130101 | P       | M     | G        |   3.66906  |
+| 19 | sub37_la130266 | P       | F     | D        |   3.77187  |
+| 20 | sub38_mv130274 | P       | M     | D        |   2.17901  |
+| 21 | sub39_ya130305 | P       | F     | G        |   1.08922  |
+| 22 | sub41_sa130332 | P       | F     | D        |   1.80184  |
+| 23 | sub43_mc130373 | P       | F     | G        |   2.01819  |
+| 24 | sub44_av130474 | P       | F     | G        |  -3.84236  |
+| 25 | sub01_nc110193 | C       | F     | nan      | nan        |
+| 26 | sub02_ib110200 | C       | M     | nan      | nan        |
+| 27 | sub03_ct110201 | C       | F     | nan      | nan        |
+| 28 | sub04_eb110217 | C       | F     | nan      | nan        |
+| 29 | sub05_gk110258 | C       | M     | nan      | nan        |
+| 30 | sub06_al110271 | C       | M     | nan      | nan        |
+| 31 | sub08_cd090095 | C       | F     | nan      | nan        |
+| 32 | sub09_sl100362 | C       | M     | nan      | nan        |
+| 33 | sub10_ag110427 | C       | M     | nan      | nan        |
+| 34 | sub11_nn110428 | C       | F     | nan      | nan        |
+| 35 | sub12_at110408 | C       | M     | nan      | nan        |
+| 36 | sub14_rp120164 | C       | M     | nan      | nan        |
+| 37 | sub16_cg120322 | C       | F     | nan      | nan        |
+| 38 | sub17_cm120095 | C       | M     | nan      | nan        |
+| 39 | sub18_cb130208 | C       | F     | nan      | nan        |
+| 40 | sub19_cd120206 | C       | M     | nan      | nan        |
+| 41 | sub20_mp120048 | C       | M     | nan      | nan        |
+| 42 | sub21_sb120208 | C       | F     | nan      | nan        |
+| 43 | sub22_ln120402 | C       | M     | nan      | nan        |
+| 44 | sub23_kf130380 | C       | F     | nan      | nan        |
+| 45 | sub24_ls130404 | C       | F     | nan      | nan        |
+| 46 | sub25_sv120315 | C       | F     | nan      | nan        |
+| 47 | sub26_ep120255 | C       | M     | nan      | nan        |
+| 48 | sub27_ea130507 | C       | F     | nan      | nan        |
+| 49 | sub28_ml130538 | C       | F     | nan      | nan        |
+| 50 | sub29_hd130539 | C       | F     | nan      | nan        |
+</pre></div>
+</div>
+<p>This data table have a very common
+structure with a mix of categorical
+and continous variable. Let’s barplot
+the score for the group of female and male
+in the patients population:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">'Sex'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">'score'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data_table</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_selection_of_data_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_selection_of_data_001.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/05_utilities/plot_selection_of_data.py:74: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+
+
+<h2 id="selecting-a-subset-of-data">Selecting a subset of data<a class="headerlink" href="#selecting-a-subset-of-data" title="Permalink to this headline">¶</a></h2>
+<p>It’s common to extract and compute the connectivity
+matrices on your whole cohort of data, and entering
+them in one or multiple statistical analysis. In
+practice, you may want only selecting a sub-set
+of your connectivity matrices. For example,
+you might want to select inside the
+<strong>patients group</strong>, the left lesioned subject
+and male only. For convenience, and avoiding
+a fastidious manual extraction inside the
+subjects connectivity matrices dictionary,
+we create a special function dedicated
+to this task. The main inputs are
+the connectivity dictionary of your
+population and the corresponding table.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select the male, and left lesioned</span>
+<span class="c1"># patients.</span>
+<span class="c1"># Select a subset of patients</span>
+<span class="c1"># Compute the connectivity matrices dictionary with factor as keys.</span>
+<span class="n">group_by_factor_subjects_connectivity</span><span class="p">,</span> <span class="n">population_df_by_factor</span><span class="p">,</span> <span class="n">factor_keys</span><span class="p">,</span> <span class="o">=</span> \
+    <span class="n">dictionary_operations</span><span class="o">.</span><span class="n">groupby_factor_connectivity_matrices</span><span class="p">(</span>
+        <span class="n">population_data_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'data_table.xlsx'</span><span class="p">),</span>
+        <span class="n">sheetname</span><span class="o">=</span><span class="s1">'behavioral_data'</span><span class="p">,</span>
+        <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="o">=</span><span class="n">subjects_connectivity_matrices</span><span class="p">,</span>
+        <span class="n">groupes</span><span class="o">=</span><span class="p">[</span><span class="s1">'patients'</span><span class="p">],</span> <span class="n">factors</span><span class="o">=</span><span class="p">[</span><span class="s1">'Lesion'</span><span class="p">,</span> <span class="s1">'Sex'</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-func docutils literal notranslate"><span class="pre">groupby_factor_connectivity_matrices()</span></code>
+output 3 objects: <code class="docutils literal notranslate"><span class="pre">group_by_factor_subjects_connectivity</span></code> is a dictionary
+with all possible combination of the <code class="docutils literal notranslate"><span class="pre">factors</span></code> list you’ve entered. Here,
+we entered <em>Lesion</em>, and <em>Sex</em>, two categorical variable with 2 levels
+each. So number of keys of the <cite>groupby_factor_connectivity_matrices</cite>
+dictionary should be 2x2, <strong>4</strong>: the right lesioned <strong>AND</strong> female patients,
+the right lesioned <strong>AND</strong> male patients, the left lesioned <strong>AND</strong> male patients,
+the left lesioned <strong>AND</strong> female patients. Let’s print out the keys list
+to verify it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">group_by_factor_subjects_connectivity</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[('D', 'F'), ('D', 'M'), ('G', 'F'), ('G', 'M')]
+</pre></div>
+</div>
+<p>The second output is another  dictionary, with the previous
+list as key, and the list of subjects for each sub-group.
+For example, let’s print out the list of subjects in the
+male right lesioned group:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">population_df_by_factor</span><span class="p">[(</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'M'</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Index(['sub21_yg120001', 'sub23_lf120459', 'sub24_ed110159', 'sub26_as110192',
+       'sub38_mv130274'],
+      dtype='object')
+</pre></div>
+</div>
+<p>The last output is simply the keys list
+of the new group:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">factor_keys</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[('D', 'F'), ('D', 'M'), ('G', 'F'), ('G', 'M')]
+</pre></div>
+</div>
+<p>Now, we can create a new dictionary of
+patients that contains only the sub-group
+we wanted: the left lesioned and male
+patients. It’s easy, because you
+just computed it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">left_lesioned_male_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">left_lesioned_male_matrices</span><span class="p">[</span><span class="s1">'patients'</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_by_factor_subjects_connectivity</span><span class="p">[(</span><span class="s1">'G'</span><span class="p">,</span> <span class="s1">'M'</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.588 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-05-utilities-plot-selection-of-data-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0f77229b986038469971cc68cca17426/plot_selection_of_data.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_selection_of_data.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/d5cff4b385139991bf345e347d3c3e72/plot_selection_of_data.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_selection_of_data.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../04_Advanced_Statistical_Analyses/plot_connectome_predictive_modelling.html" title="Connectome Predictive Modelling"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Connectome Predictive Modelling </span>
+              </div>
+            </a>
+          
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Two groups classification &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Regression analysis" href="plot_linear_regression.html" />
+    <link rel="prev" title="Build the connectivity matrices" href="../02_Functional_Connectivity/plot_connectivity_matrices.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/03_Basic_Statistical_Analyses/plot_two_groups_classification" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Two groups classification </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Two groups classification </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Two groups classification</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-03-basic-statistical-analyses-plot-two-groups-classification--page-root" class="md-nav__link">Two groups classification</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-import" class="md-nav__link">Module import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-data-and-set-path" class="md-nav__link">Load data, and set Path</a>
+        </li>
+        <li class="md-nav__item"><a href="#classification-between-the-two-group" class="md-nav__link">Classification between the two group</a>
+        </li>
+        <li class="md-nav__item"><a href="#barplot-of-the-accuracy" class="md-nav__link">Barplot of the accuracy</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/03_Basic_Statistical_Analyses/plot_two_groups_classification.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_linear_regression.html" class="md-nav__link">Regression analysis</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_t_test_analysis.html" class="md-nav__link">Two samples t-test</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-03-basic-statistical-analyses-plot-two-groups-classification--page-root" class="md-nav__link">Two groups classification</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-import" class="md-nav__link">Module import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-data-and-set-path" class="md-nav__link">Load data, and set Path</a>
+        </li>
+        <li class="md-nav__item"><a href="#classification-between-the-two-group" class="md-nav__link">Classification between the two group</a>
+        </li>
+        <li class="md-nav__item"><a href="#barplot-of-the-accuracy" class="md-nav__link">Barplot of the accuracy</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/03_Basic_Statistical_Analyses/plot_two_groups_classification.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-03-basic-statistical-analyses-plot-two-groups-classification-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-03-basic-statistical-analyses-plot-two-groups-classification-py"></span><h1 id="examples-03-basic-statistical-analyses-plot-two-groups-classification--page-root">Two groups classification<a class="headerlink" href="#examples-03-basic-statistical-analyses-plot-two-groups-classification--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Perform a simple classification between two
+distinct group of subjects, and evaluate the accuracy for different
+connectivity metric.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-example-dataset">Retrieve the example dataset<a class="headerlink" href="#retrieve-the-example-dataset" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will work directly on a pre-computed dictionary,
+that contain two set of connectivity matrices, from two different groups.
+The first group, called <em>controls</em> is a set of connectivity matrices from healthy
+seven years old children, and the second group called <em>patients</em>, is a set of
+connectivity matrices from seven years old children who have suffered a stroke.
+You can download the dictionary use in this example
+<a class="reference external" href="https://www.dropbox.com/s/kwdrx4liauo10kr/raw_subjects_connectivity_matrices.pkl?dl=1">here</a>.</p>
+
+
+<h2 id="module-import">Module import<a class="headerlink" href="#module-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">load_object</span><span class="p">,</span> <span class="n">save_object</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">sym_matrix_to_vec</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">StratifiedShuffleSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+</pre></div>
+</div>
+
+
+<h2 id="load-data-and-set-path">Load data, and set Path<a class="headerlink" href="#load-data-and-set-path" title="Permalink to this headline">¶</a></h2>
+<p>We will load the pre-computed dictionary containing the connectivity matrices
+for each subjects, for different metrics. We already used this exact same
+dictionary in the t-test example.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+<span class="c1"># Load the dictionary containing the connectivity matrices</span>
+<span class="n">subjects_connectivity_matrices</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span>
+    <span class="n">full_path_to_object</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'raw_subjects_connectivity_matrices.pkl'</span><span class="p">))</span>
+
+<span class="c1"># Fetch tne group name, for this classification</span>
+<span class="c1"># task, the group name are the class name too.</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+
+
+<h2 id="classification-between-the-two-group">Classification between the two group<a class="headerlink" href="#classification-between-the-two-group" title="Permalink to this headline">¶</a></h2>
+<p>We will compute a classification task for each connectivity
+at disposal, between the two group. In this example, we will
+use a classical support vector machine (SVM) algorithm with
+a linear kernel. We will leave the hyperparameters by default.
+First we create the labels for each class, that is simply create
+a 1D vector with binary labels. We naturally cross validate our
+results with a Stratified Shuffle and Split strategy. The evaluation
+metric of classification scores, will be the accuracy.
+The features are simply the <strong>connectivity coefficient</strong> , and
+we take the lower triangle only, because of the symmetry of
+the connectivity matrices. We have to vectorize each matrices in
+order to produce a data array of shape (n_subjects, n_features).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Labels vectors: 0 for the first class, 1 for the second. Those</span>
+<span class="c1"># 1, and 0 are the label for each subjects.</span>
+<span class="n">class_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))))</span>
+
+<span class="c1"># total number of subject</span>
+<span class="n">n_subjects</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_labels</span><span class="p">)</span>
+
+<span class="c1"># Stratified Shuffle and Split cross validation:</span>
+<span class="c1"># we initialize the cross validation object</span>
+<span class="c1"># and set the split to 10000.</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                            <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Instance initialization of SVM classifier with a linear kernel</span>
+<span class="n">svc</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span>
+
+<span class="c1"># Compare the classification accuracy across multiple metric</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'tangent'</span><span class="p">,</span> <span class="s1">'correlation'</span><span class="p">,</span> <span class="s1">'partial correlation'</span><span class="p">]</span>
+<span class="n">mean_scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># To decrease the computation time you</span>
+<span class="c1"># can distribute the computation on</span>
+<span class="c1"># multiple core, here, 4.</span>
+<span class="n">n_jobs</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1"># Final mean accuracy scores will be stored in a dictionary</span>
+<span class="n">mean_score_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+    <span class="c1"># We take the lower triangle of each matrices, and vectorize it to</span>
+    <span class="c1"># produce a classical machine learning data array of shape (n_subjects, n_features)</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span>
+                                           <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span>
+                                           <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()],</span>
+                                          <span class="p">),</span> <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Evaluate classification performance on </span><span class="si">{}</span><span class="s1"> with '</span>
+          <span class="s1">'</span><span class="si">{}</span><span class="s1"> observations and </span><span class="si">{}</span><span class="s1"> features...'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">n_subjects</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># We call cross_val_score, a convenient scikit-learn</span>
+    <span class="c1"># wrapper that will perform the classification task</span>
+    <span class="c1"># with the desired cross-validation scheme.</span>
+    <span class="n">cv_scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+                                <span class="n">y</span><span class="o">=</span><span class="n">class_labels</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                                <span class="n">scoring</span><span class="o">=</span><span class="s1">'accuracy'</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+    <span class="c1"># We compute the mean cross-validation score</span>
+    <span class="c1"># over all the splits</span>
+    <span class="n">mean_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cv_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="c1"># We store the mean accuracy score</span>
+    <span class="c1"># in a dictionary.</span>
+    <span class="n">mean_score_dict</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Done for </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluate classification performance on tangent with 53 observations and 2556 features...
+Done for tangent
+Evaluate classification performance on correlation with 53 observations and 2556 features...
+Done for correlation
+Evaluate classification performance on partial correlation with 53 observations and 2556 features...
+Done for partial correlation
+</pre></div>
+</div>
+
+
+<h2 id="barplot-of-the-accuracy">Barplot of the accuracy<a class="headerlink" href="#barplot-of-the-accuracy" title="Permalink to this headline">¶</a></h2>
+<p>We can plot the accuracy for each metric in a barplot. We simply use
+the dictionary in which we stored the accuracy score for each metric.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">mean_score_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">y</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">mean_score_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Connectivity metrics'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Mean scores of classification'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Mean scores of classification using different kind of connectivity'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_two_groups_classification_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_two_groups_classification_001.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/03_Basic_Statistical_Analyses/plot_two_groups_classification.py:138: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>As you can see, the accuracy vary between connectivity metric.
+The tangent metric present the best accuracy scores here. So if
+classification is your main objective, you should choose very
+carefully the metric. Different machine learning algorithm will
+perform differently, I encourage you to test multiple algorithm
+on your data.</p>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  53.788 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-03-basic-statistical-analyses-plot-two-groups-classification-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/15e8bf63e17e7f90050ef486261c30c4/plot_two_groups_classification.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_two_groups_classification.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9130ce57c4a3ac5ec60a20f7c8375a18/plot_two_groups_classification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_two_groups_classification.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../02_Functional_Connectivity/plot_connectivity_matrices.html" title="Build the connectivity matrices"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Build the connectivity matrices </span>
+              </div>
+            </a>
+          
+          
+            <a href="plot_linear_regression.html" title="Regression analysis"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Regression analysis </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

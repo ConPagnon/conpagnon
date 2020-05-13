@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Extracting brain signals &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Build the connectivity matrices" href="plot_connectivity_matrices.html" />
+    <link rel="prev" title="Manipulating a brain atlas" href="../01_Organizing_data/plot_import_atlas_example.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/02_Functional_Connectivity/plot_times_series_extraction" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Extracting brain signals </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Extracting brain signals </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Extracting brain signals</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-02-functional-connectivity-plot-times-series-extraction--page-root" class="md-nav__link">Extracting brain signals</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-data" class="md-nav__link">Retrieve the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#setting-paths-and-parameters" class="md-nav__link">Setting paths, and parameters</a>
+        </li>
+        <li class="md-nav__item"><a href="#compute-the-times-series" class="md-nav__link">Compute the times series</a>
+        </li>
+        <li class="md-nav__item"><a href="#plot-the-time-series" class="md-nav__link">Plot the time series</a>
+        </li>
+        <li class="md-nav__item"><a href="#save-the-times-series-dictionary" class="md-nav__link">Save the times series dictionary</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/02_Functional_Connectivity/plot_times_series_extraction.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_connectivity_matrices.html" class="md-nav__link">Build the connectivity matrices</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-02-functional-connectivity-plot-times-series-extraction--page-root" class="md-nav__link">Extracting brain signals</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-data" class="md-nav__link">Retrieve the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#setting-paths-and-parameters" class="md-nav__link">Setting paths, and parameters</a>
+        </li>
+        <li class="md-nav__item"><a href="#compute-the-times-series" class="md-nav__link">Compute the times series</a>
+        </li>
+        <li class="md-nav__item"><a href="#plot-the-time-series" class="md-nav__link">Plot the time series</a>
+        </li>
+        <li class="md-nav__item"><a href="#save-the-times-series-dictionary" class="md-nav__link">Save the times series dictionary</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/02_Functional_Connectivity/plot_times_series_extraction.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-02-functional-connectivity-plot-times-series-extraction-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-02-functional-connectivity-plot-times-series-extraction-py"></span><h1 id="examples-02-functional-connectivity-plot-times-series-extraction--page-root">Extracting brain signals<a class="headerlink" href="#examples-02-functional-connectivity-plot-times-series-extraction--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Extracting the signal for each regions in
+a brain atlas.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-data">Retrieve the data<a class="headerlink" href="#retrieve-the-data" title="Permalink to this headline">¶</a></h2>
+<p>We will work on the dataset of the first tutorial. You can simply download it
+<a class="reference external" href="https://www.dropbox.com/sh/07r0i5kyfyweesx/AAA798Z2pWYO9FPd8gtny_E2a?dl=1">here</a>, and
+go through all the necessary steps to organize your data. If you doesn’t want
+to go through all those steps, you can download the results, that is the
+<a class="reference external" href="https://www.dropbox.com/s/0cz601a2ko9xen7/data_dictionary.pkl?dl=1">dictionary</a>
+containing all the necessary to the data files paths. We will also need a brain
+atlas. You can pick the <a class="reference external" href="https://www.dropbox.com/s/wwmg0a4g3cjnfvv/atlas.nii?dl=1">one</a>
+from the tutorial examples, or fetch your own.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>As usual ,we will work in the user home directory.</p>
+</div>
+
+
+<h2 id="modules-import">Modules import<a class="headerlink" href="#modules-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">conpagnon.computing.compute_connectivity_matrices</span> <span class="kn">import</span> <span class="n">time_series_extraction</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">load_object</span><span class="p">,</span> <span class="n">save_object</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+</pre></div>
+</div>
+
+
+<h2 id="setting-paths-and-parameters">Setting paths, and parameters<a class="headerlink" href="#setting-paths-and-parameters" title="Permalink to this headline">¶</a></h2>
+<p>As usual, we set all the necessary path to the data, and we also load
+the data dictionary that you’ve just downloaded.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+<span class="c1"># The root fmri data directory containing all the fmri files directories</span>
+<span class="c1"># This is the 'data' folder in you're home directory</span>
+<span class="n">root_fmri_data_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">)</span>
+
+<span class="c1"># Groups to include in the study: this is</span>
+<span class="c1"># simply the name of the folder</span>
+<span class="n">group</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'group_1'</span><span class="p">]</span>
+
+<span class="c1"># Filename of the atlas file.</span>
+<span class="n">atlas_file_name</span> <span class="o">=</span> <span class="s1">'atlas.nii'</span>
+<span class="c1"># Full path to the atlas file</span>
+<span class="n">atlas_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="n">atlas_file_name</span><span class="p">)</span>
+
+<span class="c1"># Repetition time in your resting state</span>
+<span class="c1"># sequence</span>
+<span class="n">t_r</span> <span class="o">=</span> <span class="mf">2.4</span>
+
+<span class="c1"># load the data dictionary, containing</span>
+<span class="c1"># all the paths to the functional files for</span>
+<span class="c1"># the groups in your study</span>
+<span class="n">groups_data_dictionary</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span>
+    <span class="n">full_path_to_object</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'data_dictionary.pkl'</span><span class="p">))</span>
+
+<span class="c1"># Full path to the text file containing the subjects identifiers</span>
+<span class="n">subjects_text_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_fmri_data_directory</span><span class="p">,</span> <span class="s1">'text_data/subjects_list.txt'</span><span class="p">)</span>
+
+<span class="c1"># Create a cache directory for Nilearn</span>
+<span class="c1"># when we will compute the times series</span>
+<span class="k">if</span> <span class="s1">'nilearn_cache'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">home_directory</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'nilearn_cache'</span><span class="p">))</span>
+</pre></div>
+</div>
+
+
+<h2 id="compute-the-times-series">Compute the times series<a class="headerlink" href="#compute-the-times-series" title="Permalink to this headline">¶</a></h2>
+<p>Now we can call  <a class="reference internal" href="../../conpagnon.computing.html#conpagnon.computing.compute_connectivity_matrices.time_series_extraction" title="conpagnon.computing.compute_connectivity_matrices.time_series_extraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.computing.compute_connectivity_matrices.time_series_extraction()</span></code></a>
+function to compute in each brain region of the atlas, and for each subject the brain signals,
+commonly called <strong>times series</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute the times series for each subject</span>
+<span class="n">times_series_dictionary</span> <span class="o">=</span> <span class="n">time_series_extraction</span><span class="p">(</span>
+    <span class="n">root_fmri_data_directory</span><span class="o">=</span><span class="n">root_fmri_data_directory</span><span class="p">,</span>
+    <span class="n">groupes</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
+    <span class="n">subjects_id_data_path</span><span class="o">=</span><span class="n">subjects_text_list</span><span class="p">,</span>
+    <span class="n">reference_atlas</span><span class="o">=</span><span class="n">atlas_path</span><span class="p">,</span>
+    <span class="n">group_data</span><span class="o">=</span><span class="n">groups_data_dictionary</span><span class="p">,</span>
+    <span class="n">repetition_time</span><span class="o">=</span><span class="n">t_r</span><span class="p">,</span>
+    <span class="n">nilearn_cache_directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'nilearn_cache'</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The result is also a structured dictionary, following the same
+construction as the data dictionary. Let’s take a look, at the
+available fields for the subject 1 for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the dictionary key for the first subject</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">times_series_dictionary</span><span class="p">[</span><span class="s1">'group_1'</span><span class="p">][</span><span class="s1">'subject_1'</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>dict_keys(['time_series', 'masked_array'])
+</pre></div>
+</div>
+<p>The <strong>times_series</strong> field contain a numpy array,
+storing the brain signal for each regions. The
+field <strong>masked_array</strong> also contain a numpy array with boolean values
+of shape (number_of_brain_regions, number_of_brain_region). How to
+to possibly used the masked_array field will be discussed in the advanced
+examples section. Now, if we print the shape of shape of the times_series
+array we get:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">times_series_dictionary</span><span class="p">[</span><span class="s1">'group_1'</span><span class="p">][</span><span class="s1">'subject_1'</span><span class="p">][</span><span class="s1">'time_series'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(180, 72)
+</pre></div>
+</div>
+<p>The <strong>times_series</strong> array shape is (180, 72): 72 simply
+represent the number of region in the atlas we use, so
+yours may differ. 180, represent the number of time point
+in our functional image.</p>
+
+
+<h2 id="plot-the-time-series">Plot the time series<a class="headerlink" href="#plot-the-time-series" title="Permalink to this headline">¶</a></h2>
+<p>We can plot the time series to visualize the brain signal
+we’ve just extracted, for the first subject. For obvious
+visualization purposes, we will plot the first 10 regions
+only</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># number of region to plot</span>
+<span class="n">n_regions_to_plot</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># Times series of the first subject</span>
+<span class="n">subject_1_time_series</span> <span class="o">=</span> <span class="n">times_series_dictionary</span><span class="p">[</span><span class="s1">'group_1'</span><span class="p">][</span><span class="s1">'subject_1'</span><span class="p">][</span><span class="s1">'time_series'</span><span class="p">]</span>
+<span class="c1"># The time series time point:</span>
+<span class="n">time_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">subject_1_time_series</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Region number</span>
+<span class="n">region_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">subject_1_time_series</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Build a panda dataframe: each column contain the associated brain signal in that</span>
+<span class="c1"># region number</span>
+<span class="n">times_series_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">subject_1_time_series</span><span class="p">,</span> <span class="n">time_points</span><span class="p">,</span> <span class="n">region_number</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="c1"># plot the time series</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_regions_to_plot</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">time_points</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">times_series_dataframe</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Time points'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Signal amplitude'</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Plot of the </span><span class="si">{}</span><span class="s1"> first brain signals'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_regions_to_plot</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_times_series_extraction_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_times_series_extraction_001.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/02_Functional_Connectivity/plot_times_series_extraction.py:151: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As you can see, those brain signals seem to be
+very similar ! The times series are usually not
+the primary object we will manipulate in the
+statistical analysis. Indeed, the traditional next step
+should be the computation of the <strong>connectivity matrices</strong>
+explain in the next section.</p>
+</div>
+
+
+<h2 id="save-the-times-series-dictionary">Save the times series dictionary<a class="headerlink" href="#save-the-times-series-dictionary" title="Permalink to this headline">¶</a></h2>
+<p>For convenience, you can save the times series dictionary in
+you’re home directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the times series dictionary</span>
+<span class="n">save_object</span><span class="p">(</span><span class="n">object_to_save</span><span class="o">=</span><span class="n">times_series_dictionary</span><span class="p">,</span>
+            <span class="n">saving_directory</span><span class="o">=</span><span class="n">home_directory</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">'time_series_dictionary.pkl'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.934 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-02-functional-connectivity-plot-times-series-extraction-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/30c49b752e5184e564a9de6f744eeb7e/plot_times_series_extraction.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_times_series_extraction.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/a2366b91f0067f0e8d1c9707ba5ca600/plot_times_series_extraction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_times_series_extraction.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../01_Organizing_data/plot_import_atlas_example.html" title="Manipulating a brain atlas"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Manipulating a brain atlas </span>
+              </div>
+            </a>
+          
+          
+            <a href="plot_connectivity_matrices.html" title="Build the connectivity matrices"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Build the connectivity matrices </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

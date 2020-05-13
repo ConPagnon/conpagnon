@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
   
    
-  
-  <script src="_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "_static/versions.json",
-        target_loc = "../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -199,6 +202,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -207,17 +211,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      <a href="examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -231,6 +230,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
@@ -267,9 +267,9 @@
 <span id="conpagnon-plotting-display-module"></span><h2 id="module-conpagnon.plotting.display">conpagnon.plotting.display module<a class="headerlink" href="#module-conpagnon.plotting.display" title="Permalink to this headline">¶</a></h2>
 <p>Display functions</p>
 <p>Author: Dhaif BEKHA</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.plotting.display.display_gaussian_connectivity_fit">
-<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">display_gaussian_connectivity_fit</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity</em>, <em class="sig-param">estimate_mean</em>, <em class="sig-param">estimate_std</em>, <em class="sig-param">raw_data_colors='blue'</em>, <em class="sig-param">line_width=2</em>, <em class="sig-param">alpha=0.5</em>, <em class="sig-param">normed=True</em>, <em class="sig-param">bins='auto'</em>, <em class="sig-param">fitted_distribution_color='black'</em>, <em class="sig-param">title=None</em>, <em class="sig-param">xtitle=None</em>, <em class="sig-param">ytitle=None</em>, <em class="sig-param">legend_fitted='Fitted Gaussian Distribution'</em>, <em class="sig-param">legend_data=None</em>, <em class="sig-param">display_fit='yes'</em>, <em class="sig-param">ms=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#display_gaussian_connectivity_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.display_gaussian_connectivity_fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">display_gaussian_connectivity_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_connectivity</span></em>, <em class="sig-param"><span class="n">estimate_mean</span></em>, <em class="sig-param"><span class="n">estimate_std</span></em>, <em class="sig-param"><span class="n">raw_data_colors</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">line_width</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">normed</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bins</span><span class="o">=</span><span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">fitted_distribution_color</span><span class="o">=</span><span class="default_value">'black'</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xtitle</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ytitle</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">legend_fitted</span><span class="o">=</span><span class="default_value">'Fitted Gaussian Distribution'</span></em>, <em class="sig-param"><span class="n">legend_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">display_fit</span><span class="o">=</span><span class="default_value">'yes'</span></em>, <em class="sig-param"><span class="n">ms</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#display_gaussian_connectivity_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.display_gaussian_connectivity_fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a vectorized connectivity matrices histogram, along with a Gaussian
 fit with an estimated mean, and standard deviation.</p>
 <dl class="field-list simple">
@@ -306,9 +306,9 @@ Default is ‘auto’, the maximum of the sturges and fd estimators are taken.</
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.plotting.display.plot_matrix">
-<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">plot_matrix</code><span class="sig-paren">(</span><em class="sig-param">matrix</em>, <em class="sig-param">labels_colors='auto'</em>, <em class="sig-param">mpart='lower'</em>, <em class="sig-param">k=0</em>, <em class="sig-param">colormap='RdBu_r'</em>, <em class="sig-param">colorbar_params={'shrink': 0.5}</em>, <em class="sig-param">center=0</em>, <em class="sig-param">vmin=None</em>, <em class="sig-param">vmax=None</em>, <em class="sig-param">labels_size=8</em>, <em class="sig-param">horizontal_labels='auto'</em>, <em class="sig-param">vertical_labels='auto'</em>, <em class="sig-param">linewidths=0.5</em>, <em class="sig-param">linecolor='white'</em>, <em class="sig-param">title='Untitled'</em>, <em class="sig-param">figure_size=(12</em>, <em class="sig-param">9)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#plot_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.plot_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">plot_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">labels_colors</span><span class="o">=</span><span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">mpart</span><span class="o">=</span><span class="default_value">'lower'</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'RdBu_r'</span></em>, <em class="sig-param"><span class="n">colorbar_params</span><span class="o">=</span><span class="default_value">{'shrink': 0.5}</span></em>, <em class="sig-param"><span class="n">center</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">vmin</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels_size</span><span class="o">=</span><span class="default_value">8</span></em>, <em class="sig-param"><span class="n">horizontal_labels</span><span class="o">=</span><span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">vertical_labels</span><span class="o">=</span><span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">linewidths</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">linecolor</span><span class="o">=</span><span class="default_value">'white'</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'Untitled'</span></em>, <em class="sig-param"><span class="n">figure_size</span><span class="o">=</span><span class="default_value">12, 9</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#plot_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.plot_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a entire matrix, or it’s lower part with a chosen heatmap.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -356,9 +356,9 @@ Default is (12, 9).</p></li>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.plotting.display.plot_ttest_results">
-<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">plot_ttest_results</code><span class="sig-paren">(</span><em class="sig-param">t_test_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">contrast</em>, <em class="sig-param">node_coords</em>, <em class="sig-param">node_color</em>, <em class="sig-param">output_pdf</em>, <em class="sig-param">node_size=50</em>, <em class="sig-param">colormap='bwr'</em>, <em class="sig-param">colorbar=False</em>, <em class="sig-param">annotate=True</em>, <em class="sig-param">display_mode='ortho'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#plot_ttest_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.plot_ttest_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">plot_ttest_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t_test_dictionnary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">contrast</span></em>, <em class="sig-param"><span class="n">node_coords</span></em>, <em class="sig-param"><span class="n">node_color</span></em>, <em class="sig-param"><span class="n">output_pdf</span></em>, <em class="sig-param"><span class="n">node_size</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'bwr'</span></em>, <em class="sig-param"><span class="n">colorbar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">annotate</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">display_mode</span><span class="o">=</span><span class="default_value">'ortho'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#plot_ttest_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.plot_ttest_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot on a glass brain the significant mean effect resulting of a
 two samples t-test and save resulting figures in a PDF files.</p>
 <dl class="field-list simple">
@@ -435,13 +435,13 @@ Default if ‘ortho’.</p></li>
 the title. You shoul have already used this variables when
 you compute the two sample t-test between you’re two groups.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.plotting.display.seaborn_scatterplot">
-<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">seaborn_scatterplot</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">data</em>, <em class="sig-param">figure_title</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#seaborn_scatterplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.seaborn_scatterplot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">seaborn_scatterplot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">figure_title</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#seaborn_scatterplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.seaborn_scatterplot" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.plotting.display.t_and_p_values_barplot">
-<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">t_and_p_values_barplot</code><span class="sig-paren">(</span><em class="sig-param">t_values</em>, <em class="sig-param">p_values</em>, <em class="sig-param">alpha_level</em>, <em class="sig-param">xlabel_color</em>, <em class="sig-param">bar_labels</em>, <em class="sig-param">t_xlabel</em>, <em class="sig-param">t_ylabel</em>, <em class="sig-param">p_xlabel</em>, <em class="sig-param">p_ylabel</em>, <em class="sig-param">t_title</em>, <em class="sig-param">p_title</em>, <em class="sig-param">xlabel_size=10</em>, <em class="sig-param">ylabel_size=10</em>, <em class="sig-param">size_label=8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#t_and_p_values_barplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.t_and_p_values_barplot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.plotting.display.</code><code class="sig-name descname">t_and_p_values_barplot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t_values</span></em>, <em class="sig-param"><span class="n">p_values</span></em>, <em class="sig-param"><span class="n">alpha_level</span></em>, <em class="sig-param"><span class="n">xlabel_color</span></em>, <em class="sig-param"><span class="n">bar_labels</span></em>, <em class="sig-param"><span class="n">t_xlabel</span></em>, <em class="sig-param"><span class="n">t_ylabel</span></em>, <em class="sig-param"><span class="n">p_xlabel</span></em>, <em class="sig-param"><span class="n">p_ylabel</span></em>, <em class="sig-param"><span class="n">t_title</span></em>, <em class="sig-param"><span class="n">p_title</span></em>, <em class="sig-param"><span class="n">xlabel_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">ylabel_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">size_label</span><span class="o">=</span><span class="default_value">8</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/plotting/display.html#t_and_p_values_barplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.plotting.display.t_and_p_values_barplot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a barplot representation of t and p values resulting
 of a two sample Student t-test in two separates figure.</p>
 </dd></dl>
@@ -470,14 +470,14 @@ of a two sample Student t-test in two separates figure.</p>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

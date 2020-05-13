@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Basic data organization &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Manipulating a brain atlas" href="plot_import_atlas_example.html" />
+    <link rel="prev" title="ConPagnon usage examples" href="../index.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/01_Organizing_data/plot_organizing_data_example" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Basic data organization </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Basic data organization </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Basic data organization</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-01-organizing-data-plot-organizing-data-example--page-root" class="md-nav__link">Basic data organization</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#data-folder-structure" class="md-nav__link">Data folder structure</a>
+        </li>
+        <li class="md-nav__item"><a href="#import-all-the-module-we-will-need" class="md-nav__link">Import all the module we will need</a>
+        </li>
+        <li class="md-nav__item"><a href="#setting-paths-to-the-data" class="md-nav__link">Setting paths to the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#with-confounds-files" class="md-nav__link">With confounds files</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/01_Organizing_data/plot_organizing_data_example.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_import_atlas_example.html" class="md-nav__link">Manipulating a brain atlas</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-01-organizing-data-plot-organizing-data-example--page-root" class="md-nav__link">Basic data organization</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#data-folder-structure" class="md-nav__link">Data folder structure</a>
+        </li>
+        <li class="md-nav__item"><a href="#import-all-the-module-we-will-need" class="md-nav__link">Import all the module we will need</a>
+        </li>
+        <li class="md-nav__item"><a href="#setting-paths-to-the-data" class="md-nav__link">Setting paths to the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#with-confounds-files" class="md-nav__link">With confounds files</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/01_Organizing_data/plot_organizing_data_example.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-01-organizing-data-plot-organizing-data-example-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-01-organizing-data-plot-organizing-data-example-py"></span><h1 id="examples-01-organizing-data-plot-organizing-data-example--page-root">Basic data organization<a class="headerlink" href="#examples-01-organizing-data-plot-organizing-data-example--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Organize you’re dataset for ConPagnon processing, and learn how to retrieve it,
+and store it efficiently.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-example-dataset">Retrieve the example dataset<a class="headerlink" href="#retrieve-the-example-dataset" title="Permalink to this headline">¶</a></h2>
+<p>For this example, we will work on a very simple dataset consisting in five
+pre-processed resting state images. We will show you after how to organize
+the data with confound to be regressed out if you have it.
+Please, download the example <a class="reference external" href="https://www.dropbox.com/sh/07r0i5kyfyweesx/AAA798Z2pWYO9FPd8gtny_E2a?dl=1">dataset</a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Once you’ve downloaded the example dataset, make sure to unzip it,
+and move it to you’re home directory. If you are not in you’re home
+directory, make sure to change all the path leading to data !
+For the rest of the tutorial, we will assume that you’ve moved
+the folder ‘data’ in you’re home directory.</p>
+</div>
+
+
+<h2 id="data-folder-structure">Data folder structure<a class="headerlink" href="#data-folder-structure" title="Permalink to this headline">¶</a></h2>
+<p>In the data folder, you will find a folder called <strong>group_1</strong> containing
+the resting state images, in the .nii.gz format. You will find  a second folder
+called <strong>text_data</strong> containing a single .txt file, with only one column
+representing the subject identifier or ids, for each subject.</p>
+
+
+<h2 id="import-all-the-module-we-will-need">Import all the module we will need<a class="headerlink" href="#import-all-the-module-we-will-need" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">conpagnon.data_handling.data_architecture</span> <span class="kn">import</span> <span class="n">fetch_data</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">check_directories_existence</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+
+
+<h2 id="setting-paths-to-the-data">Setting paths to the data<a class="headerlink" href="#setting-paths-to-the-data" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The first steps is to set the paths to all the relevant data paths.</span>
+
+<span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+<span class="c1"># The root fmri data directory containing all the fmri files directories</span>
+<span class="c1"># This is the 'data' folder in you're **home directory**</span>
+<span class="n">root_fmri_data_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">)</span>
+
+<span class="c1"># Groups to include in the study: this is</span>
+<span class="c1"># simply the name of the folder</span>
+<span class="n">group</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'group_1'</span><span class="p">]</span>
+
+<span class="c1"># We simply check that the root data directory,</span>
+<span class="c1"># and the group directory exist, if not exception</span>
+<span class="c1"># is raised we're good to go !</span>
+<span class="n">check_directories_existence</span><span class="p">(</span><span class="n">root_directory</span><span class="o">=</span><span class="n">root_fmri_data_directory</span><span class="p">,</span>
+                            <span class="n">directories_list</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <strong>name</strong> of the folder containing
+you’re resting state images, is considered
+in ConPagnon to be the name of the group
+in the study. Often those groups are called
+‘patients’, ‘controls’, etc. In this example, it’s
+simply ‘group_1”.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full path to the text file containing the subjects identifiers</span>
+<span class="n">subjects_text_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_fmri_data_directory</span><span class="p">,</span> <span class="s1">'text_data/subjects_list.txt'</span><span class="p">)</span>
+<span class="c1"># We read this files with pandas</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">subjects_text_list</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># Naturally, when we print we get:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">subjects</span><span class="p">)</span>
+
+<span class="c1"># Now, we can fetch the data, i.e the functional image</span>
+<span class="c1"># present in the group_1 directory.</span>
+<span class="n">data_dictionary</span> <span class="o">=</span> <span class="n">fetch_data</span><span class="p">(</span><span class="n">subjects_id_data_path</span><span class="o">=</span><span class="n">subjects_text_list</span><span class="p">,</span>
+                             <span class="n">root_fmri_data_directory</span><span class="o">=</span><span class="n">root_fmri_data_directory</span><span class="p">,</span>
+                             <span class="n">groupes</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
+                             <span class="n">individual_confounds_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Let's print the result:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_dictionary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>['subject_1', 'subject_2', 'subject_3', 'subject_4', 'subject_5']
+{'group_1': {'subject_2': {'functional_file': ['/home/dhaif/data/group_1/subject_2.nii.gz'], 'counfounds_file': []}, 'subject_1': {'functional_file': ['/home/dhaif/data/group_1/subject_1.nii.gz'], 'counfounds_file': []}, 'subject_5': {'functional_file': ['/home/dhaif/data/group_1/subject_5.nii.gz'], 'counfounds_file': []}, 'subject_4': {'functional_file': ['/home/dhaif/data/group_1/subject_4.nii.gz'], 'counfounds_file': []}, 'subject_3': {'functional_file': ['/home/dhaif/data/group_1/subject_3.nii.gz'], 'counfounds_file': []}}}
+</pre></div>
+</div>
+<p>Once you fetch you’re data with the <a class="reference internal" href="../../conpagnon.data_handling.html#conpagnon.data_handling.data_architecture.fetch_data" title="conpagnon.data_handling.data_architecture.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.data_handling.data_architecture.fetch_data()</span></code></a> function, you
+get a Python dictionary. The first level of keys, is simply the groups names, here
+it’s just ‘group_1’, since we only have one group. The value of this key, is another
+dictionary, with the subject identifier name as keys, and as value, a dictionary with
+two field: ‘functional_file’, indicating the full path to the subject image, and ‘confound_file’,
+indicating the full path to the text file containing possible confound to regress. It’s empty here,
+because the images are already preprocessed.</p>
+
+
+<h2 id="with-confounds-files">With confounds files<a class="headerlink" href="#with-confounds-files" title="Permalink to this headline">¶</a></h2>
+<p>We previously assumed that you have already completely
+preprocessed you’re data. In some case, you may have not completed
+this step. The steps are exactly the same, the only difference is that
+you have to create a directory, at the root of the data folder.  In this
+directory, you should put the confounds file in the .csv format. The filename
+rules, is the same as the functional images: the filename of all confound files
+should contain the subject identifier at least.
+Once you’ve done that, you should put the full path of the confound directory
+in the argument called <strong>individual_confounds_directory</strong> in the
+<a class="reference internal" href="../../conpagnon.data_handling.html#conpagnon.data_handling.data_architecture.fetch_data" title="conpagnon.data_handling.data_architecture.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.data_handling.data_architecture.fetch_data()</span></code></a> function.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.132 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-01-organizing-data-plot-organizing-data-example-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/57160e2cddb2f0c29e33f951aaabb613/plot_organizing_data_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_organizing_data_example.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/4e23173d507f095752e3ed71e21d2f3e/plot_organizing_data_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_organizing_data_example.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="../index.html" title="ConPagnon usage examples"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> ConPagnon usage examples </span>
+              </div>
+            </a>
+          
+          
+            <a href="plot_import_atlas_example.html" title="Manipulating a brain atlas"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Manipulating a brain atlas </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
   
    
-  
-  <script src="_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "_static/versions.json",
-        target_loc = "../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -199,6 +202,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -207,17 +211,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      <a href="examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -231,6 +230,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
@@ -267,9 +267,9 @@
 
 
 <span id="conpagnon-connectivity-statistics-parametric-tests-module"></span><h2 id="module-conpagnon.connectivity_statistics.parametric_tests">conpagnon.connectivity_statistics.parametric_tests module<a class="headerlink" href="#module-conpagnon.connectivity_statistics.parametric_tests" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.design_matrix_builder">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">design_matrix_builder</code><span class="sig-paren">(</span><em class="sig-param">dataframe</em>, <em class="sig-param">formula</em>, <em class="sig-param">return_type='dataframe'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#design_matrix_builder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.design_matrix_builder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">design_matrix_builder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframe</span></em>, <em class="sig-param"><span class="n">formula</span></em>, <em class="sig-param"><span class="n">return_type</span><span class="o">=</span><span class="default_value">'dataframe'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#design_matrix_builder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.design_matrix_builder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build a design matrix based on a dataframe</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -292,9 +292,9 @@ the variable to explain</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.distribution_estimation_mean_subjects_connectivity">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">distribution_estimation_mean_subjects_connectivity</code><span class="sig-paren">(</span><em class="sig-param">mean_matrix_for_each_subjects</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#distribution_estimation_mean_subjects_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.distribution_estimation_mean_subjects_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">distribution_estimation_mean_subjects_connectivity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean_matrix_for_each_subjects</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#distribution_estimation_mean_subjects_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.distribution_estimation_mean_subjects_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides an estimation of mean and standard deviation of the distribution for the two groupes
 under study, of the mean matrix of each subjects.</p>
 <dl class="field-list simple">
@@ -317,9 +317,9 @@ of the mean matrix of each subjects.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.functional_connectivity_distribution_estimation">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">functional_connectivity_distribution_estimation</code><span class="sig-paren">(</span><em class="sig-param">functional_connectivity_estimate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#functional_connectivity_distribution_estimation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.functional_connectivity_distribution_estimation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">functional_connectivity_distribution_estimation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">functional_connectivity_estimate</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#functional_connectivity_distribution_estimation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.functional_connectivity_distribution_estimation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Estimates the mean and standard deviation of functional connectivity distribution assuming a Gaussian behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -352,9 +352,9 @@ and therefore can be describe properly with two parameters: the mean and the sta
 To ensure a Gaussian behavior transformation of the connectivity coefficient should be used like
 Fisher transform for correlation or partial correlation for example.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.inter_network_two_sample_t_test">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">inter_network_two_sample_t_test</code><span class="sig-paren">(</span><em class="sig-param">subjects_inter_network_connectivity_matrices</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">contrast</em>, <em class="sig-param">network_label_list</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">p_value_correction_method='fdr_bh'</em>, <em class="sig-param">assuming_equal_var=True</em>, <em class="sig-param">nan_policy='omit'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#inter_network_two_sample_t_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.inter_network_two_sample_t_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">inter_network_two_sample_t_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_inter_network_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">contrast</span></em>, <em class="sig-param"><span class="n">network_label_list</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">p_value_correction_method</span><span class="o">=</span><span class="default_value">'fdr_bh'</span></em>, <em class="sig-param"><span class="n">assuming_equal_var</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">nan_policy</span><span class="o">=</span><span class="default_value">'omit'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#inter_network_two_sample_t_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.inter_network_two_sample_t_test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the difference of connectivity between network performing a two sample t test.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -386,9 +386,9 @@ the alpha threshold.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.intra_network_two_samples_t_test">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">intra_network_two_samples_t_test</code><span class="sig-paren">(</span><em class="sig-param">intra_network_connectivity_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">contrast</em>, <em class="sig-param">network_labels_list</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">p_value_correction_method='fdr_bh'</em>, <em class="sig-param">assume_equal_var=True</em>, <em class="sig-param">nan_policy='omit'</em>, <em class="sig-param">paired=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#intra_network_two_samples_t_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.intra_network_two_samples_t_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">intra_network_two_samples_t_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">intra_network_connectivity_dictionary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">contrast</span></em>, <em class="sig-param"><span class="n">network_labels_list</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">p_value_correction_method</span><span class="o">=</span><span class="default_value">'fdr_bh'</span></em>, <em class="sig-param"><span class="n">assume_equal_var</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">nan_policy</span><span class="o">=</span><span class="default_value">'omit'</span></em>, <em class="sig-param"><span class="n">paired</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#intra_network_two_samples_t_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.intra_network_two_samples_t_test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the difference of intra network connectivity between the groups under the study.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -420,14 +420,14 @@ each group, and the contrast vector.
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.linear_regression">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">linear_regression</code><span class="sig-paren">(</span><em class="sig-param">connectivity_data, data, formula, NA_action, kind, subjects_to_drop=None, sheetname=None, save_regression_directory=None, contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed', alpha=0.05, pvals_correction_method=['fdr_bh'], nperms_maxT=10000, vectorize=False, discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#linear_regression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.linear_regression" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">linear_regression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connectivity_data</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">formula</span></em>, <em class="sig-param"><span class="n">NA_action</span></em>, <em class="sig-param"><span class="n">kind</span></em>, <em class="sig-param"><span class="n">subjects_to_drop</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sheetname</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">save_regression_directory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">contrasts</span><span class="o">=</span><span class="default_value">'Id'</span></em>, <em class="sig-param"><span class="n">compute_pvalues</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">pvalues_tail</span><span class="o">=</span><span class="default_value">'two_tailed'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">pvals_correction_method</span><span class="o">=</span><span class="default_value">['fdr_bh']</span></em>, <em class="sig-param"><span class="n">nperms_maxT</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">vectorize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#linear_regression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.linear_regression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a linear model on connectivity coefficients across subjects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connectivity_data</strong> (<em>dict</em>) – The connectivity matrix organised in a dictionnary. The subject identifier
+<li><p><strong>connectivity_data</strong> (<em>dict</em>) – The connectivity matrix organised in a dictionary. The subject identifier
 as keys, and metric as values, i.e the matrix which contain the connectivity coefficient.
 As metric are symmetric, matrix as to be vectorize in a 1D array of shape n_features.</p></li>
 <li><p><strong>formula</strong> (<em>string</em>) – The model, in a R fashion.</p></li>
@@ -436,7 +436,7 @@ in the model you want to estimate.</p></li>
 <li><p><strong>NA_action</strong> (<em>string</em>) – Directive for handling missing data in the xlsx file. Choices are :
 ‘drop’: subject will discarded in the analysis, ‘raise’: raise an
 error if missing data is present.</p></li>
-<li><p><strong>sheetname</strong> (<em>string</em>) – The name of the sheet containing the useful data.</p></li>
+<li><p><strong>sheetname</strong> (<em>int</em>) – The position in your excel file of the sheet of interest.</p></li>
 <li><p><strong>subjects_to_drop</strong> (<em>list</em><em>, </em><em>optional</em>) – List of subjects you want to discard in the analysis. If None, all the
 row in the dataframe are kept. Default is None.</p></li>
 <li><p><strong>kind</strong> (<em>string</em>) – The metric, present in the provided connectivity data you want to perform analysis.</p></li>
@@ -467,9 +467,9 @@ t-values matrix under the alpha uncorrected threshold.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.mean_functional_connectivity_distribution_estimation">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">mean_functional_connectivity_distribution_estimation</code><span class="sig-paren">(</span><em class="sig-param">mean_groups_connectivity_matrices</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#mean_functional_connectivity_distribution_estimation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.mean_functional_connectivity_distribution_estimation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">mean_functional_connectivity_distribution_estimation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean_groups_connectivity_matrices</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#mean_functional_connectivity_distribution_estimation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.mean_functional_connectivity_distribution_estimation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Estimates for the mean connectivity matrices for each group, the mean and standard deviation
 assuming gaussian distribution</p>
 <dl class="field-list simple">
@@ -502,9 +502,9 @@ assuming gaussian distribution</p>
 <p>Apply a Z-fisher transformation to the input matrices can be useful to improve and ensure a normal
 behavior of the data.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.ols_regression">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">ols_regression</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#ols_regression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.ols_regression" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">ols_regression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#ols_regression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.ols_regression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a linear model with ordinary least square regression
 from statmodels library</p>
 <dl class="field-list simple">
@@ -523,9 +523,9 @@ from statmodels library</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.ols_regression_formula">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">ols_regression_formula</code><span class="sig-paren">(</span><em class="sig-param">formula</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#ols_regression_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.ols_regression_formula" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">ols_regression_formula</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">formula</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#ols_regression_formula"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.ols_regression_formula" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a linear model with a formula API in R style.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -539,9 +539,9 @@ from statmodels library</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.partial_corr">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">partial_corr</code><span class="sig-paren">(</span><em class="sig-param">C</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#partial_corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.partial_corr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">partial_corr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#partial_corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.partial_corr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the sample linear partial correlation coefficients between pairs of variables in C, controlling
 for the remaining variables in C.
 :param C: Array with the different variables. Each column of C is taken as a variable
@@ -556,9 +556,9 @@ for the remaining variables in C.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.regress_confounds">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">regress_confounds</code><span class="sig-paren">(</span><em class="sig-param">vectorize_subjects_connectivity</em>, <em class="sig-param">confound_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">data</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">NA_action='drop'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#regress_confounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.regress_confounds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">regress_confounds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorize_subjects_connectivity</span></em>, <em class="sig-param"><span class="n">confound_dictionary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">sheetname</span></em>, <em class="sig-param"><span class="n">NA_action</span><span class="o">=</span><span class="default_value">'drop'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#regress_confounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.regress_confounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Regress confound on connectivity matrices</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -583,9 +583,9 @@ row is deleted from the design matrix.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">two_sample_t_test_</code><span class="sig-paren">(</span><em class="sig-param">connectivity_dictionnary_</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">field</em>, <em class="sig-param">contrast</em>, <em class="sig-param">assume_equal_var=True</em>, <em class="sig-param">nan_policy='omit'</em>, <em class="sig-param">paired=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#two_sample_t_test_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">two_sample_t_test_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connectivity_dictionnary_</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">contrast</span></em>, <em class="sig-param"><span class="n">assume_equal_var</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">nan_policy</span><span class="o">=</span><span class="default_value">'omit'</span></em>, <em class="sig-param"><span class="n">paired</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#two_sample_t_test_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a simple two sample t test between two sets
 of connectivity matrices.</p>
 <dl class="field-list simple">
@@ -611,9 +611,9 @@ and the <strong>uncorrected</strong> p values.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_on_mean_connectivity">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">two_sample_t_test_on_mean_connectivity</code><span class="sig-paren">(</span><em class="sig-param">mean_matrix_for_each_subjects</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groupes</em>, <em class="sig-param">contrast</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#two_sample_t_test_on_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_on_mean_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">two_sample_t_test_on_mean_connectivity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean_matrix_for_each_subjects</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">contrast</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#two_sample_t_test_on_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.two_sample_t_test_on_mean_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a two sample t-test between the two groupes in the study on the mean matrix of each subjects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -639,9 +639,9 @@ values for each kinds.</p>
 <p class="rubric">Notes</p>
 <p>The p-values is based on a two-sided statistic.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.parametric_tests.two_samples_t_test">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">two_samples_t_test</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">contrast</em>, <em class="sig-param">preprocessing_method='fisher'</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">multicomp_method='fdr_bh'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#two_samples_t_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.two_samples_t_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.parametric_tests.</code><code class="sig-name descname">two_samples_t_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_connectivity_matrices_dictionnary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">contrast</span></em>, <em class="sig-param"><span class="n">preprocessing_method</span><span class="o">=</span><span class="default_value">'fisher'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">multicomp_method</span><span class="o">=</span><span class="default_value">'fdr_bh'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/parametric_tests.html#two_samples_t_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.parametric_tests.two_samples_t_test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform two samples t-test on connectivity matrices to detect group differences in connectivity
 using different kinds.</p>
 <p>The t-test account for discarded rois you might want to exclude in the analysis.</p>
@@ -753,15 +753,15 @@ metrics like covariances, correlation of partial correlation.</p>
 <p>Modules to perform connectivity analysis at the network
 level</p>
 <p>Author: Dhaif BEKHA.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.joint_models_correction">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">joint_models_correction</code><span class="sig-paren">(</span><em class="sig-param">root_analysis_directory</em>, <em class="sig-param">kinds</em>, <em class="sig-param">models</em>, <em class="sig-param">correction_methods</em>, <em class="sig-param">networks=None</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#joint_models_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.joint_models_correction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">joint_models_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">models</span></em>, <em class="sig-param"><span class="n">correction_methods</span></em>, <em class="sig-param"><span class="n">networks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#joint_models_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.joint_models_correction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a joint models correction for the whole brains models,
 or the networks models.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.one_way_anova">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">one_way_anova</code><span class="sig-paren">(</span><em class="sig-param">models</em>, <em class="sig-param">groups</em>, <em class="sig-param">behavioral_dataframe</em>, <em class="sig-param">kinds</em>, <em class="sig-param">correction_method</em>, <em class="sig-param">root_analysis_directory</em>, <em class="sig-param">variables_in_model</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#one_way_anova"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.one_way_anova" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">one_way_anova</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">models</span></em>, <em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">correction_method</span></em>, <em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#one_way_anova"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.one_way_anova" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform one way ANOVA analysis followed by a post hoc analysis with t test,
 and multiple comparison correction.</p>
 <dl class="field-list simple">
@@ -787,9 +787,9 @@ in the statsmodels library.</p></li>
 <p>If models in a list containing more than one elements,
 the p values are jointly corrected for all models.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.one_way_anova_network">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">one_way_anova_network</code><span class="sig-paren">(</span><em class="sig-param">root_analysis_directory</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groups</em>, <em class="sig-param">networks_list</em>, <em class="sig-param">models</em>, <em class="sig-param">behavioral_dataframe</em>, <em class="sig-param">variables_in_model</em>, <em class="sig-param">correction_method</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#one_way_anova_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.one_way_anova_network" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">one_way_anova_network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">networks_list</span></em>, <em class="sig-param"><span class="n">models</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">correction_method</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#one_way_anova_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.one_way_anova_network" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a one way ANOVA at the network level.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -816,18 +816,18 @@ in the statsmodels library.</p></li>
 containing more than one elements, the p values
 are jointly corrected for the number of models * number of networks.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_internetwork_level">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_internetwork_level</code><span class="sig-paren">(</span><em class="sig-param">internetwork_subjects_connectivity_dictionary, groups_in_model, behavioral_data_path, sheet_name, subjects_to_drop, model_formula, kinds_to_model, root_analysis_directory, inter_network_model, network_labels_list, network_labels_colors, pvals_correction_method=['fdr_bh'], vectorize=True, discard_diagonal=False, nperms_maxT=10000, contrasts='Id', compute_pvalues='True', pvalues_tail='True', NA_action='drop', alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_internetwork_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_internetwork_level" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_internetwork_level</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">internetwork_subjects_connectivity_dictionary</span></em>, <em class="sig-param"><span class="n">groups_in_model</span></em>, <em class="sig-param"><span class="n">behavioral_data_path</span></em>, <em class="sig-param"><span class="n">sheet_name</span></em>, <em class="sig-param"><span class="n">subjects_to_drop</span></em>, <em class="sig-param"><span class="n">model_formula</span></em>, <em class="sig-param"><span class="n">kinds_to_model</span></em>, <em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">inter_network_model</span></em>, <em class="sig-param"><span class="n">network_labels_list</span></em>, <em class="sig-param"><span class="n">network_labels_colors</span></em>, <em class="sig-param"><span class="n">pvals_correction_method</span><span class="o">=</span><span class="default_value">['fdr_bh']</span></em>, <em class="sig-param"><span class="n">vectorize</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">nperms_maxT</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">contrasts</span><span class="o">=</span><span class="default_value">'Id'</span></em>, <em class="sig-param"><span class="n">compute_pvalues</span><span class="o">=</span><span class="default_value">'True'</span></em>, <em class="sig-param"><span class="n">pvalues_tail</span><span class="o">=</span><span class="default_value">'True'</span></em>, <em class="sig-param"><span class="n">NA_action</span><span class="o">=</span><span class="default_value">'drop'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_internetwork_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_internetwork_level" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_network_level">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_network_level</code><span class="sig-paren">(</span><em class="sig-param">groups, kinds, networks_list, root_analysis_directory, network_model, variables_in_model, behavioral_dataframe, correction_method=['fdr_bh'], alpha=0.05, two_tailed=True, n_permutations=10000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_network_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_network_level" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_network_level</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">networks_list</span></em>, <em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">network_model</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">correction_method</span><span class="o">=</span><span class="default_value">['fdr_bh']</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">two_tailed</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">n_permutations</span><span class="o">=</span><span class="default_value">10000</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_network_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_network_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Regress a linear model at the network level</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_network_level_v2">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_network_level_v2</code><span class="sig-paren">(</span><em class="sig-param">groups, kinds, networks_list, root_analysis_directory, network_model, variables_in_model, score_of_interest, behavioral_dataframe, correction_method=['fdr_bh'], alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_network_level_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_network_level_v2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_network_level_v2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">networks_list</span></em>, <em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">network_model</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">score_of_interest</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">correction_method</span><span class="o">=</span><span class="default_value">['fdr_bh']</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_network_level_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_network_level_v2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform linear regression between a behavioral score and a functional connectivity “score”.
 The connectivity score is usually a simple mean between the connectivity coefficient
 of a single network. ConPagnon has some function to compute those kind of score from
@@ -877,14 +877,14 @@ method.</p></li>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_whole_brain">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_whole_brain</code><span class="sig-paren">(</span><em class="sig-param">groups, kinds, root_analysis_directory, whole_brain_model, variables_in_model, behavioral_dataframe, correction_method=['FDR'], alpha=0.05, n_permutations=10000, two_tailed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_whole_brain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_whole_brain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_whole_brain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">whole_brain_model</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">correction_method</span><span class="o">=</span><span class="default_value">['FDR']</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">n_permutations</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">two_tailed</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_whole_brain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_whole_brain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Regression analysis on composite connectivity score over the whole brain.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_whole_brain_v2">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_whole_brain_v2</code><span class="sig-paren">(</span><em class="sig-param">groups, kinds, root_analysis_directory, whole_brain_model, variables_in_model, score_of_interest, behavioral_dataframe, correction_method=['fdr_bh'], alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_whole_brain_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_whole_brain_v2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">regression_analysis_whole_brain_v2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">root_analysis_directory</span></em>, <em class="sig-param"><span class="n">whole_brain_model</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">score_of_interest</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">correction_method</span><span class="o">=</span><span class="default_value">['fdr_bh']</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#regression_analysis_whole_brain_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.regression_analysis_whole_brain_v2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a linear model with a continuous score test as the response variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -905,9 +905,9 @@ method.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.write_raw_data">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">write_raw_data</code><span class="sig-paren">(</span><em class="sig-param">output_csv_directory</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groups</em>, <em class="sig-param">models</em>, <em class="sig-param">variables_in_model</em>, <em class="sig-param">behavioral_dataframe</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#write_raw_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.write_raw_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">write_raw_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_csv_directory</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">models</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#write_raw_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.write_raw_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the response variable along with the co-variables in a unique
 dataframe inside a csv files.</p>
 <dl class="field-list simple">
@@ -929,9 +929,9 @@ columns as index.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.connectivity_statistics.regression_analysis_model.write_raw_data_network">
-<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">write_raw_data_network</code><span class="sig-paren">(</span><em class="sig-param">output_csv_directory</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groups</em>, <em class="sig-param">models</em>, <em class="sig-param">variables_in_model</em>, <em class="sig-param">behavioral_dataframe</em>, <em class="sig-param">network_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#write_raw_data_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.write_raw_data_network" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.connectivity_statistics.regression_analysis_model.</code><code class="sig-name descname">write_raw_data_network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_csv_directory</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">groups</span></em>, <em class="sig-param"><span class="n">models</span></em>, <em class="sig-param"><span class="n">variables_in_model</span></em>, <em class="sig-param"><span class="n">behavioral_dataframe</span></em>, <em class="sig-param"><span class="n">network_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/connectivity_statistics/regression_analysis_model.html#write_raw_data_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.connectivity_statistics.regression_analysis_model.write_raw_data_network" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the response variable along with the co-variables in a unique
 dataframe inside a csv files, at the network level.</p>
 <dl class="field-list simple">
@@ -982,14 +982,14 @@ should have a directory containing the data for each group.</p></li>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

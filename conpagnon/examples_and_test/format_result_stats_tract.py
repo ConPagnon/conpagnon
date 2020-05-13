@@ -7,8 +7,10 @@ from statsmodels.stats.multitest import multipletests
 Format R results from statistical 
 analysis of bundle parameters from
 NAIS cohort.
+Author: Dhaif BEKHA (dhaif@dhaifbekha.com)
 
 """
+
 
 def _parse_line(line, rx_dict):
     """
@@ -24,9 +26,13 @@ def _parse_line(line, rx_dict):
 
 
 stat_results_directory = "/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/Ines_2018/stats_tracts_2"
+# model names: the same model name you find in the R script
 model_names = ["_Parole_LD", "_SyntExp_LD", "_SyntComp_LD", "_LexExp_LD", "_LexComp_LD", "_PC1_LD"]
+# parameters of interest
 parameters = ["FA"]
+# sides: ipsi, contra, etc...
 sides = ["lat"]
+# bundle of interest
 bundle_names = ["MLF", "SLF", "AF"]
 
 
