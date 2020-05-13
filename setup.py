@@ -9,8 +9,8 @@ MAINTAINER = 'Dhaif BEKHA'
 MAINTAINER_EMAIL = 'dhaif@dhaifbekha.com'
 URL = 'https://conpagnon.github.io/conpagnon/'
 LICENSE = 'new BSD'
-DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.5.tar.gz'
-VERSION = 'v2.0.5'
+DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.6.tar.gz'
+VERSION = 'v2.0.6'
 
 
 if __name__ == "__main__":
