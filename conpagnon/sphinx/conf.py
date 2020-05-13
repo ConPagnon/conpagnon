@@ -76,7 +76,7 @@ master_doc = 'index'
 # General information about the project.
 project = u'ConPagnon 2.0'
 version = u'2.0'
-copyright = u'2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com)'
+copyright = u'2016 - 2020. Created by Dhaif BEKHA.'
 autosummary_generate = True
 autoclass_content = 'class'
 
