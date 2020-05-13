@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="../../../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   
    
-  
-  <script src="../../../_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "../../../_static/versions.json",
-        target_loc = "../../../../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="../../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../../_static/versions.json",
+        target_loc = "../../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -206,6 +209,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -214,17 +218,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="../../../gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="../../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="../../../user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="../../../examples/index.html" class="md-nav__link">Examples</a>
+      <a href="../../../examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -238,6 +237,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
   <ul class="md-nav__list" data-md-scrollfix="">
     
@@ -255,10 +255,10 @@
             
   <h1 id="modules-conpagnon-data-handling-dictionary-operations--page-root">Source code for conpagnon.data_handling.dictionary_operations</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">shuffle</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">conpagnon.computing</span> <span class="k">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
-<span class="kn">from</span> <span class="nn">conpagnon.utils.array_operation</span> <span class="k">import</span> <span class="n">array_rebuilder</span>
+<span class="kn">from</span> <span class="nn">conpagnon.computing</span> <span class="kn">import</span> <span class="n">compute_connectivity_matrices</span> <span class="k">as</span> <span class="n">ccm</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.array_operation</span> <span class="kn">import</span> <span class="n">array_rebuilder</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="sd">"""</span>
 <span class="sd">This module contain useful operation on subjects connectivity matrices dictionnary.</span>
@@ -293,22 +293,21 @@
     <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">all_subjects_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-
-    <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">population_text_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">all_subjects_list</span><span class="p">]</span>
+    <span class="n">population_text_data</span> <span class="o">=</span> <span class="n">population_text_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">population_text_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">all_subjects_list</span><span class="p">)]</span>
 
     <span class="c1"># Using pandas, group the dataframe by the factor list entered and store</span>
-    <span class="c1"># it in a dictionnary</span>
+    <span class="c1"># it in a dictionary</span>
     <span class="n">population_data_by_factor</span> <span class="o">=</span> <span class="n">population_text_data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">factors</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span>
     <span class="c1"># Store all the keys, i.e all the possible factor pairs.</span>
     <span class="n">factors_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">population_data_by_factor</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-    <span class="c1"># Create a subjects connectivity matrices dictionnary, with factor keys as first level</span>
+    <span class="c1"># Create a subjects connectivity matrices dictionary, with factor keys as first level</span>
     <span class="c1"># keys, instead of groupes list</span>
     <span class="n">group_by_factor_subjects_connectivity_matrices</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">factors_keys</span><span class="p">)</span>
     <span class="c1"># Stack the connectivity matrices</span>
     <span class="n">stacked_matrices</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">][</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">groupe</span> <span class="ow">in</span> <span class="n">groupes</span>
                         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices_dictionnary</span><span class="p">[</span><span class="n">groupe</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
-    <span class="c1"># Fill the dictionnary, with the corresponding subject level dictionary for each</span>
+    <span class="c1"># Fill the dictionary, with the corresponding subject level dictionary for each</span>
     <span class="c1"># factor key pair</span>
     <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors_keys</span><span class="p">:</span>
         <span class="c1"># subjects list ID for the current factor pair key</span>
@@ -322,12 +321,12 @@
 
 <div class="viewcode-block" id="random_draw_of_connectivity_matrices"><a class="viewcode-back" href="../../../conpagnon.data_handling.html#conpagnon.data_handling.dictionary_operations.random_draw_of_connectivity_matrices">[docs]</a><span class="k">def</span> <span class="nf">random_draw_of_connectivity_matrices</span><span class="p">(</span><span class="n">subjects_connectivity_dictionary</span><span class="p">,</span> <span class="n">groupe</span><span class="p">,</span> <span class="n">n_matrices</span><span class="p">,</span>
                                          <span class="n">subjects_id_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extract_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Randomly pick N connectivity matrices from a subjects connectivity dictionnary.</span>
+    <span class="sd">"""Randomly pick N connectivity matrices from a subjects connectivity dictionary.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    subjects_connectivity_dictionary: dict</span>
-<span class="sd">        The subjects dictionnary containing connectivity matrices</span>
+<span class="sd">        The subjects dictionary containing connectivity matrices</span>
 <span class="sd">    groupe: str</span>
 <span class="sd">        The group in which you want pick the matrices</span>
 <span class="sd">    n_matrices: int</span>
@@ -555,14 +554,14 @@
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

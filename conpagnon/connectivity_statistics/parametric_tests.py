@@ -266,7 +266,7 @@ def two_samples_t_test(subjects_connectivity_matrices_dictionnary, groupes, kind
 
 
 def linear_regression(connectivity_data, data, formula, NA_action,
-                      kind, subjects_to_drop=None, sheetname=None,save_regression_directory=None,
+                      kind, subjects_to_drop=None, sheetname=0, save_regression_directory=None,
                       contrasts='Id', compute_pvalues=True, pvalues_tail='two_tailed',
                       alpha=0.05, pvals_correction_method=['fdr_bh'], nperms_maxT=10000,
                       vectorize=False, discard_diagonal=False):
@@ -277,7 +277,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     Parameters
     ----------
     connectivity_data: dict
-        The connectivity matrix organised in a dictionnary. The subject identifier
+        The connectivity matrix organised in a dictionary. The subject identifier
         as keys, and metric as values, i.e the matrix which contain the connectivity coefficient.
         As metric are symmetric, matrix as to be vectorize in a 1D array of shape n_features.
     formula: string
@@ -289,8 +289,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         Directive for handling missing data in the xlsx file. Choices are :
         'drop': subject will discarded in the analysis, 'raise': raise an
         error if missing data is present.
-    sheetname: string
-        The name of the sheet containing the useful data.
+    sheetname: int
+        The position in your excel file of the sheet of interest.
     subjects_to_drop: list, optional
         List of subjects you want to discard in the analysis. If None, all the
         row in the dataframe are kept. Default is None.
@@ -331,6 +331,8 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     """
     # Reading the data
     df = pd.read_excel(data, sheet_name=sheetname)
+    # Set the index to the subjects identifier column
+    df = df.set_index(['subjects'])
     
     # Drop the subjects we want to discard :
     df_c = df.copy()
@@ -342,7 +344,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
     # Build the design matrix according the dataframe and regression model.
     X_df = dmatrix(formula_like=formula, data=df, return_type='dataframe',
                    NA_action=NA_action)
-    
+
     # Stacked vectorized connectivity matrices in the same order of subjects
     # index list of the DESIGN MATRIX, because of missing data, not all subjects
     # will be in the analysis.
@@ -456,7 +458,7 @@ def linear_regression(connectivity_data, data, formula, NA_action,
         if corr_method == 'maxT':    
             correction_method_regression_results['maximum T null distribution'] = null_distribution
 
-    # saving the dictionnary
+    # saving the dictionary
     if save_regression_directory is not None:
         folders_and_files_management.save_object(correction_method_regression_results,
                                                  save_regression_directory,

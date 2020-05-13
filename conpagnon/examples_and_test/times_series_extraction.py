@@ -11,10 +11,10 @@ Example code: time series extraction with individual atlases
 """
 
 # Groups name to include in the study
-groups = [ 'Lesion_flip_MCA', 'TDC']
+groups = [ 'controls', 'patients']
 # The root fmri data directory containing all the fmri files directories
 root_fmri_data_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/fmri_images'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/fmri_images'
 # Check all functional files existence
 folders_and_files_management.check_directories_existence(
     root_directory=root_fmri_data_directory,
@@ -27,17 +27,17 @@ individual_atlas_labels_extension = '*.csv'
 # Full path, including extension, to the text file containing
 # all the subject identifiers.
 subjects_ID_data_path = \
-    '/media/db242421/db242421_data/ConPagnon_data/text_data/acm_patients_and_controls.txt'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/text_data/acm_patients_and_controls.txt'
 
 
 # Full to the following directories: individual atlases images,
 # individual text labels files, and individual confounds directories.
 individual_atlases_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_flip_V2'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/individual_atlases_flip_V2'
 individual_atlases_labels_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/atlas/individual_atlases_labels_flip_V2'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/atlas/individual_atlases_labels_flip_V2'
 individual_confounds_directory = \
-    '/media/db242421/db242421_data/ConPagnon_data/regressors'
+    '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/AVCnn_Dhaif/ConPagnon_data/regressors'
 
 # Fetch data in the case of individual atlases for each subjects.
 organised_data_with_individual_atlas = data_architecture.fetch_data_with_individual_atlases(
@@ -51,7 +51,7 @@ organised_data_with_individual_atlas = data_architecture.fetch_data_with_individ
     individual_counfounds_directory=individual_confounds_directory)
 
 # Nilearn cache directory
-nilearn_cache_directory = '/media/db242421/db242421_data/ConPagnon/nilearn_cache'
+nilearn_cache_directory = '/home/dhaif/nilearn_cache'
 
 # Repetition time between time points in the fmri acquisition, usually 2.4s or 2.5s
 repetition_time = 2.5
@@ -71,10 +71,8 @@ total_extraction_ts = (end - start)/60.
 
 # Save the subjects time series dictionary
 save_object(object_to_save=times_series_individual_atlases,
-            saving_directory='/media/db242421/db242421_data/ConPagnon_data/'
-                             'language_study_ANOVA_ACM_controls_new_figures/'
-                             'discriminative_connection_identification/Lesion_flip_TDC',
-            filename='times_series_individual_atlases_Lesion_flip_MCA_TDC.pkl')
+            saving_directory='/home/dhaif',
+            filename='times_series.pkl')
 
 
 # Illustration: time series plot

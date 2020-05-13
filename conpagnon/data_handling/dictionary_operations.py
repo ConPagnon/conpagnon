@@ -37,22 +37,21 @@ def groupby_factor_connectivity_matrices(population_data_file, sheetname,
     for groupe in groupes:
         for s in subjects_connectivity_matrices_dictionnary[groupe].keys():
             all_subjects_list.append(s)
-
-    population_text_data = population_text_data.loc[all_subjects_list]
+    population_text_data = population_text_data.loc[population_text_data.index.intersection(all_subjects_list)]
 
     # Using pandas, group the dataframe by the factor list entered and store
-    # it in a dictionnary
+    # it in a dictionary
     population_data_by_factor = population_text_data.groupby(factors).groups
     # Store all the keys, i.e all the possible factor pairs.
     factors_keys = list(population_data_by_factor.keys())
 
-    # Create a subjects connectivity matrices dictionnary, with factor keys as first level
+    # Create a subjects connectivity matrices dictionary, with factor keys as first level
     # keys, instead of groupes list
     group_by_factor_subjects_connectivity_matrices = dict.fromkeys(factors_keys)
     # Stack the connectivity matrices
     stacked_matrices = {s: subjects_connectivity_matrices_dictionnary[groupe][s] for groupe in groupes
                         for s in subjects_connectivity_matrices_dictionnary[groupe].keys()}
-    # Fill the dictionnary, with the corresponding subject level dictionary for each
+    # Fill the dictionary, with the corresponding subject level dictionary for each
     # factor key pair
     for factor in factors_keys:
         # subjects list ID for the current factor pair key
@@ -66,12 +65,12 @@ def groupby_factor_connectivity_matrices(population_data_file, sheetname,
 
 def random_draw_of_connectivity_matrices(subjects_connectivity_dictionary, groupe, n_matrices,
                                          subjects_id_list=None, random_state=None, extract_kwargs=None):
-    """Randomly pick N connectivity matrices from a subjects connectivity dictionnary.
+    """Randomly pick N connectivity matrices from a subjects connectivity dictionary.
 
     Parameters
     ----------
     subjects_connectivity_dictionary: dict
-        The subjects dictionnary containing connectivity matrices
+        The subjects dictionary containing connectivity matrices
     groupe: str
         The group in which you want pick the matrices
     n_matrices: int

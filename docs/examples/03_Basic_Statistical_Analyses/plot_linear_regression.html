@@ -1,0 +1,733 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Regression analysis &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Two samples t-test" href="plot_t_test_analysis.html" />
+    <link rel="prev" title="Two groups classification" href="plot_two_groups_classification.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/03_Basic_Statistical_Analyses/plot_linear_regression" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Regression analysis </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="plot_two_groups_classification.html" class="md-nav__link">Two groups classification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Regression analysis </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Regression analysis</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-03-basic-statistical-analyses-plot-linear-regression--page-root" class="md-nav__link">Regression analysis</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-import" class="md-nav__link">Module import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-data-and-set-path" class="md-nav__link">Load data, and set Path</a>
+        </li>
+        <li class="md-nav__item"><a href="#compute-the-linear-regression" class="md-nav__link">Compute the linear regression</a>
+        </li>
+        <li class="md-nav__item"><a href="#retrieve-significant-results" class="md-nav__link">Retrieve significant results</a>
+        </li>
+        <li class="md-nav__item"><a href="#view-the-results-in-a-matrix" class="md-nav__link">View the results in a matrix</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/03_Basic_Statistical_Analyses/plot_linear_regression.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_t_test_analysis.html" class="md-nav__link">Two samples t-test</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-03-basic-statistical-analyses-plot-linear-regression--page-root" class="md-nav__link">Regression analysis</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#module-import" class="md-nav__link">Module import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-data-and-set-path" class="md-nav__link">Load data, and set Path</a>
+        </li>
+        <li class="md-nav__item"><a href="#compute-the-linear-regression" class="md-nav__link">Compute the linear regression</a>
+        </li>
+        <li class="md-nav__item"><a href="#retrieve-significant-results" class="md-nav__link">Retrieve significant results</a>
+        </li>
+        <li class="md-nav__item"><a href="#view-the-results-in-a-matrix" class="md-nav__link">View the results in a matrix</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/03_Basic_Statistical_Analyses/plot_linear_regression.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-03-basic-statistical-analyses-plot-linear-regression-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-03-basic-statistical-analyses-plot-linear-regression-py"></span><h1 id="examples-03-basic-statistical-analyses-plot-linear-regression--page-root">Regression analysis<a class="headerlink" href="#examples-03-basic-statistical-analyses-plot-linear-regression--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Perform a simple linear regression to find
+a linear relationship between a continuous behavioral variable and
+resting state functional connectivity matrices.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-example-dataset">Retrieve the example dataset<a class="headerlink" href="#retrieve-the-example-dataset" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will work directly on a pre-computed dictionary,
+that contain two set of connectivity matrices, from two different groups.
+The first group, called <em>controls</em> is a set of connectivity matrices from healthy
+seven years old children, and the second group called <em>patients</em>, is a set of
+connectivity matrices from seven years old children who have suffered a stroke.
+You can download the dictionary use in this example
+<a class="reference external" href="https://www.dropbox.com/s/kwdrx4liauo10kr/raw_subjects_connectivity_matrices.pkl?dl=1">here</a>.
+In this example we will perform a regression analysis on a continuous variable. You
+can also download a
+<a class="reference external" href="https://www.dropbox.com/scl/fi/w5mxeel9ihmlksxfz88or/regression_data.xlsx?dl=1&amp;rlkey=3srxro9jm8k0e2asbwfetxnjl">table</a>
+, containing one behavioral variable for all subject in the patients group.</p>
+
+
+<h2 id="module-import">Module import<a class="headerlink" href="#module-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">load_object</span>
+<span class="kn">from</span> <span class="nn">conpagnon.connectivity_statistics.parametric_tests</span> <span class="kn">import</span> <span class="n">linear_regression</span>
+<span class="kn">from</span> <span class="nn">conpagnon.data_handling</span> <span class="kn">import</span> <span class="n">atlas</span>
+<span class="kn">from</span> <span class="nn">conpagnon.plotting.display</span> <span class="kn">import</span> <span class="n">plot_matrix</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">seaborn</span> <span class="kn">import</span> <span class="n">lmplot</span>
+</pre></div>
+</div>
+
+
+<h2 id="load-data-and-set-path">Load data, and set Path<a class="headerlink" href="#load-data-and-set-path" title="Permalink to this headline">¶</a></h2>
+<p>We will perform a regression analysis and in this case we aim to find
+a linear relationship between the functional connectivity and a continuous
+variable, which is traditionally a score measuring an individual performance
+for a particular cognitive task. In our case, for this simple example, this score
+will be interpreted as the mean performance for a battery of sub-test regarding the language
+function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+
+<span class="c1"># Load the dictionary containing the connectivity matrices</span>
+<span class="n">subjects_connectivity_matrices</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span>
+    <span class="n">full_path_to_object</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'raw_subjects_connectivity_matrices.pkl'</span><span class="p">))</span>
+
+<span class="c1"># Load the data table</span>
+<span class="n">regression_data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'regression_data.xlsx'</span><span class="p">)</span>
+<span class="n">regression_data_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">regression_data_path</span><span class="p">)</span>
+
+<span class="c1"># Print the data table</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regression_data_table</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>|    | subjects       |   language_performance |
+|---:|:---------------|-----------------------:|
+|  0 | sub04_rc110343 |               1.00484  |
+|  1 | sub06_ml110125 |               3.83867  |
+|  2 | sub07_lc110496 |              -0.907201 |
+|  3 | sub08_jl110342 |              -4.26892  |
+|  4 | sub10_dl120547 |              -0.957913 |
+|  5 | sub12_ab110489 |               3.21885  |
+|  6 | sub13_vl110480 |              -0.331407 |
+|  7 | sub14_rs120006 |              -1.05699  |
+|  8 | sub17_eb120007 |               2.88928  |
+|  9 | sub20_hd120032 |              -5.33207  |
+| 10 | sub21_yg120001 |              -1.56495  |
+| 11 | sub23_lf120459 |               3.80515  |
+| 12 | sub24_ed110159 |             -10.4086   |
+| 13 | sub25_ec110149 |               1.78148  |
+| 14 | sub26_as110192 |              -3.93445  |
+| 15 | sub30_zp130008 |               1.42485  |
+| 16 | sub32_mp130025 |              -1.2626   |
+| 17 | sub34_jc130100 |               1.37514  |
+| 18 | sub35_gc130101 |               3.66906  |
+| 19 | sub37_la130266 |               3.77187  |
+| 20 | sub38_mv130274 |               2.17901  |
+| 21 | sub39_ya130305 |               1.08922  |
+| 22 | sub41_sa130332 |               1.80184  |
+| 23 | sub43_mc130373 |               2.01819  |
+| 24 | sub44_av130474 |              -3.84236  |
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In order to use the regression function in ConPagnon and some other function,
+the table need to follow one basic rule: there must be one column named <strong>subjects</strong>
+containing the <strong>same</strong> subject name you use in your data dictionary. The simple reason
+for that, is when we will perform the regression, we will math the connectivity matrix
+for a subject with the behavioral score for that same subject. In order to do that, we must
+have id’s column to fetch the right data. Finally, for this example only, the data should be
+in the <strong>.xlsx</strong> format.</p>
+</div>
+<p>As you may notice, we have <em>27</em> subjects in the patients group, but
+we have only 25 entries in the date table. Traditionally, in a linear
+regression, we simply drop the subjects, discarding their entire
+connectivity matrix. In the regression function we use next, we will
+have the possibility to drop void entries.</p>
+
+
+<h2 id="compute-the-linear-regression">Compute the linear regression<a class="headerlink" href="#compute-the-linear-regression" title="Permalink to this headline">¶</a></h2>
+<p>We can now compute the regression calling the
+<a class="reference internal" href="../../conpagnon.connectivity_statistics.html#conpagnon.connectivity_statistics.parametric_tests.linear_regression" title="conpagnon.connectivity_statistics.parametric_tests.linear_regression"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.connectivity_statistics.parametric_tests.linear_regression()</span></code></a> function. This function
+is very convenient because we give the entire subjects connectivity matrices dictionary as an input. The equation
+for this example is very simple :
+<span class="math notranslate nohighlight">\(Functional Connectivity = \beta_0 + \beta_1*LanguagePerformance + \mu\)</span>,
+where <span class="math notranslate nohighlight">\(\mu\sim N\left(0,\Sigma\right).\)</span></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Call the regression function</span>
+<span class="n">results_dictionary</span><span class="p">,</span> <span class="n">design_matrix</span><span class="p">,</span> <span class="n">true_connectivity</span><span class="p">,</span> <span class="n">fitted_connectivity_vec</span><span class="p">,</span> \
+    <span class="n">subjects_list</span> <span class="o">=</span> <span class="n">linear_regression</span><span class="p">(</span><span class="n">connectivity_data</span><span class="o">=</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="s1">'patients'</span><span class="p">],</span>
+                                      <span class="n">data</span><span class="o">=</span><span class="n">regression_data_path</span><span class="p">,</span>
+                                      <span class="n">formula</span><span class="o">=</span><span class="s1">'language_performance'</span><span class="p">,</span>
+                                      <span class="n">NA_action</span><span class="o">=</span><span class="s1">'drop'</span><span class="p">,</span>
+                                      <span class="n">kind</span><span class="o">=</span><span class="s1">'correlation'</span><span class="p">,</span>
+                                      <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">sheetname</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As you notice we store the result in a dictionary as usual, here the variable
+<code class="docutils literal notranslate"><span class="pre">results_dictionary</span></code>, contains a sub-dictionary of results for each correction
+method you choose. Here, we only apply a False Discovery Rate correction, so there is
+only one entry to the results dictionary, <code class="docutils literal notranslate"><span class="pre">results_dictionary['fdr_bh']</span></code>. For convenience,
+there is an entry <strong>for each variable</strong> in your model. For example to explore the results
+associated with the language performance variable, you can access it with
+<code class="docutils literal notranslate"><span class="pre">results_dictionary['fdr_bh']['results']['language_performance']</span></code>.</p>
+<p>We only compute the linear regression for the <em>correlation</em> metric,
+but you can off course explore in what the result differ if you
+use other metric like <em>partial correlation</em> or, <em>tangent</em>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Explore the available results for the language performance:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results_dictionary</span><span class="p">[</span><span class="s1">'fdr_bh'</span><span class="p">][</span><span class="s1">'results'</span><span class="p">][</span><span class="s1">'language_performance'</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>dict_keys(['raw pvalues', 'raw tvalues', 'corrected pvalues', 'significant tvalues'])
+</pre></div>
+</div>
+<p>As you can see, we store the uncorrected p-values matrix, the corrected
+p-values matrix, the t-values matrix, and the thresholded t-values matrix
+at the corresponding Type I error rate. We can also retrieve the design matrix
+of the model, containing the intercept (column of one) and the language score
+we regressed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The design matrix storing the model</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">design_matrix</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>| subjects       |   Intercept |   language_performance |
+|:---------------|------------:|-----------------------:|
+| sub43_mc130373 |           1 |               2.01819  |
+| sub30_zp130008 |           1 |               1.42485  |
+| sub38_mv130274 |           1 |               2.17901  |
+| sub32_mp130025 |           1 |              -1.2626   |
+| sub37_la130266 |           1 |               3.77187  |
+| sub14_rs120006 |           1 |              -1.05699  |
+| sub04_rc110343 |           1 |               1.00484  |
+| sub25_ec110149 |           1 |               1.78148  |
+| sub41_sa130332 |           1 |               1.80184  |
+| sub20_hd120032 |           1 |              -5.33207  |
+| sub35_gc130101 |           1 |               3.66906  |
+| sub07_lc110496 |           1 |              -0.907201 |
+| sub17_eb120007 |           1 |               2.88928  |
+| sub34_jc130100 |           1 |               1.37514  |
+| sub23_lf120459 |           1 |               3.80515  |
+| sub26_as110192 |           1 |              -3.93445  |
+| sub08_jl110342 |           1 |              -4.26892  |
+| sub13_vl110480 |           1 |              -0.331407 |
+| sub12_ab110489 |           1 |               3.21885  |
+| sub44_av130474 |           1 |              -3.84236  |
+| sub10_dl120547 |           1 |              -0.957913 |
+| sub06_ml110125 |           1 |               3.83867  |
+| sub24_ed110159 |           1 |             -10.4086   |
+| sub21_yg120001 |           1 |              -1.56495  |
+| sub39_ya130305 |           1 |               1.08922  |
+</pre></div>
+</div>
+
+
+<h2 id="retrieve-significant-results">Retrieve significant results<a class="headerlink" href="#retrieve-significant-results" title="Permalink to this headline">¶</a></h2>
+<p>From the <code class="docutils literal notranslate"><span class="pre">results_dictionary</span></code> we can fetch pretty easily the different
+regions statistically significant. For example, we can first compute
+the indices corresponding to those regions. For simplicity purpose,
+we will plot the regression curve for only one couple of regions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find the indices of significant regions of interest</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">results_dictionary</span><span class="p">[</span><span class="s1">'fdr_bh'</span><span class="p">][</span><span class="s1">'results'</span><span class="p">][</span><span class="s1">'language_performance'</span><span class="p">][</span><span class="s1">'corrected pvalues'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">)</span>
+<span class="c1"># Fetch the functional connectivity for the one couple of regions</span>
+<span class="c1"># from the subject connectivity matrices dictionary</span>
+<span class="n">roi_i</span><span class="p">,</span> <span class="n">roi_j</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="mi">70</span><span class="p">],</span> <span class="n">j</span><span class="p">[</span><span class="mi">70</span><span class="p">]</span>
+<span class="n">raw_connectivity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="s1">'patients'</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="s1">'correlation'</span><span class="p">][</span><span class="n">roi_i</span><span class="p">,</span> <span class="n">roi_j</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_list</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fitted_connectivity_vec</span></code> output from the linear regression
+function is a matrix of shape <code class="docutils literal notranslate"><span class="pre">(25,</span> <span class="pre">2628)</span></code>, that mean, all the
+subjects connectivity matrices are stacked and <strong>vectorized</strong> on top
+of each other. For a quick rebuild of the stack of connectivity matrices,
+you can call the <a class="reference internal" href="../../conpagnon.utils.html#conpagnon.utils.array_operation.array_rebuilder" title="conpagnon.utils.array_operation.array_rebuilder"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.utils.array_operation.array_rebuilder()</span></code></a> function.
+We can now plot the results for the couple of regions we fetched.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">'language_performance'</span><span class="p">,</span>
+       <span class="n">y</span><span class="o">=</span><span class="s1">'raw_connectivity'</span><span class="p">,</span>
+       <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'language_performance'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">regression_data_table</span><span class="p">[</span><span class="s1">'language_performance'</span><span class="p">]),</span>
+                          <span class="s1">'raw_connectivity'</span><span class="p">:</span> <span class="n">raw_connectivity</span><span class="p">}),</span>
+       <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">'color'</span><span class="p">:</span> <span class="s1">'red'</span><span class="p">},</span> <span class="n">height</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Linear regression between the language performance and the functional </span><span class="se">\n</span><span class="s1">'</span>
+          <span class="s1">'connectivity for region pair (</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">roi_i</span><span class="p">,</span> <span class="n">roi_j</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_linear_regression_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_regression_001.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/03_Basic_Statistical_Analyses/plot_linear_regression.py:168: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<p>It can be tedious to plot all the significant graph
+corresponding to significant couple of regions. We
+have a much more global view of the results if we plot
+the results in a matrix fashion, and have a grasp of
+all regions involved in the linear model we currently
+study. In the newt section below, you lean to plot the
+results in a connectivity matrix structure.</p>
+
+
+<h2 id="view-the-results-in-a-matrix">View the results in a matrix<a class="headerlink" href="#view-the-results-in-a-matrix" title="Permalink to this headline">¶</a></h2>
+<p>We can view the results in a global way, by plotting them
+in a matrix. Each row, and each column correspond to the
+atlas region you computed your connectivity matrices with, but
+this time, you will find t-values instead of connectivity coefficient.
+For plotting purposes only we will use in this section, the atlas
+we already manipulate in the very first section of the tutorials. You can download the
+<a class="reference external" href="https://www.dropbox.com/s/wwmg0a4g3cjnfvv/atlas.nii?dl=1">atlas</a>,
+and the corresponding <a class="reference external" href="https://www.dropbox.com/s/3wuzwn14l7nksvy/atlas_labels.csv?dl=1">labels</a>
+for each regions. This atlas have 72 regions of interest, and connectivity matrices
+were computed using this same atlas.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>All those files, as a reminder, should be in your home
+directory.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># First, we will load the atlas, and fetching</span>
+<span class="c1"># in particular, the regions name, the</span>
+<span class="c1"># colors of each network in the atlas.</span>
+
+<span class="c1"># Filename of the atlas file.</span>
+<span class="n">atlas_file_name</span> <span class="o">=</span> <span class="s1">'atlas.nii'</span>
+<span class="c1"># Full path to atlas labels file</span>
+<span class="n">atlas_label_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'atlas_labels.csv'</span><span class="p">)</span>
+<span class="c1"># Set the colors of the twelves network in the atlas</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'navy'</span><span class="p">,</span> <span class="s1">'sienna'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'orchid'</span><span class="p">,</span> <span class="s1">'indianred'</span><span class="p">,</span> <span class="s1">'olive'</span><span class="p">,</span>
+          <span class="s1">'goldenrod'</span><span class="p">,</span> <span class="s1">'turquoise'</span><span class="p">,</span> <span class="s1">'darkslategray'</span><span class="p">,</span> <span class="s1">'limegreen'</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span>
+          <span class="s1">'lightpink'</span><span class="p">]</span>
+<span class="c1"># Number of regions in each of the network</span>
+<span class="n">networks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="c1"># We can call fetch_atlas to retrieve useful information about the atlas</span>
+<span class="n">atlas_nodes</span><span class="p">,</span> <span class="n">labels_regions</span><span class="p">,</span> <span class="n">labels_colors</span><span class="p">,</span> <span class="n">n_nodes</span> <span class="o">=</span> <span class="n">atlas</span><span class="o">.</span><span class="n">fetch_atlas</span><span class="p">(</span>
+    <span class="n">atlas_folder</span><span class="o">=</span><span class="n">home_directory</span><span class="p">,</span>
+    <span class="n">atlas_name</span><span class="o">=</span><span class="n">atlas_file_name</span><span class="p">,</span>
+    <span class="n">network_regions_number</span><span class="o">=</span><span class="n">networks</span><span class="p">,</span>
+    <span class="n">colors_labels</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">atlas_label_file</span><span class="p">,</span>
+    <span class="n">normalize_colors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remember that you can generate random colors,
+if you can’t attribute to each regions a functional
+network. Please see the docstring
+of the <a class="reference internal" href="../../conpagnon.data_handling.html#module-conpagnon.data_handling.atlas" title="conpagnon.data_handling.atlas"><code class="xref py py-class docutils literal notranslate"><span class="pre">conpagnon.data_handling.atlas</span></code></a> class.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now, we can fetch the t-value matrix, thresholded</span>
+<span class="c1"># at the alpha level (.O5), plotting only the t-value</span>
+<span class="c1"># corresponding to statically significant brain regions</span>
+<span class="n">significant_t_value_matrix</span> <span class="o">=</span> <span class="n">results_dictionary</span><span class="p">[</span><span class="s1">'fdr_bh'</span><span class="p">][</span><span class="s1">'results'</span><span class="p">][</span><span class="s1">'language_performance'</span><span class="p">][</span><span class="s1">'significant tvalues'</span><span class="p">]</span>
+
+<span class="c1"># Plot of the t-value matrix</span>
+<span class="n">plot_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="o">=</span><span class="n">significant_t_value_matrix</span><span class="p">,</span>
+            <span class="n">labels_colors</span><span class="o">=</span><span class="n">labels_colors</span><span class="p">,</span>
+            <span class="n">vertical_labels</span><span class="o">=</span><span class="n">labels_regions</span><span class="p">,</span>
+            <span class="n">horizontal_labels</span><span class="o">=</span><span class="n">labels_regions</span><span class="p">,</span>
+            <span class="n">linecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
+            <span class="n">linewidths</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">'Significant brain regions for language performance'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_linear_regression_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_linear_regression_002.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/03_Basic_Statistical_Analyses/plot_linear_regression.py:243: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A blue coded value indicate a anti-correlated behavior
+with the variable you plotted, and a red coded value
+indicate a correlated behavior. You can plot the corresponding
+t-value matrix for all the variable included in your model.</p>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.710 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-03-basic-statistical-analyses-plot-linear-regression-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9d4330431e0835ddf9ae166b03c93620/plot_linear_regression.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_linear_regression.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/20b4116c8528ff042b0e20ecd5a16296/plot_linear_regression.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_linear_regression.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="plot_two_groups_classification.html" title="Two groups classification"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Two groups classification </span>
+              </div>
+            </a>
+          
+          
+            <a href="plot_t_test_analysis.html" title="Two samples t-test"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Two samples t-test </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

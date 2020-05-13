@@ -86,7 +86,7 @@ organised_data = data_architecture.fetch_data(
     subjects_id_data_path=subjects_ID_data_path,
     root_fmri_data_directory=root_fmri_data_directory,
     groupes=groupes,
-    individual_counfounds_directory=None
+    individual_confounds_directory=None
 )
 
 # kinds

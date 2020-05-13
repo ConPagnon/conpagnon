@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
   
    
-  
-  <script src="_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "_static/versions.json",
-        target_loc = "../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -199,6 +202,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -207,17 +211,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      <a href="examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -231,6 +230,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
@@ -272,9 +272,9 @@
 <p>Created on Thu Sep 28 09:58:24 2017</p>
 <p>@author: Dhaif BEKHA</p>
 <p>Useful operation on arrays.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.append_masks">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">append_masks</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_dictionnary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">discard_diagonal</em>, <em class="sig-param">vectorize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#append_masks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.append_masks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">append_masks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_connectivity_dictionnary</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span></em>, <em class="sig-param"><span class="n">vectorize</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#append_masks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.append_masks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append a new key called ‘masked_array’ in the subjects connectivity
 matrices dictionnary and stock as values a boolean mask array accounting
 for discarded rois.</p>
@@ -315,9 +315,9 @@ A new keys is added too, which contain the diagonal array of the mask.</p>
 in the atlas labels file of each subjects, then all roi are included in the
 analysis, and we append a boolean mask array of False values.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.array_rebuilder">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">array_rebuilder</code><span class="sig-paren">(</span><em class="sig-param">vectorized_array</em>, <em class="sig-param">array_type</em>, <em class="sig-param">diagonal=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#array_rebuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.array_rebuilder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">array_rebuilder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_array</span></em>, <em class="sig-param"><span class="n">array_type</span></em>, <em class="sig-param"><span class="n">diagonal</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#array_rebuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.array_rebuilder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reconstruct a square array assuming a it is symmetric</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -348,9 +348,9 @@ Choices are: numeric, bool.</p></li>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.check_2d">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">check_2d</code><span class="sig-paren">(</span><em class="sig-param">numpy_array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#check_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.check_2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">check_2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">numpy_array</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#check_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.check_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if an array is two dimensional.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -360,9 +360,9 @@ Choices are: numeric, bool.</p></li>
 <p>:raises ValueError : if the passed array is NOT two dimensional, a Value Error:
 :raises is raised.:</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.concatenate_imgs_in_order">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">concatenate_imgs_in_order</code><span class="sig-paren">(</span><em class="sig-param">imgs_directory</em>, <em class="sig-param">index_roi_number</em>, <em class="sig-param">filename</em>, <em class="sig-param">save_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#concatenate_imgs_in_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.concatenate_imgs_in_order" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">concatenate_imgs_in_order</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">imgs_directory</span></em>, <em class="sig-param"><span class="n">index_roi_number</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">save_directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#concatenate_imgs_in_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.concatenate_imgs_in_order" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate 3D NifTi images into a single 4D NifTi files, given a user order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -393,9 +393,9 @@ we use it to search the entire path corresponding to the file, and append it in 
 containing all the path to the files in the right order before concatenation. The pattern
 is simply a number in the file name.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.mask_array_std">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">mask_array_std</code><span class="sig-paren">(</span><em class="sig-param">arrays</em>, <em class="sig-param">masked_array</em>, <em class="sig-param">axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#mask_array_std"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.mask_array_std" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">mask_array_std</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arrays</span></em>, <em class="sig-param"><span class="n">masked_array</span></em>, <em class="sig-param"><span class="n">axis</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#mask_array_std"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.mask_array_std" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the standard deviation of a ndimensional numpy array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -421,9 +421,9 @@ True for masked values, False elsewhere.</p></li>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.masked_arrays_mean">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">masked_arrays_mean</code><span class="sig-paren">(</span><em class="sig-param">arrays</em>, <em class="sig-param">masked_array</em>, <em class="sig-param">axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#masked_arrays_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.masked_arrays_mean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">masked_arrays_mean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arrays</span></em>, <em class="sig-param"><span class="n">masked_array</span></em>, <em class="sig-param"><span class="n">axis</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#masked_arrays_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.masked_arrays_mean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the arithmetic mean of a ndimensional numpy masked array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -449,9 +449,9 @@ True for masked values, False elsewhere.</p></li>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.masked_void_rois_connectivity_matrix">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">masked_void_rois_connectivity_matrix</code><span class="sig-paren">(</span><em class="sig-param">subject_kinds_connectivity</em>, <em class="sig-param">kinds</em>, <em class="sig-param">discard_diagonal=False</em>, <em class="sig-param">vectorize=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#masked_void_rois_connectivity_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.masked_void_rois_connectivity_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">masked_void_rois_connectivity_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subject_kinds_connectivity</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vectorize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#masked_void_rois_connectivity_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.masked_void_rois_connectivity_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a boolean mask array for discarded rois</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -498,14 +498,14 @@ build a numpy masked array that is a couple of a numerical array and a boolean
 array where True are masked values, and False are un-masked values.</p>
 <p>Please refer to the numpy documentation for further details.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.truncate">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">truncate</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.truncate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">truncate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.truncate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Truncates/pads a float f to n decimal places without rounding</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.vec_to_matrix_boolean_mask">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">vec_to_matrix_boolean_mask</code><span class="sig-paren">(</span><em class="sig-param">vectorized_mask</em>, <em class="sig-param">diagonal=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#vec_to_matrix_boolean_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.vec_to_matrix_boolean_mask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">vec_to_matrix_boolean_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_mask</span></em>, <em class="sig-param"><span class="n">diagonal</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#vec_to_matrix_boolean_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.vec_to_matrix_boolean_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reconstruct a ndim symmetrical boolean mask array giving a boolean vectorized mask.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -534,9 +534,9 @@ you first vectorize the ndimensional mask array</p>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.vectorize_boolean_mask">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">vectorize_boolean_mask</code><span class="sig-paren">(</span><em class="sig-param">symmetric_boolean_mask</em>, <em class="sig-param">discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#vectorize_boolean_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.vectorize_boolean_mask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">vectorize_boolean_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symmetric_boolean_mask</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#vectorize_boolean_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.vectorize_boolean_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Vectorize the lower part of symmetric boolean mask.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -563,9 +563,9 @@ if discard_diagonal is False and (…, (n_features - 1) * n_features / 2) otherw
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.array_operation.vectorizer">
-<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">vectorizer</code><span class="sig-paren">(</span><em class="sig-param">numpy_array</em>, <em class="sig-param">discard_diagonal=False</em>, <em class="sig-param">array_type='numeric'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#vectorizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.vectorizer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.array_operation.</code><code class="sig-name descname">vectorizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">numpy_array</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">array_type</span><span class="o">=</span><span class="default_value">'numeric'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/array_operation.html#vectorizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.array_operation.vectorizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Vectorize a numerical or boolean numpy array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -591,14 +591,14 @@ if discard_diagonal is False and (…, (n_features - 1) * n_features / 2) otherw
 <p>Created on Thu Sep 21 13:34:12 2017</p>
 <p>@author: db242421</p>
 <p>Utilitary modules.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.append_pdf">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">append_pdf</code><span class="sig-paren">(</span><em class="sig-param">input</em>, <em class="sig-param">output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#append_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.append_pdf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">append_pdf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em>, <em class="sig-param"><span class="n">output</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#append_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.append_pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append a input pdf file to an output empty pdf file.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.check_directories_existence">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">check_directories_existence</code><span class="sig-paren">(</span><em class="sig-param">root_directory</em>, <em class="sig-param">directories_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#check_directories_existence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.check_directories_existence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">check_directories_existence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_directory</span></em>, <em class="sig-param"><span class="n">directories_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#check_directories_existence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.check_directories_existence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if all directories supplied exist, raises an exception if not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -613,15 +613,15 @@ if discard_diagonal is False and (…, (n_features - 1) * n_features / 2) otherw
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.create_directory">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">create_directory</code><span class="sig-paren">(</span><em class="sig-param">directory</em>, <em class="sig-param">erase_previous=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#create_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.create_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">create_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">erase_previous</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#create_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.create_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a directory, erase it and create it
 if it exist.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.load_object">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">load_object</code><span class="sig-paren">(</span><em class="sig-param">full_path_to_object</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#load_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.load_object" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">load_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">full_path_to_object</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#load_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.load_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a python object saved by a pickler operator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -643,14 +643,14 @@ the .pkl extension.</p>
 </dl>
 </div>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.merge_pdfs">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">merge_pdfs</code><span class="sig-paren">(</span><em class="sig-param">pdfs</em>, <em class="sig-param">output_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#merge_pdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.merge_pdfs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">merge_pdfs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pdfs</span></em>, <em class="sig-param"><span class="n">output_filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#merge_pdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.merge_pdfs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge together a list of pdf files.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.remove_empty_directories">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">remove_empty_directories</code><span class="sig-paren">(</span><em class="sig-param">root_directory</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#remove_empty_directories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.remove_empty_directories" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">remove_empty_directories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_directory</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#remove_empty_directories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.remove_empty_directories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Erase all empty directory at a root location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -658,9 +658,9 @@ the .pkl extension.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.folders_and_files_management.save_object">
-<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">save_object</code><span class="sig-paren">(</span><em class="sig-param">object_to_save</em>, <em class="sig-param">saving_directory</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#save_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.save_object" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.folders_and_files_management.</code><code class="sig-name descname">save_object</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">object_to_save</span></em>, <em class="sig-param"><span class="n">saving_directory</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/folders_and_files_management.html#save_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.folders_and_files_management.save_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a python object in pickle format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -689,9 +689,9 @@ a exhausting list of what object can be saved.</p>
 <p>Created on Fri Oct  6 17:04:32 2017</p>
 <p>@author: db242421 (<a class="reference external" href="mailto:dhaif.bekha%40cea.fr">dhaif<span>.</span>bekha<span>@</span>cea<span>.</span>fr</a>)</p>
 <p>Useful pre-processing step before doing statistical test.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.pre_preprocessing.fisher_transform">
-<code class="sig-prename descclassname">conpagnon.utils.pre_preprocessing.</code><code class="sig-name descname">fisher_transform</code><span class="sig-paren">(</span><em class="sig-param">symmetric_array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/pre_preprocessing.html#fisher_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.pre_preprocessing.fisher_transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.pre_preprocessing.</code><code class="sig-name descname">fisher_transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symmetric_array</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/pre_preprocessing.html#fisher_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.pre_preprocessing.fisher_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Fisher transform of all coefficient in a symmetric array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -715,9 +715,9 @@ formula :</p>
 <p>For <strong>r = 1</strong>, the Fisher transform is not defined, typically on the diagonal
 of connectivity matrices. Then we fill diagonal value with np.nan values.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.utils.pre_preprocessing.stacked_connectivity_matrices">
-<code class="sig-prename descclassname">conpagnon.utils.pre_preprocessing.</code><code class="sig-name descname">stacked_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/pre_preprocessing.html#stacked_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.pre_preprocessing.stacked_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.utils.pre_preprocessing.</code><code class="sig-name descname">stacked_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">kinds</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/utils/pre_preprocessing.html#stacked_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.utils.pre_preprocessing.stacked_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stacked the connectivity matrices for each group and for each kinds.</p>
 <p>If a masked array exist, i.e a ‘masked_array’ key in each subjects dictionnary, we
 stacked them too.</p>
@@ -779,14 +779,14 @@ numbers of regions).</p>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

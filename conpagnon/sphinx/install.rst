@@ -27,7 +27,7 @@ you can run the following command in a command prompt:
 .. code-block:: bash
 
     pip install numpy joblib matplotlib seaborn nibabel pandas patsy scipy statsmodels scipy webcolors PyPDF2
-                webcolors scikit-learn nilearn psutil networkx
+                webcolors scikit-learn nilearn psutil networkx tabulate xlrd
 
 Installation from PyPi
 ----------------------

@@ -60,17 +60,6 @@ class MUOLS:
     -------
     """
 
-    def _block_slices(self, dim_size, block_size):
-        """Generator that yields slice objects for indexing into
-        sequential blocks of an array along a particular axis
-        """
-        count = 0
-        while True:
-            yield slice(count, count + block_size, 1)
-            count += block_size
-            if count >= dim_size:
-                raise StopIteration
-
     def __init__(self, Y, X):
         self.coef = None
         if X.shape[0] != Y.shape[0]:
@@ -96,7 +85,8 @@ class MUOLS:
             max_cols = p
         self.coef = np.zeros((q, p))
         self.err_ss = np.zeros(p)
-        for pp in self._block_slices(p, max_cols):
+        #for pp in self._block_slices(p, max_cols):
+        for pp in range(p):
             if isinstance(self.Y, np.memmap):
                 Y_block = self.Y[:, pp].copy()  # copy to force a read
             else: Y_block = self.Y[:, pp]
@@ -158,6 +148,7 @@ class MUOLS:
         p_vals_ = list()
         df_ = list()
         for contrast in contrasts:
+            # contrast = contrasts[0]
             #ccontrasts = np.asarray(contrasts)
             # t = c'beta / std(c'beta)
             # std(c'beta) = sqrt(var_err (c'X+)(X+'c))
@@ -202,10 +193,10 @@ class MUOLS:
         >>> tvals, maxT, df = mod.t_test_maxT(contrasts, two_tailed=True)
         """
         #contrast = [0, 1] + [0] * (X.shape[1] - 2)
+        contrasts = np.atleast_2d(np.asarray(contrasts))
         tvals, _, df = self.t_test(contrasts=contrasts, pval=False, **kwargs)
         max_t = list()
         for i in range(nperms):
-            
             perm_idx = np.random.permutation(self.X.shape[0])
             Xp = self.X[perm_idx, :]
             muols = MUOLS(self.Y, Xp).fit(block=self.block,
@@ -221,7 +212,7 @@ class MUOLS:
         pvalues = np.array(
             [np.array([np.sum(max_t[:, con] >= t) for t in tvals_[con, :]])\
                 / float(nperms) for con in range(contrasts.shape[0])])
-        return tvals, pvalues, df, max_t
+        return tvals, pvalues, df
 
     def t_test_minP(self, contrasts, nperms=10000, two_tailed=True, **kwargs):
         """Correct for multiple comparisons using minP procedure.
@@ -273,11 +264,11 @@ class MUOLS:
         return tvals, pvalues, df
 
     def f_test(self, contrast, pval=False):
-        from sklearn.utils import array2d
+        # from sklearn.utils import array2d
         #Ypred = self.predict(self.X)
         #betas = self.coef
         #ss_errors = np.sum((self.Y - self.y_hat) ** 2, axis=0)
-        C1 = array2d(contrast).T
+        C1 = np.atleast_2d(contrast).T
         n, p = self.X.shape
         #Xpinv = scipy.linalg.pinv(X)
         rank_x = np.linalg.matrix_rank(self.pinv)

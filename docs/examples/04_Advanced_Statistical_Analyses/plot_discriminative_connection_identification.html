@@ -1,0 +1,1283 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="../../_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="../../_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="../../_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#3f51b5">
+  <script src="../../_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Discriminative connection identification &#8212; ConPagnon 2.0</title>
+    <link rel="stylesheet" href="../../_static/material.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Connectome Predictive Modelling" href="plot_connectome_predictive_modelling.html" />
+    <link rel="prev" title="Statistics in the tangent space" href="plot_individual_statistics_in_the_tangent_space.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=red data-md-color-accent=blue>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples/04_Advanced_Statistical_Analyses/plot_discriminative_connection_identification" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../index.html" title="ConPagnon 2.0"
+           class="md-header-nav__button md-logo">
+          
+              <img src="../../_static/logo_conpagnon_small_header.png" height="26"
+                   alt="ConPagnon 2.0 logo">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">ConPagnon 2.0</span>
+          <span class="md-header-nav__topic"> Discriminative connection identification </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="../../search.html" method="GET" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder="Search"
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="../../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../../_static/versions.json",
+        target_loc = "../../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../../index.html" title="ConPagnon 2.0" class="md-nav__button md-logo">
+      
+        <img src="../../_static/logo_conpagnon_small_header.png" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="../../index.html"
+       title="ConPagnon 2.0">ConPagnon 2.0</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/ConPagnon/conpagnon" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    ConPagnon
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <a href="../../install.html" class="md-nav__link">Installing ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="plot_individual_statistics_in_the_tangent_space.html" class="md-nav__link">Statistics in the tangent space</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Discriminative connection identification </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Discriminative connection identification</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification--page-root" class="md-nav__link">Discriminative connection identification</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-data" class="md-nav__link">Load data</a>
+        </li>
+        <li class="md-nav__item"><a href="#understand-and-analyze-the-results-of-a-classifier" class="md-nav__link">Understand and analyze the results of a classifier</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#discriminative-connection-identification-the-algorithm" class="md-nav__link">Discriminative connection identification: the algorithm</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/04_Advanced_Statistical_Analyses/plot_discriminative_connection_identification.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_connectome_predictive_modelling.html" class="md-nav__link">Connectome Predictive Modelling</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification--page-root" class="md-nav__link">Discriminative connection identification</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#modules-import" class="md-nav__link">Modules import</a>
+        </li>
+        <li class="md-nav__item"><a href="#load-data" class="md-nav__link">Load data</a>
+        </li>
+        <li class="md-nav__item"><a href="#understand-and-analyze-the-results-of-a-classifier" class="md-nav__link">Understand and analyze the results of a classifier</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#discriminative-connection-identification-the-algorithm" class="md-nav__link">Discriminative connection identification: the algorithm</a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/04_Advanced_Statistical_Analyses/plot_discriminative_connection_identification.rst.txt">Show Source</a> </li>
+
+<li id="searchbox" class="md-nav__item"></li>
+
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+
+<span id="sphx-glr-examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification-py"></span><h1 id="examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification--page-root">Discriminative connection identification<a class="headerlink" href="#examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification--page-root" title="Permalink to this headline">¶</a></h1>
+<p><strong>What you’ll learn</strong>: Build a model
+around the weight of a linear classifier
+to identify the discriminant connections.</p>
+<p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
+
+<h2 id="retrieve-the-example-dataset">Retrieve the example dataset<a class="headerlink" href="#retrieve-the-example-dataset" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will work directly on a pre-computed dictionary,
+that contain two set of connectivity matrices, from two different groups.
+The first group, called <em>controls</em> is a set of connectivity matrices from healthy
+seven years old children, and the second group called <em>patients</em>, is a set of
+connectivity matrices from seven years old children who have suffered a stroke.
+You can download the dictionary use in this example
+<a class="reference external" href="https://www.dropbox.com/s/kwdrx4liauo10kr/raw_subjects_connectivity_matrices.pkl?dl=1">here</a>.
+Finally, we will plot some results on a glass brain, and we will need
+the nodes coordinates of the atlas regions in which the signals were extracted.
+You can download the <a class="reference external" href="https://www.dropbox.com/s/wwmg0a4g3cjnfvv/atlas.nii?dl=1">atlas</a>,
+and the corresponding <a class="reference external" href="https://www.dropbox.com/s/3wuzwn14l7nksvy/atlas_labels.csv?dl=1">labels</a>.
+As usual, we will suppose that all needed files are in your <strong>home directory</strong>.</p>
+
+
+<h2 id="modules-import">Modules import<a class="headerlink" href="#modules-import" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.folders_and_files_management</span> <span class="kn">import</span> <span class="n">load_object</span>
+<span class="kn">from</span> <span class="nn">conpagnon.machine_learning.features_indentification</span> <span class="kn">import</span> <span class="n">discriminative_brain_connection_identification</span><span class="p">,</span> \
+    <span class="n">find_top_features</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">conpagnon.data_handling</span> <span class="kn">import</span> <span class="n">atlas</span>
+<span class="kn">from</span> <span class="nn">conpagnon.utils.array_operation</span> <span class="kn">import</span> <span class="n">array_rebuilder</span>
+<span class="kn">from</span> <span class="nn">nilearn.connectome</span> <span class="kn">import</span> <span class="n">sym_matrix_to_vec</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">StratifiedShuffleSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+
+
+<h2 id="load-data">Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h2>
+<p>We load the <strong>subjects connectivity matrices</strong> dictionary,
+and the <strong>atlas</strong> that you previously downloaded.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch the path of the home directory</span>
+<span class="n">home_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span>
+<span class="c1"># Filename of the atlas file.</span>
+<span class="n">atlas_file_name</span> <span class="o">=</span> <span class="s1">'atlas.nii'</span>
+<span class="c1"># Full path to atlas labels file</span>
+<span class="n">atlas_label_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'atlas_labels.csv'</span><span class="p">)</span>
+<span class="c1"># Set the colors of the twelves network in the atlas</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'navy'</span><span class="p">,</span> <span class="s1">'sienna'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'orchid'</span><span class="p">,</span> <span class="s1">'indianred'</span><span class="p">,</span> <span class="s1">'olive'</span><span class="p">,</span>
+          <span class="s1">'goldenrod'</span><span class="p">,</span> <span class="s1">'turquoise'</span><span class="p">,</span> <span class="s1">'darkslategray'</span><span class="p">,</span> <span class="s1">'limegreen'</span><span class="p">,</span> <span class="s1">'black'</span><span class="p">,</span>
+          <span class="s1">'lightpink'</span><span class="p">]</span>
+<span class="c1"># Number of regions in each of the network</span>
+<span class="n">networks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="c1"># We can call fetch_atlas to retrieve useful information about the atlas</span>
+<span class="n">atlas_nodes</span><span class="p">,</span> <span class="n">labels_regions</span><span class="p">,</span> <span class="n">labels_colors</span><span class="p">,</span> <span class="n">n_nodes</span> <span class="o">=</span> <span class="n">atlas</span><span class="o">.</span><span class="n">fetch_atlas</span><span class="p">(</span>
+    <span class="n">atlas_folder</span><span class="o">=</span><span class="n">home_directory</span><span class="p">,</span>
+    <span class="n">atlas_name</span><span class="o">=</span><span class="n">atlas_file_name</span><span class="p">,</span>
+    <span class="n">network_regions_number</span><span class="o">=</span><span class="n">networks</span><span class="p">,</span>
+    <span class="n">colors_labels</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">atlas_label_file</span><span class="p">,</span>
+    <span class="n">normalize_colors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># We now fetch the subjects connectivity dictionary</span>
+
+<span class="c1"># Load the dictionary containing the connectivity matrices</span>
+<span class="n">subjects_connectivity_matrices</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span>
+    <span class="n">full_path_to_object</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="s1">'raw_subjects_connectivity_matrices.pkl'</span><span class="p">))</span>
+<span class="c1"># Groups names in the dictionary</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+</div>
+
+
+<h2 id="understand-and-analyze-the-results-of-a-classifier">Understand and analyze the results of a classifier<a class="headerlink" href="#understand-and-analyze-the-results-of-a-classifier" title="Permalink to this headline">¶</a></h2>
+<p>In the basic section, we saw an example of <strong>two groups classification</strong>
+using a classifier, a <a href="#id1"><span class="problematic" id="id2">**</span></a>S**upport <a href="#id3"><span class="problematic" id="id4">**</span></a>V**ector <a href="#id5"><span class="problematic" id="id6">**</span></a>M**achine (SVM) with a
+linear kernel. Please, do not hesitate to go back to the two groups
+classification tutorial if needed. Briefly, with a SVM we perform
+a classification task between patients and controls, with a
+Stratified and Shuffle cross-validation scheme. This task
+is performed for the correlation, partial correlation and
+tangent space connectivity matrices. We compute and store
+the accuracy for each of those connectivity metric.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Labels vectors: 0 for the first class, 1 for the second. Those</span>
+<span class="c1"># 1, and 0 are the label for each subjects.</span>
+<span class="n">class_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))))</span>
+
+<span class="c1"># total number of subject</span>
+<span class="n">n_subjects</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_labels</span><span class="p">)</span>
+
+<span class="c1"># Stratified Shuffle and Split cross validation:</span>
+<span class="c1"># we initialize the cross validation object</span>
+<span class="c1"># and set the split to 10000.</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                            <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Instance initialization of SVM classifier with a linear kernel</span>
+<span class="n">svc</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span>
+
+<span class="c1"># Compare the classification accuracy across multiple metric</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'tangent'</span><span class="p">,</span> <span class="s1">'correlation'</span><span class="p">,</span> <span class="s1">'partial correlation'</span><span class="p">]</span>
+<span class="n">mean_scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># To decrease the computation time you</span>
+<span class="c1"># can distribute the computation on</span>
+<span class="c1"># multiple core, here, 4.</span>
+<span class="n">n_jobs</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1"># Final mean accuracy scores will be stored in a dictionary</span>
+<span class="n">mean_score_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+    <span class="c1"># We take the lower triangle of each matrices, and vectorize it to</span>
+    <span class="c1"># produce a classical machine learning data array of shape (n_subjects, n_features)</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="n">subject</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span>
+                                           <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span>
+                                           <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()],</span>
+                                          <span class="p">),</span> <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Evaluate classification performance on </span><span class="si">{}</span><span class="s1"> with '</span>
+          <span class="s1">'</span><span class="si">{}</span><span class="s1"> observations and </span><span class="si">{}</span><span class="s1"> features...'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">n_subjects</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># We call cross_val_score, a convenient scikit-learn</span>
+    <span class="c1"># wrapper that will perform the classification task</span>
+    <span class="c1"># with the desired cross-validation scheme.</span>
+    <span class="n">cv_scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+                                <span class="n">y</span><span class="o">=</span><span class="n">class_labels</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                                <span class="n">scoring</span><span class="o">=</span><span class="s1">'accuracy'</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+    <span class="c1"># We compute the mean cross-validation score</span>
+    <span class="c1"># over all the splits</span>
+    <span class="n">mean_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cv_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="c1"># We store the mean accuracy score</span>
+    <span class="c1"># in a dictionary.</span>
+    <span class="n">mean_score_dict</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Done for </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="p">))</span>
+
+<span class="c1"># Lets print out the accuracy for each metric</span>
+<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> accuracy: </span><span class="si">{}</span><span class="s1"> %'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">mean_score_dict</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Evaluate classification performance on tangent with 53 observations and 2556 features...
+Done for tangent
+Evaluate classification performance on correlation with 53 observations and 2556 features...
+Done for correlation
+Evaluate classification performance on partial correlation with 53 observations and 2556 features...
+Done for partial correlation
+tangent accuracy: 89.69000000000001 %
+correlation accuracy: 82.03833333333334 %
+partial correlation accuracy: 87.58666666666667 %
+</pre></div>
+</div>
+<p>We input a set of <code class="docutils literal notranslate"><span class="pre">2556</span></code> features, i.e, the connectivity coefficients,
+to the classifier. In the training phase, the classifier give a
+<strong>weight</strong> to each input features. It’s very common that
+the features have not the same importance in the decision
+whether for a given subject it’s a patient or a control
+subject. If we simplify, some feature are “not so important”
+in the final decision, and they have a “small weight” compared
+to some other feature that are more important in the final
+decision, with higher weight. The idea of the algorithm
+that we detailed below is explore the classifier weight
+and build a statistic for those weight to find the
+more important one.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>We will use the <strong>tangent space</strong> metric
+only for the rest of this tutorial. The tangent
+space metric is better suited for classification
+task, and in general, to pinpoint individual
+difference in functional connectivity. We detailed
+why in another tutorial of the advanced examples.
+Do not hesitate to dive deeper in the subject if
+you need to.</p>
+</div>
+
+<h3 id="discriminative-connection-identification-the-algorithm">Discriminative connection identification: the algorithm<a class="headerlink" href="#discriminative-connection-identification-the-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>The presented algorithm was created by Bertrand Ng &amp; al,
+and we encourage you to read the full paper with a deeper
+dive in the theory
+<a class="reference external" href="https://www.dropbox.com/s/9z3gg8uqnmwvcl6/Transport%20on%20Riemannian%20Manifold.pdf?dl=1">here</a>.
+Let’s consider we have <span class="math notranslate nohighlight">\({ d\Sigma^{1} ... d\Sigma^{S} }\)</span>, the tangent matrices
+of the whole cohort (patients and controls), with the corresponding labels vector
+<span class="math notranslate nohighlight">\([0, 0, ..., 1, 1 ,1]\)</span>, coding <span class="math notranslate nohighlight">\(0\)</span> for a control subject, and <span class="math notranslate nohighlight">\(1\)</span>
+for a patient. We first compute the classification for this set of tangent matrices
+and labels, which results in a vector of weights,  <span class="math notranslate nohighlight">\(\omega\)</span>. We then,
+<strong>randomly permute</strong> <span class="math notranslate nohighlight">\(N\)</span> times the labels vector. Then, for each
+permutation, we perform the classifier learning on a bootstrapped sample
+of size  <span class="math notranslate nohighlight">\(B\)</span>. So, for each permutation, for each bootstrapped sample
+we compute the classifier weights  <span class="math notranslate nohighlight">\(\omega_{n, b}\)</span> with
+<span class="math notranslate nohighlight">\(b \in {1, ... B}\)</span> and  <span class="math notranslate nohighlight">\(n \in {1, ... N}\)</span>. For each
+permutation we ended up with a matrix weight of size  <span class="math notranslate nohighlight">\((B, n_{features})\)</span>.
+We then compute the <strong>normalized weight over the bootstrapped sample</strong>:</p>
+<div class="math notranslate nohighlight">
+\[\Omega_{n} = \frac{1}{B} \frac{\sum_{b=1}^{B}\omega_{n, b}}{std(\omega_{n, b})}\]</div>
+<p>We then, store the <strong>maximum</strong> normalized weight for the permutation <span class="math notranslate nohighlight">\(n\)</span>.
+This is the <strong>null distribution of maximum normalized weight mean</strong>.
+After the  <span class="math notranslate nohighlight">\(N\)</span> permutation we compute
+<span class="math notranslate nohighlight">\(\Omega_{0} = \frac{1}{B} \frac{\sum_{b=1}^{B}\omega_{b}}{std(\omega_{b})}\)</span>
+which is simply the normalized weight without permutations. Giving the We finally declare a weight
+of <span class="math notranslate nohighlight">\(\Omega_{0}\)</span> significant if they are greater than the 99 th percentile of the
+null distribution, corresponding to a p-value threshold of 0.01. We use the same
+classifier as the classification task above, that is, a SVM with a linear kernel.
+We keep the regularization term <strong>C</strong> to the default value one.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the <strong>negative weights</strong>, we store the <strong>minimum</strong>
+of the normalized weight mean instead of the maximum.
+In the end, you will end up with a set of significant
+negative weight, and a set of positive one. This
+way of assessing significance is often called
+maxT (or minT)</p>
+</div>
+<p>We build a function that conveniently wrap all the
+detailed step above,
+<a class="reference internal" href="../../conpagnon.machine_learning.html#conpagnon.machine_learning.features_indentification.discriminative_brain_connection_identification" title="conpagnon.machine_learning.features_indentification.discriminative_brain_connection_identification"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.machine_learning.features_indentification.discriminative_brain_connection_identification()</span></code></a>.
+This function parallelize the computation of the bootstrapped weights. In this function, you can also
+choose a parametric correction like FDR for example. I encourage you to look up to the docstring before
+using it. We write all the useful results in a report, including the top weight labels.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stacked the 2D array of connectivity matrices for each subjects</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="n">groups</span>
+<span class="n">metric</span> <span class="o">=</span> <span class="s1">'tangent'</span>
+
+<span class="c1"># Vectorize the connectivity matrices</span>
+<span class="n">vectorized_connectivity_matrices</span> <span class="o">=</span> <span class="n">sym_matrix_to_vec</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">class_name</span>
+              <span class="ow">in</span> <span class="n">class_names</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]),</span>
+    <span class="n">discard_diagonal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Stacked connectivity matrices</span>
+<span class="n">stacked_connectivity_matrices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="n">s</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span>
+                                          <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">class_names</span>
+                                          <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+<span class="c1"># Compute mean connectivity matrices for each class</span>
+<span class="c1"># for plotting purpose only</span>
+<span class="n">first_class_mean_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">s</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>
+                                    <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">second_class_mean_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">s</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>
+                                     <span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Directory where you wan to save the report</span>
+<span class="n">save_directory</span> <span class="o">=</span> <span class="n">home_directory</span>
+
+<span class="c1"># Labels vectors</span>
+<span class="n">class_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+                          <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subjects_connectivity_matrices</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))))</span>
+
+<span class="n">classifier_weights</span><span class="p">,</span> <span class="n">weight_null_distribution</span><span class="p">,</span> <span class="n">p_values_corrected</span> <span class="o">=</span> \
+    <span class="n">discriminative_brain_connection_identification</span><span class="p">(</span>
+        <span class="n">vectorized_connectivity_matrices</span><span class="o">=</span><span class="n">vectorized_connectivity_matrices</span><span class="p">,</span>
+        <span class="n">class_labels</span><span class="o">=</span><span class="n">class_labels</span><span class="p">,</span>
+        <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span>
+        <span class="n">save_directory</span><span class="o">=</span><span class="n">save_directory</span><span class="p">,</span>
+        <span class="n">n_permutations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">bootstrap_number</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">features_labels</span><span class="o">=</span><span class="n">labels_regions</span><span class="p">,</span>
+        <span class="n">features_colors</span><span class="o">=</span><span class="n">labels_colors</span><span class="p">,</span>
+        <span class="n">n_nodes</span><span class="o">=</span><span class="n">n_nodes</span><span class="p">,</span>
+        <span class="n">atlas_nodes</span><span class="o">=</span><span class="n">atlas_nodes</span><span class="p">,</span>
+        <span class="n">first_class_mean_matrix</span><span class="o">=</span><span class="n">first_class_mean_matrix</span><span class="p">,</span>
+        <span class="n">second_class_mean_matrix</span><span class="o">=</span><span class="n">second_class_mean_matrix</span><span class="p">,</span>
+        <span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">top_features_number</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">write_report</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">correction</span><span class="o">=</span><span class="s1">'fdr_bh'</span><span class="p">,</span>
+        <span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Check Bootstrapped class labels for each permutation...
+Verifying that bootstrapped sample labels classes contain two labels....
+Done checking bootstrapped class labels for each permutation.
+Performing classification on 200 bootstrap sample...
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.7s finished
+Performing permutation number 0 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 1 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 2 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 3 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 4 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 5 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 6 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 7 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 8 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 9 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 10 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 11 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 12 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 13 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 14 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 15 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 16 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 17 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 18 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 19 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 20 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 21 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 22 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 23 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 24 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 25 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 26 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 27 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 28 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 29 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 30 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 31 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 32 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 33 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 34 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.8s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 35 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 36 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 37 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 38 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 39 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 40 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.8s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 41 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 42 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 43 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.9s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    3.0s finished
+Performing permutation number 44 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.9s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.8s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 45 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 46 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 47 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 48 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 49 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 50 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 51 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 52 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 53 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 54 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 55 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 56 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 57 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 58 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 59 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 60 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 61 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 62 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 63 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 64 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 65 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 66 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 67 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 68 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.8s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 69 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 70 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 71 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 72 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 73 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 74 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 75 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 76 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 77 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.6s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 78 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 79 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 80 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 81 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 82 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 83 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 84 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 85 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 86 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 87 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 88 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.9s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 89 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 90 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 91 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.9s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.9s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    3.0s finished
+Performing permutation number 92 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 93 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 94 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 95 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.9s finished
+Performing permutation number 96 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 97 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 98 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 185 out of 200 | elapsed:    2.7s remaining:    0.2s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Performing permutation number 99 out of 100
+[Parallel(n_jobs=8)]: Using backend MultiprocessingBackend with 8 concurrent workers.
+[Parallel(n_jobs=8)]: Done  52 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=8)]: Done 200 out of 200 | elapsed:    2.8s finished
+Elapsed time for 100 permutations: 5.099279391765594 min
+/home/dhaif/anaconda3/envs/conpagnon/lib/python3.7/site-packages/nilearn/plotting/displays.py:1752: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  if node_color == 'auto':
+</pre></div>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>For the sake of computation time, we
+choose to compute 500 permutation
+on bootstrapped sample of size 200.
+We recommend that you runs at least
+10,000 permutation on 500 bootstrapped
+sample size. We also choose a less conservative
+correction than the original algorithm, a FDR
+correction dealing with the multiple comparison.</p>
+</div>
+<p>We will not recreate exactly all the plot and information
+you’ll find in the final report, but in the section
+below we will first plot the histogram of the top-weight
+for both positive and negative weights. The full report
+is stored in your home directory, and contains all the
+figure, along with a text file with all the analytics
+you’ll need.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find top features</span>
+<span class="c1"># Rebuild a symmetric array from normalized mean weight vector</span>
+<span class="n">normalized_mean_weight_array</span> <span class="o">=</span> <span class="n">array_rebuilder</span><span class="p">(</span><span class="n">classifier_weights</span><span class="p">,</span>
+                                               <span class="s1">'numeric'</span><span class="p">,</span> <span class="n">diagonal</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">))</span>
+<span class="n">normalized_mean_weight_array_top_features</span><span class="p">,</span> <span class="n">top_weights</span><span class="p">,</span> <span class="n">top_coefficients_indices</span><span class="p">,</span> <span class="n">top_weight_labels</span> <span class="o">=</span> \
+    <span class="n">find_top_features</span><span class="p">(</span><span class="n">normalized_mean_weight_array</span><span class="o">=</span><span class="n">normalized_mean_weight_array</span><span class="p">,</span>
+                      <span class="n">labels_regions</span><span class="o">=</span><span class="n">labels_regions</span><span class="p">,</span>
+                      <span class="n">top_features_number</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
+
+<span class="c1"># Convert the array of labels regions into</span>
+<span class="c1"># a list of string for plotting purpose.</span>
+<span class="n">labels_str</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">top_weight_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">labels_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">top_weight_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+<span class="c1"># let's plot the top negative and positive weight</span>
+<span class="c1"># on a bar plot</span>
+<span class="n">weight_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'blue'</span> <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">'red'</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">top_weights</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">top_weights</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="n">top_weights</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">weight_colors</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_weights</span><span class="p">)),</span> <span class="n">labels_str</span><span class="p">,</span>
+           <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+           <span class="n">ha</span><span class="o">=</span><span class="s1">'right'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">())):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">weight_colors</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Features names'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Features weights'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Top </span><span class="si">{}</span><span class="s1"> features ranking of normalized mean weight'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_discriminative_connection_identification_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_discriminative_connection_identification_001.png"/>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/media/dhaif/Samsung_T5/Work/Programs/ConPagnon/examples/04_Advanced_Statistical_Analyses/plot_discriminative_connection_identification.py:331: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The barplot above give you
+a sense of what will be the
+import feature, i.e, <strong>pairs
+of regions</strong>, that will have
+a huge impact on the classification
+decision. For example, it seems that
+the connectivity between the left and
+right supra-marginal gyrus and also
+for the intra-parietal sulcus plays
+an important role in the classification
+decision.</p>
+</div>
+<p>Let’s load the text file generated
+by the analysis. The text file
+should in your home directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the text file:</span>
+<span class="n">text_filename</span> <span class="o">=</span> <span class="s1">'features_identification_patients_controls_0.05_fdr_bh.txt'</span>
+<span class="n">discriminative_connection_identification_report</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home_directory</span><span class="p">,</span> <span class="n">text_filename</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">discriminative_connection_identification_report</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>|    | ------------ Parameters ------------                                                    |
+|---:|:----------------------------------------------------------------------------------------|
+|  0 | Number of subjects: 53                                                                  |
+|  1 | Groups: ['patients', 'controls']                                                        |
+|  2 | Groups labels: [ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1.  1. |
+|  3 | 1.  1.  1.  1.  1.  1.  1.  1.  1. -1. -1. -1. -1. -1. -1. -1. -1. -1.                  |
+|  4 | -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.]                    |
+|  5 | Bootstrap number: 200                                                                   |
+|  6 | Number of permutations: 100                                                             |
+|  7 | Alpha threshold: 0.05                                                                   |
+|  8 | Regularization parameters C: 1                                                          |
+|  9 | ------------ Results ------------                                                       |
+| 10 | ------------ Discriminative connections for negative features weight ------------       |
+| 11 | Precent_Inf_2_R &lt;-&gt; Precent_Inf_2_L, (indices: 0 &lt;-&gt; 1)                                 |
+| 12 | Planum_T_L &lt;-&gt; Planum_T_R, (indices: 2 &lt;-&gt; 3)                                           |
+| 13 | Precent_Inf_1_R &lt;-&gt; POS_Sup_R, (indices: 5 &lt;-&gt; 12)                                      |
+| 14 | Front_Op_L &lt;-&gt; Front_Op_R, (indices: 22 &lt;-&gt; 29)                                         |
+| 15 | SMG_L &lt;-&gt; SMG_R, (indices: 23 &lt;-&gt; 28)                                                   |
+| 16 | BG_1_L &lt;-&gt; BG_1_R, (indices: 30 &lt;-&gt; 31)                                                 |
+| 17 | IPS_Int_L &lt;-&gt; IPS_Int_R, (indices: 54 &lt;-&gt; 57)                                           |
+| 18 | IPS_Sup_L &lt;-&gt; IPS_Sup_R, (indices: 59 &lt;-&gt; 60)                                           |
+| 19 | ------------ Discriminative connections for positive features weight ------------       |
+| 20 | Precent_Inf_2_L &lt;-&gt; Precent_Inf_1_L, (indices: 1 &lt;-&gt; 4)                                 |
+| 21 | POS_Sup_L &lt;-&gt; Precun_Inf_L, (indices: 13 &lt;-&gt; 36)                                        |
+| 22 | CentSulc_Sup_R &lt;-&gt; Cing_Ant_R, (indices: 19 &lt;-&gt; 33)                                     |
+| 23 | SMG_L &lt;-&gt; IPS_Sup_L, (indices: 23 &lt;-&gt; 59)                                               |
+| 24 | Cun_Sup_R &lt;-&gt; Ling_R, (indices: 40 &lt;-&gt; 53)                                              |
+</pre></div>
+</div>
+<p>In the text report, you find the full list of the
+regions that are the most important in the
+decision, that is, the regions which the
+p-value associated to the attached weight
+that are significant. In the <strong>pdf report</strong>
+you will find a glass brain plot with
+the significant positive and negative
+regions.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 7 minutes  16.379 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9ad45b3b28d274810a8a3b14e372f864/plot_discriminative_connection_identification.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_discriminative_connection_identification.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/1ba2d505e8afa3d2a97b1ebdf34adabb/plot_discriminative_connection_identification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_discriminative_connection_identification.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
+
+
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="plot_individual_statistics_in_the_tangent_space.html" title="Statistics in the tangent space"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> Statistics in the tangent space </span>
+              </div>
+            </a>
+          
+          
+            <a href="plot_connectome_predictive_modelling.html" title="Connectome Predictive Modelling"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Connectome Predictive Modelling </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
+              
+          </div>
+            Last updated on
+              May 13, 2020.
+            <br/>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../../_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

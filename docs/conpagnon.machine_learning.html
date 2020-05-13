@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
   
    
-  
-  <script src="_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "_static/versions.json",
-        target_loc = "../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -199,6 +202,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -207,17 +211,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      <a href="examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -231,6 +230,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
@@ -284,13 +284,13 @@ named connectome predictive modelling is adapted from
 </dl>
 <p>predict individual behavior from brain connectivity, Shen et al.</p>
 <p>author: Dhaif BEKHA.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.CPM_method.compute_summary_subjects_summary_values">
-<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">compute_summary_subjects_summary_values</code><span class="sig-paren">(</span><em class="sig-param">training_connectivity_matrices</em>, <em class="sig-param">significance_selection_threshold</em>, <em class="sig-param">R_mat</em>, <em class="sig-param">P_mat</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#compute_summary_subjects_summary_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.compute_summary_subjects_summary_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">compute_summary_subjects_summary_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">training_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">significance_selection_threshold</span></em>, <em class="sig-param"><span class="n">R_mat</span></em>, <em class="sig-param"><span class="n">P_mat</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#compute_summary_subjects_summary_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.compute_summary_subjects_summary_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.CPM_method.fit_model_on_training_set">
-<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">fit_model_on_training_set</code><span class="sig-paren">(</span><em class="sig-param">negative_edges_summary_values</em>, <em class="sig-param">positive_edges_summary_values</em>, <em class="sig-param">training_set_behavioral_score</em>, <em class="sig-param">add_predictive_variables=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#fit_model_on_training_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.fit_model_on_training_set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">fit_model_on_training_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">negative_edges_summary_values</span></em>, <em class="sig-param"><span class="n">positive_edges_summary_values</span></em>, <em class="sig-param"><span class="n">training_set_behavioral_score</span></em>, <em class="sig-param"><span class="n">add_predictive_variables</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#fit_model_on_training_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.fit_model_on_training_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a linear model on the training set for positive and negative model, with behavioral score
 as variable.</p>
 <dl class="field-list simple">
@@ -307,9 +307,9 @@ be given. The variables wil be used in the predictive model.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.CPM_method.predict_behavior">
-<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predict_behavior</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">behavioral_scores</em>, <em class="sig-param">selection_predictor_method='correlation'</em>, <em class="sig-param">significance_selection_threshold=0.01</em>, <em class="sig-param">confounding_variables_matrix=None</em>, <em class="sig-param">add_predictive_variables=None</em>, <em class="sig-param">verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predict_behavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predict_behavior" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predict_behavior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">behavioral_scores</span></em>, <em class="sig-param"><span class="n">selection_predictor_method</span><span class="o">=</span><span class="default_value">'correlation'</span></em>, <em class="sig-param"><span class="n">significance_selection_threshold</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">confounding_variables_matrix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_predictive_variables</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predict_behavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predict_behavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict behavior from matrix connectivity with a simple linear model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -341,17 +341,17 @@ and positive summary features.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.CPM_method.predictor_selection_pcorrelation">
-<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predictor_selection_pcorrelation</code><span class="sig-paren">(</span><em class="sig-param">training_connectivity_matrices</em>, <em class="sig-param">training_set_behavioral_scores</em>, <em class="sig-param">training_set_confounding_variables</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predictor_selection_pcorrelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predictor_selection_pcorrelation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predictor_selection_pcorrelation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">training_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">training_set_behavioral_scores</span></em>, <em class="sig-param"><span class="n">training_set_confounding_variables</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predictor_selection_pcorrelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predictor_selection_pcorrelation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.CPM_method.predictors_selection_correlation">
-<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predictors_selection_correlation</code><span class="sig-paren">(</span><em class="sig-param">training_connectivity_matrices</em>, <em class="sig-param">training_set_behavioral_scores</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predictors_selection_correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predictors_selection_correlation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predictors_selection_correlation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">training_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">training_set_behavioral_scores</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predictors_selection_correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predictors_selection_correlation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.CPM_method.predictors_selection_linear_model">
-<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predictors_selection_linear_model</code><span class="sig-paren">(</span><em class="sig-param">training_connectivity_matrices</em>, <em class="sig-param">training_confound_variable_matrix</em>, <em class="sig-param">training_set_behavioral_score</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predictors_selection_linear_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predictors_selection_linear_model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.CPM_method.</code><code class="sig-name descname">predictors_selection_linear_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">training_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">training_confound_variable_matrix</span></em>, <em class="sig-param"><span class="n">training_set_behavioral_score</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/CPM_method.html#predictors_selection_linear_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.CPM_method.predictors_selection_linear_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Relate each edges of subjects connectivity matrices in the training set
 with a behavioral scores using a linear model</p>
 </dd></dl>
@@ -360,9 +360,9 @@ with a behavioral scores using a linear model</p>
 <span id="conpagnon-machine-learning-classification-module"></span><h2 id="module-conpagnon.machine_learning.classification">conpagnon.machine_learning.classification module<a class="headerlink" href="#module-conpagnon.machine_learning.classification" title="Permalink to this headline">¶</a></h2>
 <p>Created on Fri Oct  6 13:40:49 2017</p>
 <p>@author: db242421 (<a class="reference external" href="mailto:dhaif.bekha%40cea.fr">dhaif<span>.</span>bekha<span>@</span>cea<span>.</span>fr</a>)</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.classification.two_groups_classification">
-<code class="sig-prename descclassname">conpagnon.machine_learning.classification.</code><code class="sig-name descname">two_groups_classification</code><span class="sig-paren">(</span><em class="sig-param">pooled_groups_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">labels</em>, <em class="sig-param">n_splits</em>, <em class="sig-param">test_size</em>, <em class="sig-param">train_size</em>, <em class="sig-param">C=1.0</em>, <em class="sig-param">dual=True</em>, <em class="sig-param">fit_intercept=True</em>, <em class="sig-param">loss='squared_hinge'</em>, <em class="sig-param">max_iter=1000</em>, <em class="sig-param">penalty='l2'</em>, <em class="sig-param">random_state=0</em>, <em class="sig-param">scoring='accuracy'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/classification.html#two_groups_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.classification.two_groups_classification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.classification.</code><code class="sig-name descname">two_groups_classification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pooled_groups_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">n_splits</span></em>, <em class="sig-param"><span class="n">test_size</span></em>, <em class="sig-param"><span class="n">train_size</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">dual</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fit_intercept</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">loss</span><span class="o">=</span><span class="default_value">'squared_hinge'</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">penalty</span><span class="o">=</span><span class="default_value">'l2'</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">scoring</span><span class="o">=</span><span class="default_value">'accuracy'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/classification.html#two_groups_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.classification.two_groups_classification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform binary classification on two classes using connectivity coefficient as features.</p>
 <p>Perform classification  on two labels classes using a support vector machine with a linear kernel function.</p>
 <dl class="field-list simple">
@@ -428,9 +428,9 @@ algorithm.</p>
 
 
 <span id="conpagnon-machine-learning-cpm-predict-behavior-module"></span><h2 id="module-conpagnon.machine_learning.cpm_predict_behavior">conpagnon.machine_learning.cpm_predict_behavior module<a class="headerlink" href="#module-conpagnon.machine_learning.cpm_predict_behavior" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.cpm_predict_behavior.predict_behavior">
-<code class="sig-prename descclassname">conpagnon.machine_learning.cpm_predict_behavior.</code><code class="sig-name descname">predict_behavior</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">behavioral_scores</em>, <em class="sig-param">selection_predictor_method='correlation'</em>, <em class="sig-param">significance_selection_threshold=0.01</em>, <em class="sig-param">confounding_variables=None</em>, <em class="sig-param">confounding_variables_kwarg=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/cpm_predict_behavior.html#predict_behavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.cpm_predict_behavior.predict_behavior" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.cpm_predict_behavior.</code><code class="sig-name descname">predict_behavior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">behavioral_scores</span></em>, <em class="sig-param"><span class="n">selection_predictor_method</span><span class="o">=</span><span class="default_value">'correlation'</span></em>, <em class="sig-param"><span class="n">significance_selection_threshold</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">confounding_variables</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">confounding_variables_kwarg</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/cpm_predict_behavior.html#predict_behavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.cpm_predict_behavior.predict_behavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Connectome Predictive Modelling pipeline. This function select the predictors,
 train/test a linear model on the selected predictors following a Leave One Out cross
 validation scheme.</p>
@@ -485,9 +485,9 @@ brain decoding”, IEEE Transactions on Medical Imaging, 2015.</p>
 <p>Author: Dhaif BEKHA.</p>
 <p># TODO: code a function permutation_svc to estimate the null distribution without
 # TODO: bootstrapping, because when sample size is too small, bootstrap with replacement fail.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.bootstrap_classification">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">bootstrap_classification</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">boot_indices</em>, <em class="sig-param">C=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#bootstrap_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.bootstrap_classification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">bootstrap_classification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">boot_indices</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#bootstrap_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.bootstrap_classification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform classification on two binary class for each sample generated
 by bootstrap (with replacement).</p>
 <dl class="field-list simple">
@@ -509,9 +509,9 @@ subjects.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.bootstrap_svc">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">bootstrap_svc</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">bootstrap_array_indices</em>, <em class="sig-param">n_cpus_bootstrap=1</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">backend='multiprocessing'</em>, <em class="sig-param">C=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#bootstrap_svc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.bootstrap_svc" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">bootstrap_svc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">bootstrap_array_indices</span></em>, <em class="sig-param"><span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#bootstrap_svc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.bootstrap_svc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform classification between two binary class on
 bootstrapped samples.</p>
 <dl class="field-list simple">
@@ -542,23 +542,23 @@ bootstrapped sample.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.bootstrap_svc_">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">bootstrap_svc_</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">bootstrap_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#bootstrap_svc_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.bootstrap_svc_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">bootstrap_svc_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">bootstrap_number</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#bootstrap_svc_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.bootstrap_svc_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit Support Vector Machine with linear kernel on bootstrap sample</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.compute_weight_distribution">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">compute_weight_distribution</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">bootstrap_number</em>, <em class="sig-param">n_permutations</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">C=1</em>, <em class="sig-param">n_cpus_bootstrap=1</em>, <em class="sig-param">verbose_bootstrap=1</em>, <em class="sig-param">verbose_permutations=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#compute_weight_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.compute_weight_distribution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">compute_weight_distribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">bootstrap_number</span></em>, <em class="sig-param"><span class="n">n_permutations</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose_permutations</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#compute_weight_distribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.compute_weight_distribution" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.discriminative_brain_connection_identification">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">discriminative_brain_connection_identification</code><span class="sig-paren">(</span><em class="sig-param">vectorized_connectivity_matrices</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">class_names</em>, <em class="sig-param">save_directory</em>, <em class="sig-param">n_permutations</em>, <em class="sig-param">bootstrap_number</em>, <em class="sig-param">features_labels</em>, <em class="sig-param">features_colors</em>, <em class="sig-param">n_nodes</em>, <em class="sig-param">atlas_nodes</em>, <em class="sig-param">first_class_mean_matrix</em>, <em class="sig-param">second_class_mean_matrix</em>, <em class="sig-param">top_features_number=100</em>, <em class="sig-param">correction='fdr_bh'</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">n_cpus_bootstrap=1</em>, <em class="sig-param">verbose_bootstrap=1</em>, <em class="sig-param">verbose_permutations=1</em>, <em class="sig-param">write_report=True</em>, <em class="sig-param">node_size=15</em>, <em class="sig-param">C=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#discriminative_brain_connection_identification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.discriminative_brain_connection_identification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">discriminative_brain_connection_identification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectorized_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">class_names</span></em>, <em class="sig-param"><span class="n">save_directory</span></em>, <em class="sig-param"><span class="n">n_permutations</span></em>, <em class="sig-param"><span class="n">bootstrap_number</span></em>, <em class="sig-param"><span class="n">features_labels</span></em>, <em class="sig-param"><span class="n">features_colors</span></em>, <em class="sig-param"><span class="n">n_nodes</span></em>, <em class="sig-param"><span class="n">atlas_nodes</span></em>, <em class="sig-param"><span class="n">first_class_mean_matrix</span></em>, <em class="sig-param"><span class="n">second_class_mean_matrix</span></em>, <em class="sig-param"><span class="n">top_features_number</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">correction</span><span class="o">=</span><span class="default_value">'fdr_bh'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose_permutations</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">write_report</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">node_size</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#discriminative_brain_connection_identification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.discriminative_brain_connection_identification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identify important connection when performing a binary classification task.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.features_weights_max_t_correction">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">features_weights_max_t_correction</code><span class="sig-paren">(</span><em class="sig-param">null_distribution_features_weights</em>, <em class="sig-param">normalized_mean_weight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#features_weights_max_t_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.features_weights_max_t_correction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">features_weights_max_t_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">null_distribution_features_weights</span></em>, <em class="sig-param"><span class="n">normalized_mean_weight</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#features_weights_max_t_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.features_weights_max_t_correction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute features weight corrected p values with
 the estimated null distribution of normalized mean features weight.</p>
 <dl class="field-list simple">
@@ -577,9 +577,9 @@ estimated with class labels permutations, and bootstrap.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.features_weights_parametric_correction">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">features_weights_parametric_correction</code><span class="sig-paren">(</span><em class="sig-param">null_distribution_features_weights</em>, <em class="sig-param">normalized_mean_weight</em>, <em class="sig-param">method='fdr_bh'</em>, <em class="sig-param">alpha=0.05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#features_weights_parametric_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.features_weights_parametric_correction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">features_weights_parametric_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">null_distribution_features_weights</span></em>, <em class="sig-param"><span class="n">normalized_mean_weight</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'fdr_bh'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#features_weights_parametric_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.features_weights_parametric_correction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parametric estimation of p-values for each features weight using the estimated
 null distribution and fitting it’s mean and standard deviation with normal law.</p>
 <dl class="field-list simple">
@@ -601,9 +601,9 @@ correction (FDR).</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.find_significant_features_indices">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">find_significant_features_indices</code><span class="sig-paren">(</span><em class="sig-param">p_positive_features_significant</em>, <em class="sig-param">p_negative_features_significant</em>, <em class="sig-param">features_labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#find_significant_features_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.find_significant_features_indices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">find_significant_features_indices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p_positive_features_significant</span></em>, <em class="sig-param"><span class="n">p_negative_features_significant</span></em>, <em class="sig-param"><span class="n">features_labels</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#find_significant_features_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.find_significant_features_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return regions indices and corresponding labels for s
 surviving features after permutation testing, for both
 negative and positive features weight.</p>
@@ -628,9 +628,9 @@ negative weights, and zero elsewhere.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.find_top_features">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">find_top_features</code><span class="sig-paren">(</span><em class="sig-param">normalized_mean_weight_array</em>, <em class="sig-param">labels_regions</em>, <em class="sig-param">top_features_number=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#find_top_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.find_top_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">find_top_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">normalized_mean_weight_array</span></em>, <em class="sig-param"><span class="n">labels_regions</span></em>, <em class="sig-param"><span class="n">top_features_number</span><span class="o">=</span><span class="default_value">50</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#find_top_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.find_top_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the top features weight in the normalized mean weight array, and mask the other
 features weight outside the ranking.</p>
 <dl class="field-list simple">
@@ -653,9 +653,9 @@ and zero elsewhere.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.k_largest_index_argsort">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">k_largest_index_argsort</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">k</em>, <em class="sig-param">reverse_order=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#k_largest_index_argsort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.k_largest_index_argsort" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">k_largest_index_argsort</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">reverse_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#k_largest_index_argsort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.k_largest_index_argsort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the k+1 largest element indices in a an array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -675,9 +675,9 @@ The shape is the same of the input array.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.k_smallest_index_argsort">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">k_smallest_index_argsort</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">k</em>, <em class="sig-param">reverse_order=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#k_smallest_index_argsort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.k_smallest_index_argsort" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">k_smallest_index_argsort</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em>, <em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">reverse_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#k_smallest_index_argsort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.k_smallest_index_argsort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the k+1 smallest element indices in a an array</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -697,9 +697,9 @@ The shape is the same of the input array.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.one_against_all_bootstrap">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">one_against_all_bootstrap</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">bootstrap_array_indices</em>, <em class="sig-param">n_cpus_bootstrap=1</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">backend='multiprocessing'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#one_against_all_bootstrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.one_against_all_bootstrap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">one_against_all_bootstrap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">bootstrap_array_indices</span></em>, <em class="sig-param"><span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#one_against_all_bootstrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.one_against_all_bootstrap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform classification between two binary class on
 bootstrapped samples.</p>
 <dl class="field-list simple">
@@ -730,9 +730,9 @@ bootstrapped sample.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.one_against_all_classification">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">one_against_all_classification</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">class_labels</em>, <em class="sig-param">boot_indices</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#one_against_all_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.one_against_all_classification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">one_against_all_classification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">class_labels</span></em>, <em class="sig-param"><span class="n">boot_indices</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#one_against_all_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.one_against_all_classification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform multi-class classification problem on a bootstrapped
 sample with a one versus all strategy.</p>
 <dl class="field-list simple">
@@ -754,9 +754,9 @@ subjects.</p></li>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.one_against_all_permutation_bootstrap">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">one_against_all_permutation_bootstrap</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">class_labels_perm</em>, <em class="sig-param">bootstrap_array_perm</em>, <em class="sig-param">n_classes</em>, <em class="sig-param">n_permutations=1000</em>, <em class="sig-param">n_cpus_bootstrap=1</em>, <em class="sig-param">backend='multiprocessing'</em>, <em class="sig-param">verbose_bootstrap=0</em>, <em class="sig-param">verbose_permutation=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#one_against_all_permutation_bootstrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.one_against_all_permutation_bootstrap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">one_against_all_permutation_bootstrap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">class_labels_perm</span></em>, <em class="sig-param"><span class="n">bootstrap_array_perm</span></em>, <em class="sig-param"><span class="n">n_classes</span></em>, <em class="sig-param"><span class="n">n_permutations</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">verbose_bootstrap</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbose_permutation</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#one_against_all_permutation_bootstrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.one_against_all_permutation_bootstrap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform classification on two binary class for each sample generated
 by bootstrap (with replacement) and permuted class labels vector.</p>
 <dl class="field-list simple">
@@ -790,9 +790,9 @@ with a linear SVM, over bootstrap sample</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.permutation_bootstrap_svc">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">permutation_bootstrap_svc</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">class_labels_perm</em>, <em class="sig-param">bootstrap_array_perm</em>, <em class="sig-param">n_permutations=1000</em>, <em class="sig-param">n_cpus_bootstrap=1</em>, <em class="sig-param">backend='multiprocessing'</em>, <em class="sig-param">verbose_bootstrap=0</em>, <em class="sig-param">verbose_permutation=0</em>, <em class="sig-param">C=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#permutation_bootstrap_svc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.permutation_bootstrap_svc" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">permutation_bootstrap_svc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">features</span></em>, <em class="sig-param"><span class="n">class_labels_perm</span></em>, <em class="sig-param"><span class="n">bootstrap_array_perm</span></em>, <em class="sig-param"><span class="n">n_permutations</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">n_cpus_bootstrap</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">backend</span><span class="o">=</span><span class="default_value">'multiprocessing'</span></em>, <em class="sig-param"><span class="n">verbose_bootstrap</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbose_permutation</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#permutation_bootstrap_svc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.permutation_bootstrap_svc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform classification on two binary class for each sample generated
 by bootstrap (with replacement) and permuted class labels vector.</p>
 <dl class="field-list simple">
@@ -826,9 +826,9 @@ with a linear SVM, over bootstrap sample</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.rank_top_features_weight">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">rank_top_features_weight</code><span class="sig-paren">(</span><em class="sig-param">coefficients_array</em>, <em class="sig-param">top_features_number</em>, <em class="sig-param">features_labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#rank_top_features_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.rank_top_features_weight" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">rank_top_features_weight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coefficients_array</span></em>, <em class="sig-param"><span class="n">top_features_number</span></em>, <em class="sig-param"><span class="n">features_labels</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#rank_top_features_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.rank_top_features_weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Establish a ranking of the most important features from the classifier, based
 on weights magnitude.</p>
 <dl class="field-list simple">
@@ -849,13 +849,13 @@ on weights magnitude.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.remove_reversed_duplicates">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">remove_reversed_duplicates</code><span class="sig-paren">(</span><em class="sig-param">iterable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#remove_reversed_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.remove_reversed_duplicates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">remove_reversed_duplicates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#remove_reversed_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.remove_reversed_duplicates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.features_indentification.timer">
-<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">timer</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.timer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.features_indentification.</code><code class="sig-name descname">timer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/features_indentification.html#timer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.features_indentification.timer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print measured time between two point in the code</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -870,13 +870,13 @@ on weights magnitude.</p>
 
 <span id="conpagnon-machine-learning-scores-predictions-module"></span><h2 id="module-conpagnon.machine_learning.scores_predictions">conpagnon.machine_learning.scores_predictions module<a class="headerlink" href="#module-conpagnon.machine_learning.scores_predictions" title="Permalink to this headline">¶</a></h2>
 <p>Created by db242421 at 14/01/19</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.scores_predictions.predict_scores">
-<code class="sig-prename descclassname">conpagnon.machine_learning.scores_predictions.</code><code class="sig-name descname">predict_scores</code><span class="sig-paren">(</span><em class="sig-param">connectivity_matrices</em>, <em class="sig-param">raw_score</em>, <em class="sig-param">alpha=0.01</em>, <em class="sig-param">C=1</em>, <em class="sig-param">alpha_ridge=1</em>, <em class="sig-param">estimator='svr'</em>, <em class="sig-param">with_mean=False</em>, <em class="sig-param">with_std=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/scores_predictions.html#predict_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.scores_predictions.predict_scores" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.scores_predictions.</code><code class="sig-name descname">predict_scores</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">connectivity_matrices</span></em>, <em class="sig-param"><span class="n">raw_score</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">C</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">alpha_ridge</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">estimator</span><span class="o">=</span><span class="default_value">'svr'</span></em>, <em class="sig-param"><span class="n">with_mean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">with_std</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/scores_predictions.html#predict_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.scores_predictions.predict_scores" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.machine_learning.scores_predictions.vcorrcoef">
-<code class="sig-prename descclassname">conpagnon.machine_learning.scores_predictions.</code><code class="sig-name descname">vcorrcoef</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/scores_predictions.html#vcorrcoef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.scores_predictions.vcorrcoef" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.machine_learning.scores_predictions.</code><code class="sig-name descname">vcorrcoef</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/machine_learning/scores_predictions.html#vcorrcoef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.machine_learning.scores_predictions.vcorrcoef" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 
@@ -905,14 +905,14 @@ on weights magnitude.</p>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

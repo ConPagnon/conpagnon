@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -49,27 +49,19 @@
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
   
    
-  
-  <script src="_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "_static/versions.json",
-        target_loc = "../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -155,6 +147,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "_static/versions.json",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -199,6 +202,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -207,17 +211,12 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="gettingstarted.html" class="md-nav__link">Getting Started</a>
+      <a href="contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
-      <a href="user-guide.html" class="md-nav__link">User Guide</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="examples/index.html" class="md-nav__link">Examples</a>
+      <a href="examples/index.html" class="md-nav__link">ConPagnon usage examples</a>
       
     </li>
   </ul>
@@ -231,6 +230,7 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
@@ -268,9 +268,9 @@
 <p>Created on Tue Sep 19 17:02:19 2017</p>
 <p>ComPagnon 2.0</p>
 <p>@author: Dhaif BEKHA</p>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.create_connectivity_mask">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">create_connectivity_mask</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#create_connectivity_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.create_connectivity_mask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">create_connectivity_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_series_dictionary</span></em>, <em class="sig-param"><span class="n">groupes</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#create_connectivity_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.create_connectivity_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create boolean mask for each subjects accounting
 for discarded roi if they exist.</p>
 <dl class="field-list simple">
@@ -307,9 +307,9 @@ in the array.
 Almost all the operation in ConPagnon accounts for discarded rois with
 masked array via the dedicated module in NumPy.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.extract_sub_connectivity_matrices">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">extract_sub_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">regions_index</em>, <em class="sig-param">vectorize=False</em>, <em class="sig-param">discard_diagonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#extract_sub_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.extract_sub_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">extract_sub_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">regions_index</span></em>, <em class="sig-param"><span class="n">vectorize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">discard_diagonal</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#extract_sub_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.extract_sub_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract sub matrices given region index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -336,9 +336,9 @@ the extract sub-matrice, and the corresponding boolean mask.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.group_mean_connectivity">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">group_mean_connectivity</code><span class="sig-paren">(</span><em class="sig-param">subjects_connectivity_matrices</em>, <em class="sig-param">kinds</em>, <em class="sig-param">axis=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#group_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.group_mean_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">group_mean_connectivity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_connectivity_matrices</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#group_mean_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.group_mean_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Compute the mean connectivity matrices for each kind accounting for masked rois.</dt><dd><p>Read the notes for the tangent space !</p>
 </dd>
@@ -405,9 +405,9 @@ Be careful with the interpretation !!
 That said, the tangent space is defined at ONE point in the manifold of symmetric matrices.
 This point is the geometric mean for the POOLED groups if multiple group are studied !</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.individual_connectivity_matrices">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">individual_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">covariance_estimator</em>, <em class="sig-param">vectorize=False</em>, <em class="sig-param">discarding_diagonal=False</em>, <em class="sig-param">z_fisher_transform=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#individual_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.individual_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">individual_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_series_dictionary</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">covariance_estimator</span></em>, <em class="sig-param"><span class="n">vectorize</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">discarding_diagonal</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">z_fisher_transform</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#individual_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.individual_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the connectivity matrices for groups of subjects</p>
 <p>This function computes connectivity matrices for different metrics.</p>
 <dl class="field-list simple">
@@ -496,9 +496,9 @@ nilearn.connectome.ConnectivityMeasure</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">inter_network_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">atlas_file</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">roi_indices_column_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#inter_network_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">inter_network_subjects_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_individual_matrices_dictionnary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">atlas_file</span></em>, <em class="sig-param"><span class="n">sheetname</span></em>, <em class="sig-param"><span class="n">network_column_name</span></em>, <em class="sig-param"><span class="n">roi_indices_column_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#inter_network_subjects_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.inter_network_subjects_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute for each subjects, the inter network connectivity matrices</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -539,9 +539,9 @@ cognitive impairment”, Nature Publishing Group, 2015.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.intra_network_functional_connectivity">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">intra_network_functional_connectivity</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em>, <em class="sig-param">atlas_file</em>, <em class="sig-param">network_column_name</em>, <em class="sig-param">sheetname</em>, <em class="sig-param">roi_indices_column_name</em>, <em class="sig-param">color_of_network_column</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#intra_network_functional_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.intra_network_functional_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">intra_network_functional_connectivity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_individual_matrices_dictionnary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">atlas_file</span></em>, <em class="sig-param"><span class="n">network_column_name</span></em>, <em class="sig-param"><span class="n">sheetname</span></em>, <em class="sig-param"><span class="n">roi_indices_column_name</span></em>, <em class="sig-param"><span class="n">color_of_network_column</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#intra_network_functional_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.intra_network_functional_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute for each subjects, the intra network connectivity for each network in the study.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -589,9 +589,9 @@ cognitive impairment”, Nature Publishing Group, 2015.</p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">mean_of_flatten_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionary</em>, <em class="sig-param">groupes</em>, <em class="sig-param">kinds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#mean_of_flatten_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">mean_of_flatten_connectivity_matrices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_individual_matrices_dictionary</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">kinds</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#mean_of_flatten_connectivity_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.mean_of_flatten_connectivity_matrices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the flat mean connectivity for each subjects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -617,9 +617,9 @@ exist.</p>
 <p>The subjects connectivity matrices shouldn’t be vectorized, the shape should
 be (n_features, n_features).</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.pooled_groups_connectivity">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_connectivity</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">kinds</em>, <em class="sig-param">covariance_estimator</em>, <em class="sig-param">vectorize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#pooled_groups_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.pooled_groups_connectivity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_connectivity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_series_dictionary</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">covariance_estimator</span></em>, <em class="sig-param"><span class="n">vectorize</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#pooled_groups_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.pooled_groups_connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute connectivity matrices of pooled groups.</p>
 <p>This function simply stack the all the times series of each group in one pooled groups and compute
 the connectivity matrices  on the whole group. When computing the tangent kind this function is
@@ -672,9 +672,9 @@ if vectorize is False, and shape (n_columns * (n_columns + 1) /2) else</p>
 Multiple estimator can be found in the module sklearn.covariance, popular
 choices are the Ledoit-Wolf estimator, or the OAS estimator.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.pooled_groups_tangent_mean">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_tangent_mean</code><span class="sig-paren">(</span><em class="sig-param">time_series_dictionary</em>, <em class="sig-param">covariance_estimator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#pooled_groups_tangent_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.pooled_groups_tangent_mean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">pooled_groups_tangent_mean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_series_dictionary</span></em>, <em class="sig-param"><span class="n">covariance_estimator</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#pooled_groups_tangent_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.pooled_groups_tangent_mean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the geometric mean of covariances connectivity matrices for the tangent kind.</p>
 <p>The geometric mean is the point in the symmetric manifold matrices spaces
 where the tangent space is defined. Therefore it’s make sense for the pooled
@@ -718,9 +718,9 @@ choices are the Ledoit-Wolf estimator, or the OAS estimator.
 For now, we doesnt account for discarded rois for the derivation of the
 geometric mean.</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.subjects_mean_connectivity_">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">subjects_mean_connectivity_</code><span class="sig-paren">(</span><em class="sig-param">subjects_individual_matrices_dictionnary</em>, <em class="sig-param">connectivity_coefficient_position</em>, <em class="sig-param">kinds</em>, <em class="sig-param">groupes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#subjects_mean_connectivity_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.subjects_mean_connectivity_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">subjects_mean_connectivity_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subjects_individual_matrices_dictionnary</span></em>, <em class="sig-param"><span class="n">connectivity_coefficient_position</span></em>, <em class="sig-param"><span class="n">kinds</span></em>, <em class="sig-param"><span class="n">groupes</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#subjects_mean_connectivity_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.subjects_mean_connectivity_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute for each subjects, the mean connectivity for some connectivity coefficient in the general subjects
 connectivity matrices.</p>
 <dl class="field-list simple">
@@ -749,9 +749,9 @@ exist.</p>
 <p>The subjects connectivity matrices shouldn’t be vectorized, the shape should
 be (n_features, n_features).</p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.tangent_space_projection">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">tangent_space_projection</code><span class="sig-paren">(</span><em class="sig-param">reference_group</em>, <em class="sig-param">group_to_project</em>, <em class="sig-param">bootstrap_number</em>, <em class="sig-param">bootstrap_size</em>, <em class="sig-param">output_directory</em>, <em class="sig-param">verif_null=True</em>, <em class="sig-param">correction_method='bonferroni'</em>, <em class="sig-param">alpha=0.05</em>, <em class="sig-param">statistic='t'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#tangent_space_projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.tangent_space_projection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">tangent_space_projection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reference_group</span></em>, <em class="sig-param"><span class="n">group_to_project</span></em>, <em class="sig-param"><span class="n">bootstrap_number</span></em>, <em class="sig-param"><span class="n">bootstrap_size</span></em>, <em class="sig-param"><span class="n">output_directory</span></em>, <em class="sig-param"><span class="n">verif_null</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">correction_method</span><span class="o">=</span><span class="default_value">'bonferroni'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">statistic</span><span class="o">=</span><span class="default_value">'t'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#tangent_space_projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.tangent_space_projection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project a group of time series to a space tangent to a reference connectivity matrix.
 The reference matrix is derived from a reference times series group. Then, each edges of
 the projected matrices is tested regarding the reference group through a one sample t-test
@@ -825,9 +825,9 @@ difference in post-stroke patients using group-level covariance modeling”, MIC
 </dd>
 </dl>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.time_series_extraction">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">reference_atlas</em>, <em class="sig-param">group_data</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">low_pass_filtering=None</em>, <em class="sig-param">high_pass_filtering=None</em>, <em class="sig-param">detrend_signal=True</em>, <em class="sig-param">standardize_signal=True</em>, <em class="sig-param">smooth_signal=None</em>, <em class="sig-param">resampling_target='data'</em>, <em class="sig-param">memory_level=1</em>, <em class="sig-param">nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#time_series_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.time_series_extraction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_fmri_data_directory</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">subjects_id_data_path</span></em>, <em class="sig-param"><span class="n">reference_atlas</span></em>, <em class="sig-param"><span class="n">group_data</span></em>, <em class="sig-param"><span class="n">repetition_time</span></em>, <em class="sig-param"><span class="n">low_pass_filtering</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">high_pass_filtering</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">detrend_signal</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">standardize_signal</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">smooth_signal</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resampling_target</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">memory_level</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">nilearn_cache_directory</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#time_series_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.time_series_extraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Times series extractions for each subjects on a common atlas.</p>
 <p>This function extract time series for each subjects according predefined regions on one common atlas.</p>
 <dl class="field-list simple">
@@ -917,9 +917,9 @@ It’s should have a row column of ID for each subjects.</p>
 <p>The Nilearn official documentation on Github :
 [1] <a class="reference external" href="http://nilearn.github.io/index.html">http://nilearn.github.io/index.html</a></p>
 </dd></dl>
-<dl class="function">
+<dl class="py function">
 <dt id="conpagnon.computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases">
-<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction_with_individual_atlases</code><span class="sig-paren">(</span><em class="sig-param">root_fmri_data_directory</em>, <em class="sig-param">groupes</em>, <em class="sig-param">subjects_id_data_path</em>, <em class="sig-param">group_data</em>, <em class="sig-param">repetition_time</em>, <em class="sig-param">low_pass_filtering=None</em>, <em class="sig-param">high_pass_filtering=None</em>, <em class="sig-param">detrend_signal=True</em>, <em class="sig-param">standardize_signal=True</em>, <em class="sig-param">smooth_signal=None</em>, <em class="sig-param">resampling_target='data'</em>, <em class="sig-param">memory_level=1</em>, <em class="sig-param">nilearn_cache_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#time_series_extraction_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">conpagnon.computing.compute_connectivity_matrices.</code><code class="sig-name descname">time_series_extraction_with_individual_atlases</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_fmri_data_directory</span></em>, <em class="sig-param"><span class="n">groupes</span></em>, <em class="sig-param"><span class="n">subjects_id_data_path</span></em>, <em class="sig-param"><span class="n">group_data</span></em>, <em class="sig-param"><span class="n">repetition_time</span></em>, <em class="sig-param"><span class="n">low_pass_filtering</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">high_pass_filtering</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">detrend_signal</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">standardize_signal</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">smooth_signal</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resampling_target</span><span class="o">=</span><span class="default_value">'data'</span></em>, <em class="sig-param"><span class="n">memory_level</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">nilearn_cache_directory</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/conpagnon/computing/compute_connectivity_matrices.html#time_series_extraction_with_individual_atlases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#conpagnon.computing.compute_connectivity_matrices.time_series_extraction_with_individual_atlases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Times series extractions for each subjects with an individual atlas.</p>
 <p>This function extract time series for each subjects according predefined regions in individual atlases.</p>
 <dl class="field-list simple">
@@ -1039,14 +1039,14 @@ which must be declared as ‘void’ in the subject atlas labels files.</p>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

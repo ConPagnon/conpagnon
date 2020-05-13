@@ -3,6 +3,7 @@ import nibabel as nb
 import numpy as np
 import collections
 import pandas as pd
+from subprocess import Popen, PIPE
 
 
 def flatten(d, parent_key='', sep='_'):
@@ -17,17 +18,17 @@ def flatten(d, parent_key='', sep='_'):
 
 
 # Directory containing the subjects image folder
-root_directory = '/neurospin/grip/protocols/MRI/Ines_2018/images/controls_v2'
+root_directory = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/Ines_2018/images/controls_v2'
 
 # Subject text list
-subject_txt = '/neurospin/grip/protocols/MRI/Ines_2018/images/controls_v2_nip'
+subject_txt = '/media/dhaif/Samsung_T5/Work/Neurospin/AVCnn/Ines_2018/images/controls_v2_nip'
 subjects = open(subject_txt).read().split()
 # Hemisphere side
 sides = ["left", "right"]
 # Diffusion parameters
-params = ["FA", "ADC", "AD", "RD"]
+params = ["FA"]
 # Tract name
-tracts = ["AF", "MLF", "SLF_III"]
+tracts = ["AF", "MLF", "SLF_III", "CST", "CG"]
 
 
 # Dictionary that will stock the diffusion parameters
@@ -46,9 +47,21 @@ for subject in subjects:
             tract_probability_map = os.path.join(root_directory, subject,
                                                  "TractSeg_outputs/tractseg_output/bundle_probabilities_old",
                                                  tract + "_" + side + ".nii.gz")
+            tract_probability_mask = os.path.join(root_directory, subject,
+                                                  "TractSeg_outputs/tractseg_output/bundle_segmentations_mask",
+                                                  tract + "_" + side + ".nii.gz")
             tract_probability_image = nb.load(filename=tract_probability_map)
             tract_probability_data = tract_probability_image.get_data()
             tract_probability_affine = tract_probability_image.affine
+
+            tract_probability_mask_affine = nb.load(tract_probability_mask).affine
+
+            fslstats = ['fslstats',
+                       tract_probability_mask,
+                       '-V']
+            fslstats_cmd = Popen(fslstats, stdout=PIPE)
+            fslstats_cmd_o, fslstats_cmd_err = fslstats_cmd.communicate()
+            tract_probability_mask_volume = int(fslstats_cmd_o.decode(encoding='UTF-8').split()[0])*(np.abs(np.prod(np.diag(tract_probability_mask_affine))))
 
             # Load bundle segmentation mask
             bundle_mask = os.path.join(root_directory, subject, "TractSeg_outputs", "tractseg_output",
@@ -74,7 +87,8 @@ for subject in subjects:
                 weighted_sum = np.sum(np.multiply(probability, param_voxels))
                 # Finally compute the mean values, by dividing
                 # the previous weighted sum by the number of voxels
-                mean_param = weighted_sum / len(param_voxels)
+                #mean_param = weighted_sum / len(param_voxels)
+                mean_param = tract_probability_mask_volume
 
                 params_values_result[subject][tract][side][param] = mean_param
 # Stack on top of each other, individual dataframe containing the
@@ -94,4 +108,4 @@ for subject in subjects:
 # Concatenate a final dataframe with all of the variables
 final_dataframe = pd.concat(all_subjects_dataframe)
 # Save in the CSV format the final dataframe
-final_dataframe.to_csv(os.path.join(root_directory, "all_diffusion_parameters_probability_mask.csv"))
+final_dataframe.to_csv(os.path.join(root_directory, "test.csv"))

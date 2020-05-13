@@ -9,8 +9,8 @@ MAINTAINER = 'Dhaif BEKHA'
 MAINTAINER_EMAIL = 'dhaif@dhaifbekha.com'
 URL = 'https://conpagnon.github.io/conpagnon/'
 LICENSE = 'new BSD'
-DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.3.tar.gz'
-VERSION = '2.0.3'
+DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.4.tar.gz'
+VERSION = '2.0.4'
 
 
 if __name__ == "__main__":
@@ -52,6 +52,10 @@ if __name__ == "__main__":
                             'PyPDF2',
                             'scikit-learn',
                             'nilearn',
-                            'psutil', 'networkx', 'patsy'],
+                            'psutil',
+                            'networkx',
+                            'patsy',
+                            'xlrd',
+                            'tabulate'],
           python_requires='>=3.5',
           )

@@ -826,6 +826,10 @@ def discriminative_brain_connection_identification(vectorized_connectivity_matri
         find_top_features(normalized_mean_weight_array=normalized_mean_weight_array,
                           labels_regions=features_labels)
 
+    labels_str = []
+    for i in range(top_weight_labels.shape[0]):
+        labels_str.append(str(top_weight_labels[i]))
+
     if correction == 'max_t':
         # Corrected p values with the maximum statistic
         sorted_null_maximum_dist, sorted_null_minimum_dist, p_value_positive_weights, p_value_negative_weights = \
@@ -904,7 +908,7 @@ def discriminative_brain_connection_identification(vectorized_connectivity_matri
                         color=weight_colors,
                         edgecolor='black',
                         alpha=0.5)
-                plt.xticks(np.arange(0, len(top_weights)), top_weight_labels,
+                plt.xticks(np.arange(0, len(top_weights)), labels_str,
                            rotation=60,
                            ha='right')
                 for label in range(len(plt.gca().get_xticklabels())):
@@ -1057,7 +1061,7 @@ def discriminative_brain_connection_identification(vectorized_connectivity_matri
                         color=weight_colors,
                         edgecolor='black',
                         alpha=0.5)
-                plt.xticks(np.arange(0, len(top_weights)), top_weight_labels,
+                plt.xticks(np.arange(0, len(top_weights)), labels_str,
                            rotation=60,
                            ha='right')
                 for label in range(len(plt.gca().get_xticklabels())):

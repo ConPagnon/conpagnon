@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -45,32 +45,25 @@
   
   
   
-    <title>Examples &#8212; ConPagnon 2.0</title>
+    <title>ConPagnon usage examples &#8212; ConPagnon 2.0</title>
     <link rel="stylesheet" href="../_static/material.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="User Guide" href="../user-guide.html" />
+    <link rel="next" title="Basic data organization" href="01_Organizing_data/plot_organizing_data_example.html" />
+    <link rel="prev" title="Contributing to ConPagnon" href="../contributing.html" />
   
    
-  
-  <script src="../_static/javascripts/version_dropdown.js"></script>
-  <script>
-    var json_loc = "../_static/versions.json",
-        target_loc = "../../",
-        text = "Versions";
-    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
-  </script>
-
 
   </head>
   <body dir=ltr
@@ -106,7 +99,7 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           <span class="md-header-nav__topic">ConPagnon 2.0</span>
-          <span class="md-header-nav__topic"> Examples </span>
+          <span class="md-header-nav__topic"> ConPagnon usage examples </span>
         </div>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
@@ -156,6 +149,17 @@
           </div>
         </div>
       
+      
+  
+  <script src="../_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = "../_static/versions.json",
+        target_loc = "../../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
     </div>
   </nav>
 </header>
@@ -207,6 +211,7 @@
 
   
   
+  
   <ul class="md-nav__list">
     <li class="md-nav__item">
     
@@ -215,29 +220,127 @@
     </li>
     <li class="md-nav__item">
     
-      <a href="../gettingstarted.html" class="md-nav__link">Getting Started</a>
-      
-    </li>
-    <li class="md-nav__item">
-    
-      <a href="../user-guide.html" class="md-nav__link">User Guide</a>
+      <a href="../contributing.html" class="md-nav__link">Contributing to ConPagnon</a>
       
     </li>
     <li class="md-nav__item">
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    <label class="md-nav__link md-nav__link--active" for="__toc"> Examples </label>
+    <label class="md-nav__link md-nav__link--active" for="__toc"> ConPagnon usage examples </label>
     
-      <a href="#" class="md-nav__link md-nav__link--active">Examples</a>
+      <a href="#" class="md-nav__link md-nav__link--active">ConPagnon usage examples</a>
       
         
+
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-index--page-root" class="md-nav__link">ConPagnon usage examples</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+        </li>
+        <li class="md-nav__item"><a href="#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+        </li>
+        <li class="md-nav__item"><a href="#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+        </li>
+        <li class="md-nav__item"><a href="#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+        </li>
+        <li class="md-nav__item"><a href="#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+        </li>
+        <li class="md-nav__item"><a href="#utilities" class="md-nav__link">Utilities</a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/index.rst.txt">Show Source</a> </li>
 
   </ul>
-</nav>
+</nav><ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="01_Organizing_data/plot_organizing_data_example.html" class="md-nav__link">Basic data organization</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="01_Organizing_data/plot_import_atlas_example.html" class="md-nav__link">Manipulating a brain atlas</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="02_Functional_Connectivity/plot_times_series_extraction.html" class="md-nav__link">Extracting brain signals</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="02_Functional_Connectivity/plot_connectivity_matrices.html" class="md-nav__link">Build the connectivity matrices</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="03_Basic_Statistical_Analyses/plot_two_groups_classification.html" class="md-nav__link">Two groups classification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="03_Basic_Statistical_Analyses/plot_linear_regression.html" class="md-nav__link">Regression analysis</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="03_Basic_Statistical_Analyses/plot_t_test_analysis.html" class="md-nav__link">Two samples t-test</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="04_Advanced_Statistical_Analyses/plot_individual_statistics_in_the_tangent_space.html" class="md-nav__link">Statistics in the tangent space</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="04_Advanced_Statistical_Analyses/plot_discriminative_connection_identification.html" class="md-nav__link">Discriminative connection identification</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="04_Advanced_Statistical_Analyses/plot_connectome_predictive_modelling.html" class="md-nav__link">Connectome Predictive Modelling</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="#utilities" class="md-nav__link">Utilities</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="05_utilities/plot_selection_of_data.html" class="md-nav__link">Manipulation of the data dictionary</a>
+      
+    </li></ul>
+    </li></ul>
     </li>
   </ul>
   
@@ -250,8 +353,26 @@
             <div class="md-sidebar__scrollwrap">
               <div class="md-sidebar__inner">
                 
+
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-index--page-root" class="md-nav__link">ConPagnon usage examples</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#tutorial-examples" class="md-nav__link">Tutorial examples</a>
+        </li>
+        <li class="md-nav__item"><a href="#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+        </li>
+        <li class="md-nav__item"><a href="#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+        </li>
+        <li class="md-nav__item"><a href="#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+        </li>
+        <li class="md-nav__item"><a href="#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+        </li>
+        <li class="md-nav__item"><a href="#utilities" class="md-nav__link">Utilities</a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/examples/index.rst.txt">Show Source</a> </li>
 
@@ -267,10 +388,156 @@
           <article class="md-content__inner md-typeset" role="main">
             
   
-<span id="conpagnon-examples"></span><h1 id="examples-index--page-root">Examples<a class="headerlink" href="#examples-index--page-root" title="Permalink to this headline">¶</a></h1>
-<p>This page provides a range of example from loading
-and manipulating resting state data to performing statistical
-analysis and plotting the results in a insightful way.</p>
+<span id="sphx-glr-examples"></span><h1 id="examples-index--page-root">ConPagnon usage examples<a class="headerlink" href="#examples-index--page-root" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you want to run the example if the Jupyter
+Notebook format (.ipynb file), make sure that
+you have Jupyter Notebook installed in you’re
+Python environment.</p>
+</div>
+<div class="contents local topic" id="contents">
+<p class="topic-title"><strong>Contents</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tutorial-examples" id="id13">Tutorial examples</a></p></li>
+<li><p><a class="reference internal" href="#organization-of-data-for-conpagnon" id="id14">Organization of data for ConPagnon</a></p></li>
+<li><p><a class="reference internal" href="#functional-connectivity-computing" id="id15">Functional Connectivity: Computing</a></p></li>
+<li><p><a class="reference internal" href="#basic-statistical-analyses" id="id16">Basic Statistical Analyses</a></p></li>
+<li><p><a class="reference internal" href="#advanced-statistical-analyses" id="id17">Advanced Statistical Analyses</a></p></li>
+<li><p><a class="reference internal" href="#utilities" id="id18">Utilities</a></p></li>
+</ul>
+</div>
+
+<span id="id1"></span><h2 id="tutorial-examples"><a class="toc-backref" href="#id13">Tutorial examples</a><a class="headerlink" href="#tutorial-examples" title="Permalink to this headline">¶</a></h2>
+<p>The following examples will teach you on how
+to use ConPagnon. Do not hesitate to copy and paste
+those examples, to understand the core logic of ConPagnon.</p>
+<div class="line-block">
+<div class="line"><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></div>
+</div>
+<div class="sphx-glr-clear"></div>
+
+<span id="sphx-glr-examples-01-organizing-data"></span><h2 id="organization-of-data-for-conpagnon"><a class="toc-backref" href="#id14">Organization of data for ConPagnon</a><a class="headerlink" href="#organization-of-data-for-conpagnon" title="Permalink to this headline">¶</a></h2>
+<p>For easier data processing along you’re analysis with ConPagnon, your
+data need to be organized in a specific manner. In this section, we will
+go through simple examples to get you started.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="Basic data organization"><div class="figure align-default" id="id2">
+<img alt="../_images/sphx_glr_plot_organizing_data_example_thumb.png" src="../_images/sphx_glr_plot_organizing_data_example_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="01_Organizing_data/plot_organizing_data_example.html#sphx-glr-examples-01-organizing-data-plot-organizing-data-example-py"><span class="std std-ref">Basic data organization</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Manipulating a brain atlas"><div class="figure align-default" id="id3">
+<img alt="../_images/sphx_glr_plot_import_atlas_example_thumb.png" src="../_images/sphx_glr_plot_import_atlas_example_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="01_Organizing_data/plot_import_atlas_example.html#sphx-glr-examples-01-organizing-data-plot-import-atlas-example-py"><span class="std std-ref">Manipulating a brain atlas</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div>
+
+<span id="sphx-glr-examples-02-functional-connectivity"></span><h2 id="functional-connectivity-computing"><a class="toc-backref" href="#id15">Functional Connectivity: Computing</a><a class="headerlink" href="#functional-connectivity-computing" title="Permalink to this headline">¶</a></h2>
+<p>In this section of the tutorials, we assume that your data are nicely
+organised according to the first section of the tutorials, and you’ve
+fetched the data with the <a class="reference internal" href="../conpagnon.data_handling.html#conpagnon.data_handling.data_architecture.fetch_data" title="conpagnon.data_handling.data_architecture.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.data_handling.data_architecture.fetch_data()</span></code></a>
+function. Next steps involve the extraction of clean brain signals and the computing of the
+connectivity matrices.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>ConPagnon extract the brain signals in each region from
+a brain atlas only. If you don’t have one, you can fetch a
+atlas among the numerous examples in the <a class="reference external" href="https://nilearn.github.io/modules/reference.html#module-nilearn.datasets">Nilearn dataset
+module</a> !</p>
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Extracting brain signals"><div class="figure align-default" id="id4">
+<img alt="../_images/sphx_glr_plot_times_series_extraction_thumb.png" src="../_images/sphx_glr_plot_times_series_extraction_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="02_Functional_Connectivity/plot_times_series_extraction.html#sphx-glr-examples-02-functional-connectivity-plot-times-series-extraction-py"><span class="std std-ref">Extracting brain signals</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Build the connectivity matrices"><div class="figure align-default" id="id5">
+<img alt="../_images/sphx_glr_plot_connectivity_matrices_thumb.png" src="../_images/sphx_glr_plot_connectivity_matrices_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="02_Functional_Connectivity/plot_connectivity_matrices.html#sphx-glr-examples-02-functional-connectivity-plot-connectivity-matrices-py"><span class="std std-ref">Build the connectivity matrices</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div>
+
+<span id="sphx-glr-examples-03-basic-statistical-analyses"></span><h2 id="basic-statistical-analyses"><a class="toc-backref" href="#id16">Basic Statistical Analyses</a><a class="headerlink" href="#basic-statistical-analyses" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will cover simple examples of
+statistical analyses you might encounter in classic
+resting state analysis. Those tests are simple and quick
+to run, and it might help you to have a better understanding
+of your data, before running into more advanced statistical analysis
+in the next section.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="Two groups classification"><div class="figure align-default" id="id6">
+<img alt="../_images/sphx_glr_plot_two_groups_classification_thumb.png" src="../_images/sphx_glr_plot_two_groups_classification_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="03_Basic_Statistical_Analyses/plot_two_groups_classification.html#sphx-glr-examples-03-basic-statistical-analyses-plot-two-groups-classification-py"><span class="std std-ref">Two groups classification</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Regression analysis"><div class="figure align-default" id="id7">
+<img alt="../_images/sphx_glr_plot_linear_regression_thumb.png" src="../_images/sphx_glr_plot_linear_regression_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="03_Basic_Statistical_Analyses/plot_linear_regression.html#sphx-glr-examples-03-basic-statistical-analyses-plot-linear-regression-py"><span class="std std-ref">Regression analysis</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Two samples t-test"><div class="figure align-default" id="id8">
+<img alt="../_images/sphx_glr_plot_t_test_analysis_thumb.png" src="../_images/sphx_glr_plot_t_test_analysis_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="03_Basic_Statistical_Analyses/plot_t_test_analysis.html#sphx-glr-examples-03-basic-statistical-analyses-plot-t-test-analysis-py"><span class="std std-ref">Two samples t-test</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div>
+
+<span id="sphx-glr-examples-04-advanced-statistical-analyses"></span><h2 id="advanced-statistical-analyses"><a class="toc-backref" href="#id17">Advanced Statistical Analyses</a><a class="headerlink" href="#advanced-statistical-analyses" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will cover more advanced type
+of analyses on resting state functional data. Those
+advanced method often came from different machine learning
+tactics. Machine learning on resting state data is an area
+in continuous expansion, and may allow you to explore your data
+in a new way. We also cover some analysis developed to exploit
+specifically the <code class="docutils literal notranslate"><span class="pre">tangent</span></code> space connectivity metric.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="Statistics in the tangent space"><div class="figure align-default" id="id9">
+<img alt="../_images/sphx_glr_plot_individual_statistics_in_the_tangent_space_thumb.png" src="../_images/sphx_glr_plot_individual_statistics_in_the_tangent_space_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="04_Advanced_Statistical_Analyses/plot_individual_statistics_in_the_tangent_space.html#sphx-glr-examples-04-advanced-statistical-analyses-plot-individual-statistics-in-the-tangent-space-py"><span class="std std-ref">Statistics in the tangent space</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Discriminative connection identification"><div class="figure align-default" id="id10">
+<img alt="../_images/sphx_glr_plot_discriminative_connection_identification_thumb.png" src="../_images/sphx_glr_plot_discriminative_connection_identification_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="04_Advanced_Statistical_Analyses/plot_discriminative_connection_identification.html#sphx-glr-examples-04-advanced-statistical-analyses-plot-discriminative-connection-identification-py"><span class="std std-ref">Discriminative connection identification</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Connectome Predictive Modelling"><div class="figure align-default" id="id11">
+<img alt="../_images/sphx_glr_plot_connectome_predictive_modelling_thumb.png" src="../_images/sphx_glr_plot_connectome_predictive_modelling_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="04_Advanced_Statistical_Analyses/plot_connectome_predictive_modelling.html#sphx-glr-examples-04-advanced-statistical-analyses-plot-connectome-predictive-modelling-py"><span class="std std-ref">Connectome Predictive Modelling</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div>
+
+<span id="sphx-glr-examples-05-utilities"></span><h2 id="utilities"><a class="toc-backref" href="#id18">Utilities</a><a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we present some tips and tricks
+that will make your life easier while manipulating
+data, as well as some other useful function for
+specific cases.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="Manipulation of the data dictionary"><div class="figure align-default" id="id12">
+<img alt="../_images/sphx_glr_plot_selection_of_data_thumb.png" src="../_images/sphx_glr_plot_selection_of_data_thumb.png"/>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="05_utilities/plot_selection_of_data.html#sphx-glr-examples-05-utilities-plot-selection-of-data-py"><span class="std std-ref">Manipulation of the data dictionary</span></a></span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ab4f6b7668795a7fcd17b8ffc33a6588/examples_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">examples_python.zip</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/3f63d5eb825554eb59b29111d665f435/examples_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">examples_jupyter.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+
 
 
 
@@ -283,7 +550,7 @@ analysis and plotting the results in a insightful way.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
           
-            <a href="../user-guide.html" title="Material"
+            <a href="../contributing.html" title="Contributing to ConPagnon"
                class="md-flex md-footer-nav__link md-footer-nav__link--prev"
                rel="prev">
               <div class="md-flex__cell md-flex__cell--shrink">
@@ -292,10 +559,21 @@ analysis and plotting the results in a insightful way.</p>
               <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
                 <span class="md-flex__ellipsis">
                   <span
-                      class="md-footer-nav__direction"> Previous </span> User Guide </span>
+                      class="md-footer-nav__direction"> Previous </span> Contributing to ConPagnon </span>
               </div>
             </a>
           
+          
+            <a href="01_Organizing_data/plot_organizing_data_example.html" title="Basic data organization"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Basic data organization </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
           
         </a>
         
@@ -305,14 +583,14 @@ analysis and plotting the results in a insightful way.</p>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2O18-2020, Dhaif BEKHA .
+              &#169; Copyright 2016 - 2020. Created by Dhaif BEKHA (dhaif@dhaifbekha.com).
               
           </div>
             Last updated on
-              Feb 24, 2020.
+              May 13, 2020.
             <br/>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 2.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.0.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>
