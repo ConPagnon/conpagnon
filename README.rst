@@ -22,7 +22,7 @@ Dependencies
 
 The required dependencies to use the software are:
 
-* Python >= 3.5,
+* Python >= 3.6,
 * setuptools
 * Numpy
 * SciPy
@@ -37,6 +37,8 @@ The required dependencies to use the software are:
 * Psutil
 * Networkx
 * Patsy
+* xlrd
+* tabulate
 
 Install
 =======
