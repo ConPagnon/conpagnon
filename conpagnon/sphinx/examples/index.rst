@@ -53,9 +53,9 @@ go through simple examples to get you started.
 
 .. only:: html
 
- .. figure:: /examples/01_Organizing_data/images/thumb/sphx_glr_plot_organizing_data_example_thumb.png
+ .. figure:: /examples/01_Organizing_data/images/thumb/sphx_glr_plot_organizing_data_thumb.png
 
-     :ref:`sphx_glr_examples_01_Organizing_data_plot_organizing_data_example.py`
+     :ref:`sphx_glr_examples_01_Organizing_data_plot_organizing_data.py`
 
 .. raw:: html
 
@@ -65,7 +65,7 @@ go through simple examples to get you started.
 .. toctree::
    :hidden:
 
-   /examples/01_Organizing_data/plot_organizing_data_example
+   /examples/01_Organizing_data/plot_organizing_data
 
 .. raw:: html
 

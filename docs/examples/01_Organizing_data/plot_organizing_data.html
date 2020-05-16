@@ -60,6 +60,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Manipulating a brain atlas" href="plot_import_atlas_example.html" />
+    <link rel="prev" title="ConPagnon usage examples" href="../index.html" />
   
    
 
@@ -78,7 +80,7 @@
   <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
   <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
   <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-  <a href="#examples/01_Organizing_data/plot_organizing_data_example" tabindex="1" class="md-skip"> Skip to content </a>
+  <a href="#examples/01_Organizing_data/plot_organizing_data" tabindex="1" class="md-skip"> Skip to content </a>
   <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
@@ -167,6 +169,13 @@
     
     
     
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">ConPagnon usage examples</a></li>
+      </ul>
+    </div>
+  </nav>
     <main class="md-main">
       <div class="md-main__inner md-grid" data-md-component="container">
         
@@ -217,7 +226,74 @@
     <li class="md-nav__item">
     
       <a href="../index.html" class="md-nav__link">ConPagnon usage examples</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+      <a href="../index.html#tutorial-examples" class="md-nav__link">Tutorial examples</a>
       
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#organization-of-data-for-conpagnon" class="md-nav__link">Organization of data for ConPagnon</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Basic data organization </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Basic data organization</a>
+      
+        
+
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples-01-organizing-data-plot-organizing-data--page-root" class="md-nav__link">Basic data organization</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
+        </li>
+        <li class="md-nav__item"><a href="#data-folder-structure" class="md-nav__link">Data folder structure</a>
+        </li>
+        <li class="md-nav__item"><a href="#import-all-the-module-we-will-need" class="md-nav__link">Import all the module we will need</a>
+        </li>
+        <li class="md-nav__item"><a href="#setting-paths-to-the-data" class="md-nav__link">Setting paths to the data</a>
+        </li>
+        <li class="md-nav__item"><a href="#with-confounds-files" class="md-nav__link">With confounds files</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/01_Organizing_data/plot_organizing_data.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="plot_import_atlas_example.html" class="md-nav__link">Manipulating a brain atlas</a>
+      
+    </li></ul>
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#functional-connectivity-computing" class="md-nav__link">Functional Connectivity: Computing</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#basic-statistical-analyses" class="md-nav__link">Basic Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#advanced-statistical-analyses" class="md-nav__link">Advanced Statistical Analyses</a>
+      
+    </li>
+    <li class="md-nav__item">
+    
+      <a href="../index.html#utilities" class="md-nav__link">Utilities</a>
+      
+    </li></ul>
     </li>
   </ul>
   
@@ -234,7 +310,7 @@
 <nav class="md-nav md-nav--secondary">
     <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
-        <li class="md-nav__item"><a href="#examples-01-organizing-data-plot-organizing-data-example--page-root" class="md-nav__link">Basic data organization</a><nav class="md-nav">
+        <li class="md-nav__item"><a href="#examples-01-organizing-data-plot-organizing-data--page-root" class="md-nav__link">Basic data organization</a><nav class="md-nav">
               <ul class="md-nav__list">
         <li class="md-nav__item"><a href="#retrieve-the-example-dataset" class="md-nav__link">Retrieve the example dataset</a>
         </li>
@@ -249,7 +325,7 @@
             </nav>
         </li>
     
-<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/01_Organizing_data/plot_organizing_data_example.rst.txt">Show Source</a> </li>
+<li class="md-nav__item"><a class="md-nav__extra_link" href="../../_sources/examples/01_Organizing_data/plot_organizing_data.rst.txt">Show Source</a> </li>
 
 <li id="searchbox" class="md-nav__item"></li>
 
@@ -264,10 +340,10 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-01-organizing-data-plot-organizing-data-example-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-01-organizing-data-plot-organizing-data-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 
-<span id="sphx-glr-examples-01-organizing-data-plot-organizing-data-example-py"></span><h1 id="examples-01-organizing-data-plot-organizing-data-example--page-root">Basic data organization<a class="headerlink" href="#examples-01-organizing-data-plot-organizing-data-example--page-root" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-examples-01-organizing-data-plot-organizing-data-py"></span><h1 id="examples-01-organizing-data-plot-organizing-data--page-root">Basic data organization<a class="headerlink" href="#examples-01-organizing-data-plot-organizing-data--page-root" title="Permalink to this headline">¶</a></h1>
 <p><strong>What you’ll learn</strong>: Organize you’re dataset for ConPagnon processing, and learn how to retrieve it,
 and store it efficiently.</p>
 <p><strong>Author</strong>: <a class="reference external" href="mailto:dhaif%40dhaifbekha.com">Dhaif BEKHA</a></p>
@@ -377,13 +453,13 @@ should contain the subject identifier at least.
 Once you’ve done that, you should put the full path of the confound directory
 in the argument called <strong>individual_confounds_directory</strong> in the
 <a class="reference internal" href="../../conpagnon.data_handling.html#conpagnon.data_handling.data_architecture.fetch_data" title="conpagnon.data_handling.data_architecture.fetch_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">conpagnon.data_handling.data_architecture.fetch_data()</span></code></a> function.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.102 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-01-organizing-data-plot-organizing-data-example-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.101 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-01-organizing-data-plot-organizing-data-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/57160e2cddb2f0c29e33f951aaabb613/plot_organizing_data_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_organizing_data_example.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/c0a88494da4a6d767cef9c1d4aeb8c7c/plot_organizing_data.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_organizing_data.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/4e23173d507f095752e3ed71e21d2f3e/plot_organizing_data_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_organizing_data_example.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/624b3d536c305e3edbab3649d869a139/plot_organizing_data.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_organizing_data.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -400,6 +476,30 @@ in the argument called <strong>individual_confounds_directory</strong> in the
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
           
+            <a href="../index.html" title="ConPagnon usage examples"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> Previous </span> ConPagnon usage examples </span>
+              </div>
+            </a>
+          
+          
+            <a href="plot_import_atlas_example.html" title="Manipulating a brain atlas"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> Manipulating a brain atlas </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
           
         </a>
         

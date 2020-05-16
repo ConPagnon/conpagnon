@@ -1,10 +1,10 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_examples_01_Organizing_data_plot_organizing_data_example.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_examples_01_Organizing_data_plot_organizing_data.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_examples_01_Organizing_data_plot_organizing_data_example.py:
+.. _sphx_glr_examples_01_Organizing_data_plot_organizing_data.py:
 
 
 Basic data organization
@@ -159,10 +159,10 @@ in the argument called **individual_confounds_directory** in the
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.102 seconds)
+   **Total running time of the script:** ( 0 minutes  0.101 seconds)
 
 
-.. _sphx_glr_download_examples_01_Organizing_data_plot_organizing_data_example.py:
+.. _sphx_glr_download_examples_01_Organizing_data_plot_organizing_data.py:
 
 
 .. only :: html
@@ -174,13 +174,13 @@ in the argument called **individual_confounds_directory** in the
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: plot_organizing_data_example.py <plot_organizing_data_example.py>`
+     :download:`Download Python source code: plot_organizing_data.py <plot_organizing_data.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: plot_organizing_data_example.ipynb <plot_organizing_data_example.ipynb>`
+     :download:`Download Jupyter notebook: plot_organizing_data.ipynb <plot_organizing_data.ipynb>`
 
 
 .. only:: html
