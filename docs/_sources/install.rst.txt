@@ -13,7 +13,7 @@ It's easy to manipulate, and we suggest Anaconda as you're default Python enviro
 Python support
 --------------
 
-ConPagnon supports all Python version since the 3.5 Python release. Prior version may work,
+ConPagnon supports all Python version since the 3.6 Python release. Prior version may work,
 but we do not recommend nor supports their utilisation here. Python 2.X is not supported
 at all, and we do not recommend, if you can, to use that version at all in you're project.
 

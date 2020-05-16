@@ -159,7 +159,7 @@ in the argument called **individual_confounds_directory** in the
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.132 seconds)
+   **Total running time of the script:** ( 0 minutes  0.102 seconds)
 
 
 .. _sphx_glr_download_examples_01_Organizing_data_plot_organizing_data_example.py:
