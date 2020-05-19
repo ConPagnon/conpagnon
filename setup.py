@@ -2,6 +2,15 @@ from setuptools import find_packages, setup
 import os
 import sys
 
+"""
+Setup file for ConPagnon,
+checks require dependencies
+version, fetch version from
+version.py
+
+Author: Dhaif BEKHA (dhaif@dhaifbekha.com)
+"""
+
 
 def load_version():
     """Executes conpagnon/version.py in a globals dictionary and return it.
