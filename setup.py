@@ -44,7 +44,7 @@ MAINTAINER = 'Dhaif BEKHA'
 MAINTAINER_EMAIL = 'dhaif@dhaifbekha.com'
 URL = 'https://conpagnon.github.io/conpagnon/'
 LICENSE = 'new BSD'
-DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.9.tar.gz'
+DOWNLOAD_URL = 'https://github.com/ConPagnon/conpagnon/archive/v2.0.10.tar.gz'
 VERSION = _VERSION_GLOBALS['__version__']
 
 
