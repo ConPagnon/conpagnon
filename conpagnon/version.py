@@ -12,7 +12,7 @@ ConPagnon version, dependencies checking.
 # X.YrcN # Release Candidate
 # X.Y # Final release
 
-__version__ = '2.0.10'
+__version__ = '2.0.11'
 
 _CONPAGNON_INSTALL_MSG = 'See %s for installation information.' % (
     'https://conpagnon.github.io/conpagnon/install.html')
