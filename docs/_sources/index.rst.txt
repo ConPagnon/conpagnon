@@ -10,13 +10,7 @@ Welcome to ConPagnon !
    :target: https://github.com/ConPagnon/conpagnon
    :width: 40%
    :alt: conpagnon2.0
-   :align: left
-
-.. image:: images/logo/logo_indev.jpg
-   :target: http://neurodiderot.org/index.php/indev-en/
-   :width: 10%
-   :alt: InDev
-   :align: right
+   :align: center
 
 ConPagnon is python library designed to facilitate the analysis of Resting State data. ConPagnon
 is mainly build around `Nilearn`_ and `Scikit-learn`_. We provide not only useful wrapper around
@@ -39,4 +33,49 @@ Index
 :ref:`genindex`
 
 :ref:`modindex`
+
+
+ConPagnon development and maintenance
+=====================================
+
+ConPagnon is a open-source Python project, however the creation of such project
+and the continuous development, improvement and sustainability are made possible
+by the following funders (each image is a link, sending you the their respective website):
+
+
+InDev
+~~~~~
+
+.. image:: images/logo/logo_indev.jpg
+   :target: http://neurodiderot.org/index.php/indev-en/
+   :width: 15%
+   :alt: InDev
+   :align: right
+
+Neurospin
+~~~~~~~~~
+
+.. image:: images/logo/neurospin.jpg
+   :target: http://joliot.cea.fr/drf/joliot/Pages/Entites_de_recherche/NeuroSpin.aspx
+   :width: 25%
+   :alt: Neurospin
+   :align: right
+
+CEA
+~~~~
+
+.. image:: images/logo/cea.jpg
+   :target: http://www.cea.fr/
+   :width: 15%
+   :alt: CEA
+   :align: right
+
+Inserm
+~~~~~~
+
+.. image:: images/logo/inserm.png
+   :target: http://www.inserm.fr/
+   :width: 25%
+   :alt: Inserm
+   :align: right
 
