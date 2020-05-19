@@ -43,7 +43,7 @@ utils                   --- Utilities for saving and loading object,
 import sys
 import warnings
 
-from .version import _check_module_dependencies, __version__
+from conpagnon.version import _check_module_dependencies, __version__
 
 
 def _py35_deprecation_warning():
