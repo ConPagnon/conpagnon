@@ -65,7 +65,7 @@ def _python_deprecation_warnings():
 _check_module_dependencies()
 _python_deprecation_warnings()
 
-# list all submodules available in nilearn and version
+# list all submodules available in ConPagnon
 __all__ = ['computing', 'connectivity_statistics', 'data_handling',
            'machine_learning', 'pylearn_mulm',
            'sphinx', 'plotting', 'utils', '__version__']
